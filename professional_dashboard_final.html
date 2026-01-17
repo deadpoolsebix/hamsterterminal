@@ -4939,31 +4939,23 @@
         
         // Update commodity prices display in ticker
         function updateCommodityDisplay() {
-            const goldEl = document.getElementById('ticker-gold-price');
-            const silverEl = document.getElementById('ticker-silver-price');
-            
-            if (goldEl) {
-                const goldChange = ((commodityPrices.gold - commodityPrices.goldPrev) / commodityPrices.goldPrev * 100).toFixed(2);
-                const goldChangeEl = goldEl.querySelector('#ticker-gold-change');
-                if (goldChangeEl) {
-                    goldChangeEl.textContent = (goldChange >= 0 ? '+' : '') + goldChange + '%';
-                    goldChangeEl.style.color = goldChange >= 0 ? '#00ff41' : '#ff0033';
+            try {
+                const goldEl = document.getElementById('ticker-gold-price');
+                const silverEl = document.getElementById('ticker-silver-price');
+                
+                if (goldEl) {
+                    const goldChange = ((commodityPrices.gold - commodityPrices.goldPrev) / commodityPrices.goldPrev * 100).toFixed(2);
+                    goldEl.innerHTML = 'GOLD $' + commodityPrices.gold.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' <span style="color: ' + (goldChange >= 0 ? '#00ff41' : '#ff0033') + ';">' + (goldChange >= 0 ? '+' : '') + goldChange + '%</span>';
+                    console.log('💛 Gold Updated: $' + commodityPrices.gold + ' | Change: ' + goldChange + '%');
                 }
-                goldEl.textContent = 'GOLD $' + commodityPrices.gold.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' ';
-                goldEl.appendChild(goldChangeEl);
-                console.log('💛 Gold Updated: $' + commodityPrices.gold);
-            }
-            
-            if (silverEl) {
-                const silverChange = ((commodityPrices.silver - commodityPrices.silverPrev) / commodityPrices.silverPrev * 100).toFixed(2);
-                const silverChangeEl = silverEl.querySelector('#ticker-silver-change');
-                if (silverChangeEl) {
-                    silverChangeEl.textContent = (silverChange >= 0 ? '+' : '') + silverChange + '%';
-                    silverChangeEl.style.color = silverChange >= 0 ? '#00ff41' : '#ff0033';
+                
+                if (silverEl) {
+                    const silverChange = ((commodityPrices.silver - commodityPrices.silverPrev) / commodityPrices.silverPrev * 100).toFixed(2);
+                    silverEl.innerHTML = '🔱 SILVER $' + commodityPrices.silver.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' <span style="color: ' + (silverChange >= 0 ? '#00ff41' : '#ff0033') + ';">' + (silverChange >= 0 ? '+' : '') + silverChange + '%</span>';
+                    console.log('🥈 Silver Updated: $' + commodityPrices.silver + ' | Change: ' + silverChange + '%');
                 }
-                silverEl.innerHTML = '🔱 SILVER $' + commodityPrices.silver.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' ';
-                silverEl.appendChild(silverChangeEl);
-                console.log('🥈 Silver Updated: $' + commodityPrices.silver);
+            } catch(e) {
+                console.warn('⚠️ Error updating commodity display:', e);
             }
         }
         
