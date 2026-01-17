@@ -1446,8 +1446,8 @@
                     <div style="font-size: 0.85em; color: #00d4ff; font-weight: 700;">Aktywna sesja</div>
                     <div style="color: #ffff00; font-weight: 700;">NEW YORK</div>
                     <div style="font-size: 0.8em; color: #ccc; line-height: 1.5;">
-                        Godzina: 19:32 EST<br>
-                        Volatility: <span style="color: #ff6600;">WYSOKIE (+12%)</span><br>
+                        Godzina: <span id="ny-current-time">19:32</span> EST<br>
+                        Volatility: <span style="color: #ff6600;" id="ny-volatility">WYSOKIE (+12%)</span><br>
                         Likwidność: <span style="color: #00ff41;">DOSKONAŁA</span>
                     </div>
                 </div>
@@ -2328,6 +2328,20 @@
             // Update panel godziny - NEW YORK (zamyka 16:00)
             const nyt = document.getElementById('ny-time-panel');
             const nys = document.getElementById('ny-status-panel');
+            const nyCurrentTime = document.getElementById('ny-current-time');
+            const nyVolatility = document.getElementById('ny-volatility');
+            
+            if (nyCurrentTime) {
+                const timeStr = ny.hour.toString().padStart(2, '0') + ':' + ny.minute.toString().padStart(2, '0');
+                nyCurrentTime.textContent = timeStr;
+            }
+            
+            if (nyVolatility) {
+                const volatilityValue = (Math.random() * 15 + 5).toFixed(1); // 5-20%
+                nyVolatility.textContent = (volatilityValue > 12 ? 'WYSOKIE' : 'NORMALNE') + ' (±' + volatilityValue + '%)';
+                nyVolatility.style.color = volatilityValue > 12 ? '#ff6600' : '#ffaa00';
+            }
+            
             if (nyt) {
                 const isWeekend = ny.weekday === 'Sat' || ny.weekday === 'Sun';
                 if (isWeekend) {
@@ -4915,29 +4929,7 @@
             lastUpdate: Date.now()
         };
         
-        // Fetch commodity prices from CoinGecko API
-        async function fetchCommodityPrices() {
-            try {
-                const response = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=gold,silver&vs_currencies=usd');
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data.gold && data.gold.usd) {
-                        commodityPrices.goldPrev = commodityPrices.gold;
-                        commodityPrices.gold = data.gold.usd;
-                        if (data.silver && data.silver.usd) {
-                            commodityPrices.silverPrev = commodityPrices.silver;
-                            commodityPrices.silver = data.silver.usd;
-                        }
-                        console.log('✅ Commodity prices updated from API:', commodityPrices);
-                        updateCommodityDisplay();
-                    }
-                }
-            } catch(e) {
-                console.warn('Commodity fetch failed, using cache:', e);
-            }
-        }
-        
-        // Update commodity prices display in ticker
+        // NO API CALLS - Use local simulation only to avoid 429 errors
         function updateCommodityDisplay() {
             try {
                 const goldEl = document.getElementById('ticker-gold-price');
@@ -4946,24 +4938,25 @@
                 if (goldEl) {
                     const goldChange = ((commodityPrices.gold - commodityPrices.goldPrev) / commodityPrices.goldPrev * 100).toFixed(2);
                     goldEl.innerHTML = 'GOLD $' + commodityPrices.gold.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' <span style="color: ' + (goldChange >= 0 ? '#00ff41' : '#ff0033') + ';">' + (goldChange >= 0 ? '+' : '') + goldChange + '%</span>';
-                    console.log('💛 Gold Updated: $' + commodityPrices.gold + ' | Change: ' + goldChange + '%');
+                    console.log('💛 Gold Updated: $' + commodityPrices.gold.toFixed(2) + ' | Change: ' + goldChange + '%');
                 }
                 
                 if (silverEl) {
                     const silverChange = ((commodityPrices.silver - commodityPrices.silverPrev) / commodityPrices.silverPrev * 100).toFixed(2);
                     silverEl.innerHTML = '🔱 SILVER $' + commodityPrices.silver.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' <span style="color: ' + (silverChange >= 0 ? '#00ff41' : '#ff0033') + ';">' + (silverChange >= 0 ? '+' : '') + silverChange + '%</span>';
-                    console.log('🥈 Silver Updated: $' + commodityPrices.silver + ' | Change: ' + silverChange + '%');
+                    console.log('🥈 Silver Updated: $' + commodityPrices.silver.toFixed(2) + ' | Change: ' + silverChange + '%');
                 }
             } catch(e) {
                 console.warn('⚠️ Error updating commodity display:', e);
             }
         }
         
-        // Update commodity prices every 30 seconds with random variation
+        // Simulate realistic commodity price movement every 20 seconds
         setInterval(() => {
-            // Simulate realistic price movement
-            const goldVolatility = (Math.random() - 0.5) * 0.002; // ±0.1%
-            const silverVolatility = (Math.random() - 0.5) * 0.003; // ±0.15%
+            // Gold: ±0.05% volatility
+            const goldVolatility = (Math.random() - 0.5) * 0.001;
+            // Silver: ±0.1% volatility  
+            const silverVolatility = (Math.random() - 0.5) * 0.002;
             
             commodityPrices.goldPrev = commodityPrices.gold;
             commodityPrices.silverPrev = commodityPrices.silver;
@@ -4972,11 +4965,9 @@
             commodityPrices.silver *= (1 + silverVolatility);
             
             updateCommodityDisplay();
-            console.log('🔄 Commodity prices simulated update');
-        }, 30000);
+        }, 20000);
         
-        // Initial fetch
-        fetchCommodityPrices();
+        // Initial display
         updateCommodityDisplay();
         
         function calculatePositionSize() {
