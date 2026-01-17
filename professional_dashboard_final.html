@@ -2330,16 +2330,22 @@
             const nys = document.getElementById('ny-status-panel');
             const nyCurrentTime = document.getElementById('ny-current-time');
             const nyVolatility = document.getElementById('ny-volatility');
-            
+
+            // Update current local time in New York using Intl
             if (nyCurrentTime) {
-                const timeStr = ny.hour.toString().padStart(2, '0') + ':' + ny.minute.toString().padStart(2, '0');
-                nyCurrentTime.textContent = timeStr;
+                try {
+                    const timeStr = new Intl.DateTimeFormat('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }).format(new Date());
+                    nyCurrentTime.textContent = timeStr;
+                } catch {}
             }
-            
+
+            // Derive a simple volatility signal from BTC 24h change
             if (nyVolatility) {
-                const volatilityValue = (Math.random() * 15 + 5).toFixed(1); // 5-20%
-                nyVolatility.textContent = (volatilityValue > 12 ? 'WYSOKIE' : 'NORMALNE') + ' (±' + volatilityValue + '%)';
-                nyVolatility.style.color = volatilityValue > 12 ? '#ff6600' : '#ffaa00';
+                const changeAbs = Math.abs(Number(marketData?.btcChange24h ?? 0));
+                const estVol = Math.min(20, (changeAbs * 4)); // scale to a 0-20% band
+                const levelHigh = estVol >= 12;
+                nyVolatility.textContent = (levelHigh ? 'WYSOKIE' : 'NORMALNE') + ' (±' + estVol.toFixed(1) + '%)';
+                nyVolatility.style.color = levelHigh ? '#ff6600' : '#ffaa00';
             }
             
             if (nyt) {
@@ -4398,6 +4404,8 @@
                 
                 console.log('🥇 Commodity prices updated:', commodityPrices);
                 updateCommodityDisplay();
+                // Also refresh ticker so GOLD/SILVER IDs exist for DOM updates
+                updatePixelTicker();
                 
                 // Fetch all data in parallel for speed
                 await Promise.all([
