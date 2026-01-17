@@ -4381,6 +4381,7 @@
                 commodityPrices.gold *= (1 + goldVolatility);
                 commodityPrices.silver *= (1 + silverVolatility);
                 
+                console.log('🥇 Commodity prices updated:', commodityPrices);
                 updateCommodityDisplay();
                 
                 // Fetch all data in parallel for speed
@@ -4949,6 +4950,8 @@
             try {
                 const goldEl = document.getElementById('ticker-gold-price');
                 const silverEl = document.getElementById('ticker-silver-price');
+                
+                console.log('📍 Checking commodity elements:', {goldEl: !!goldEl, silverEl: !!silverEl});
                 
                 if (goldEl) {
                     const goldChange = ((commodityPrices.gold - commodityPrices.goldPrev) / commodityPrices.goldPrev * 100).toFixed(2);
