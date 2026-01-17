@@ -4291,7 +4291,21 @@
                 ];
                 
                 tickers.forEach(ticker => {
-                    const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';\n                    html += `<div class=\"pixel-instrument\" style=\"color: ${ticker.color};\">` +\n                            `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +\n                            `<span style=\"${changeClass}\">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +\n                            `</div>`;\n                });\n                \n                // Add duplicate for seamless loop\n                tickers.forEach(ticker => {\n                    const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';\n                    html += `<div class=\"pixel-instrument\" style=\"color: ${ticker.color};\">` +\n                            `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +\n                            `<span style=\"${changeClass}\">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +\n                            `</div>`;\n                });\n                \n                tickerContent.innerHTML = html;\n                \n            } catch (error) {\n                console.warn('⚠️ Error updating ticker:', error);\n            }\n        }
+                    const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';
+                    html += `<div class="pixel-instrument" style="color: ${ticker.color};">` +
+                            `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +
+                            `<span style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
+                            `</div>`;
+                });
+                
+                // Add duplicate for seamless loop
+                tickers.forEach(ticker => {
+                    const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';
+                    html += `<div class="pixel-instrument" style="color: ${ticker.color};">` +
+                            `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +
+                            `<span style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
+                            `</div>`;
+                });\n                \n                tickerContent.innerHTML = html;\n                \n            } catch (error) {\n                console.warn('⚠️ Error updating ticker:', error);\n            }\n        }
         
         // Update DOM with real data
         function updateDashboardUI() {
@@ -4378,10 +4392,10 @@
                     fetchYahooFinanceData()
                 ]);
                 
-                // ❌ DISABLED: updateDashboardUI() causes DOM updates = flashing
-                // updateDashboardUI();
+                // ✅ ENABLED: updateDashboardUI() now safe with proper interval
+                updateDashboardUI();
                 
-                console.log('✅ All market data fetched (DOM updates disabled to prevent flashing)');
+                console.log('✅ All market data fetched and UI updated');
             } catch (error) {
                 console.error('❌ Error updating market data:', error);
             }
@@ -4404,8 +4418,8 @@
             // Update ticker display every 10 seconds for fresh prices
             setInterval(updatePixelTicker, 10000);
             
-            // ❌ DISABLED: UI update every 1 second CAUSES FLASHING/MIGANIE ON ZEGAROW & BTC PANEL
-            // setInterval(updateDashboardUI, 1000);
+            // ✅ ENABLED: UI update every 5 seconds for real-time data display
+            setInterval(updateDashboardUI, 5000);
             
             // HAMSTER COMMENTARY SYSTEM 🐹
             initHamsterAI();
