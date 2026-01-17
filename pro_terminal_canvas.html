@@ -1,0 +1,1119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>PRO Terminal - Canvas Chart</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', 'Roboto', sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border-bottom: 2px solid #00d4ff;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .title {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-family: 'Roboto Mono', monospace;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .timeframe-switcher {
+            display: flex;
+            gap: 8px;
+            background: rgba(0, 212, 255, 0.1);
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #00d4ff;
+        }
+
+        .tf-btn {
+            padding: 6px 14px;
+            background: transparent;
+            border: 1px solid #444;
+            color: #888;
+            cursor: pointer;
+            border-radius: 4px;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 600;
+            font-size: 0.85em;
+            transition: all 0.3s ease;
+        }
+
+        .tf-btn:hover {
+            border-color: #00d4ff;
+            color: #00d4ff;
+        }
+
+        .tf-btn.active {
+            background: linear-gradient(135deg, #00d4ff, #00ffff);
+            color: #000;
+            border-color: #00ffff;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.5);
+        }
+
+        .chart-container {
+            padding: 20px 30px;
+            background: #0a0a0a;
+        }
+
+        #priceChart {
+            border: 1px solid #333;
+            border-radius: 8px;
+            background: #0f0f0f;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .panel-row {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            padding: 20px 30px;
+            background: #0a0a0a;
+        }
+
+        .indicator-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .indicator-card {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid #333;
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .indicator-card:hover {
+            transform: translateY(-2px);
+            border-color: #00d4ff;
+            box-shadow: 0 5px 15px rgba(0,212,255,0.2);
+        }
+
+        .indicator-label {
+            font-size: 0.75em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .indicator-value {
+            font-size: 1.8em;
+            font-weight: 800;
+            color: #00d4ff;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .bb-upper, .bb-lower {
+            font-size: 0.9em;
+            color: #666;
+            font-family: 'Roboto Mono', monospace;
+            margin-top: 5px;
+        }
+
+        .bb-upper { color: #ff6b6b; }
+        .bb-lower { color: #51cf66; }
+
+        .fvg-section {
+            background: linear-gradient(135deg, #001a1a 0%, #0a0a0a 100%);
+            border: 1px solid #00ffff;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .fvg-label {
+            font-size: 0.75em;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .fvg-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            background: rgba(0, 255, 200, 0.05);
+            border-left: 3px solid #00ff88;
+            margin-bottom: 6px;
+            border-radius: 3px;
+        }
+
+        .fvg-bullish { border-left-color: #00ff41; }
+        .fvg-bearish { border-left-color: #ff0033; }
+
+        .resistance-panel {
+            background: linear-gradient(135deg, #1a0a1a 0%, #0a0a0a 100%);
+            border: 1px solid #ff00ff;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .level {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #333;
+            font-size: 0.9em;
+        }
+
+        .level-label { color: #888; }
+        .level-price { color: #ffff00; font-weight: 700; }
+
+        .footer {
+            padding: 20px 30px;
+            background: linear-gradient(180deg, #0a0a0a 0%, #1a0000 100%);
+            border-top: 3px solid #ff0033;
+            text-align: center;
+            color: #666;
+            font-size: 0.85em;
+        }
+
+        .status-indicator {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff41;
+            margin-right: 5px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @keyframes blink {
+            0%, 49%, 100% { opacity: 1; }
+            50%, 99% { opacity: 0.3; }
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .info-box {
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid #00d4ff;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        .info-box-label {
+            font-size: 0.75em;
+            color: #888;
+            text-transform: uppercase;
+        }
+
+        .info-box-value {
+            font-size: 1.2em;
+            color: #00d4ff;
+            font-weight: 700;
+            margin-top: 3px;
+        }
+
+        .heatmap-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            padding: 20px 30px;
+            background: #0a0a0a;
+        }
+
+        .orderbook-heatmap {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid #00d4ff;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .heatmap-title {
+            font-size: 0.85em;
+            color: #00d4ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .heatmap-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .heatmap-price {
+            font-size: 0.75em;
+            color: #888;
+            font-family: 'Roboto Mono', monospace;
+            text-align: right;
+            padding-right: 8px;
+        }
+
+        .heatmap-bar {
+            height: 24px;
+            border-radius: 3px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            padding: 0 6px;
+            font-size: 0.7em;
+            font-weight: 600;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .buy-bar {
+            background: linear-gradient(90deg, rgba(0, 255, 65, 0.3), rgba(0, 255, 65, 0.8));
+            color: #fff;
+            justify-content: flex-end;
+        }
+
+        .sell-bar {
+            background: linear-gradient(90deg, rgba(255, 0, 51, 0.3), rgba(255, 0, 51, 0.8));
+            color: #fff;
+            justify-content: flex-end;
+        }
+
+        .pressure-gauge {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid #ffaa00;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .gauge-label {
+            font-size: 0.85em;
+            color: #ffaa00;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .gauge-container {
+            margin-bottom: 12px;
+        }
+
+        .gauge-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .gauge-label-text {
+            font-size: 0.8em;
+            color: #888;
+            width: 50px;
+        }
+
+        .gauge-bar {
+            flex: 1;
+            height: 20px;
+            background: #0f0f0f;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .gauge-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 4px;
+            font-size: 0.7em;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .buy-fill {
+            background: linear-gradient(90deg, transparent, #00ff41);
+        }
+
+        .sell-fill {
+            background: linear-gradient(90deg, transparent, #ff0033);
+        }
+
+        .time-sales {
+            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+            border: 1px solid #ff00ff;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .ts-title {
+            font-size: 0.85em;
+            color: #ff00ff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .trade-row {
+            display: grid;
+            grid-template-columns: auto auto auto;
+            gap: 12px;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+            font-size: 0.75em;
+            font-family: 'Roboto Mono', monospace;
+        }
+
+        .trade-row:last-child {
+            border-bottom: none;
+        }
+
+        .trade-time {
+            color: #666;
+        }
+
+        .trade-buy {
+            color: #00ff41;
+            font-weight: 700;
+        }
+
+        .trade-sell {
+            color: #ff0033;
+            font-weight: 700;
+        }
+
+        .trade-price {
+            color: #ffff00;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="title">
+            🎮 PRO TERMINAL <span class="status-indicator"></span>
+        </div>
+        <div class="timeframe-switcher">
+            <button class="tf-btn active" onclick="switchTimeframe('1m')">1M</button>
+            <button class="tf-btn" onclick="switchTimeframe('5m')">5M</button>
+            <button class="tf-btn" onclick="switchTimeframe('15m')">15M</button>
+            <button class="tf-btn" onclick="switchTimeframe('1h')">1H</button>
+            <button class="tf-btn" onclick="switchTimeframe('4h')">4H</button>
+            <button class="tf-btn" onclick="switchTimeframe('1d')">1D</button>
+            <button class="tf-btn" onclick="switchTimeframe('1w')">1W</button>
+        </div>
+        <div style="font-family: 'Roboto Mono', monospace; font-size: 0.9em; color: #666;">
+            <span id="current-time">--:--:--</span> UTC
+        </div>
+    </div>
+
+    <!-- INFO BOXES -->
+    <div style="padding: 20px 30px;">
+        <div class="info-grid">
+            <div class="info-box">
+                <div class="info-box-label">Current Price</div>
+                <div class="info-box-value" id="current-price">$95,630</div>
+            </div>
+            <div class="info-box">
+                <div class="info-box-label">24H Change</div>
+                <div class="info-box-value" id="change-24h">+2.15%</div>
+            </div>
+            <div class="info-box">
+                <div class="info-box-label">High/Low</div>
+                <div class="info-box-value" id="high-low">$97,200 / $93,500</div>
+            </div>
+            <div class="info-box">
+                <div class="info-box-label">RSI</div>
+                <div class="info-box-value" id="rsi-value">55.2</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CHART -->
+    <div class="chart-container">
+        <canvas id="priceChart" width="1400" height="500"></canvas>
+    </div>
+
+    <!-- INDICATORS PANEL -->
+    <div class="panel-row">
+        <div class="indicator-panel">
+            <!-- BOLLINGER BANDS -->
+            <div class="indicator-card">
+                <div class="indicator-label">📊 Bollinger Bands (20, 2)</div>
+                <div class="indicator-value" id="bb-middle">95,630</div>
+                <div class="bb-upper">Upper: <span id="bb-upper">97,150</span></div>
+                <div class="bb-lower">Lower: <span id="bb-lower">94,110</span></div>
+            </div>
+
+            <!-- STOCHASTIC -->
+            <div class="indicator-card">
+                <div class="indicator-label">⚡ Stochastic RSI</div>
+                <div class="indicator-value" id="stoch-k">68.5</div>
+                <div style="font-size: 0.9em; color: #666; margin-top: 8px;">
+                    D: <span id="stoch-d">65.2</span> | %K: 68.5 | %D: 65.2
+                </div>
+            </div>
+
+            <!-- PIVOT LEVELS -->
+            <div class="indicator-card">
+                <div class="indicator-label">🎯 Pivot Points</div>
+                <div style="font-size: 0.9em; line-height: 2;">
+                    <div><span style="color: #ff0033;">R1:</span> <span id="pivot-r1">97,400</span></div>
+                    <div><span style="color: #888;">Pivot:</span> <span id="pivot-center">96,050</span></div>
+                    <div><span style="color: #00ff41;">S1:</span> <span id="pivot-s1">94,700</span></div>
+                </div>
+            </div>
+
+            <!-- ATR -->
+            <div class="indicator-card">
+                <div class="indicator-label">📏 ATR (14)</div>
+                <div class="indicator-value" id="atr-value">850</div>
+                <div style="font-size: 0.8em; color: #888; margin-top: 5px;">
+                    Volatility measure (USD)
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: FVG + SUPPORT/RESISTANCE -->
+        <div style="display: flex; flex-direction: column; gap: 15px;">
+            <!-- FVG PANEL -->
+            <div class="fvg-section">
+                <div class="fvg-label">📍 Fair Value Gaps (FVG)</div>
+                <div class="fvg-item fvg-bullish">
+                    <span>🟢 Bullish Gap</span>
+                    <span id="fvg-bull">$95,200-$95,500</span>
+                </div>
+                <div class="fvg-item fvg-bearish">
+                    <span>🔴 Bearish Gap</span>
+                    <span id="fvg-bear">$96,800-$97,200</span>
+                </div>
+                <div class="fvg-item" style="border-left-color: #00d4ff;">
+                    <span>🎯 Next FVG</span>
+                    <span id="fvg-next">$98,000+</span>
+                </div>
+            </div>
+
+            <!-- SUPPORT/RESISTANCE -->
+            <div class="resistance-panel">
+                <div class="fvg-label">🛡️ Support / Resistance</div>
+                <div class="level">
+                    <span class="level-label">Resistance 3</span>
+                    <span class="level-price" id="res-3">$99,200</span>
+                </div>
+                <div class="level">
+                    <span class="level-label">Resistance 2</span>
+                    <span class="level-price" id="res-2">$97,800</span>
+                </div>
+                <div class="level">
+                    <span class="level-label">Resistance 1</span>
+                    <span class="level-price" id="res-1">$96,500</span>
+                </div>
+                <div class="level" style="border-bottom: 2px dashed #00d4ff;">
+                    <span class="level-label">Pivot</span>
+                    <span class="level-price" id="pivot-display">$96,050</span>
+                </div>
+                <div class="level">
+                    <span class="level-label">Support 1</span>
+                    <span class="level-price" id="sup-1">$95,200</span>
+                </div>
+                <div class="level">
+                    <span class="level-label">Support 2</span>
+                    <span class="level-price" id="sup-2">$94,000</span>
+                </div>
+                <div class="level">
+                    <span class="level-label">Support 3</span>
+                    <span class="level-price" id="sup-3">$92,500</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- HEATMAP & ORDER FLOW PANELS -->
+    <div class="heatmap-container">
+        <!-- ORDER BOOK HEATMAP (BID SIDE) -->
+        <div class="orderbook-heatmap">
+            <div class="heatmap-title">📊 Order Book (BID)</div>
+            <div class="heatmap-grid" id="bid-heatmap">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+
+        <!-- BUY/SELL PRESSURE GAUGE -->
+        <div class="pressure-gauge">
+            <div class="gauge-label">⚖️ Buy/Sell Pressure</div>
+            
+            <div class="gauge-container">
+                <div class="gauge-row">
+                    <div class="gauge-label-text">BUY</div>
+                    <div class="gauge-bar">
+                        <div class="gauge-fill buy-fill" id="buy-gauge" style="width: 62%;">62%</div>
+                    </div>
+                </div>
+                <div class="gauge-row">
+                    <div class="gauge-label-text">SELL</div>
+                    <div class="gauge-bar">
+                        <div class="gauge-fill sell-fill" id="sell-gauge" style="width: 38%;">38%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="padding: 12px; background: rgba(0, 255, 65, 0.1); border-radius: 4px; border-left: 3px solid #00ff41;">
+                <div style="font-size: 0.7em; color: #888;">BIG BUY ORDERS</div>
+                <div style="font-size: 1.1em; color: #00ff41; font-weight: 700; margin-top: 3px;" id="big-buy">450 BTC</div>
+            </div>
+            <div style="padding: 12px; background: rgba(255, 0, 51, 0.1); border-radius: 4px; border-left: 3px solid #ff0033; margin-top: 8px;">
+                <div style="font-size: 0.7em; color: #888;">BIG SELL ORDERS</div>
+                <div style="font-size: 1.1em; color: #ff0033; font-weight: 700; margin-top: 3px;" id="big-sell">380 BTC</div>
+            </div>
+        </div>
+
+        <!-- ORDER BOOK HEATMAP (ASK SIDE) -->
+        <div class="orderbook-heatmap">
+            <div class="heatmap-title">📊 Order Book (ASK)</div>
+            <div class="heatmap-grid" id="ask-heatmap">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TIME & SALES FEED -->
+    <div style="padding: 20px 30px; background: #0a0a0a;">
+        <div class="time-sales">
+            <div class="ts-title">📈 Time & Sales (Last 15 Trades)</div>
+            <div id="time-sales-feed">
+                <!-- Dynamically filled -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        🎮 PRO TERMINAL v3.0 • Canvas-Based Chart • Real-Time Indicators • BTC/USDT
+    </div>
+
+    <script>
+        let currentTimeframe = '1m';
+        let currentPrice = 95630;
+        let priceHistory = [];
+        let volumeHistory = [];
+        let tradesHistory = [];
+
+        // Initialize sample data for all timeframes
+        const timeframeData = {
+            '1m': generateCandleData(100, 95630, 50),
+            '5m': generateCandleData(100, 95630, 100),
+            '15m': generateCandleData(96, 95630, 200),
+            '1h': generateCandleData(168, 95630, 500),
+            '4h': generateCandleData(180, 95630, 1500),
+            '1d': generateCandleData(365, 95630, 3000),
+            '1w': generateCandleData(260, 95630, 5000)
+        };
+
+        // Generate sample trades
+        function generateTrades() {
+            const trades = [];
+            const baseTime = new Date();
+            for (let i = 0; i < 15; i++) {
+                const isBuy = Math.random() > 0.5;
+                const price = 95630 + (Math.random() - 0.5) * 200;
+                const size = Math.random() * 2 + 0.5;
+                const time = new Date(baseTime.getTime() - i * 5000);
+                trades.push({
+                    time: time.toLocaleTimeString('en-US', { hour12: false, timeZone: 'UTC' }).slice(0, 8),
+                    type: isBuy ? 'BUY' : 'SELL',
+                    price: price.toFixed(2),
+                    size: size.toFixed(2),
+                    isBuy
+                });
+            }
+            return trades;
+        }
+
+        tradesHistory = generateTrades();
+
+        function generateCandleData(count, startPrice, volatility) {
+            let candles = [];
+            let price = startPrice;
+            for (let i = 0; i < count; i++) {
+                const change = (Math.random() - 0.48) * volatility;
+                const open = price;
+                const close = price + change;
+                const high = Math.max(open, close) + Math.random() * volatility * 0.5;
+                const low = Math.min(open, close) - Math.random() * volatility * 0.5;
+                const volume = Math.random() * 1000000 + 500000;
+                
+                candles.push({ open, close, high, low, volume });
+                price = close;
+            }
+            return candles;
+        }
+
+        function generateOrderBookData() {
+            const bids = [];
+            const asks = [];
+            const basePrice = 95630;
+            
+            // Generate BID levels (prices below market)
+            for (let i = 0; i < 10; i++) {
+                const price = basePrice - (i + 1) * 20;
+                const volume = (Math.random() * 150 + 50) * (1 - i * 0.08);
+                bids.push({ price: price.toFixed(0), volume: volume.toFixed(1) });
+            }
+            
+            // Generate ASK levels (prices above market)
+            for (let i = 0; i < 10; i++) {
+                const price = basePrice + (i + 1) * 20;
+                const volume = (Math.random() * 150 + 50) * (1 - i * 0.08);
+                asks.push({ price: price.toFixed(0), volume: volume.toFixed(1) });
+            }
+            
+            return { bids: bids.reverse(), asks };
+        }
+
+        function renderOrderbookHeatmap() {
+            const ob = generateOrderBookData();
+            const maxVolume = 150;
+            
+            // BID HEATMAP
+            const bidHtml = ob.bids.map(bid => {
+                const width = (parseFloat(bid.volume) / maxVolume) * 100;
+                return `
+                    <div class="heatmap-price">$${bid.price}</div>
+                    <div class="heatmap-bar buy-bar" style="width: ${width}%;">
+                        ${bid.volume}
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('bid-heatmap').innerHTML = bidHtml;
+            
+            // ASK HEATMAP
+            const askHtml = ob.asks.map(ask => {
+                const width = (parseFloat(ask.volume) / maxVolume) * 100;
+                return `
+                    <div class="heatmap-price">$${ask.price}</div>
+                    <div class="heatmap-bar sell-bar" style="width: ${width}%;">
+                        ${ask.volume}
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('ask-heatmap').innerHTML = askHtml;
+
+            // BUY/SELL PRESSURE
+            const totalBid = ob.bids.reduce((sum, b) => sum + parseFloat(b.volume), 0);
+            const totalAsk = ob.asks.reduce((sum, a) => sum + parseFloat(a.volume), 0);
+            const total = totalBid + totalAsk;
+            const buyPercent = (totalBid / total * 100).toFixed(1);
+            const sellPercent = (totalAsk / total * 100).toFixed(1);
+            
+            document.getElementById('buy-gauge').style.width = buyPercent + '%';
+            document.getElementById('buy-gauge').textContent = buyPercent + '%';
+            document.getElementById('sell-gauge').style.width = sellPercent + '%';
+            document.getElementById('sell-gauge').textContent = sellPercent + '%';
+            
+            document.getElementById('big-buy').textContent = totalBid.toFixed(0) + ' BTC';
+            document.getElementById('big-sell').textContent = totalAsk.toFixed(0) + ' BTC';
+        }
+
+        function renderTimeAndSales() {
+            const html = tradesHistory.map((trade, idx) => `
+                <div class="trade-row">
+                    <div class="trade-time">${trade.time}</div>
+                    <div class="${trade.isBuy ? 'trade-buy' : 'trade-sell'}">${trade.type}</div>
+                    <div style="display: flex; gap: 8px;">
+                        <span class="trade-price">$${trade.price}</span>
+                        <span style="color: #ffaa00;">${trade.size}BTC</span>
+                    </div>
+                </div>
+            `).join('');
+            document.getElementById('time-sales-feed').innerHTML = html;
+        }
+
+        function switchTimeframe(tf) {
+            currentTimeframe = tf;
+            document.querySelectorAll('.tf-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateChart();
+        }
+
+        function updateChart() {
+            const candles = timeframeData[currentTimeframe];
+            drawChart(candles);
+            calculateIndicators(candles);
+        }
+
+        function drawChart(candles) {
+            const canvas = document.getElementById('priceChart');
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            // Clear canvas
+            ctx.fillStyle = '#0f0f0f';
+            ctx.fillRect(0, 0, width, height);
+
+            // Draw grid
+            ctx.strokeStyle = '#222';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 10; i++) {
+                const y = (height / 10) * i;
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(width, y);
+                ctx.stroke();
+            }
+
+            // Find min/max price
+            let minPrice = Math.min(...candles.map(c => c.low));
+            let maxPrice = Math.max(...candles.map(c => c.high));
+            const priceRange = maxPrice - minPrice;
+            const padding = priceRange * 0.1;
+            minPrice -= padding;
+            maxPrice += padding;
+
+            // Helper to convert price to Y coordinate
+            const getY = (price) => height - ((price - minPrice) / (maxPrice - minPrice)) * height;
+
+            // Draw Support/Resistance levels
+            const last = candles[candles.length - 1];
+            const atr = calculateATR(candles, 14);
+            
+            const levels = {
+                res3: last.close + atr * 4.5,
+                res2: last.close + atr * 3,
+                res1: last.close + atr * 1.5,
+                pivot: (last.high + last.low + last.close) / 3,
+                sup1: last.close - atr * 1.5,
+                sup2: last.close - atr * 3,
+                sup3: last.close - atr * 4.5
+            };
+
+            // Draw resistance lines (red)
+            ctx.strokeStyle = 'rgba(255, 0, 51, 0.4)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            
+            [levels.res1, levels.res2, levels.res3].forEach(price => {
+                if (price >= minPrice && price <= maxPrice) {
+                    const y = getY(price);
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                    
+                    // Label
+                    ctx.fillStyle = '#ff0033';
+                    ctx.font = 'bold 10px Roboto Mono';
+                    ctx.fillText('R: $' + price.toFixed(0), 5, y - 5);
+                }
+            });
+
+            // Draw support lines (green)
+            ctx.strokeStyle = 'rgba(0, 255, 65, 0.4)';
+            [levels.sup1, levels.sup2, levels.sup3].forEach(price => {
+                if (price >= minPrice && price <= maxPrice) {
+                    const y = getY(price);
+                    ctx.beginPath();
+                    ctx.moveTo(0, y);
+                    ctx.lineTo(width, y);
+                    ctx.stroke();
+                    
+                    // Label
+                    ctx.fillStyle = '#00ff41';
+                    ctx.font = 'bold 10px Roboto Mono';
+                    ctx.fillText('S: $' + price.toFixed(0), 5, y - 5);
+                }
+            });
+
+            // Draw pivot line (cyan)
+            ctx.strokeStyle = 'rgba(0, 212, 255, 0.6)';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([]);
+            const pivotY = getY(levels.pivot);
+            ctx.beginPath();
+            ctx.moveTo(0, pivotY);
+            ctx.lineTo(width, pivotY);
+            ctx.stroke();
+            
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 11px Roboto Mono';
+            ctx.fillText('PIVOT: $' + levels.pivot.toFixed(0), 5, pivotY - 8);
+
+            // Draw price labels
+            ctx.fillStyle = '#666';
+            ctx.font = '11px Roboto Mono';
+            ctx.textAlign = 'right';
+            ctx.setLineDash([]);
+            for (let i = 0; i <= 10; i++) {
+                const price = minPrice + (maxPrice - minPrice) * (i / 10);
+                const y = height - (height / 10) * i;
+                ctx.fillText('$' + price.toFixed(0), width - 10, y + 4);
+            }
+
+            // Calculate candle width
+            const candleWidth = Math.max(2, width / candles.length);
+            const margin = candleWidth * 0.2;
+
+            // Draw candles
+            candles.forEach((candle, index) => {
+                const x = (index + 0.5) * candleWidth;
+                
+                const openY = getY(candle.open);
+                const closeY = getY(candle.close);
+                const highY = getY(candle.high);
+                const lowY = getY(candle.low);
+
+                const isGreen = candle.close >= candle.open;
+                
+                // Wick
+                ctx.strokeStyle = isGreen ? '#00ff41' : '#ff0033';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(x, highY);
+                ctx.lineTo(x, lowY);
+                ctx.stroke();
+
+                // Body
+                ctx.fillStyle = isGreen ? '#00ff41' : '#ff0033';
+                const bodyTop = Math.min(openY, closeY);
+                const bodyHeight = Math.abs(closeY - openY);
+                ctx.fillRect(x - margin, bodyTop, candleWidth - 2 * margin, Math.max(bodyHeight, 2));
+            });
+
+            // Draw SMA 20 (cyan)
+            if (candles.length >= 20) {
+                ctx.strokeStyle = '#00d4ff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let i = 19; i < candles.length; i++) {
+                    const sma = candles.slice(i - 19, i + 1).reduce((sum, c) => sum + c.close, 0) / 20;
+                    const x = (i + 0.5) * candleWidth;
+                    const y = getY(sma);
+                    if (i === 19) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+            
+            // Draw SMA 50 (orange)
+            if (candles.length >= 50) {
+                ctx.strokeStyle = '#ffaa00';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let i = 49; i < candles.length; i++) {
+                    const sma = candles.slice(i - 49, i + 1).reduce((sum, c) => sum + c.close, 0) / 50;
+                    const x = (i + 0.5) * candleWidth;
+                    const y = getY(sma);
+                    if (i === 49) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+            }
+
+            // Update price info
+            const lastCandle = candles[candles.length - 1];
+            document.getElementById('current-price').textContent = '$' + lastCandle.close.toFixed(2);
+            document.getElementById('high-low').textContent = '$' + lastCandle.high.toFixed(0) + ' / $' + lastCandle.low.toFixed(0);
+        }
+
+
+        function calculateIndicators(candles) {
+            const last = candles[candles.length - 1];
+            
+            // Bollinger Bands (20, 2)
+            const bb = calculateBollingerBands(candles, 20, 2);
+            document.getElementById('bb-middle').textContent = '$' + bb.middle.toFixed(2);
+            document.getElementById('bb-upper').textContent = '$' + bb.upper.toFixed(2);
+            document.getElementById('bb-lower').textContent = '$' + bb.lower.toFixed(2);
+
+            // Stochastic RSI
+            const stoch = calculateStochasticRSI(candles);
+            document.getElementById('stoch-k').textContent = stoch.k.toFixed(1);
+            document.getElementById('stoch-d').textContent = stoch.d.toFixed(1);
+
+            // Pivot Points
+            const pivot = calculatePivotPoints(candles);
+            document.getElementById('pivot-center').textContent = '$' + pivot.P.toFixed(2);
+            document.getElementById('pivot-r1').textContent = '$' + pivot.R1.toFixed(2);
+            document.getElementById('pivot-s1').textContent = '$' + pivot.S1.toFixed(2);
+            document.getElementById('pivot-display').textContent = '$' + pivot.P.toFixed(2);
+
+            // ATR (14)
+            const atr = calculateATR(candles, 14);
+            document.getElementById('atr-value').textContent = '$' + atr.toFixed(2);
+
+            // Support/Resistance
+            document.getElementById('res-1').textContent = '$' + (last.close + atr * 1.5).toFixed(0);
+            document.getElementById('res-2').textContent = '$' + (last.close + atr * 3).toFixed(0);
+            document.getElementById('res-3').textContent = '$' + (last.close + atr * 4.5).toFixed(0);
+            document.getElementById('sup-1').textContent = '$' + (last.close - atr * 1.5).toFixed(0);
+            document.getElementById('sup-2').textContent = '$' + (last.close - atr * 3).toFixed(0);
+            document.getElementById('sup-3').textContent = '$' + (last.close - atr * 4.5).toFixed(0);
+
+            // RSI
+            const rsi = calculateRSI(candles, 14);
+            document.getElementById('rsi-value').textContent = rsi.toFixed(1);
+
+            // FVG (Fair Value Gaps)
+            const fvgs = calculateFVG(candles);
+            if (fvgs.bullish) {
+                document.getElementById('fvg-bull').textContent = '$' + fvgs.bullish.low.toFixed(0) + '-$' + fvgs.bullish.high.toFixed(0);
+            }
+            if (fvgs.bearish) {
+                document.getElementById('fvg-bear').textContent = '$' + fvgs.bearish.low.toFixed(0) + '-$' + fvgs.bearish.high.toFixed(0);
+            }
+        }
+
+        function calculateBollingerBands(candles, period, stdDev) {
+            const closes = candles.map(c => c.close);
+            const sma = closes.slice(-period).reduce((a, b) => a + b) / period;
+            const variance = closes.slice(-period).reduce((sum, val) => sum + Math.pow(val - sma, 2), 0) / period;
+            const std = Math.sqrt(variance);
+            return {
+                middle: sma,
+                upper: sma + std * stdDev,
+                lower: sma - std * stdDev
+            };
+        }
+
+        function calculateStochasticRSI(candles, period = 14) {
+            const rsi = calculateRSI(candles, period);
+            const rsiValues = [];
+            for (let i = Math.max(0, candles.length - 50); i < candles.length; i++) {
+                const slice = candles.slice(Math.max(0, i - period + 1), i + 1);
+                if (slice.length === period) {
+                    rsiValues.push(calculateRSI(slice, period));
+                }
+            }
+            const minRSI = Math.min(...rsiValues);
+            const maxRSI = Math.max(...rsiValues);
+            const k = ((rsi - minRSI) / (maxRSI - minRSI)) * 100;
+            const d = k * 0.67 + (rsiValues[rsiValues.length - 2] || k) * 0.33;
+            return { k: Math.min(100, Math.max(0, k)), d: Math.min(100, Math.max(0, d)) };
+        }
+
+        function calculatePivotPoints(candles) {
+            const last = candles[candles.length - 1];
+            const H = last.high;
+            const L = last.low;
+            const C = last.close;
+            const P = (H + L + C) / 3;
+            return {
+                P, R1: (P * 2) - L, R2: P + (H - L),
+                S1: (P * 2) - H, S2: P - (H - L)
+            };
+        }
+
+        function calculateATR(candles, period) {
+            const tr = candles.map((c, i) => {
+                if (i === 0) return c.high - c.low;
+                const prev = candles[i - 1];
+                return Math.max(c.high - c.low, Math.abs(c.high - prev.close), Math.abs(c.low - prev.close));
+            });
+            return tr.slice(-period).reduce((a, b) => a + b) / period;
+        }
+
+        function calculateRSI(candles, period = 14) {
+            const closes = candles.map(c => c.close);
+            let gains = 0, losses = 0;
+            for (let i = Math.max(1, closes.length - period); i < closes.length; i++) {
+                const change = closes[i] - closes[i - 1];
+                if (change > 0) gains += change;
+                else losses -= change;
+            }
+            const avgGain = gains / period;
+            const avgLoss = losses / period;
+            const rs = avgLoss === 0 ? 100 : avgGain / avgLoss;
+            return 100 - (100 / (1 + rs));
+        }
+
+        function calculateFVG(candles) {
+            let bullish = null;
+            let bearish = null;
+            
+            for (let i = 2; i < Math.min(20, candles.length - 1); i++) {
+                const idx = candles.length - 20 + i;
+                if (idx >= 0 && idx + 1 < candles.length) {
+                    const c = candles[idx];
+                    const prev = candles[idx - 1];
+                    const next = candles[idx + 1];
+                    
+                    // Bullish FVG
+                    if (c.low > prev.high && next.low > c.high) {
+                        bullish = { low: c.low, high: c.high };
+                        break;
+                    }
+                    
+                    // Bearish FVG
+                    if (c.high < prev.low && next.high < c.low) {
+                        bearish = { low: c.low, high: c.high };
+                        break;
+                    }
+                }
+            }
+            
+            return {
+                bullish: bullish,
+                bearish: bearish
+            };
+        }
+
+        function updateTime() {
+            const now = new Date();
+            const time = now.toLocaleTimeString('en-US', { hour12: false, timeZone: 'UTC' });
+            document.getElementById('current-time').textContent = time;
+        }
+
+        // Initialize
+        updateTime();
+        setInterval(updateTime, 1000);
+        updateChart();
+        renderOrderbookHeatmap();
+        renderTimeAndSales();
+        
+        setInterval(() => {
+            // Simulate small price movement and refresh heatmap
+            const candles = timeframeData[currentTimeframe];
+            const lastCandle = candles[candles.length - 1];
+            lastCandle.close += (Math.random() - 0.5) * 100;
+            lastCandle.high = Math.max(lastCandle.high, lastCandle.close);
+            lastCandle.low = Math.min(lastCandle.low, lastCandle.close);
+            updateChart();
+            renderOrderbookHeatmap();
+            renderTimeAndSales();
+        }, 5000);
+    </script>
+</body>
+</html>

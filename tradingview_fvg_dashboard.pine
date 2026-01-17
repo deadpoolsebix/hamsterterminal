@@ -1,0 +1,61 @@
+//@version=5
+indicator("Professional Terminal FVG & Dashboard", overlay=true, max_boxes_count=500)
+
+// --- USTAWIENIA ---
+showFVG = input.bool(true, "Pokaż Fair Value Gaps", group="Analiza Techniczna")
+fvgColorBull = input.color(color.new(color.emerald, 80), "FVG Wzrostowy", group="Analiza Techniczna")
+fvgColorBear = input.color(color.new(color.rose, 80), "FVG Spadkowy", group="Analiza Techniczna")
+dashColor = input.color(color.new(color.gray, 10), "Kolor Dashboardu", group="Dashboard")
+
+// --- LOGIKA FVG ---
+if showFVG
+    // Bullish FVG (Luka wzrostowa)
+    if low[0] > high[2]
+        box.new(bar_index[2], high[2], bar_index, low[0], border_color=na, bgcolor=fvgColorBull)
+        label.new(bar_index[1], low[0], "BULL FVG", style=label.style_none, textcolor=color.emerald, size=size.tiny)
+
+    // Bearish FVG (Luka spadkowa)
+    if high[0] < low[2]
+        box.new(bar_index[2], low[2], bar_index, high[0], border_color=na, bgcolor=fvgColorBear)
+        label.new(bar_index[1], high[0], "BEAR FVG", style=label.style_none, textcolor=color.rose, size=size.tiny)
+
+// --- LOGIKA SYGNAŁÓW (Przykładowe RSI + FVG) ---
+rsiVal = ta.rsi(close, 14)
+signal = "NEUTRAL"
+sigColor = color.white
+
+if rsiVal > 70
+    signal := "OVERBOUGHT (SELL)"
+    sigColor := color.red
+else if rsiVal < 30
+    signal := "OVERSOLD (BUY)"
+    sigColor := color.green
+
+// --- DASHBOARD (Styl Terminala) ---
+var table terminalDash = table.new(position.top_right, 2, 6, bgcolor=color.new(color.black, 20), border_width=1, border_color=color.gray)
+
+if barstate.islast
+    // Nagłówek
+    table.cell(terminalDash, 0, 0, "MARKET TERMINAL", text_color=color.gold, text_halign=text.align_center)
+    table.cell(terminalDash, 1, 0, "STATUS", text_color=color.gold)
+    
+    // Dane o cenie
+    table.cell(terminalDash, 0, 1, "Price:", text_color=color.white, text_halign=text.align_left)
+    table.cell(terminalDash, 1, 1, str.tostring(close), text_color=color.white)
+    
+    // Zmiana procentowa
+    change = ((close - close[1]) / close[1]) * 100
+    table.cell(terminalDash, 0, 2, "24h Change:", text_color=color.white, text_halign=text.align_left)
+    table.cell(terminalDash, 1, 2, str.tostring(change, "#.##") + "%", text_color=change >= 0 ? color.lime : color.red)
+    
+    // RSI
+    table.cell(terminalDash, 0, 3, "RSI (14):", text_color=color.white, text_halign=text.align_left)
+    table.cell(terminalDash, 1, 3, str.tostring(rsiVal, "#.##"), text_color=sigColor)
+    
+    // Sygnał główny
+    table.cell(terminalDash, 0, 4, "Signal:", text_color=color.white, text_halign=text.align_left)
+    table.cell(terminalDash, 1, 4, signal, text_color=sigColor)
+
+    // Wolumen
+    table.cell(terminalDash, 0, 5, "Volume:", text_color=color.white, text_halign=text.align_left)
+    table.cell(terminalDash, 1, 5, str.tostring(volume, format.volume), text_color=color.lightblue)

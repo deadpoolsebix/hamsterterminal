@@ -3,7 +3,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Profesjonalny Terminal Tradingowy</title>
+    <title>Hamster Terminal - Trading Dashboard Pro | hamsterterminal.com</title>
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
@@ -3818,7 +3818,7 @@
         </div>
 
         <p style="font-size: 0.85em; color: #666; text-align: center;">
-            🎮 Trading Terminal Version 3.0 • 2026 • Real-Time Analysis Engine • Market Data Powered by Advanced Analytics
+            🐹 Hamster Terminal v3.0 • hamsterterminal.com • 2026 • Real-Time Analysis Engine • Powered by Binance API
         </p>
     </div>
     
@@ -4918,6 +4918,36 @@
     </div>
 
     <script>
+        // Commodity prices cache
+        let commodityPrices = {
+            gold: 4594.61,
+            silver: 134.52,
+            lastUpdate: 0
+        };
+        
+        // Fetch commodity prices from backend API
+        async function fetchCommodityPrices() {
+            try {
+                const response = await fetch('/api/prices');
+                const data = await response.json();
+                
+                if(data) {
+                    commodityPrices = {
+                        gold: data.gold || 4594.61,
+                        silver: data.silver || 134.52,
+                        lastUpdate: Date.now()
+                    };
+                    console.log('🔄 Prices updated:', commodityPrices);
+                }
+            } catch(e) {
+                console.warn('Price fetch failed, using cache:', e);
+            }
+        }
+        
+        // Update commodity prices every 60 seconds
+        setInterval(fetchCommodityPrices, 60000);
+        fetchCommodityPrices(); // Initial fetch
+        
         function calculatePositionSize() {
             const instrument = document.getElementById('posCalcInstrument').value;
             const account = parseFloat(document.getElementById('posCalcAccount').value) || 10000;
@@ -4950,13 +4980,13 @@
                     pipValue = 10; // $10 per pip for Gold
                     contractSize = 1; // 1 oz per lot
                     instrumentName = '🥇 XAU';
-                    currentPrice = 2650; // Gold price estimate
+                    currentPrice = commodityPrices.gold || 2650; // Live gold price
                     break;
                 case 'silver':
                     pipValue = 5; // $5 per pip for Silver
                     contractSize = 1; // 1 oz per lot
                     instrumentName = '🥈 XAG';
-                    currentPrice = 30.5; // Silver price estimate
+                    currentPrice = commodityPrices.silver || 30.5; // Live silver price
                     break;
             }
             

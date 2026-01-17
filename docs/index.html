@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Trading Dashboard – Live (Client‑only)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <style>
+    body { margin:0; font-family: Inter, system-ui; background:#0a0a0a; color:#e0e0e0; }
+    header { padding:14px 20px; border-bottom:1px solid #222; display:flex; align-items:center; gap:14px; }
+    .brand { font-weight:800; color:#00d4ff; letter-spacing:0.5px; }
+    .status { font-size:14px; color:#aaa; }
+    .container { padding:16px; }
+    #chart { height: 70vh; min-height: 420px; }
+    .cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(220px,1fr)); gap:12px; margin-top:16px; }
+    .card { background:#111; border:1px solid #222; border-radius:10px; padding:14px; }
+    .card h3 { margin:0 0 8px 0; font-size:13px; color:#aaa; font-weight:600; }
+    .value { font-size:22px; font-weight:700; color:#00d4ff; }
+    a { color:#00d4ff; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">Professional Trading Dashboard</div>
+    <div class="status" id="status">Ładowanie danych…</div>
+    <div style="margin-left:auto" class="status">Client‑only: działa na GitHub Pages</div>
+  </header>
+  <div class="container">
+    <div id="chart"></div>
+    <div class="cards">
+      <div class="card">
+        <h3>BTC/USDT (Live)</h3>
+        <div class="value" id="price">–</div>
+        <div class="status" id="updated">—</div>
+      </div>
+      <div class="card">
+        <h3>Źródło danych</h3>
+        <div>Binance REST API (klines: 1m)</div>
+        <div><a href="https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=5" target="_blank">Podgląd API</a></div>
+      </div>
+      <div class="card">
+        <h3>Wskazówki</h3>
+        <div>Ten widok nie wymaga bota ani backendu.</div>
+        <div>Idealny pod GitHub Pages.</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const KLINES_URL = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1m&limit=200';
+
+    async function fetchKlines() {
+      const statusEl = document.getElementById('status');
+      try {
+        statusEl.textContent = 'Pobieranie danych…';
+        const res = await fetch(KLINES_URL, { cache: 'no-store' });
+        if (!res.ok) throw new Error('API error ' + res.status);
+        const data = await res.json();
+        // Każdy element: [openTime, open, high, low, close, volume, closeTime, ...]
+        const times = data.map(d => new Date(d[0]));
+        const open = data.map(d => parseFloat(d[1]));
+        const high = data.map(d => parseFloat(d[2]));
+        const low  = data.map(d => parseFloat(d[3]));
+        const close= data.map(d => parseFloat(d[4]));
+        const last = close[close.length - 1];
+
+        // Render wykresu (bez bdata)
+        const trace = {
+          x: times,
+          open, high, low, close,
+          type: 'candlestick',
+          name: 'BTC/USDT',
+          increasing: { line: { color: '#00ff41' } },
+          decreasing: { line: { color: '#ff0033' } }
+        };
+        const layout = {
+          paper_bgcolor: '#0a0a0a',
+          plot_bgcolor: '#0a0a0a',
+          font: { color: '#e0e0e0' },
+          xaxis: { gridcolor: '#1a1a1a' },
+          yaxis: { gridcolor: '#1a1a1a', title: 'Price (USD)' },
+          margin: { t: 30, r: 20, b: 40, l: 50 },
+          height: Math.max(420, window.innerHeight * 0.7),
+          showlegend: false
+        };
+        Plotly.newPlot('chart', [trace], layout, { responsive: true });
+
+        document.getElementById('price').textContent = last.toFixed(2) + ' USDT';
+        document.getElementById('updated').textContent = 'Ostatnia świeca: ' + times[times.length - 1].toLocaleTimeString();
+        statusEl.textContent = 'Dane załadowane';
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Błąd ładowania danych: ' + err.message;
+      }
+    }
+
+    // Pierwsze ładowanie i odświeżanie co 30s
+    fetchKlines();
+    setInterval(fetchKlines, 30000);
+  </script>
+</body>
+</html>
