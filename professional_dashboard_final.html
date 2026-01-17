@@ -4314,7 +4314,14 @@
                             `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +
                             `<span style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
                             `</div>`;
-                });\n                \n                tickerContent.innerHTML = html;\n                \n            } catch (error) {\n                console.warn('⚠️ Error updating ticker:', error);\n            }\n        }
+                });
+                
+                tickerContent.innerHTML = html;
+                
+            } catch (error) {
+                console.warn('⚠️ Error updating ticker:', error);
+            }
+        }
         
         // Update DOM with REAL selectors
         function updateDashboardUI() {
