@@ -4316,44 +4316,33 @@
                             `</div>`;
                 });\n                \n                tickerContent.innerHTML = html;\n                \n            } catch (error) {\n                console.warn('⚠️ Error updating ticker:', error);\n            }\n        }
         
-        // Update DOM with real data - AGGRESSIVE SEARCH
+        // Update DOM with REAL selectors
         function updateDashboardUI() {
-            console.log('🔄 Dashboard update triggered | BTC: $' + marketData.btcPrice.toFixed(0));
+            // Update BTC price - KONKRETNE KLASY
+            const btcPriceEl = document.querySelector('.metric-value.btc-price.current-price');
+            if (btcPriceEl) {
+                btcPriceEl.textContent = `$${marketData.btcPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2})}`;
+                btcPriceEl.style.color = marketData.btcChange24h >= 0 ? '#00ff41' : '#ff0033';
+                console.log('💰 BTC Updated: $' + marketData.btcPrice.toFixed(0) + ' | Change: ' + marketData.btcChange24h.toFixed(2) + '%');
+            }
             
-            // Find ALL elements containing price text
-            const allElements = document.querySelectorAll('*');
-            let updated = 0;
-            
-            allElements.forEach(el => {
-                const text = el.textContent || '';
-                
-                // Update BTC prices (match $95,xxx format)
-                if (text.match(/\$95,?[0-9]{3}/)) {
-                    el.textContent = `$${marketData.btcPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 0})}`;
-                    el.style.color = marketData.btcChange24h >= 0 ? '#00ff41' : '#ff0033';
-                    updated++;
-                }
-                
-                // Update change percentage
-                if (text.match(/\+2\.45%|^\+.*%$/) && !text.includes('NASDAQ')) {
-                    const sign = marketData.btcChange24h >= 0 ? '+' : '';
-                    el.textContent = `${sign}${marketData.btcChange24h.toFixed(2)}%`;
-                    el.style.color = marketData.btcChange24h >= 0 ? '#00ff41' : '#ff0033';
-                    updated++;
-                }
-                
-                // Update ETH prices (match $2,xxx format)
-                if (text.match(/\$2,[0-9]{3}/) && el.textContent.length < 20) {
-                    el.textContent = `$${marketData.ethPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2})}`;
-                    updated++;
+            // Update ALL spans with $95,5xx pattern (other displays of BTC price)
+            document.querySelectorAll('span').forEach(el => {
+                if (el.textContent.includes('95,50') || el.textContent.includes('95501')) {
+                    el.textContent = '$' + marketData.btcPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 0});
                 }
             });
             
-            if (updated > 0) {
-                console.log('✅ Updated ' + updated + ' price elements | BTC: $' + marketData.btcPrice.toFixed(0));
-            } else {
-                console.warn('⚠️ No price elements found to update (selectors may not match)');
-            }
+            // Update change % displays
+            document.querySelectorAll('*').forEach(el => {
+                if (el.textContent === '+2.45%' || el.textContent === '2.45%') {
+                    const sign = marketData.btcChange24h >= 0 ? '+' : '';
+                    el.textContent = `${sign}${marketData.btcChange24h.toFixed(2)}%`;
+                    el.style.color = marketData.btcChange24h >= 0 ? '#00ff41' : '#ff0033';
+                }
+            });
+            
+            console.log('✅ Dashboard UI updated');
         }
         
         // Master update function - fetch all data sources
