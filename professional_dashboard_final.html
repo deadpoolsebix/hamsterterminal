@@ -4272,41 +4272,52 @@
                     {
                         symbol: 'BTC',
                         price: (window.tickerData?.BTC?.price || marketData.btcPrice || 95500).toFixed(0),
-                        change: (window.tickerData?.BTC?.change || 2.45).toFixed(1),
+                        change: (window.tickerData?.BTC?.change ?? marketData.btcChange24h ?? 0).toFixed(2),
                         color: '#ff8800',
                         emoji: '₿'
                     },
                     {
                         symbol: 'ETH',
                         price: (window.tickerData?.ETH?.price || marketData.ethPrice || 2845).toFixed(0),
-                        change: (window.tickerData?.ETH?.change || 1.85).toFixed(1),
+                        change: (window.tickerData?.ETH?.change ?? 0).toFixed(2),
                         color: '#627eea',
                         emoji: '⟠'
                     },
                     {
                         symbol: 'GOLD',
-                        price: (2085).toFixed(0),
-                        change: (0.9).toFixed(1),
+                        price: (commodityPrices?.gold ?? 2650).toFixed(2),
+                        change: (((commodityPrices?.gold ?? 2650) - (commodityPrices?.goldPrev ?? 2650)) / (commodityPrices?.goldPrev ?? 2650) * 100).toFixed(2),
                         color: '#ffff00',
-                        emoji: '🏅'
+                        emoji: '🏅',
+                        idPrice: 'ticker-gold-price',
+                        idChange: 'ticker-gold-change'
+                    },
+                    {
+                        symbol: 'SILVER',
+                        price: (commodityPrices?.silver ?? 31.5).toFixed(2),
+                        change: (((commodityPrices?.silver ?? 31.5) - (commodityPrices?.silverPrev ?? 31.5)) / (commodityPrices?.silverPrev ?? 31.5) * 100).toFixed(2),
+                        color: '#c0c0c0',
+                        emoji: '🔱',
+                        idPrice: 'ticker-silver-price',
+                        idChange: 'ticker-silver-change'
                     },
                     {
                         symbol: 'S&P500',
-                        price: (5847),
+                        price: (5847).toFixed(0),
                         change: (1.4).toFixed(1),
                         color: '#00d4ff',
                         emoji: '📊'
                     },
                     {
                         symbol: 'NASDAQ',
-                        price: (18542),
+                        price: (18542).toFixed(0),
                         change: (1.9).toFixed(1),
                         color: '#00ff41',
                         emoji: '💻'
                     },
                     {
                         symbol: 'DAX',
-                        price: (18234),
+                        price: (18234).toFixed(0),
                         change: (-0.6).toFixed(1),
                         color: '#ffaa00',
                         emoji: '🇩🇪'
@@ -4315,18 +4326,22 @@
                 
                 tickers.forEach(ticker => {
                     const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';
-                    html += `<div class="pixel-instrument" style="color: ${ticker.color};">` +
+                    const idAttr = ticker.idPrice ? ` id="${ticker.idPrice}"` : '';
+                    const changeIdAttr = ticker.idChange ? ` id="${ticker.idChange}"` : '';
+                    html += `<div class="pixel-instrument"${idAttr} style="color: ${ticker.color};">` +
                             `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +
-                            `<span style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
+                            `<span${changeIdAttr} style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
                             `</div>`;
                 });
                 
                 // Add duplicate for seamless loop
                 tickers.forEach(ticker => {
                     const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';
-                    html += `<div class="pixel-instrument" style="color: ${ticker.color};">` +
+                    const idAttr = ticker.idPrice ? ` id="${ticker.idPrice}"` : '';
+                    const changeIdAttr = ticker.idChange ? ` id="${ticker.idChange}"` : '';
+                    html += `<div class="pixel-instrument"${idAttr} style="color: ${ticker.color};">` +
                             `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +
-                            `<span style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
+                            `<span${changeIdAttr} style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
                             `</div>`;
                 });
                 
