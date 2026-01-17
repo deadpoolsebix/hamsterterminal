@@ -4371,6 +4371,18 @@
             console.log('🔄 Fetching real-time market data...');
             
             try {
+                // Update commodities prices (local simulation)
+                const goldVolatility = (Math.random() - 0.5) * 0.001;
+                const silverVolatility = (Math.random() - 0.5) * 0.002;
+                
+                commodityPrices.goldPrev = commodityPrices.gold;
+                commodityPrices.silverPrev = commodityPrices.silver;
+                
+                commodityPrices.gold *= (1 + goldVolatility);
+                commodityPrices.silver *= (1 + silverVolatility);
+                
+                updateCommodityDisplay();
+                
                 // Fetch all data in parallel for speed
                 await Promise.all([
                     fetchBinanceData(),
@@ -4951,24 +4963,10 @@
             }
         }
         
-        // Simulate realistic commodity price movement every 20 seconds
-        setInterval(() => {
-            // Gold: ±0.05% volatility
-            const goldVolatility = (Math.random() - 0.5) * 0.001;
-            // Silver: ±0.1% volatility  
-            const silverVolatility = (Math.random() - 0.5) * 0.002;
-            
-            commodityPrices.goldPrev = commodityPrices.gold;
-            commodityPrices.silverPrev = commodityPrices.silver;
-            
-            commodityPrices.gold *= (1 + goldVolatility);
-            commodityPrices.silver *= (1 + silverVolatility);
-            
+        // Initial commodity display on page load
+        document.addEventListener('DOMContentLoaded', () => {
             updateCommodityDisplay();
-        }, 20000);
-        
-        // Initial display
-        updateCommodityDisplay();
+        });
         
         function calculatePositionSize() {
             const instrument = document.getElementById('posCalcInstrument').value;
