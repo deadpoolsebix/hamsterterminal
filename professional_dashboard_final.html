@@ -4405,6 +4405,9 @@
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Dashboard loaded - starting real-time data feed');
             
+            // Initialize commodity display FIRST
+            updateCommodityDisplay();
+            
             // Initialize ticker data
             window.tickerData = {};
             
@@ -4962,11 +4965,6 @@
                 console.warn('⚠️ Error updating commodity display:', e);
             }
         }
-        
-        // Initial commodity display on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            updateCommodityDisplay();
-        });
         
         function calculatePositionSize() {
             const instrument = document.getElementById('posCalcInstrument').value;
