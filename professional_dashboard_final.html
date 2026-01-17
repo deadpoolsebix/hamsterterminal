@@ -1313,12 +1313,12 @@
         <div class="pixel-ticker-content">
             <span class="pixel-bull">�</span>
             
-            <div class="pixel-instrument" style="color: #ffff00;">
-                GOLD $2,085 <span style="color: #00ff41;">+0.9%</span>
+            <div class="pixel-instrument" id="ticker-gold-price" style="color: #ffff00;">
+                GOLD $2,650 <span id="ticker-gold-change" style="color: #00ff41;">+0.5%</span>
             </div>
             
-            <div class="pixel-instrument" style="color: #c0c0c0;">
-                SILVER $28.42 <span style="color: #ff0033;">-1.2%</span>
+            <div class="pixel-instrument" id="ticker-silver-price" style="color: #c0c0c0;">
+                SILVER $31.50 <span id="ticker-silver-change" style="color: #ff0033;">+0.3%</span>
             </div>
             
             <div class="pixel-instrument" style="color: #ff8800;">
@@ -1353,11 +1353,11 @@
             <span class="pixel-bull">$</span>
             
             <div class="pixel-instrument" style="color: #ffff00;">
-                GOLD $2,085 <span style="color: #00ff41;">+0.9%</span>
+                GOLD $2,650 <span style="color: #00ff41;">+0.5%</span>
             </div>
             
             <div class="pixel-instrument" style="color: #c0c0c0;">
-                🔱 SILVER $28.42 <span style="color: #ff0033;">-1.2%</span>
+                🔱 SILVER $31.50 <span style="color: #ff0033;">+0.3%</span>
             </div>
             
             <div class="pixel-instrument" style="color: #ff8800;">
@@ -3137,11 +3137,11 @@
             </div>
         </div>
         
-        <!-- SHORT & LONG SQUEEZE + MOMENTUM TRACKER (3-COLUMN TABLE) -->
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; padding: 0 30px 20px 30px;">
+        <!-- SHORT & LONG SQUEEZE + MOMENTUM TRACKER (STACKED VERTICALLY) -->
+        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 30px 20px 30px;">
             
             <!-- SHORT SQUEEZE MONITOR -->
-            <div class="squeeze-alert short">
+            <div class="squeeze-alert short" style="grid-column: span 1;">
                 <div class="squeeze-title">🔴 SHORT SQUEEZE MONITOR</div>
                 <div class="squeeze-meter">
                     <div class="squeeze-fill squeeze-short-fill" style="width: 72%;">72% RISK</div>
@@ -3170,7 +3170,7 @@
             </div>
             
             <!-- LONG SQUEEZE MONITOR -->
-            <div class="squeeze-alert long">
+            <div class="squeeze-alert long" style="grid-column: span 1;">
                 <div class="squeeze-title">🔵 LONG SQUEEZE MONITOR</div>
                 <div class="squeeze-meter">
                     <div class="squeeze-fill squeeze-long-fill" style="width: 58%;">58% RISK</div>
@@ -3199,7 +3199,7 @@
             </div>
             
             <!-- SQUEEZE MOMENTUM TRACKER -->
-            <div class="squeeze-alert momentum" style="border-color: #ff00ff; background: linear-gradient(135deg, #1a0a1a 0%, #0f0a0f 100%); border: 2px solid #ff00ff;">
+            <div class="squeeze-alert momentum" style="border-color: #ff00ff; background: linear-gradient(135deg, #1a0a1a 0%, #0f0a0f 100%); border: 2px solid #ff00ff; grid-column: span 2;">
                 <div class="squeeze-title" style="color: #ff00ff; text-shadow: 0 0 15px rgba(255,0,255,0.6);">⚡ MOMENTUM TRACKER</div>
                 <div style="margin-top: 8px; font-size: 0.85em; color: #ffff00; line-height: 1.4;">
                     ⚡ <strong>87% ENERGY BUILD-UP</strong> - Squeeze jest naprawdę BLISKO!
@@ -4909,7 +4909,9 @@
         // Commodity prices cache
         let commodityPrices = {
             gold: 2650.00,      // USD per oz
+            goldPrev: 2650.00,
             silver: 31.50,      // USD per oz
+            silverPrev: 31.50,
             lastUpdate: Date.now()
         };
         
@@ -4920,9 +4922,14 @@
                 if (response.ok) {
                     const data = await response.json();
                     if (data.gold && data.gold.usd) {
+                        commodityPrices.goldPrev = commodityPrices.gold;
                         commodityPrices.gold = data.gold.usd;
-                        if (data.silver && data.silver.usd) commodityPrices.silver = data.silver.usd;
+                        if (data.silver && data.silver.usd) {
+                            commodityPrices.silverPrev = commodityPrices.silver;
+                            commodityPrices.silver = data.silver.usd;
+                        }
                         console.log('✅ Commodity prices updated from API:', commodityPrices);
+                        updateCommodityDisplay();
                     }
                 }
             } catch(e) {
@@ -4930,9 +4937,55 @@
             }
         }
         
-        // Update commodity prices every 60 seconds
-        setInterval(fetchCommodityPrices, 60000);
-        fetchCommodityPrices(); // Initial fetch
+        // Update commodity prices display in ticker
+        function updateCommodityDisplay() {
+            const goldEl = document.getElementById('ticker-gold-price');
+            const silverEl = document.getElementById('ticker-silver-price');
+            
+            if (goldEl) {
+                const goldChange = ((commodityPrices.gold - commodityPrices.goldPrev) / commodityPrices.goldPrev * 100).toFixed(2);
+                const goldChangeEl = goldEl.querySelector('#ticker-gold-change');
+                if (goldChangeEl) {
+                    goldChangeEl.textContent = (goldChange >= 0 ? '+' : '') + goldChange + '%';
+                    goldChangeEl.style.color = goldChange >= 0 ? '#00ff41' : '#ff0033';
+                }
+                goldEl.textContent = 'GOLD $' + commodityPrices.gold.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' ';
+                goldEl.appendChild(goldChangeEl);
+                console.log('💛 Gold Updated: $' + commodityPrices.gold);
+            }
+            
+            if (silverEl) {
+                const silverChange = ((commodityPrices.silver - commodityPrices.silverPrev) / commodityPrices.silverPrev * 100).toFixed(2);
+                const silverChangeEl = silverEl.querySelector('#ticker-silver-change');
+                if (silverChangeEl) {
+                    silverChangeEl.textContent = (silverChange >= 0 ? '+' : '') + silverChange + '%';
+                    silverChangeEl.style.color = silverChange >= 0 ? '#00ff41' : '#ff0033';
+                }
+                silverEl.innerHTML = '🔱 SILVER $' + commodityPrices.silver.toLocaleString('en-US', {maximumFractionDigits: 2}) + ' ';
+                silverEl.appendChild(silverChangeEl);
+                console.log('🥈 Silver Updated: $' + commodityPrices.silver);
+            }
+        }
+        
+        // Update commodity prices every 30 seconds with random variation
+        setInterval(() => {
+            // Simulate realistic price movement
+            const goldVolatility = (Math.random() - 0.5) * 0.002; // ±0.1%
+            const silverVolatility = (Math.random() - 0.5) * 0.003; // ±0.15%
+            
+            commodityPrices.goldPrev = commodityPrices.gold;
+            commodityPrices.silverPrev = commodityPrices.silver;
+            
+            commodityPrices.gold *= (1 + goldVolatility);
+            commodityPrices.silver *= (1 + silverVolatility);
+            
+            updateCommodityDisplay();
+            console.log('🔄 Commodity prices simulated update');
+        }, 30000);
+        
+        // Initial fetch
+        fetchCommodityPrices();
+        updateCommodityDisplay();
         
         function calculatePositionSize() {
             const instrument = document.getElementById('posCalcInstrument').value;
