@@ -4922,31 +4922,23 @@
         let commodityPrices = {
             gold: 4594.61,
             silver: 134.52,
-            lastUpdate: 0
+            lastUpdate: Date.now()
         };
         
         // Fetch commodity prices from backend API
         async function fetchCommodityPrices() {
             try {
-                const response = await fetch('/api/prices');
-                const data = await response.json();
-                
-                if(data) {
-                    commodityPrices = {
-                        gold: data.gold || 4594.61,
-                        silver: data.silver || 134.52,
-                        lastUpdate: Date.now()
-                    };
-                    console.log('🔄 Prices updated:', commodityPrices);
-                }
+                // Optional: fetch from external API if needed
+                // For now, use cached prices
+                console.log('✅ Using cached prices:', commodityPrices);
             } catch(e) {
                 console.warn('Price fetch failed, using cache:', e);
             }
         }
         
-        // Update commodity prices every 60 seconds
-        setInterval(fetchCommodityPrices, 60000);
-        fetchCommodityPrices(); // Initial fetch
+        // Update commodity prices every 60 seconds (disabled - using cache)
+        // setInterval(fetchCommodityPrices, 60000);
+        // fetchCommodityPrices(); // Initial fetch
         
         function calculatePositionSize() {
             const instrument = document.getElementById('posCalcInstrument').value;
