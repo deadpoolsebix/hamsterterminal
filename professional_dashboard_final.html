@@ -4316,42 +4316,44 @@
                             `</div>`;
                 });\n                \n                tickerContent.innerHTML = html;\n                \n            } catch (error) {\n                console.warn('⚠️ Error updating ticker:', error);\n            }\n        }
         
-        // Update DOM with real data
+        // Update DOM with real data - AGGRESSIVE SEARCH
         function updateDashboardUI() {
-            // Update main BTC price
-            const priceElements = document.querySelectorAll('.metric-value.btc-price, .current-price, [class*="btc"], [class*="price"]');
+            console.log('🔄 Dashboard update triggered | BTC: $' + marketData.btcPrice.toFixed(0));
+            
+            // Find ALL elements containing price text
+            const allElements = document.querySelectorAll('*');
             let updated = 0;
-            priceElements.forEach(el => {
-                if (el && el.textContent.includes('$') || el.classList.toString().includes('price')) {
+            
+            allElements.forEach(el => {
+                const text = el.textContent || '';
+                
+                // Update BTC prices (match $95,xxx format)
+                if (text.match(/\$95,?[0-9]{3}/)) {
                     el.textContent = `$${marketData.btcPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 0})}`;
                     el.style.color = marketData.btcChange24h >= 0 ? '#00ff41' : '#ff0033';
+                    updated++;
+                }
+                
+                // Update change percentage
+                if (text.match(/\+2\.45%|^\+.*%$/) && !text.includes('NASDAQ')) {
+                    const sign = marketData.btcChange24h >= 0 ? '+' : '';
+                    el.textContent = `${sign}${marketData.btcChange24h.toFixed(2)}%`;
+                    el.style.color = marketData.btcChange24h >= 0 ? '#00ff41' : '#ff0033';
+                    updated++;
+                }
+                
+                // Update ETH prices (match $2,xxx format)
+                if (text.match(/\$2,[0-9]{3}/) && el.textContent.length < 20) {
+                    el.textContent = `$${marketData.ethPrice.toLocaleString('en-US', {minimumFractionDigits: 0, maximumFractionDigits: 2})}`;
                     updated++;
                 }
             });
             
             if (updated > 0) {
-                console.log('💰 Updated ' + updated + ' price elements | BTC: $' + marketData.btcPrice.toFixed(0) + ' | Change: ' + marketData.btcChange24h.toFixed(2) + '%');
+                console.log('✅ Updated ' + updated + ' price elements | BTC: $' + marketData.btcPrice.toFixed(0));
+            } else {
+                console.warn('⚠️ No price elements found to update (selectors may not match)');
             }
-            
-            // Update 24h change indicators
-            const changeElements = document.querySelectorAll('[class*="change"], [class*="percent"]');
-            changeElements.forEach(el => {
-                if (el && (el.textContent.includes('%') || el.textContent.includes('±'))) {
-                    const sign = marketData.btcChange24h >= 0 ? '+' : '';
-                    el.textContent = `${sign}${marketData.btcChange24h.toFixed(2)}%`;
-                    el.style.color = marketData.btcChange24h >= 0 ? '#00ff41' : '#ff0033';
-                }
-            });
-            
-            // Update ETH price
-            const ethElements = document.querySelectorAll('[class*="eth"]');
-            ethElements.forEach(el => {
-                if (el && el.textContent.includes('$')) {
-                    el.textContent = `$${marketData.ethPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 0})}`;
-                }
-            });
-            
-            console.log('✅ Dashboard UI updated');
         }
         
         // Master update function - fetch all data sources
