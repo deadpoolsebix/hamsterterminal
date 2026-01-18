@@ -973,7 +973,7 @@
             <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
                 <div style="display: flex; gap: 6px; padding: 6px; background: rgba(0,0,0,0.5); border-radius: 6px; border: 1px solid #00ff41;">
                     <button onclick="changeTimezone('Asia/Tokyo', '🗼 TOKYO')" class="tz-btn" style="background: rgba(255,100,150,0.2); border: 1px solid #ff6496; color: #ff6496; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Tokyo Stock Exchange"><span style="display: inline-block; font-size: 1em;">🐉</span> TYO</button>
-                    <button onclick="changeTimezone('Europe/London', '🇬🇧 LONDON')" class="tz-btn" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="London Stock Exchange"><span style="display: inline-block; font-size: 1em;">🇬🇧</span> LON</button>
+                    <button onclick="changeTimezone('Europe/London', '👑 LONDON')" class="tz-btn" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="London Stock Exchange"><span style="display: inline-block; font-size: 1em;">👑</span> LON</button>
                     <button onclick="changeTimezone('America/New_York', '🗽 NY')" class="tz-btn" style="background: rgba(0,255,65,0.2); border: 1px solid #00ff41; color: #00ff41; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s; min-width: 75px; display: inline-flex; align-items: center; justify-content: center;" title="New York Stock Exchange"><span style="display: inline-block; font-size: 1em; width: 1.2em;">🗽</span> NY</button>
                     <button onclick="changeTimezone('Europe/Zurich', '🇨🇭 ZURICH')" class="tz-btn" style="background: rgba(255,170,0,0.2); border: 1px solid #ffaa00; color: #ffaa00; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Swiss Exchange"><span style="display: inline-block; font-size: 1em;">🇨🇭</span> ZRH</button>
                     <button onclick="changeTimezone('Australia/Sydney', '🦘 SYDNEY')" class="tz-btn" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; color: #8a2be2; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Australian Securities Exchange"><span style="display: inline-block; font-size: 1em;">🦘</span> SYD</button>
@@ -982,7 +982,7 @@
             </div>
             <div class="terminal-time" id="terminal-clock" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <span id="clock-time" data-static-clock="true" style="font-size: 1.3em; font-weight: 900; color: #ffffff; font-family: 'Courier New', monospace; letter-spacing: 2px; animation: none !important;">--:--:--</span>
-                <span id="clock-zone" style="color: #ffffff; font-weight: 700; letter-spacing: 1px; font-size: 0.9em; animation: none !important; text-align: center;">🇬🇧 LONDON</span>
+                <span id="clock-zone" style="color: #ffffff; font-weight: 700; letter-spacing: 1px; font-size: 0.9em; animation: none !important; text-align: center;">👑 LONDON</span>
             </div>
         </div>
         
@@ -2528,10 +2528,10 @@
                     const isWeekend = london.weekday === 'Sat' || london.weekday === 'Sun';
                     if (isWeekend) {
                         clockTime.textContent = 'WEEKEND';
-                        clockZone.textContent = '🇬🇧 LONDON (ZAMKNIĘTA)';
+                        clockZone.textContent = '👑 LONDON (ZAMKNIĘTA)';
                     } else {
                         clockTime.textContent = timeRemaining(london, 16, 30);
-                        clockZone.textContent = '🇬🇧 LONDON';
+                        clockZone.textContent = '👑 LONDON';
                     }
                 }
             }
@@ -2689,7 +2689,7 @@
         // Timezone cycle function - automatically switch timezones
         window.timezones = [
             { tz: 'Asia/Tokyo', name: '🗼 TOKYO', btn: 0 },
-            { tz: 'Europe/London', name: '🇬🇧 LONDON', btn: 1 },
+            { tz: 'Europe/London', name: '👑 LONDON', btn: 1 },
             { tz: 'America/New_York', name: '🗽 NY', btn: 2 },
             { tz: 'Europe/Zurich', name: '🇨🇭 ZURICH', btn: 3 },
             { tz: 'Australia/Sydney', name: '🦘 SYDNEY', btn: 4 }
