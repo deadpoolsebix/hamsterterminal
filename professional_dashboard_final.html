@@ -982,10 +982,7 @@
             </div>
             <div class="terminal-time" id="terminal-clock" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <span id="clock-time" data-static-clock="true" style="font-size: 1.3em; font-weight: 900; color: #ffffff; font-family: 'Courier New', monospace; letter-spacing: 2px; animation: none !important;">--:--:--</span>
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <span id="clock-zone" style="color: #ffffff; font-weight: 700; letter-spacing: 1px; font-size: 0.9em; animation: none !important;">🇬🇧 LONDON</span>
-                    <span style="color: #ffffff; font-size: 0.85em; animation: none !important;">| LIVE MARKE</span>
-                </div>
+                <span id="clock-zone" style="color: #ffffff; font-weight: 700; letter-spacing: 1px; font-size: 0.9em; animation: none !important; text-align: center;">🇬🇧 LONDON</span>
             </div>
         </div>
         
@@ -2534,7 +2531,7 @@
                         clockZone.textContent = '🇬🇧 LONDON (ZAMKNIĘTA)';
                     } else {
                         clockTime.textContent = timeRemaining(london, 16, 30);
-                        clockZone.textContent = '🇬🇧 LONDON | LIVE MARKET';
+                        clockZone.textContent = '🇬🇧 LONDON';
                     }
                 }
             }
