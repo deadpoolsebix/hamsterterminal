@@ -2780,23 +2780,16 @@
                 
                 // Update button highlights with press and icon scale effects
                 document.querySelectorAll('.tz-btn').forEach((btn, idx) => {
-                    const iconSpan = btn.querySelector('span');
                     if (idx === window.currentTimezoneIndex) {
                         btn.style.opacity = '1';
                         btn.style.boxShadow = '0 0 15px currentColor';
                         btn.style.borderWidth = '2px';
-                        btn.style.animation = 'buttonPress 0.4s ease-out';
-                        if (iconSpan) {
-                            iconSpan.style.animation = 'iconGlow 0.4s ease-out';
-                        }
+                        btn.style.animation = 'none';  // NO animation - just static highlight
                     } else {
                         btn.style.opacity = '0.6';
                         btn.style.boxShadow = 'none';
                         btn.style.borderWidth = '1px';
                         btn.style.animation = 'none';
-                        if (iconSpan) {
-                            iconSpan.style.animation = 'none';
-                        }
                     }
                 });
                 
