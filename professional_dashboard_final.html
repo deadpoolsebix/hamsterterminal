@@ -2774,22 +2774,28 @@
                 const clockTime = document.getElementById('clock-time');
                 const clockZone = document.getElementById('clock-zone');
                 if (clockTime && clockZone) {
-                    clockTime.textContent = formatter.format(now);
-                    clockZone.textContent = tzInfo.name;
+                    const newTime = formatter.format(now);
+                    const newZone = tzInfo.name;
+                    
+                    // Only update if text actually changed - prevent unnecessary DOM updates
+                    if (clockTime.textContent !== newTime) {
+                        clockTime.textContent = newTime;
+                    }
+                    if (clockZone.textContent !== newZone) {
+                        clockZone.textContent = newZone;
+                    }
                 }
                 
-                // Update button highlights with press and icon scale effects
+                // Update button highlights - NO boxShadow, NO borderWidth changes (causes reflow)
                 document.querySelectorAll('.tz-btn').forEach((btn, idx) => {
                     if (idx === window.currentTimezoneIndex) {
                         btn.style.opacity = '1';
-                        btn.style.boxShadow = '0 0 15px currentColor';
-                        btn.style.borderWidth = '2px';
-                        btn.style.animation = 'none';  // NO animation - just static highlight
+                        btn.style.filter = 'brightness(1.1) drop-shadow(0 0 10px currentColor)';
+                        btn.style.borderColor = 'currentColor';
                     } else {
                         btn.style.opacity = '0.6';
-                        btn.style.boxShadow = 'none';
-                        btn.style.borderWidth = '1px';
-                        btn.style.animation = 'none';
+                        btn.style.filter = 'brightness(0.9)';
+                        btn.style.borderColor = 'rgba(255,255,255,0.1)';
                     }
                 });
                 
