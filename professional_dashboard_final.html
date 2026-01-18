@@ -1007,11 +1007,11 @@
         }
         @keyframes buttonPress { 
             0%, 100% { transform: scale(1); } 
-            50% { transform: scale(0.92); } 
+            50% { transform: scale(0.98); } 
         }
-        @keyframes iconGrow { 
-            0%, 100% { transform: scale(1); } 
-            50% { transform: scale(1.15); } 
+        @keyframes iconGlow { 
+            0%, 100% { filter: drop-shadow(0 0 0px currentColor); } 
+            50% { filter: drop-shadow(0 0 8px currentColor); } 
         }
         
         /* FOOTER LOGO STYLE */
@@ -2781,7 +2781,7 @@
                         btn.style.borderWidth = '2px';
                         btn.style.animation = 'buttonPress 0.4s ease-out';
                         if (iconSpan) {
-                            iconSpan.style.animation = 'iconGrow 0.4s ease-out';
+                            iconSpan.style.animation = 'iconGlow 0.4s ease-out';
                         }
                     } else {
                         btn.style.opacity = '0.6';

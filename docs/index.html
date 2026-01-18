@@ -1007,11 +1007,11 @@
         }
         @keyframes buttonPress { 
             0%, 100% { transform: scale(1); } 
-            50% { transform: scale(0.92); } 
+            50% { transform: scale(0.98); } 
         }
-        @keyframes iconGrow { 
-            0%, 100% { transform: scale(1); } 
-            50% { transform: scale(1.15); } 
+        @keyframes iconGlow { 
+            0%, 100% { filter: drop-shadow(0 0 0px currentColor); } 
+            50% { filter: drop-shadow(0 0 8px currentColor); } 
         }
         
         /* FOOTER LOGO STYLE */
@@ -2781,7 +2781,7 @@
                         btn.style.borderWidth = '2px';
                         btn.style.animation = 'buttonPress 0.4s ease-out';
                         if (iconSpan) {
-                            iconSpan.style.animation = 'iconGrow 0.4s ease-out';
+                            iconSpan.style.animation = 'iconGlow 0.4s ease-out';
                         }
                     } else {
                         btn.style.opacity = '0.6';
@@ -3022,9 +3022,9 @@
             <div style="background: linear-gradient(135deg, #001a1a 0%, #0a0a0a 100%); border: 2px solid #00d4ff; border-radius: 8px; padding: 15px;">
                 <div onclick="toggleAquaTrader()" style="cursor: pointer; padding: 5px 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
-                            <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800; text-transform: uppercase; white-space: nowrap;">🌊 AQUA TRADER • RSI S/R LEVELS</div>
-                            <div style="font-size: 0.95em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px;">Kluczowe poziomy oporu i wsparcia oparte na historycznym RSI</div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                            <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800; text-transform: uppercase;">🌊 AQUA TRADER • RSI S/R LEVELS</div>
+                            <div style="font-size: 0.9em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px; line-height: 1.4;">Kluczowe poziomy oporu i wsparcia oparte na historycznym RSI</div>
                         </div>
                         <div id="aqua-toggle-icon" style="font-size: 2em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;">⯆</div>
                     </div>
@@ -3248,9 +3248,9 @@
             <div style="background: linear-gradient(135deg, #1a001a 0%, #0a0a0a 100%); border: 2px solid #ff00ff; border-radius: 8px; padding: 15px;">
                 <div onclick="toggleTheTape()" style="cursor: pointer; padding: 5px 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
-                            <div style="font-size: 1.1em; color: #ff00ff; font-weight: 800; text-transform: uppercase; white-space: nowrap;">📡 THE TAPE • LIVE MARKET INTEL</div>
-                            <div style="font-size: 0.95em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px;">Order Book, Social Sentiment, Liquidations, Market Structure & Network Data</div>
+                        <div style="display: flex; flex-direction: column; gap: 8px; flex: 1;">
+                            <div style="font-size: 1.1em; color: #ff00ff; font-weight: 800; text-transform: uppercase;">📡 THE TAPE • LIVE MARKET INTEL</div>
+                            <div style="font-size: 0.9em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px; line-height: 1.4;">Order Book, Social Sentiment, Liquidations, Market Structure & Network Data</div>
                         </div>
                         <div id="tape-toggle-icon" style="font-size: 2em; color: #ff00ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;">⯆</div>
                     </div>
