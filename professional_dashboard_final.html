@@ -3157,11 +3157,46 @@
             </div>
         </div>
         
-        <!-- SHORT & LONG SQUEEZE + MOMENTUM TRACKER (STACKED VERTICALLY) -->
-        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 0 30px 20px 30px;">
+        <!-- SHORT & LONG SQUEEZE + MOMENTUM TRACKER (MOMENTUM TOP, SHORT/LONG STACKED) -->
+        <div style="padding: 0 30px 20px 30px;">
+            
+            <!-- SQUEEZE MOMENTUM TRACKER (FULL WIDTH TOP) -->
+            <div class="squeeze-alert momentum" style="border-color: #ff00ff; background: linear-gradient(135deg, #1a0a1a 0%, #0f0a0f 100%); border: 2px solid #ff00ff; margin-bottom: 15px;">
+                <div class="squeeze-title" style="color: #ff00ff; text-shadow: 0 0 15px rgba(255,0,255,0.6);">⚡ MOMENTUM TRACKER</div>
+                <div style="margin-top: 8px; font-size: 0.85em; color: #ffff00; line-height: 1.4;">
+                    ⚡ <strong>87% ENERGY BUILD-UP</strong> - Squeeze jest naprawdę BLISKO!
+                </div>
+                <div class="squeeze-details" style="margin-top: 8px;">
+                    <div class="squeeze-detail-item">
+                        <div class="squeeze-detail-label">Energy Level</div>
+                        <div class="squeeze-detail-value" style="color: #ffff00;">87/100</div>
+                    </div>
+                    <div class="squeeze-detail-item">
+                        <div class="squeeze-detail-label">Distance to Trigger</div>
+                        <div class="squeeze-detail-value" style="color: #ff6600;">$652</div>
+                    </div>
+                    <div class="squeeze-detail-item">
+                        <div class="squeeze-detail-label">Estimated Release</div>
+                        <div class="squeeze-detail-value" style="color: #ffff00;">±$3,200</div>
+                    </div>
+                    <div class="squeeze-detail-item">
+                        <div class="squeeze-detail-label">Risk Status</div>
+                        <div class="squeeze-detail-value" style="color: #ff0033;">CRITICAL</div>
+                    </div>
+                </div>
+                <div style="margin-top: 8px; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 4px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="font-size: 0.7em; color: #ff00ff; font-weight: 700;">MOMENTUM BAR</span>
+                        <span style="font-size: 0.7em; color: #ffff00;">87/100</span>
+                    </div>
+                    <div style="width: 100%; height: 12px; background: rgba(255,0,255,0.1); border-radius: 2px; overflow: hidden; border: 1px solid rgba(255,0,255,0.3);">
+                        <div style="width: 87%; height: 100%; background: linear-gradient(90deg, #ff00ff 0%, #ffff00 100%); box-shadow: 0 0 10px rgba(255,0,255,0.8);"></div>
+                    </div>
+                </div>
+            </div>
             
             <!-- SHORT SQUEEZE MONITOR -->
-            <div class="squeeze-alert short" style="grid-column: span 1;">
+            <div class="squeeze-alert short" style="margin-bottom: 15px;">
                 <div class="squeeze-title">🔴 SHORT SQUEEZE MONITOR</div>
                 <div class="squeeze-meter">
                     <div class="squeeze-fill squeeze-short-fill" style="width: 72%;">72% RISK</div>
@@ -3190,7 +3225,7 @@
             </div>
             
             <!-- LONG SQUEEZE MONITOR -->
-            <div class="squeeze-alert long" style="grid-column: span 1;">
+            <div class="squeeze-alert long">
                 <div class="squeeze-title">🔵 LONG SQUEEZE MONITOR</div>
                 <div class="squeeze-meter">
                     <div class="squeeze-fill squeeze-long-fill" style="width: 58%;">58% RISK</div>
@@ -4426,7 +4461,7 @@
         }
         
         // Initialize data fetching on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 Dashboard loaded - starting real-time data feed');
             
             // Initialize commodity display FIRST
@@ -4435,18 +4470,23 @@
             // Initialize ticker data
             window.tickerData = {};
             
-            // Initial data fetch
-            updateAllMarketData();
+            // Initial data fetch (await to ensure completion)
+            await updateAllMarketData();
             updatePixelTicker();
+            updateDashboardUI();
             
-            // Update every 3 seconds for real-time feel
-            setInterval(updateAllMarketData, 3000);
+            // Update every 3 seconds for real-time feel (start immediately after initial fetch)
+            setInterval(async () => {
+                await updateAllMarketData();
+            }, 3000);
             
             // Update ticker display every 10 seconds for fresh prices
             setInterval(updatePixelTicker, 10000);
             
             // ✅ ENABLED: UI update every 5 seconds for real-time data display
             setInterval(updateDashboardUI, 5000);
+            
+            console.log('✅ All intervals started - live updates active');
             
             // HAMSTER COMMENTARY SYSTEM 🐹
             initHamsterAI();
