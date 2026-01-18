@@ -2807,7 +2807,11 @@
         } else {
             window.startAutoTimezoneSwitch();
         }
-    </div>
+        
+        // Export tick function to global scope
+        window.tick = tick;
+    })();
+    </script>
     
         <!-- TIMEFRAME ZONE • MULTI-TF ANALYSIS (collapsible) -->
         <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
@@ -5521,7 +5525,7 @@
                 
                 // Core RSI Analysis with context
                 if (rsi > 75) {
-                    comment = `🚨 RSI ${rsi.toFixed(0)} EKSTREM WYKUPIENIE! | BTC $${btcPrice.toFixed(0)} ${priceStatus} | ${fearStatus} | UWAGA: POTENCJALNY REVERSAŁ!`;</em>
+                    comment = `🚨 RSI ${rsi.toFixed(0)} EKSTREM WYKUPIENIE! | BTC $${btcPrice.toFixed(0)} ${priceStatus} | ${fearStatus} | UWAGA: POTENCJALNY REVERSAŁ!`;
                     emoji = "😱";
                     signal = "sell";
                 } else if (rsi > 70) {

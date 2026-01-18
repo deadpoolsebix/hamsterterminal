@@ -2752,10 +2752,8 @@
             }, 5000);
         };
         
-        // Auto-cycle through timezones every 10 seconds
+        // Auto-cycle through timezones every 2 seconds
         window.startAutoTimezoneSwitch = function() {
-            if (window.manualTimezoneSelected) return; // Don't auto-switch if user manually selected
-            
             window.autoTimezoneInterval = setInterval(() => {
                 const tzInfo = window.timezones[window.currentTimezoneIndex];
                 const now = new Date();
@@ -2798,16 +2796,22 @@
                 
                 // Move to next timezone
                 window.currentTimezoneIndex = (window.currentTimezoneIndex + 1) % window.timezones.length;
-            }, 3500); // Switch every 3.5 seconds
+            }, 2000); // Switch every 2 seconds
         };
         
         // Start auto-cycle on page load
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', window.startAutoTimezoneSwitch);
+            document.addEventListener('DOMContentLoaded', () => {
+                window.startAutoTimezoneSwitch();
+            });
         } else {
             window.startAutoTimezoneSwitch();
         }
-    </div>
+        
+        // Export tick function to global scope
+        window.tick = tick;
+    })();
+    </script>
     
         <!-- TIMEFRAME ZONE • MULTI-TF ANALYSIS (collapsible) -->
         <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
@@ -3014,21 +3018,22 @@
 
 
         <!-- AQUA TRADER RSI S/R LEVELS - COLLAPSIBLE SECTION -->
-        <div style="background: linear-gradient(135deg, #001a1a 0%, #0a0a0a 100%); border: 2px solid #00d4ff; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
-            <div onclick="toggleAquaTrader()" style="cursor: pointer; padding: 5px 0;">
+        <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+            <div style="background: linear-gradient(135deg, #001a1a 0%, #0a0a0a 100%); border: 2px solid #00d4ff; border-radius: 8px; padding: 15px;">
+                <div onclick="toggleAquaTrader()" style="cursor: pointer; padding: 5px 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-                            <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800; text-transform: uppercase;">🌊 AQUA TRADER • RSI S/R LEVELS</div>
-                            <div style="font-size: 0.85em; color: #33bbdd; font-weight: 400; font-family: 'Roboto Mono', monospace;">Kluczowe poziomy oporu i wsparcia oparte na historycznym RSI</div>
+                        <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
+                            <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800; text-transform: uppercase; white-space: nowrap;">🌊 AQUA TRADER • RSI S/R LEVELS</div>
+                            <div style="font-size: 0.95em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px;">Kluczowe poziomy oporu i wsparcia oparte na historycznym RSI</div>
                         </div>
                         <div id="aqua-toggle-icon" style="font-size: 2em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;">⯆</div>
                     </div>
                 </div>
             
-            <div id="aqua-trader-content" style="display: none; margin-top: 15px;">
-                <!-- Description -->
-                <div style="background: rgba(0,212,255,0.1); padding: 10px; border-radius: 5px; border-left: 3px solid #00d4ff; margin-bottom: 15px;">
-                    <div style="font-size: 0.75em; color: #00d4ff; font-weight: 700; margin-bottom: 6px;">📊 O METODZIE AQUA TRADER:</div>
+                <div id="aqua-trader-content" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,212,255,0.3);">
+                    <!-- Description -->
+                    <div style="background: rgba(0,212,255,0.1); padding: 10px; border-radius: 5px; border-left: 3px solid #00d4ff; margin-bottom: 15px;">
+                        <div style="font-size: 0.75em; color: #00d4ff; font-weight: 700; margin-bottom: 6px;">📊 O METODZIE AQUA TRADER:</div>
                     <div style="font-size: 0.68em; line-height: 1.6; color: #ddd;">
                         <strong style="color: #00d4ff;">Aqua Trader</strong> wykorzystuje RSI (Relative Strength Index) do identyfikacji kluczowych poziomów wsparcia i oporu. Zamiast tradycyjnych poziomów cenowych, metodologia ta analizuje <strong>historyczne wartości RSI</strong> gdzie cena wcześniej się odbiła lub zawróciła. Gdy RSI wraca do tych samych poziomów, istnieje wysokie prawdopodobieństwo powtórnej reakcji cenowej.
                     </div>
@@ -3235,14 +3240,17 @@
                 }
             }
         </script>
+            </div>
+        </div>
 
         <!-- THE TAPE • LIVE MARKET INTEL - COLLAPSIBLE SECTION -->
-        <div style="background: linear-gradient(135deg, #1a001a 0%, #0a0a0a 100%); border: 2px solid #ff00ff; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
-            <div onclick="toggleTheTape()" style="cursor: pointer; padding: 5px 0;">
+        <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+            <div style="background: linear-gradient(135deg, #1a001a 0%, #0a0a0a 100%); border: 2px solid #ff00ff; border-radius: 8px; padding: 15px;">
+                <div onclick="toggleTheTape()" style="cursor: pointer; padding: 5px 0;">
                     <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
-                            <div style="font-size: 1.1em; color: #ff00ff; font-weight: 800; text-transform: uppercase;">📡 THE TAPE • LIVE MARKET INTEL</div>
-                            <div style="font-size: 0.85em; color: #bb77bb; font-weight: 400; font-family: 'Roboto Mono', monospace;">Order Book, Social Sentiment, Liquidations, Market Structure & Network Data</div>
+                        <div style="display: flex; align-items: center; gap: 20px; flex: 1;">
+                            <div style="font-size: 1.1em; color: #ff00ff; font-weight: 800; text-transform: uppercase; white-space: nowrap;">📡 THE TAPE • LIVE MARKET INTEL</div>
+                            <div style="font-size: 0.95em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px;">Order Book, Social Sentiment, Liquidations, Market Structure & Network Data</div>
                         </div>
                         <div id="tape-toggle-icon" style="font-size: 2em; color: #ff00ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;">⯆</div>
                     </div>
@@ -3530,6 +3538,8 @@
                 }
             }
         </script>
+            </div>
+        </div>
         
         <!-- MARKET REGIME SECTION -->
         <div style="background: linear-gradient(135deg, #1a001a 0%, #0a0a0a 100%); border: 2px solid #ff00ff; border-radius: 8px; padding: 20px; margin-bottom: 15px; margin-top: 0px;">
@@ -5515,7 +5525,7 @@
                 
                 // Core RSI Analysis with context
                 if (rsi > 75) {
-                    comment = `🚨 RSI ${rsi.toFixed(0)} EKSTREM WYKUPIENIE! | BTC $${btcPrice.toFixed(0)} ${priceStatus} | ${fearStatus} | UWAGA: POTENCJALNY REVERSAŁ!`;</em>
+                    comment = `🚨 RSI ${rsi.toFixed(0)} EKSTREM WYKUPIENIE! | BTC $${btcPrice.toFixed(0)} ${priceStatus} | ${fearStatus} | UWAGA: POTENCJALNY REVERSAŁ!`;
                     emoji = "😱";
                     signal = "sell";
                 } else if (rsi > 70) {
