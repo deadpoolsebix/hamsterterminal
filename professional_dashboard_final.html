@@ -5121,12 +5121,18 @@
         // REAL-TIME DATA FETCHING FROM MULTIPLE SOURCES
         // ========================================
         
-        // Data sources configuration (all proxied via Flask to avoid CORS/429)
+        // Data sources configuration - auto-detect localhost vs production
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const API_BASE = isLocalhost ? 'http://localhost:5000' : '';
+        
         const DATA_SOURCES = {
-            binance: '/api/binance',
-            coingecko: '/api/coingecko',
-            feargreed: '/api/fng',
+            binance: `${API_BASE}/api/binance`,
+            coingecko: `${API_BASE}/api/coingecko`,
+            feargreed: `${API_BASE}/api/fng`,
         };
+        
+        console.log(`🔌 API Mode: ${isLocalhost ? 'LOCALHOST (port 5000)' : 'PRODUCTION'}`);
+        console.log(`📡 API Base URL: ${API_BASE || 'relative'}`);
         
         // Global data cache
         let marketData = {
@@ -5146,7 +5152,7 @@
             try {
                 console.log('📡 Fetching Binance data...');
                 
-                const summaryRes = await fetch('/api/binance/summary', { cache: 'no-store' });
+                const summaryRes = await fetch(`${API_BASE}/api/binance/summary`, { cache: 'no-store' });
                 if (!summaryRes.ok) throw new Error('Binance summary HTTP ' + summaryRes.status);
                 const summary = await summaryRes.json();
                 if (!summary.ok) throw new Error(summary.error || 'Binance summary error');
@@ -5179,7 +5185,7 @@
         // Fetch Fear & Greed Index from CoinGecko alternative
         async function fetchFearGreedIndex() {
             try {
-                const response = await fetch('/api/fng', { cache: 'no-store' });
+                const response = await fetch(`${API_BASE}/api/fng`, { cache: 'no-store' });
                 const data = await response.json();
                 if (data.ok && data.data && data.data.data && data.data.data[0]) {
                     marketData.fearGreedIndex = parseInt(data.data.data[0].value);
@@ -5195,7 +5201,7 @@
         // Fetch funding rate from Binance Futures
         async function fetchFundingRate() {
             try {
-                const response = await fetch('/api/binance/funding?symbol=BTCUSDT', { cache: 'no-store' });
+                const response = await fetch(`${API_BASE}/api/binance/funding?symbol=BTCUSDT`, { cache: 'no-store' });
                 const data = await response.json();
                 if (data.ok && data.lastFundingRate !== undefined && data.lastFundingRate !== null) {
                     marketData.fundingRate = parseFloat(data.lastFundingRate) * 100; // percentage
@@ -5211,7 +5217,7 @@
         // Fetch Open Interest from Binance Futures
         async function fetchOpenInterest() {
             try {
-                const response = await fetch('/api/binance/oi?symbol=BTCUSDT', { cache: 'no-store' });
+                const response = await fetch(`${API_BASE}/api/binance/oi?symbol=BTCUSDT`, { cache: 'no-store' });
                 const data = await response.json();
                 if (data.ok && data.openInterest !== undefined && data.openInterest !== null) {
                     marketData.openInterest = parseFloat(data.openInterest) * marketData.btcPrice;
@@ -5230,7 +5236,7 @@
                 console.log('📡 Fetching Yahoo Finance ticker data...');
                 
                 // Fetch crypto data from CoinGecko (reliable source)
-                const cryptoResponse = await fetch('/api/coingecko/simple', { cache: 'no-store' });
+                const cryptoResponse = await fetch(`${API_BASE}/api/coingecko/simple`, { cache: 'no-store' });
                 if (cryptoResponse.ok) {
                     const cryptoDataWrapper = await cryptoResponse.json();
                     const cryptoData = cryptoDataWrapper.data || {};
