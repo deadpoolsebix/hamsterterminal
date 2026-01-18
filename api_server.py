@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 🚀 HAMSTER TERMINAL - REAL-TIME API SERVER
-Serwuje rzeczywiste dane z Binance, CoinGecko, Alternative.me
+Serwuje rzeczywiste dane z yfinance, Binance, CoinGecko, Alternative.me
 Endpoints dla dashboarda (localhost:5000)
 """
 
@@ -13,6 +13,7 @@ import threading
 import time
 from datetime import datetime
 import logging
+import yfinance as yf
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -32,10 +33,93 @@ cache = {
     'funding_rate': 0.0082,
     'open_interest': 12400000000,
     'last_update': None,
-    'timestamp': 0
+    'timestamp': 0,
+    # Additional market data
+    'gold_price': 2650.00,
+    'gold_change': 0.5,
+    'spy_price': 470.00,
+    'spy_change': 0.8,
+    'dxy_price': 103.50,
+    'dxy_change': -0.2
 }
 
-# ============ BINANCE API FUNCTIONS ============
+# ============ YFINANCE FUNCTIONS (PRIMARY SOURCE) ============
+
+def fetch_yfinance_prices():
+    """Fetch real BTC and ETH prices from Yahoo Finance via yfinance - FASTEST"""
+    try:
+        # Get BTC-USD and ETH-USD (Yahoo Finance tickers)
+        btc_ticker = yf.Ticker("BTC-USD")
+        eth_ticker = yf.Ticker("ETH-USD")
+        
+        # Get current data
+        btc_info = btc_ticker.info
+        eth_info = eth_ticker.info
+        
+        # Extract prices
+        cache['btc_price'] = btc_info.get('regularMarketPrice', btc_info.get('currentPrice', cache['btc_price']))
+        cache['eth_price'] = eth_info.get('regularMarketPrice', eth_info.get('currentPrice', cache['eth_price']))
+        
+        # Calculate 24h change from previous close
+        btc_prev = btc_info.get('regularMarketPreviousClose', btc_info.get('previousClose'))
+        eth_prev = eth_info.get('regularMarketPreviousClose', eth_info.get('previousClose'))
+        
+        if btc_prev:
+            cache['btc_change'] = ((cache['btc_price'] - btc_prev) / btc_prev) * 100
+        if eth_prev:
+            cache['eth_change'] = ((cache['eth_price'] - eth_prev) / eth_prev) * 100
+            
+        # Get volume
+        btc_vol = btc_info.get('regularMarketVolume', btc_info.get('volume', 0))
+        cache['volume_24h'] = btc_vol * cache['btc_price']
+        
+        logger.info(f"✅ yfinance: BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ yfinance fetch error: {e}")
+        return False
+
+
+def fetch_market_data():
+    """Fetch additional market data: GOLD, SPY, DXY from yfinance"""
+    try:
+        # Get GOLD, SPY (S&P 500), DXY (Dollar Index)
+        gold = yf.Ticker("GC=F")  # Gold Futures
+        spy = yf.Ticker("SPY")    # S&P 500 ETF
+        dxy = yf.Ticker("DX-Y.NYB")  # Dollar Index
+        
+        gold_info = gold.info
+        spy_info = spy.info
+        dxy_info = dxy.info
+        
+        # Gold
+        cache['gold_price'] = gold_info.get('regularMarketPrice', gold_info.get('currentPrice', cache['gold_price']))
+        gold_prev = gold_info.get('regularMarketPreviousClose', gold_info.get('previousClose'))
+        if gold_prev:
+            cache['gold_change'] = ((cache['gold_price'] - gold_prev) / gold_prev) * 100
+            
+        # SPY (S&P 500)
+        cache['spy_price'] = spy_info.get('regularMarketPrice', spy_info.get('currentPrice', cache['spy_price']))
+        spy_prev = spy_info.get('regularMarketPreviousClose', spy_info.get('previousClose'))
+        if spy_prev:
+            cache['spy_change'] = ((cache['spy_price'] - spy_prev) / spy_prev) * 100
+            
+        # DXY (Dollar Index)
+        cache['dxy_price'] = dxy_info.get('regularMarketPrice', dxy_info.get('currentPrice', cache['dxy_price']))
+        dxy_prev = dxy_info.get('regularMarketPreviousClose', dxy_info.get('previousClose'))
+        if dxy_prev:
+            cache['dxy_change'] = ((cache['dxy_price'] - dxy_prev) / dxy_prev) * 100
+        
+        logger.info(f"✅ Markets: GOLD ${cache['gold_price']:,.2f} | SPY ${cache['spy_price']:,.2f} | DXY {cache['dxy_price']:.2f}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Market data fetch error: {e}")
+        return False
+
+
+# ============ BINANCE API FUNCTIONS (BACKUP) ============
 
 def fetch_binance_prices():
     """Fetch real BTC and ETH prices from Binance"""
@@ -157,8 +241,15 @@ def update_data_loop():
     logger.info("🔄 Starting background data update thread...")
     while True:
         try:
-            # Try Binance first (most reliable)
-            fetch_binance_prices()
+            # Try yfinance first (fastest and most reliable)
+            if not fetch_yfinance_prices():
+                # Fallback to Binance if yfinance fails
+                fetch_binance_prices()
+            
+            # Get additional market data (GOLD, SPY, DXY)
+            fetch_market_data()
+            
+            # Get additional data from Binance
             fetch_funding_rate()
             fetch_open_interest()
             
@@ -182,7 +273,9 @@ update_thread.start()
 
 # Initial data fetch
 logger.info("📡 Fetching initial data...")
-fetch_binance_prices()
+if not fetch_yfinance_prices():
+    fetch_binance_prices()
+fetch_market_data()
 fetch_funding_rate()
 fetch_open_interest()
 fetch_fear_greed()
@@ -258,6 +351,26 @@ def coingecko_simple():
     })
 
 
+@app.route('/api/markets', methods=['GET'])
+def markets():
+    """Get additional market data (GOLD, SPY, DXY)"""
+    return jsonify({
+        'ok': True,
+        'gold': {
+            'price': round(cache['gold_price'], 2),
+            'change': round(cache['gold_change'], 2)
+        },
+        'spy': {
+            'price': round(cache['spy_price'], 2),
+            'change': round(cache['spy_change'], 2)
+        },
+        'dxy': {
+            'price': round(cache['dxy_price'], 2),
+            'change': round(cache['dxy_change'], 2)
+        }
+    })
+
+
 @app.route('/api/status', methods=['GET'])
 def status():
     """Get API server status"""
@@ -272,7 +385,10 @@ def status():
             'ethChange24h': round(cache['eth_change'], 2),
             'fearGreed': cache['fear_greed'],
             'fundingRate': round(cache['funding_rate'], 4),
-            'volume24h': int(cache['volume_24h'])
+            'volume24h': int(cache['volume_24h']),
+            'goldPrice': round(cache['gold_price'], 2),
+            'spyPrice': round(cache['spy_price'], 2),
+            'dxyPrice': round(cache['dxy_price'], 2)
         }
     })
 
@@ -303,12 +419,12 @@ def root():
 
 if __name__ == '__main__':
     print("=" * 80)
-    print("🚀 HAMSTER TERMINAL API SERVER")
+    print("🚀 HAMSTER TERMINAL API SERVER (yfinance Edition)")
     print("=" * 80)
     print("Server starting on http://0.0.0.0:5000")
     print("Real-time data fetching from:")
-    print("  • Binance API")
-    print("  • CoinGecko API")
+    print("  • yfinance (Yahoo Finance) - PRIMARY")
+    print("  • Binance API - BACKUP")
     print("  • Alternative.me Fear & Greed")
     print("=" * 80)
     
