@@ -1335,9 +1335,8 @@
             margin-right: 30px;
             padding: 8px 15px;
             background: linear-gradient(90deg, #000000 0%, #0a0a0a 50%, #000000 100%);
-            border: 2px solid #ffff00;
+            border: none;
             border-radius: 2px;
-            box-shadow: 0 0 10px rgba(255, 255, 0, 0.3), inset 0 0 10px rgba(255, 255, 0, 0.1);
             overflow: hidden;
             position: relative;
             font-family: 'Roboto Mono', 'Courier New', monospace;
@@ -1366,6 +1365,7 @@
             padding: 3px 8px;
             border: 1px solid currentColor;
             background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 10px currentColor, inset 0 0 8px rgba(0, 0, 0, 0.8);
         }
         .pixel-ticker-container:hover .pixel-ticker-content {
             animation-play-state: paused;
@@ -1376,11 +1376,11 @@
             <span class="pixel-bull">�</span>
             
             <div class="pixel-instrument" id="ticker-gold-price" style="color: #ffff00;">
-                GOLD $2,650 <span id="ticker-gold-change" style="color: #00ff41;">+0.5%</span>
+                🏅 GOLD $2,650 <span id="ticker-gold-change" style="color: #00ff41;">+0.5%</span>
             </div>
             
             <div class="pixel-instrument" id="ticker-silver-price" style="color: #c0c0c0;">
-                SILVER $31.50 <span id="ticker-silver-change" style="color: #ff0033;">+0.3%</span>
+                🥈 SILVER $31.50 <span id="ticker-silver-change" style="color: #ff0033;">+0.3%</span>
             </div>
             
             <div class="pixel-instrument" style="color: #ff8800;">
@@ -5174,32 +5174,51 @@
             try {
                 console.log('📡 Fetching Binance data...');
                 
-                const summaryRes = await fetch(`${API_BASE}/api/binance/summary`, { cache: 'no-store' });
-                if (!summaryRes.ok) throw new Error('Binance summary HTTP ' + summaryRes.status);
-                const summary = await summaryRes.json();
-                if (!summary.ok) throw new Error(summary.error || 'Binance summary error');
+                // Try local API first if available
+                if (isLocalhost) {
+                    const summaryRes = await fetch(`${API_BASE}/api/binance/summary`, { cache: 'no-store' });
+                    if (!summaryRes.ok) throw new Error('Local API unavailable');
+                    const summary = await summaryRes.json();
+                    if (!summary.ok) throw new Error(summary.error || 'Binance summary error');
 
-                marketData.btcPrice = summary.btcPrice;
-                marketData.btcChange24h = summary.btcChange24h;
-                marketData.volume24h = summary.btcVolume24h;
-                marketData.ethPrice = summary.ethPrice;
-                marketData.ethChange24h = summary.ethChange24h;
+                    marketData.btcPrice = summary.btcPrice;
+                    marketData.btcChange24h = summary.btcChange24h;
+                    marketData.volume24h = summary.btcVolume24h;
+                    marketData.ethPrice = summary.ethPrice;
+                    marketData.ethChange24h = summary.ethChange24h;
 
-                console.log('✅ BTC price: $' + marketData.btcPrice.toFixed(2) + ' | Change: ' + marketData.btcChange24h.toFixed(2) + '%');
+                    console.log('✅ BTC price (local API): $' + marketData.btcPrice.toFixed(2));
+                    return true;
+                }
+                
+                // Production: Direct Binance API calls
+                const btcRes = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+                const ethRes = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT');
+                
+                const btcData = await btcRes.json();
+                const ethData = await ethRes.json();
+                
+                marketData.btcPrice = parseFloat(btcData.lastPrice);
+                marketData.btcChange24h = parseFloat(btcData.priceChangePercent);
+                marketData.volume24h = parseFloat(btcData.quoteVolume);
+                marketData.ethPrice = parseFloat(ethData.lastPrice);
+                marketData.ethChange24h = parseFloat(ethData.priceChangePercent);
+
+                console.log('✅ BTC price (Binance direct): $' + marketData.btcPrice.toFixed(2) + ' | Change: ' + marketData.btcChange24h.toFixed(2) + '%');
                 return true;
             } catch (error) {
-                console.warn('⚠️ Binance API blocked, using simulated data for Hamster AI analysis...');
-                // FALLBACK: Simulate realistic price movements for Hamster AI to analyze
-                const volatility = 0.015; // 1.5% per update
+                console.warn('⚠️ Binance API error, using fallback data:', error);
+                // FALLBACK: Simulate realistic price movements
+                const volatility = 0.015;
                 const randomChange = (Math.random() - 0.5) * volatility;
                 
                 marketData.btcPrice = marketData.btcPrice * (1 + randomChange);
-                marketData.btcChange24h = (Math.random() - 0.5) * 5; // Random -2.5% to +2.5%
+                marketData.btcChange24h = (Math.random() - 0.5) * 5;
                 marketData.ethPrice = marketData.ethPrice * (1 + randomChange * 0.8);
                 marketData.ethChange24h = (Math.random() - 0.5) * 4;
                 marketData.volume24h = 24500000000 + Math.random() * 5000000000;
                 
-                console.log('✅ SIMULATED DATA: BTC $' + marketData.btcPrice.toFixed(0) + ' | Change ' + marketData.btcChange24h.toFixed(2) + '% | Hamster can analyze!');
+                console.log('✅ FALLBACK DATA: BTC $' + marketData.btcPrice.toFixed(0));
                 return false;
             }
         }
@@ -5682,7 +5701,13 @@
                 tradesStatus: "TRADES",
                 profitStatus: "PROFIT",
                 calcLots: "CALC LOTS",
-                calcSlTp: "CALC SL/TP"
+                calcSlTp: "CALC SL/TP",
+                tickerGold: "🏅 ZŁOTO",
+                tickerSilver: "🥈 SREBRO",
+                tickerOil: "ROPA",
+                tickerSP500: "S&P500",
+                tickerNasdaq: "NASDAQ",
+                tickerDax: "DAX"
             },
             EN: {
                 btnBuy: "▶ BUY",
@@ -5701,7 +5726,13 @@
                 tradesStatus: "TRADES",
                 profitStatus: "PROFIT",
                 calcLots: "CALC LOTS",
-                calcSlTp: "CALC SL/TP"
+                calcSlTp: "CALC SL/TP",
+                tickerGold: "🏅 GOLD",
+                tickerSilver: "🥈 SILVER",
+                tickerOil: "OIL",
+                tickerSP500: "S&P500",
+                tickerNasdaq: "NASDAQ",
+                tickerDax: "DAX"
             },
             DE: {
                 btnBuy: "▶ KAUFEN",
@@ -5720,7 +5751,13 @@
                 tradesStatus: "TRADES",
                 profitStatus: "GEWINN",
                 calcLots: "LOTS BERECHNEN",
-                calcSlTp: "SL/TP BERECHNEN"
+                calcSlTp: "SL/TP BERECHNEN",
+                tickerGold: "🏅 GOLD",
+                tickerSilver: "🥈 SILBER",
+                tickerOil: "ÖL",
+                tickerSP500: "S&P500",
+                tickerNasdaq: "NASDAQ",
+                tickerDax: "DAX"
             },
             SK: {
                 btnBuy: "▶ KÚP",
@@ -5739,7 +5776,13 @@
                 tradesStatus: "OBCHODY",
                 profitStatus: "ZISK",
                 calcLots: "VYPOČÍTAŤ LOTY",
-                calcSlTp: "VYPOČÍTAŤ SL/TP"
+                calcSlTp: "VYPOČÍTAŤ SL/TP",
+                tickerGold: "🏅 ZLATO",
+                tickerSilver: "🥈 STRIEBRO",
+                tickerOil: "ROPA",
+                tickerSP500: "S&P500",
+                tickerNasdaq: "NASDAQ",
+                tickerDax: "DAX"
             }
         };
         
