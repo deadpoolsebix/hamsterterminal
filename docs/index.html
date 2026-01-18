@@ -971,11 +971,11 @@
         <div style="display: flex; align-items: center; justify-content: center; gap: 15px; padding: 10px 0; border-top: 1px solid #222;">
             <!-- Timezone Selector -->
             <div style="display: flex; gap: 6px; padding: 6px; background: rgba(0,0,0,0.5); border-radius: 6px; border: 1px solid #00ff41;">
-                <button onclick="changeTimezone('Asia/Tokyo', '� TOKYO')" class="tz-btn" style="background: rgba(255,100,150,0.2); border: 1px solid #ff6496; color: #ff6496; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75em; transition: all 0.2s;" title="Tokyo Stock Exchange">🐉 TYO</button>
-                <button onclick="changeTimezone('Europe/London', '🇬🇧 LONDON')" class="tz-btn" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75em; transition: all 0.2s;" title="London Stock Exchange">🇬🇧 LON</button>
-                <button onclick="changeTimezone('America/New_York', '🗽 NY')" class="tz-btn" style="background: rgba(0,255,65,0.2); border: 1px solid #00ff41; color: #00ff41; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75em; transition: all 0.2s;" title="New York Stock Exchange">🗽 NY</button>
-                <button onclick="changeTimezone('Europe/Zurich', '🇨🇭 ZURICH')" class="tz-btn" style="background: rgba(255,170,0,0.2); border: 1px solid #ffaa00; color: #ffaa00; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75em; transition: all 0.2s;" title="Swiss Exchange">🇨🇭 ZRH</button>
-                <button onclick="changeTimezone('Australia/Sydney', '🦘 SYDNEY')" class="tz-btn" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; color: #8a2be2; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.75em; transition: all 0.2s;" title="Australian Securities Exchange">🦘 SYD</button>
+                <button onclick="changeTimezone('Asia/Tokyo', '🗼 TOKYO')" class="tz-btn" style="background: rgba(255,100,150,0.2); border: 1px solid #ff6496; color: #ff6496; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Tokyo Stock Exchange"><span style="display: inline-block;">🐉</span> TYO</button>
+                <button onclick="changeTimezone('Europe/London', '🇬🇧 LONDON')" class="tz-btn" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="London Stock Exchange"><span style="display: inline-block;">🇬🇧</span> LON</button>
+                <button onclick="changeTimezone('America/New_York', '🗽 NY')" class="tz-btn" style="background: rgba(0,255,65,0.2); border: 1px solid #00ff41; color: #00ff41; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="New York Stock Exchange"><span style="display: inline-block;">🗽</span> NY</button>
+                <button onclick="changeTimezone('Europe/Zurich', '🇨🇭 ZURICH')" class="tz-btn" style="background: rgba(255,170,0,0.2); border: 1px solid #ffaa00; color: #ffaa00; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Swiss Exchange"><span style="display: inline-block;">🇨🇭</span> ZRH</button>
+                <button onclick="changeTimezone('Australia/Sydney', '🦘 SYDNEY')" class="tz-btn" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; color: #8a2be2; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Australian Securities Exchange"><span style="display: inline-block;">🦘</span> SYD</button>
             </div>
             <div class="terminal-time" id="terminal-clock" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <span id="clock-time" data-static-clock="true" style="font-size: 1.3em; font-weight: 900; color: #ffffff; font-family: 'Courier New', monospace; letter-spacing: 2px; animation: none !important;">--:--:--</span>
@@ -1001,6 +1001,18 @@
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes spinHamster { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @keyframes hamsterPush { 0%, 100% { transform: scaleX(1) scaleY(1); filter: drop-shadow(0 2px 6px rgba(255,255,0,0.2)); } 50% { transform: scaleX(1.06) scaleY(1.03); filter: drop-shadow(0 4px 12px rgba(255,255,0,0.5)); } }
+        @keyframes arrowPulse { 
+            0%, 100% { transform: translateY(0) scale(1); opacity: 1; } 
+            50% { transform: translateY(4px) scale(1.1); opacity: 0.7; } 
+        }
+        @keyframes buttonPress { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(0.92); } 
+        }
+        @keyframes iconGrow { 
+            0%, 100% { transform: scale(1); } 
+            50% { transform: scale(1.15); } 
+        }
         
         /* FOOTER LOGO STYLE */
         .footer-logo {
@@ -1288,10 +1300,10 @@
     <div style="padding: 11.7px 35.1px 5.85px 35.1px; background: #0a0a0a;">
         <div style="background: linear-gradient(135deg, #2a000a 0%, #0a0a0a 100%); border: 2.34px solid #ff0033; border-radius: 9.36px; padding: 14.04px 18.72px; box-shadow: 0 0 18.72px rgba(255,0,51,0.25);">
             <div style="display: flex; align-items: center; gap: 11.7px; color: #ff0033; font-weight: 900; letter-spacing: 1.17px;">
-                <span style="font-size: 1.52em; opacity: 0.8;">⚠️</span>
-                <span style="font-size: 1.17em;">OSTRZEŻENIE</span>
-                <span style="animation: spin 2s linear infinite; font-size: 1.64em; color: #ffd700; text-shadow: 0 0 11.7px #ffaa00;">₿</span>
-                <span style="font-size: 1.52em; opacity: 0.8;">⚠️</span>
+                <span style="font-size: 1.44em; opacity: 0.8;">⚠️</span>
+                <span style="font-size: 1.11em;">OSTRZEŻENIE</span>
+                <span style="animation: spin 2s linear infinite; font-size: 1.56em; color: #ffd700; text-shadow: 0 0 11.7px #ffaa00;">₿</span>
+                <span style="font-size: 1.44em; opacity: 0.8;">⚠️</span>
             </div>
             <div style="margin-top: 9.36px; color: #eee; font-size: 1.05em; line-height: 1.6; font-family: 'Roboto Mono', monospace;">
                 Trading kryptowalutami wiąże się z wysokim ryzykiem. Nigdy nie inwestuj więcej niż możesz stracić. Przeszłe wyniki nie gwarantują przyszłych zysków. <span style="color: #ffaa00; font-weight: 900;">No risk no story</span> <span style="color: #00ff41; font-weight: 900;">No guts no glory</span>
@@ -1620,98 +1632,6 @@
         </div>
     </div>
     
-    <!-- TIMEFRAME ZONE STRIP (horizontal) -->
-    <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
-        <div style="background: linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%); border: 1px solid #00d4ff; border-radius: 8px; padding: 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                <div class="metric-label" style="color: #00d4ff; font-size: 0.95em;">Timeframe Zone (multi-TF)</div>
-                <div style="font-size: 0.65em; color: #888;">1m • 5m • 15m • 30m • 1h • 4h • 1d • 1M • 3M • 1Y</div>
-            </div>
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px;">
-                <div id="1m" style="background: rgba(0,255,65,0.06); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1m</div>
-                    <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">58</span></div>
-                    <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
-                    <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">72/68</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
-                </div>
-                <div id="5m" style="background: rgba(0,255,65,0.06); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">5m</div>
-                    <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">54</span></div>
-                    <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
-                    <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">65/60</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
-                </div>
-                <div id="15m" style="background: rgba(0,255,65,0.07); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">15m</div>
-                    <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">56</span></div>
-                    <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
-                    <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">58/52</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
-                </div>
-                <div id="30m" style="background: rgba(255,170,0,0.07); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">30m</div>
-                    <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">→ NEUTRAL</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">51</span></div>
-                    <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
-                    <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">48/50</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
-                </div>
-                <div id="1h" style="background: rgba(255,170,0,0.08); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1h</div>
-                    <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">↔ SIDEWAYS</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">47</span></div>
-                    <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
-                    <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">44/45</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
-                </div>
-                <div id="4h" style="background: rgba(0,212,255,0.08); border-left: 2px solid #00d4ff; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">4h</div>
-                    <div style="color: #00d4ff; font-weight: 600; margin-bottom: 2px;">→ NEUTRAL</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">48</span></div>
-                    <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↓-</span></div>
-                    <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">40/42</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
-                </div>
-                <div id="1d" style="background: rgba(255,0,51,0.08); border-left: 2px solid #ff0033; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1d</div>
-                    <div style="color: #ff0033; font-weight: 600; margin-bottom: 2px;">✗ BEAR</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">42</span></div>
-                    <div style="color: #ff0033; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↓-</span></div>
-                    <div style="color: #ff0033; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">35/38</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
-                </div>
-                <div id="1M" style="background: rgba(0,255,65,0.08); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1M</div>
-                    <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">62</span></div>
-                    <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
-                    <div style="color: #00ff41; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">78/75</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
-                </div>
-                <div id="3M" style="background: rgba(255,0,255,0.08); border-left: 2px solid #ff00ff; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #ff00ff; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">3M</div>
-                    <div style="color: #ff00ff; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">68</span></div>
-                    <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑++</span></div>
-                    <div style="color: #00ff41; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">85/82</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
-                </div>
-                <div id="1Y" style="background: rgba(255,170,0,0.10); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                    <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1Y</div>
-                    <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">◈ KONSOL.</div>
-                    <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">55</span></div>
-                    <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
-                    <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">52/55</span></div>
-                    <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- SESSION CLOCKS & EUROPE FOCUS -->
     <div class="metrics-panel" style="grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 8px; padding: 15px 30px;">
         <!-- KILL ZONE INFO CARDS -->
@@ -1915,7 +1835,7 @@
         <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border: 1px solid #00d4ff; border-radius: 8px; padding: 20px; grid-column: 1; grid-row: 2;">
             <div onclick="toggleMacroCalendar()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                 <div style="color: #00d4ff; font-size: 1.1em; font-weight: 700; text-transform: uppercase;">📅 ECONOMIC CALENDAR & KEY EVENTS</div>
-                <div id="macro-toggle-icon" style="color: #00d4ff; font-size: 1.3em; transition: transform 0.3s;">▼</div>
+                <div id="macro-toggle-icon" style="color: #00d4ff; font-size: 2em; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;">⯆</div>
             </div>
             
             <div style="font-size: 0.8em; line-height: 2; color: #ccc; font-family: 'Roboto Mono', monospace;">
@@ -2001,6 +1921,7 @@
                     const isHidden = extended.style.display === 'none' || extended.style.display === '';
                     extended.style.display = isHidden ? 'block' : 'none';
                     icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+                    icon.style.animation = isHidden ? 'none' : 'arrowPulse 2s ease-in-out infinite';
                 }
             </script>
 
@@ -2008,7 +1929,7 @@
         <div class="news-panel" style="grid-column: 2; grid-row: 2; border: 1px solid white;">
             <div class="news-header" onclick="toggleNews()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
                 <h3>📰 WIADOMOŚCI & ALERTY (PL)</h3>
-                <div id="news-toggle-icon" style="font-size: 1.3em; color: #ffaa00; transition: transform 0.3s;">▼</div>
+                <div id="news-toggle-icon" style="font-size: 2em; color: white; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px white, 0 0 20px white;">⯆</div>
             </div>
             <div class="news-feed">
         
@@ -2072,6 +1993,7 @@
                 const isHidden = extended.style.display === 'none' || extended.style.display === '';
                 extended.style.display = isHidden ? 'block' : 'none';
                 icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+                icon.style.animation = isHidden ? 'none' : 'arrowPulse 2s ease-in-out infinite';
             }
         </script>
 
@@ -2761,10 +2683,28 @@
         // ✓ Clock updates safely - only specific elements are updated
         
         
+        // Timezone cycle function - automatically switch timezones
+        window.timezones = [
+            { tz: 'Asia/Tokyo', name: '🗼 TOKYO', btn: 0 },
+            { tz: 'Europe/London', name: '🇬🇧 LONDON', btn: 1 },
+            { tz: 'America/New_York', name: '🗽 NY', btn: 2 },
+            { tz: 'Europe/Zurich', name: '🇨🇭 ZURICH', btn: 3 },
+            { tz: 'Australia/Sydney', name: '🦘 SYDNEY', btn: 4 }
+        ];
+        window.currentTimezoneIndex = 0;
+        window.autoTimezoneInterval = null;
+        
         // Timezone change function
         window.manualTimezoneSelected = false;
         window.changeTimezone = function(timezone, zoneName) {
             window.manualTimezoneSelected = true;
+            
+            // Stop auto-switching when user manually selects
+            if (window.autoTimezoneInterval) {
+                clearInterval(window.autoTimezoneInterval);
+                window.autoTimezoneInterval = null;
+            }
+            
             const now = new Date();
             const formatter = new Intl.DateTimeFormat('en-GB', {
                 hour: '2-digit',
@@ -2811,8 +2751,165 @@
                 }
             }, 5000);
         };
-    })();
-</script>
+        
+        // Auto-cycle through timezones every 10 seconds
+        window.startAutoTimezoneSwitch = function() {
+            if (window.manualTimezoneSelected) return; // Don't auto-switch if user manually selected
+            
+            window.autoTimezoneInterval = setInterval(() => {
+                const tzInfo = window.timezones[window.currentTimezoneIndex];
+                const now = new Date();
+                const formatter = new Intl.DateTimeFormat('en-GB', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    timeZone: tzInfo.tz,
+                    hour12: false
+                });
+                
+                const clockTime = document.getElementById('clock-time');
+                const clockZone = document.getElementById('clock-zone');
+                if (clockTime && clockZone) {
+                    clockTime.textContent = formatter.format(now);
+                    clockZone.textContent = tzInfo.name;
+                }
+                
+                // Update button highlights with press and icon scale effects
+                document.querySelectorAll('.tz-btn').forEach((btn, idx) => {
+                    const iconSpan = btn.querySelector('span');
+                    if (idx === window.currentTimezoneIndex) {
+                        btn.style.opacity = '1';
+                        btn.style.boxShadow = '0 0 15px currentColor';
+                        btn.style.borderWidth = '2px';
+                        btn.style.animation = 'buttonPress 0.4s ease-out';
+                        if (iconSpan) {
+                            iconSpan.style.animation = 'iconGrow 0.4s ease-out';
+                        }
+                    } else {
+                        btn.style.opacity = '0.6';
+                        btn.style.boxShadow = 'none';
+                        btn.style.borderWidth = '1px';
+                        btn.style.animation = 'none';
+                        if (iconSpan) {
+                            iconSpan.style.animation = 'none';
+                        }
+                    }
+                });
+                
+                // Move to next timezone
+                window.currentTimezoneIndex = (window.currentTimezoneIndex + 1) % window.timezones.length;
+            }, 3500); // Switch every 3.5 seconds
+        };
+        
+        // Start auto-cycle on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', window.startAutoTimezoneSwitch);
+        } else {
+            window.startAutoTimezoneSwitch();
+        }
+    </div>
+    
+        <!-- TIMEFRAME ZONE • MULTI-TF ANALYSIS (collapsible) -->
+        <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+            <div style="background: linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%); border: 2px solid #00d4ff; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(0,212,255,0.15);">
+                <div onclick="toggleTimeframeZone()" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                        <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800;">📊 TIMEFRAME ZONE • MULTI-TF ANALYSIS</div>
+                        <div style="font-size: 0.85em; color: #33bbdd; font-family: 'Roboto Mono', monospace;">
+                            Sygnały z 10 interwałów czasowych: 1m do 1Y
+                        </div>
+                    </div>
+                    <div id="timeframe-toggle-icon" style="font-size: 2em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; animation: arrowPulse 2s ease-in-out infinite;">⯆</div>
+                </div>
+                <div id="timeframe-zone-content" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,212,255,0.3);">
+                    <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
+                        <div style="font-size: 0.65em; color: #888;">1m • 5m • 15m • 30m • 1h • 4h • 1d • 1M • 3M • 1Y</div>
+                    </div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px;">
+                        <div id="1m" style="background: rgba(0,255,65,0.06); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1m</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">58</span></div>
+                            <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
+                            <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">72/68</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
+                        </div>
+                        <div id="5m" style="background: rgba(0,255,65,0.06); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">5m</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">54</span></div>
+                            <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
+                            <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">65/60</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
+                        </div>
+                        <div id="15m" style="background: rgba(0,255,65,0.07); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">15m</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">56</span></div>
+                            <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
+                            <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">58/52</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
+                        </div>
+                        <div id="30m" style="background: rgba(255,170,0,0.07); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">30m</div>
+                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">→ NEUTRAL</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">51</span></div>
+                            <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
+                            <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">48/50</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
+                        </div>
+                        <div id="1h" style="background: rgba(255,170,0,0.08); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1h</div>
+                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">↔ SIDEWAYS</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">47</span></div>
+                            <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
+                            <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">44/45</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
+                        </div>
+                        <div id="4h" style="background: rgba(0,212,255,0.08); border-left: 2px solid #00d4ff; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">4h</div>
+                            <div style="color: #00d4ff; font-weight: 600; margin-bottom: 2px;">→ NEUTRAL</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">48</span></div>
+                            <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↓-</span></div>
+                            <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">40/42</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
+                        </div>
+                        <div id="1d" style="background: rgba(255,0,51,0.08); border-left: 2px solid #ff0033; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1d</div>
+                            <div style="color: #ff0033; font-weight: 600; margin-bottom: 2px;">✗ BEAR</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">42</span></div>
+                            <div style="color: #ff0033; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↓-</span></div>
+                            <div style="color: #ff0033; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">35/38</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
+                        </div>
+                        <div id="1M" style="background: rgba(0,255,65,0.08); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1M</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">62</span></div>
+                            <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
+                            <div style="color: #00ff41; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">78/75</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
+                        </div>
+                        <div id="3M" style="background: rgba(255,0,255,0.08); border-left: 2px solid #ff00ff; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #ff00ff; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">3M</div>
+                            <div style="color: #ff00ff; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">68</span></div>
+                            <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑++</span></div>
+                            <div style="color: #00ff41; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">85/82</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
+                        </div>
+                        <div id="1Y" style="background: rgba(255,170,0,0.10); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
+                            <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1Y</div>
+                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">◈ KONSOL.</div>
+                            <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">55</span></div>
+                            <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
+                            <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">52/55</span></div>
+                            <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- ENTRY ZONE CALCULATOR • DOPRECYZUJ WEJŚCIE (STATIC SNAPSHOT) -->
         <div style="background: linear-gradient(135deg, #0a1a0a 0%, #0a0a0f 100%); padding: 16px; border-radius: 8px; border: 2px solid #00ff41; margin-bottom: 15px; box-shadow: 0 0 18px rgba(0,255,65,0.2);">
@@ -2918,9 +3015,14 @@
 
         <!-- AQUA TRADER RSI S/R LEVELS - COLLAPSIBLE SECTION -->
         <div style="background: linear-gradient(135deg, #001a1a 0%, #0a0a0a 100%); border: 2px solid #00d4ff; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
-            <div onclick="toggleAquaTrader()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 5px 0;">
-                    <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800; text-transform: uppercase;">🌊 AQUA TRADER • RSI S/R LEVELS</div>
-                    <div id="aqua-toggle-icon" style="font-size: 1.5em; color: #00d4ff; transition: transform 0.3s;">▼</div>
+            <div onclick="toggleAquaTrader()" style="cursor: pointer; padding: 5px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                            <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800; text-transform: uppercase;">🌊 AQUA TRADER • RSI S/R LEVELS</div>
+                            <div style="font-size: 0.85em; color: #33bbdd; font-weight: 400; font-family: 'Roboto Mono', monospace;">Kluczowe poziomy oporu i wsparcia oparte na historycznym RSI</div>
+                        </div>
+                        <div id="aqua-toggle-icon" style="font-size: 2em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;">⯆</div>
+                    </div>
                 </div>
             
             <div id="aqua-trader-content" style="display: none; margin-top: 15px;">
@@ -3125,25 +3227,32 @@
                 if (content.style.display === 'none') {
                     content.style.display = 'block';
                     icon.style.transform = 'rotate(180deg)';
+                    icon.style.animation = 'none';
                 } else {
                     content.style.display = 'none';
                     icon.style.transform = 'rotate(0deg)';
+                    icon.style.animation = 'arrowPulse 2s ease-in-out infinite';
                 }
             }
         </script>
 
         <!-- THE TAPE • LIVE MARKET INTEL - COLLAPSIBLE SECTION -->
         <div style="background: linear-gradient(135deg, #1a001a 0%, #0a0a0a 100%); border: 2px solid #ff00ff; border-radius: 8px; padding: 15px; margin-bottom: 15px;">
-            <div onclick="toggleTheTape()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; padding: 5px 0;">
-                    <div style="font-size: 1.1em; color: #ff00ff; font-weight: 800; text-transform: uppercase;">📡 THE TAPE • LIVE MARKET INTEL</div>
-                    <div id="tape-toggle-icon" style="font-size: 1.5em; color: #ff00ff; transition: transform 0.3s;">▼</div>
+            <div onclick="toggleTheTape()" style="cursor: pointer; padding: 5px 0;">
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                            <div style="font-size: 1.1em; color: #ff00ff; font-weight: 800; text-transform: uppercase;">📡 THE TAPE • LIVE MARKET INTEL</div>
+                            <div style="font-size: 0.85em; color: #bb77bb; font-weight: 400; font-family: 'Roboto Mono', monospace;">Order Book, Social Sentiment, Liquidations, Market Structure & Network Data</div>
+                        </div>
+                        <div id="tape-toggle-icon" style="font-size: 2em; color: #ff00ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;">⯆</div>
+                    </div>
                 </div>
             
             <div id="the-tape-content" style="display: none; margin-top: 15px;">
                 <!-- Description -->
-                <div style="background: rgba(255,0,255,0.1); padding: 10px; border-radius: 5px; border-left: 3px solid #ff00ff; margin-bottom: 15px;">
-                    <div style="font-size: 0.75em; color: #ff00ff; font-weight: 700; margin-bottom: 6px;">📡 O THE TAPE:</div>
-                    <div style="font-size: 0.68em; line-height: 1.6; color: #ddd;">
+                <div style="background: rgba(255,0,255,0.1); padding: 12px; border-radius: 6px; border-left: 3px solid #ff00ff; margin-bottom: 16px;">
+                    <div style="font-size: 0.95em; color: #ff00ff; font-weight: 700; margin-bottom: 8px;">📡 O THE TAPE:</div>
+                    <div style="font-size: 0.88em; line-height: 1.75; color: #ddd;">
                         <strong style="color: #ff00ff;">The Tape</strong> to profesjonalne narzędzie analizy rynkowej dostarczające dane w czasie rzeczywistym z giełd, sieci blockchain oraz mediów społecznościowych. Śledzi <strong>Order Book Imbalance</strong> (nierównowaga zleceń kupna/sprzedaży), <strong>Social Sentiment</strong> (nastroje społeczne), <strong>Liquidation Clusters</strong> (strefy likwidacji), <strong>Market Structure</strong> (strukturę rynku SMC), <strong>Network Health</strong> (zdrowie sieci BTC) oraz <strong>Derivatives Premium</strong> (premia kontraktów terminowych). Wszystkie te dane pozwalają identyfikować ruchy smart money zanim staną się widoczne na wykresie cenowym.
                     </div>
                 </div>
@@ -3151,9 +3260,9 @@
             <!-- TOP TIER: ORDER BOOK + SOCIAL + LIQUIDATIONS -->
             <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px;">
                 <!-- ORDER BOOK IMBALANCE -->
-                <div style="background: linear-gradient(135deg, #0a1a0f 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #00ff41;">
-                    <div style="font-size: 0.7em; color: #00ff41; margin-bottom: 4px; font-weight: 700;">📖 ORDER BOOK IMBALANCE:</div>
-                    <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
+                <div style="background: linear-gradient(135deg, #0a1a0f 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #00ff41;">
+                    <div style="font-size: 0.9em; color: #00ff41; margin-bottom: 6px; font-weight: 700;">📖 ORDER BOOK IMBALANCE:</div>
+                    <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
                             <span style="color: #888;">BID Depth:</span>
                             <span style="color: #00ff41;">$245M (2%)</span>
@@ -3170,9 +3279,9 @@
                 </div>
 
                 <!-- SOCIAL SENTIMENT -->
-                <div style="background: linear-gradient(135deg, #1a0a1a 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #ff00ff;">
-                    <div style="font-size: 0.7em; color: #ff00ff; margin-bottom: 4px; font-weight: 700;">💬 SOCIAL SENTIMENT:</div>
-                    <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
+                <div style="background: linear-gradient(135deg, #1a0a1a 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #ff00ff;">
+                    <div style="font-size: 0.9em; color: #ff00ff; margin-bottom: 6px; font-weight: 700;">💬 SOCIAL SENTIMENT:</div>
+                    <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
                             <span style="color: #888;">Twitter Vol:</span>
                             <span style="color: #ffaa00;">+145K ✍️</span>
@@ -3189,9 +3298,9 @@
                 </div>
 
                 <!-- LIQUIDATION CLUSTERS -->
-                <div style="background: linear-gradient(135deg, #1a0a00 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #ff6600;">
-                    <div style="font-size: 0.7em; color: #ff6600; margin-bottom: 4px; font-weight: 700;">💥 LIQUIDATION CLUSTERS:</div>
-                    <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
+                <div style="background: linear-gradient(135deg, #1a0a00 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #ff6600;">
+                    <div style="font-size: 0.9em; color: #ff6600; margin-bottom: 6px; font-weight: 700;">💥 LIQUIDATION CLUSTERS:</div>
+                    <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
                             <span style="color: #ff0033;">⬆️ >$97.4k:</span>
                             <span style="color: #ff0033;">$145M Shorts</span>
@@ -3211,9 +3320,9 @@
             <!-- MID TIER: STRUCTURE + NETWORK + DERIVATIVES -->
             <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 5px;">
                 <!-- MARKET STRUCTURE -->
-                <div style="background: linear-gradient(135deg, #0a1a1a 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #00d4ff;">
-                    <div style="font-size: 0.7em; color: #00d4ff; margin-bottom: 4px; font-weight: 700;">🏗️ MARKET STRUCTURE:</div>
-                    <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
+                <div style="background: linear-gradient(135deg, #0a1a1a 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #00d4ff;">
+                    <div style="font-size: 0.9em; color: #00d4ff; margin-bottom: 6px; font-weight: 700;">🏗️ MARKET STRUCTURE:</div>
+                    <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
                             <span style="color: #888;">Last BOS:</span>
                             <span style="color: #00ff41;">$96,800 🔼</span>
@@ -3230,9 +3339,9 @@
                 </div>
 
                 <!-- NETWORK HEALTH -->
-                <div style="background: linear-gradient(135deg, #0a0a1a 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #0096ff;">
-                    <div style="font-size: 0.7em; color: #0096ff; margin-bottom: 4px; font-weight: 700;">⛏️ NETWORK HEALTH:</div>
-                    <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
+                <div style="background: linear-gradient(135deg, #0a0a1a 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #0096ff;">
+                    <div style="font-size: 0.9em; color: #0096ff; margin-bottom: 6px; font-weight: 700;">⛏️ NETWORK HEALTH:</div>
+                    <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
                             <span style="color: #888;">Hashrate:</span>
                             <span style="color: #0096ff;">425 EH/s 🔼</span>
@@ -3249,9 +3358,9 @@
                 </div>
 
                 <!-- DERIVATIVES PREMIUM -->
-                <div style="background: linear-gradient(135deg, #1a1a0a 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #ffff00;">
-                    <div style="font-size: 0.7em; color: #ffff00; margin-bottom: 4px; font-weight: 700;">📊 DERIVATIVES PREMIUM:</div>
-                    <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
+                <div style="background: linear-gradient(135deg, #1a1a0a 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #ffff00;">
+                    <div style="font-size: 0.9em; color: #ffff00; margin-bottom: 6px; font-weight: 700;">📊 DERIVATIVES PREMIUM:</div>
+                    <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
                             <span style="color: #888;">Futures:</span>
                             <span style="color: #ffff00;">+$45 🔼</span>
@@ -3271,15 +3380,15 @@
             <!-- BOTTOM TIER: KEY LEVELS + FLOWS + VOLATILITY -->
             <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 5px;">
                 <!-- Market Regime -->
-                <div style="background: #0f0f0f; padding: 8px; border-radius: 5px; border-left: 3px solid #ff00ff;">
-                    <div style="font-size: 0.7em; color: #888; margin-bottom: 3px;">MARKET REGIME:</div>
-                    <div style="font-size: 0.85em; color: #ff00ff; font-weight: 700;">ACCUMULATION / SPRING</div>
+                <div style="background: #0f0f0f; padding: 10px; border-radius: 6px; border-left: 3px solid #ff00ff;">
+                    <div style="font-size: 0.9em; color: #888; margin-bottom: 4px;">MARKET REGIME:</div>
+                    <div style="font-size: 1.05em; color: #ff00ff; font-weight: 700;">ACCUMULATION / SPRING</div>
                 </div>
                 
                 <!-- Key Levels -->
-                <div style="background: #0f0f0f; padding: 8px; border-radius: 5px; font-family: 'Roboto Mono', monospace;">
-                    <div style="font-size: 0.7em; color: #00ffff; margin-bottom: 4px; font-weight: 700;">📊 KEY LEVELS:</div>
-                    <div style="font-size: 0.7em; line-height: 1.5;">
+                <div style="background: #0f0f0f; padding: 10px; border-radius: 6px; font-family: 'Roboto Mono', monospace;">
+                    <div style="font-size: 0.9em; color: #00ffff; margin-bottom: 6px; font-weight: 700;">📊 KEY LEVELS:</div>
+                    <div style="font-size: 0.9em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between;">
                             <span style="color: #ffaa00;">EQH:</span>
                             <span style="color: #fff; font-weight: bold;">$97,583</span>
@@ -3296,9 +3405,9 @@
                 </div>
                 
                 <!-- Exchange Flow -->
-                <div style="background: linear-gradient(135deg, #001a0a 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #00ff41;">
-                    <div style="font-size: 0.7em; color: #00ff41; margin-bottom: 4px; font-weight: 700;">🔄 EXCHANGE FLOW:</div>
-                    <div style="font-size: 0.7em; line-height: 1.5;">
+                <div style="background: linear-gradient(135deg, #001a0a 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #00ff41;">
+                    <div style="font-size: 0.9em; color: #00ff41; margin-bottom: 6px; font-weight: 700;">🔄 EXCHANGE FLOW:</div>
+                    <div style="font-size: 0.9em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between;">
                             <span style="color: #888;">IN:</span>
                             <span style="color: #ff0033; font-weight: bold;">-4,250 BTC</span>
@@ -3315,9 +3424,9 @@
                 </div>
                 
                 <!-- Volatility & ATR -->
-                <div style="background: linear-gradient(135deg, #1a0a00 0%, #0a0a0a 100%); padding: 8px; border-radius: 5px; border-left: 3px solid #ffaa00;">
-                    <div style="font-size: 0.7em; color: #ffaa00; margin-bottom: 4px; font-weight: 700;">📈 VOLATILITY:</div>
-                    <div style="font-size: 0.7em; line-height: 1.5;">
+                <div style="background: linear-gradient(135deg, #1a0a00 0%, #0a0a0a 100%); padding: 10px; border-radius: 6px; border-left: 3px solid #ffaa00;">
+                    <div style="font-size: 0.9em; color: #ffaa00; margin-bottom: 6px; font-weight: 700;">📈 VOLATILITY:</div>
+                    <div style="font-size: 0.9em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between;">
                             <span style="color: #888;">ATR(14):</span>
                             <span style="color: #ffaa00; font-weight: bold;">$1,245</span>
@@ -3335,25 +3444,25 @@
             </div>
 
             <!-- Killzones Compact -->
-            <div style="padding: 8px 10px; background: linear-gradient(135deg, #0a0a0a 0%, #1a001a 100%); border-left: 3px solid #ff00ff; margin-top: 5px;">
-                <div style="font-size: 0.75em; color: #ff00ff; margin-bottom: 8px; font-weight: 700;">🎯 KILL ZONES:</div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px; font-size: 0.65em;">
+            <div style="padding: 10px 12px; background: linear-gradient(135deg, #0a0a0a 0%, #1a001a 100%); border-left: 3px solid #ff00ff; margin-top: 8px;">
+                <div style="font-size: 0.95em; color: #ff00ff; margin-bottom: 10px; font-weight: 700;">🎯 KILL ZONES:</div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 10px; font-size: 0.85em;">
                     <div style="background: rgba(255,170,0,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ffaa00;">
                         <div style="color: #ffaa00; font-weight: 700; margin-bottom: 2px;">🇬🇧 LONDON</div>
                         <div style="color: #ccc;">07:00-09:00 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">Volatility: HIGH | Swing trades</div>
+                        <div style="color: #888; font-size: 0.75em; margin-top: 3px;">Volatility: HIGH | Swing trades</div>
                     </div>
                     
                     <div style="background: rgba(255,0,51,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ff0033;">
                         <div style="color: #ff0033; font-weight: 700; margin-bottom: 2px;">🇺🇸 NY OPEN</div>
                         <div style="color: #ccc;">12:30-14:30 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">Volatility: EXTREME | Scalps</div>
+                        <div style="color: #888; font-size: 0.75em; margin-top: 3px;">Volatility: EXTREME | Scalps</div>
                     </div>
                     
                     <div style="background: rgba(255,100,0,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ff6600;">
                         <div style="color: #ff6600; font-weight: 700; margin-bottom: 2px;">⚠️ LUNCH SLUMP</div>
                         <div style="color: #ccc;">16:30-17:30 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">Volatility: LOW | AVOID</div>
+                        <div style="color: #888; font-size: 0.75em; margin-top: 3px;">Volatility: LOW | AVOID</div>
                     </div>
                     
                     <div style="background: rgba(0,212,255,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #00d4ff;">
@@ -3391,12 +3500,33 @@
                 const content = document.getElementById('the-tape-content');
                 const icon = document.getElementById('tape-toggle-icon');
                 
-                if (content.style.display === 'none') {
+                if (!content || !icon) return;
+                
+                if (content.style.display === 'none' || content.style.display === '') {
                     content.style.display = 'block';
                     icon.style.transform = 'rotate(180deg)';
+                    icon.style.animation = 'none';
                 } else {
                     content.style.display = 'none';
                     icon.style.transform = 'rotate(0deg)';
+                    icon.style.animation = 'arrowPulse 2s ease-in-out infinite';
+                }
+            }
+
+            function toggleTimeframeZone() {
+                const content = document.getElementById('timeframe-zone-content');
+                const icon = document.getElementById('timeframe-toggle-icon');
+                
+                if (!content || !icon) return;
+                
+                if (content.style.display === 'none' || content.style.display === '') {
+                    content.style.display = 'block';
+                    icon.style.transform = 'rotate(180deg)';
+                    icon.style.animation = 'none';
+                } else {
+                    content.style.display = 'none';
+                    icon.style.transform = 'rotate(0deg)';
+                    icon.style.animation = 'arrowPulse 2s ease-in-out infinite';
                 }
             }
         </script>
@@ -5795,17 +5925,6 @@
                 </div>
             </div>
             
-            <!-- EDUCATION PANEL: Quick Lessons -->
-            <div style="background: #0a0a0a; border: 3px solid #00d4ff; padding: 18px; border-radius: 8px; font-family: 'Courier New', monospace;">
-                <div style="color: #00d4ff; font-weight: 800; margin-bottom: 12px; font-size: 1.1em;">📚 NAUKA • SZYBKIE LEKCJE</div>
-                <div style="font-size: 0.85em; line-height: 1.8; color: #e0e0e0;">
-                    <div style="margin-bottom: 8px;">1) Ryzyko ≤1% na trade i twardy SL. Matematyka wygrywa z ego.</div>
-                    <div style="margin-bottom: 8px;">2) Dziennik transakcji: screen wejścia, powód, wynik. Tylko tak zobaczysz patterny.</div>
-                    <div style="margin-bottom: 8px;">3) Jedna przewaga naraz: nie miksuj 10 strategii. Mierz, optymalizuj, dopiero wtedy skaluj.</div>
-                    <div>4) Złota godzina: handluj wtedy, gdy Twoje wyniki historycznie są najlepsze. Resztę czasu przeznacz na research.</div>
-                </div>
-            </div>
-
             <!-- EDUCATION PANEL: Best Traders -->
             <div style="background: #0a0a0a; border: 3px solid #ff00ff; padding: 18px; border-radius: 8px; font-family: 'Courier New', monospace;">
                 <div style="color: #ff00ff; font-weight: 800; margin-bottom: 12px; font-size: 1.1em;">🏆 NAJLEPSI TRADERZY • FAKTY</div>
