@@ -4968,6 +4968,34 @@
             lastUpdate: Date.now()
         };
         
+        // Fetch live commodities from local Flask API (fallback to simulation on error)
+        async function fetchCommoditiesFromServer() {
+            try {
+                const resp = await fetch('/api/commodities', { cache: 'no-store' });
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const data = await resp.json();
+                if (!data.ok) throw new Error(data.error || 'Commodity API error');
+                
+                // Preserve previous values for % change
+                commodityPrices.goldPrev = commodityPrices.gold ?? data.gold_previous ?? data.gold;
+                commodityPrices.silverPrev = commodityPrices.silver ?? data.silver_previous ?? data.silver;
+                
+                // Update with live values
+                commodityPrices.gold = Number(data.gold);
+                commodityPrices.silver = Number(data.silver);
+                commodityPrices.lastUpdate = Date.now();
+                
+                console.log('🥇 Commodity prices fetched from server:', data);
+                updateCommodityDisplay();
+                // Refresh ticker to ensure DOM elements exist and reflect new values
+                updatePixelTicker();
+                return true;
+            } catch (e) {
+                console.warn('⚠️ Commodity API fetch failed, using local simulation fallback', e);
+                return false;
+            }
+        }
+        
         // NO API CALLS - Use local simulation only to avoid 429 errors
         function updateCommodityDisplay() {
             try {
@@ -5069,24 +5097,23 @@
         }
 
         // 💰 FUNDING RATE CALCULATOR
-        async function updateCoinPrice() {
+        async function updateAllMarketData() {
             try {
                 const coin = document.getElementById('fundCoin').value;
                 const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${coin}`);
-                const data = await res.json();
-                if(data.price) {
-                    document.getElementById('fundEntry').value = parseFloat(data.price).toFixed(2);
+                // Try server-side live commodities first; fallback to light simulation
+                const gotLiveCommodities = await fetchCommoditiesFromServer();
+                if (!gotLiveCommodities) {
+                    const goldVolatility = (Math.random() - 0.5) * 0.001;
+                    const silverVolatility = (Math.random() - 0.5) * 0.002;
+                    commodityPrices.goldPrev = commodityPrices.gold;
+                    commodityPrices.silverPrev = commodityPrices.silver;
+                    commodityPrices.gold *= (1 + goldVolatility);
+                    commodityPrices.silver *= (1 + silverVolatility);
+                    console.log('🥇 Commodity prices (fallback simulation):', commodityPrices);
+                    updateCommodityDisplay();
+                    updatePixelTicker();
                 }
-            } catch(e) {
-                console.warn('Price fetch failed:', e);
-            }
-        }
-        
-        function calculateFundingRate() {
-            const coin = document.getElementById('fundCoin').value || 'BTCUSDT';
-            const posSize = parseFloat(document.getElementById('fundPos').value) || 10000;
-            const entryPrice = parseFloat(document.getElementById('fundEntry').value) || 95000;
-            const leverage = parseInt(document.getElementById('fundLev').value) || 10;
             const holdDays = parseInt(document.getElementById('fundDays').value) || 0;
             const holdHours = parseFloat(document.getElementById('fundHour').value) || 4;
             const feePercent = parseFloat(document.getElementById('fundFee').value) || 0.04;
