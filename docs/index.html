@@ -41,7 +41,7 @@
         .terminal-time {
             font-family: 'Roboto Mono', monospace;
             font-size: 0.9em;
-            color: #666;
+            color: #fff;
             animation: none !important;
             transition: none !important;
         }
@@ -116,7 +116,7 @@
             padding: 8px 16px;
             background: #1a1a1a;
             border: 2px solid #333;
-            color: #999;
+            color: #fff;
             border-radius: 6px;
             cursor: pointer;
             font-weight: 600;
@@ -184,7 +184,7 @@
         }
         
         .news-time {
-            color: #666;
+            color: #fff;
         }
         
         .news-source {
@@ -247,7 +247,7 @@
         }
         
         .ob-amount {
-            color: #888;
+            color: #fff;
             z-index: 1;
         }
         
@@ -293,7 +293,7 @@
         }
         
         .trade-time {
-            color: #666;
+            color: #fff;
             font-family: 'Roboto Mono', monospace;
         }
         
@@ -329,7 +329,7 @@
             text-align: center;
             padding: 20px;
             border-top: 1px solid #333;
-            color: #666;
+            color: #fff;
             font-size: 0.85em;
         }
         
@@ -564,7 +564,7 @@
         .regime-details {
             margin-top: 10px;
             font-size: 0.85em;
-            color: #888;
+            color: #fff;
         }
         
         .regime-item {
@@ -585,7 +585,7 @@
         
         .session-name {
             font-size: 0.7em;
-            color: #888;
+            color: #fff;
             text-transform: uppercase;
             margin-bottom: 5px;
         }
@@ -617,7 +617,7 @@
         }
         
         .ticker-name {
-            color: #888;
+            color: #fff;
             text-transform: uppercase;
             font-weight: 600;
             flex: 1;
@@ -777,7 +777,7 @@
         }
         
         .cvd-stat-label {
-            color: #888;
+            color: #fff;
             margin-bottom: 3px;
         }
         
@@ -867,7 +867,7 @@
         }
         
         .squeeze-detail-label {
-            color: #888;
+            color: #fff;
             margin-bottom: 2px;
         }
         
@@ -974,11 +974,11 @@
                 <div style="display: flex; gap: 6px; padding: 6px; background: rgba(0,0,0,0.5); border-radius: 6px; border: 1px solid #00ff41;">
                     <button onclick="changeTimezone('Asia/Tokyo', '🗼 TOKYO')" class="tz-btn" style="background: rgba(255,100,150,0.2); border: 1px solid #ff6496; color: #ff6496; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Tokyo Stock Exchange"><span style="display: inline-block; font-size: 1em;">🐉</span> TYO</button>
                     <button onclick="changeTimezone('Europe/London', '🇬🇧 LONDON')" class="tz-btn" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="London Stock Exchange"><span style="display: inline-block; font-size: 1em;">🇬🇧</span> LON</button>
-                    <button onclick="changeTimezone('America/New_York', '🗽 NY')" class="tz-btn" style="background: rgba(0,255,65,0.2); border: 1px solid #00ff41; color: #00ff41; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="New York Stock Exchange"><span style="display: inline-block; font-size: 1em;">🗽</span> NY</button>
+                    <button onclick="changeTimezone('America/New_York', '🗽 NY')" class="tz-btn" style="background: rgba(0,255,65,0.2); border: 1px solid #00ff41; color: #00ff41; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s; min-width: 75px; display: inline-flex; align-items: center; justify-content: center;" title="New York Stock Exchange"><span style="display: inline-block; font-size: 1em; width: 1.2em;">🗽</span> NY</button>
                     <button onclick="changeTimezone('Europe/Zurich', '🇨🇭 ZURICH')" class="tz-btn" style="background: rgba(255,170,0,0.2); border: 1px solid #ffaa00; color: #ffaa00; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Swiss Exchange"><span style="display: inline-block; font-size: 1em;">🇨🇭</span> ZRH</button>
                     <button onclick="changeTimezone('Australia/Sydney', '🦘 SYDNEY')" class="tz-btn" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; color: #8a2be2; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Australian Securities Exchange"><span style="display: inline-block; font-size: 1em;">🦘</span> SYD</button>
                 </div>
-                <div style="font-size: 0.7em; color: #888; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Timezone</div>
+                <div style="font-size: 0.7em; color: #fff; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; font-family: 'Roboto Mono', monospace;">Timezone</div>
             </div>
             <div class="terminal-time" id="terminal-clock" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <span id="clock-time" data-static-clock="true" style="font-size: 1.3em; font-weight: 900; color: #ffffff; font-family: 'Courier New', monospace; letter-spacing: 2px; animation: none !important;">--:--:--</span>
@@ -998,7 +998,7 @@
                     <button onclick="changeLanguage('DE')" style="background: transparent; border: 2px solid #ffaa00; color: #ffaa00; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;" title="Deutsch">🇩🇪 DE</button>
                     <button onclick="changeLanguage('SK')" style="background: transparent; border: 2px solid #00ffcc; color: #00ffcc; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;" title="Slovenčina">🇸🇰 SK</button>
                 </div>
-                <div style="font-size: 0.7em; color: #888; font-weight: 600; letter-spacing: 1px; text-transform: uppercase;">Language</div>
+                <div style="font-size: 0.7em; color: #fff; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; font-family: 'Roboto Mono', monospace;">Language</div>
             </div>
         </div>
     </div>
@@ -1146,40 +1146,40 @@
             <!-- Right: Data Grid (larger, compact) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px;">
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">24h High</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">24h High</div>
                     <div style="color: #00ff41; font-size: 1.1em; font-weight: 900;">$97,861</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">24h Low</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">24h Low</div>
                     <div style="color: #00d4ff; font-size: 1.1em; font-weight: 900;">$94,650</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Volume 24h</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Volume 24h</div>
                     <div style="color: #9b59b6; font-size: 1.1em; font-weight: 900;">$18.28B</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">RSI (14)</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">RSI (14)</div>
                     <div style="color: #ffaa00; font-size: 1.1em; font-weight: 900;">41.8</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Resistance</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Resistance</div>
                     <div style="color: #ff4444; font-size: 1.1em; font-weight: 900;">$98,500</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Support</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Support</div>
                     <div style="color: #00ff41; font-size: 1.1em; font-weight: 900;">$93,200</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Open Interest</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Open Interest</div>
                     <div style="color: #00d4ff; font-size: 1.1em; font-weight: 900;">$12.4B</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Funding Rate</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Funding Rate</div>
                     <div style="color: #ffaa00; font-size: 1.1em; font-weight: 900;">+0.0082%</div>
                 </div>
             </div>
         </div>
-        <div style="font-size: 0.75em; color: #888; margin-top: 15px;">Data Source: <span style="color: #00d4ff;">Binance API</span> • Updated every 2 seconds</div>
+        <div style="font-size: 0.75em; color: #fff; margin-top: 15px;">Data Source: <span style="color: #00d4ff;">Binance API</span> • Updated every 2 seconds</div>
     </div>
 
     <!-- LIVE ETH PRICE - MAIN DISPLAY (same size as BTC with hamster push effect) -->
@@ -1194,40 +1194,40 @@
             <!-- Right: Data Grid (larger, compact) -->
             <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px;">
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">24h High</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">24h High</div>
                     <div style="color: #00ff41; font-size: 1.1em; font-weight: 900;">$2,920</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">24h Low</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">24h Low</div>
                     <div style="color: #00d4ff; font-size: 1.1em; font-weight: 900;">$2,780</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Volume 24h</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Volume 24h</div>
                     <div style="color: #9b59b6; font-size: 1.1em; font-weight: 900;">$18.5B</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">CVD 24h</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">CVD 24h</div>
                     <div style="color: #00ff41; font-size: 1.1em; font-weight: 900;">+12.4K</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Resistance</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Resistance</div>
                     <div style="color: #ff4444; font-size: 1.1em; font-weight: 900;">$2,980</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Support</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Support</div>
                     <div style="color: #00ff41; font-size: 1.1em; font-weight: 900;">$2,720</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Open Interest</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Open Interest</div>
                     <div style="color: #00d4ff; font-size: 1.1em; font-weight: 900;">$8.2B</div>
                 </div>
                 <div style="line-height: 1.2;">
-                    <div style="color: #888; font-size: 0.75em; margin-bottom: 2px;">Funding Rate</div>
+                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Funding Rate</div>
                     <div style="color: #ffaa00; font-size: 1.1em; font-weight: 900;">+0.0065%</div>
                 </div>
             </div>
         </div>
-        <div style="font-size: 0.75em; color: #888; margin-top: 15px;">Data Source: <span style="color: #00d4ff;">Binance API</span> • Updated every 2 seconds</div>
+        <div style="font-size: 0.75em; color: #fff; margin-top: 15px;">Data Source: <span style="color: #00d4ff;">Binance API</span> • Updated every 2 seconds</div>
     </div>
     <style>
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-15px); } }
@@ -1285,7 +1285,7 @@
                 <div class="sentiment-bar" style="margin: 8.4px 0; height: 5.6px; background: #0a0a0a; border-radius: 2.8px; overflow: hidden;">
                     <div class="sentiment-fill" style="width: 62%; height: 100%; background: #88ff00;"></div>
                 </div>
-                <div style="font-size: 0.49em; color: #666;">0 = Strach | 100 = Chciwość</div>
+                <div style="font-size: 0.49em; color: #fff;">0 = Strach | 100 = Chciwość</div>
             </div>
         </div>
         
@@ -1293,9 +1293,9 @@
             <div style="text-align: center;">
                 <div style="font-size: 0.63em; color: #00ff41; font-weight: 700; margin-bottom: 5.6px;">💸 FUNDING RATE</div>
                 <div style="font-size: 1.54em; color: #00ff41; font-weight: 800; margin-bottom: 3.5px;" class="funding-rate-value">+0.0082%</div>
-                <div style="font-size: 0.595em; color: #888; margin-bottom: 5.6px;">Następna: za 8h 00min</div>
+                <div style="font-size: 0.595em; color: #fff; margin-bottom: 5.6px;">Następna: za 8h 00min</div>
                 <div style="font-size: 0.63em; color: #00ff41; font-weight: 600; margin-bottom: 5.6px;">Nastrój: Bycze</div>
-                <div style="font-size: 0.49em; color: #666; padding: 5.6px; background: #0a0a0a; border-radius: 2.8px;">
+                <div style="font-size: 0.49em; color: #fff; padding: 5.6px; background: #0a0a0a; border-radius: 2.8px;">
                     Dodatni FR = longi płacą shortom (presja kupna)
                 </div>
             </div>
@@ -1311,7 +1311,7 @@
                 <span style="animation: spin 2s linear infinite; font-size: 1.56em; color: #ffd700; text-shadow: 0 0 11.7px #ffaa00;">₿</span>
                 <span style="font-size: 1.44em; opacity: 0.8;">⚠️</span>
             </div>
-            <div style="margin-top: 9.36px; color: #eee; font-size: 1.05em; line-height: 1.6; font-family: 'Roboto Mono', monospace;">
+            <div style="margin-top: 9.36px; color: #eee; font-size: 0.9975em; line-height: 1.6; font-family: 'Roboto Mono', monospace;">
                 Trading kryptowalutami wiąże się z wysokim ryzykiem. Nigdy nie inwestuj więcej niż możesz stracić. Przeszłe wyniki nie gwarantują przyszłych zysków. <span style="color: #ffaa00; font-weight: 900;">No risk no story</span> <span style="color: #00ff41; font-weight: 900;">No guts no glory</span>
             </div>
         </div>
@@ -1349,9 +1349,9 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            animation: scrollLeft 45s linear infinite;
+            animation: scrollLeft 35s linear infinite;
             white-space: nowrap;
-            font-size: 1.1em;
+            font-size: 1.21em;
             letter-spacing: 2px;
             font-weight: 700;
         }
@@ -1460,7 +1460,7 @@
         <div class="metric-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%); border: 3px solid #00d4ff; box-shadow: 0 0 32px rgba(0, 212, 255, 0.32), 0 0 48px rgba(0, 212, 255, 0.2), 0 0 64px rgba(0, 212, 255, 0.12), inset 0 0 15px rgba(0, 0, 0, 0.8); padding: 15px; transition: border-color 8s ease-in-out infinite, box-shadow 8s ease-in-out infinite !important; animation: btcPanelColorCycle 8s ease-in-out infinite !important; * { animation: none !important; transition: none !important; }">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; animation: none !important; transition: none !important;">
                 <div class="metric-label" style="color: #00d4ff; letter-spacing: 1px; animation: none !important; transition: none !important;"><span style="display: inline-block; animation: none !important; transition: none !important; color: #ffff00; font-weight: 900;">SESJE RYNKOWE</span> • CHRONOLOGICZNIE</div>
-                <div style="font-size: 0.75em; color: #888; animation: none !important; transition: none !important;">Tokyo → London → NY • CVD, OI, FVG, SR</div>
+                <div style="font-size: 0.75em; color: #fff; animation: none !important; transition: none !important;">Tokyo → London → NY • CVD, OI, FVG, SR</div>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; animation: none !important; transition: none !important;">
                 <!-- Active Session Panel -->
@@ -1534,19 +1534,19 @@
                 <div style="background: #0f0f0f; padding: 12px; border-radius: 6px; border-left: 3px solid #ff00ff;">
                     <div style="font-size: 0.85em; color: #ff00ff; font-weight: 700;">CVD & OI</div>
                     <div style="display: flex; justify-content: space-between; margin-top: 6px;">
-                        <span style="color: #888;">CVD Spot:</span>
+                        <span style="color: #fff;">CVD Spot:</span>
                         <span style="color: #00ff41; font-weight: 900;">+42,850 BTC</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">CVD Perp:</span>
+                        <span style="color: #fff;">CVD Perp:</span>
                         <span style="color: #ff0033; font-weight: 900;">-18,420 BTC</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Open Interest:</span>
+                        <span style="color: #fff;">Open Interest:</span>
                         <span style="color: #00d4ff; font-weight: 900;">$12.4B (+2.3%)</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Funding:</span>
+                        <span style="color: #fff;">Funding:</span>
                         <span style="color: #ffaa00; font-weight: 900;">+0.0082%</span>
                     </div>
                 </div>
@@ -1554,15 +1554,15 @@
                 <div style="background: #0f0f0f; padding: 12px; border-radius: 6px; border-left: 3px solid #00ff41;">
                     <div style="font-size: 0.85em; color: #00ff41; font-weight: 700;">FVG (Fair Value Gap)</div>
                     <div style="display: flex; justify-content: space-between; margin-top: 6px;">
-                        <span style="color: #888;">BULLISH:</span>
+                        <span style="color: #fff;">BULLISH:</span>
                         <span style="color: #00ff41; font-weight: 900;">$95,165 - $95,337</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">BEARISH:</span>
+                        <span style="color: #fff;">BEARISH:</span>
                         <span style="color: #ff0033; font-weight: 900;">$95,882 - $96,611</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Status:</span>
+                        <span style="color: #fff;">Status:</span>
                         <span style="color: #ffaa00; font-weight: 900;">ACTIVE</span>
                     </div>
                 </div>
@@ -1570,15 +1570,15 @@
                 <div style="background: #0f0f0f; padding: 12px; border-radius: 6px; border-left: 3px solid #ff6600;">
                     <div style="font-size: 0.85em; color: #ff6600; font-weight: 700;">Wsparcie / Opór</div>
                     <div style="display: flex; justify-content: space-between; margin-top: 6px;">
-                        <span style="color: #888;">Resistance:</span>
+                        <span style="color: #fff;">Resistance:</span>
                         <span style="color: #ff0033; font-weight: 900;">$97,400 (HOT)</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Current:</span>
+                        <span style="color: #fff;">Current:</span>
                         <span style="color: #ffff00; font-weight: 900;">$95,501</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Support:</span>
+                        <span style="color: #fff;">Support:</span>
                         <span style="color: #00ff41; font-weight: 900;">$94,800 (STRONG)</span>
                     </div>
                 </div>
@@ -1586,19 +1586,19 @@
                 <div style="background: #0f0f0f; padding: 12px; border-radius: 6px; border-left: 3px solid #ffaa00;">
                     <div style="font-size: 0.85em; color: #ffaa00; font-weight: 700;">Orderbook & Delta</div>
                     <div style="display: flex; justify-content: space-between; margin-top: 6px;">
-                        <span style="color: #888;">Orderbook imbalance:</span>
+                        <span style="color: #fff;">Orderbook imbalance:</span>
                         <span style="color: #00ff41; font-weight: 900;">+2.34x BUY</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Delta 5s:</span>
+                        <span style="color: #fff;">Delta 5s:</span>
                         <span style="color: #00ff41; font-weight: 900;">+309 BTC</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">RSI (14):</span>
+                        <span style="color: #fff;">RSI (14):</span>
                         <span style="color: #ffaa00; font-weight: 900;">41.8</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">MACD:</span>
+                        <span style="color: #fff;">MACD:</span>
                         <span style="color: #00ff41; font-weight: 900;">106.71</span>
                     </div>
                 </div>
@@ -1606,11 +1606,11 @@
                 <div style="background: #0f0f0f; padding: 12px; border-radius: 6px; border-left: 3px solid #ffaa00;">
                     <div style="font-size: 0.85em; color: #ffaa00; font-weight: 700;">Sentiment & Regime</div>
                     <div style="display: flex; justify-content: space-between; margin-top: 6px;">
-                        <span style="color: #888;">Market Regime:</span>
+                        <span style="color: #fff;">Market Regime:</span>
                         <span style="color: #ffaa00; font-weight: 700;">NEUTRAL</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Nastroje:</span>
+                        <span style="color: #fff;">Nastroje:</span>
                         <span style="color: #cc0022; font-weight: 700;">LEKKO NIEDŹWIEDZI (-50/100)</span>
                     </div>
                 </div>
@@ -1618,19 +1618,19 @@
                 <div style="background: #0f0f0f; padding: 12px; border-radius: 6px; border-left: 3px solid #ffaa00;">
                     <div style="font-size: 0.85em; color: #ffaa00; font-weight: 700;">Statystyki 24h</div>
                     <div style="display: flex; justify-content: space-between; margin-top: 6px;">
-                        <span style="color: #888;">High 24h:</span>
+                        <span style="color: #fff;">High 24h:</span>
                         <span style="color: #ffff00; font-weight: 900;">$97,861</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Low 24h:</span>
+                        <span style="color: #fff;">Low 24h:</span>
                         <span style="color: #00d4ff; font-weight: 900;">$94,650</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">Wolumen 24h:</span>
+                        <span style="color: #fff;">Wolumen 24h:</span>
                         <span style="color: #9b59b6; font-weight: 900;">$18.28B</span>
                     </div>
                     <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                        <span style="color: #888;">RSI (14):</span>
+                        <span style="color: #fff;">RSI (14):</span>
                         <span style="color: #ffaa00; font-weight: 900;">41.8 (Neutralny)</span>
                     </div>
                 </div>
@@ -1652,21 +1652,21 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: #00ff41; font-weight: 800;">↗ BUY</span>
                     <span style="color: #fff; font-weight: 900; font-size: 1.1em;">1,250 BTC</span>
-                    <span style="font-size: 0.75em; color: #888;">2min</span>
+                    <span style="font-size: 0.75em; color: #fff;">2min</span>
                 </div>
             </div>
             <div style="margin-bottom: 8px; padding: 8px; background: rgba(255,0,51,0.1); border-radius: 4px; border-left: 3px solid #ff0033;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: #ff0033; font-weight: 800;">↘ SELL</span>
                     <span style="color: #fff; font-weight: 900; font-size: 1.1em;">890 BTC</span>
-                    <span style="font-size: 0.75em; color: #888;">8min</span>
+                    <span style="font-size: 0.75em; color: #fff;">8min</span>
                 </div>
             </div>
             <div style="margin-bottom: 8px; padding: 8px; background: rgba(0,212,255,0.1); border-radius: 4px; border-left: 3px solid #00d4ff;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: #00d4ff; font-weight: 800;">🧊 ICEBERG</span>
                     <span style="color: #fff; font-weight: 900; font-size: 1.1em;">450/3,200 BTC</span>
-                    <span style="font-size: 0.75em; color: #888;">12min</span>
+                    <span style="font-size: 0.75em; color: #fff;">12min</span>
                 </div>
                 <div style="font-size: 0.7em; color: #00d4ff; margin-top: 4px;">Hidden order: 2,750 BTC remaining</div>
             </div>
@@ -1674,19 +1674,19 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: #00ff41; font-weight: 800;">↗ BUY</span>
                     <span style="color: #fff; font-weight: 900; font-size: 1.1em;">2,100 BTC</span>
-                    <span style="font-size: 0.75em; color: #888;">15min</span>
+                    <span style="font-size: 0.75em; color: #fff;">15min</span>
                 </div>
             </div>
             <div style="margin-bottom: 8px; padding: 8px; background: rgba(255,170,0,0.1); border-radius: 4px; border-left: 3px solid #ffaa00;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: #ffaa00; font-weight: 800;">🧊 ICEBERG</span>
                     <span style="color: #fff; font-weight: 900; font-size: 1.1em;">180/1,800 BTC</span>
-                    <span style="font-size: 0.75em; color: #888;">18min</span>
+                    <span style="font-size: 0.75em; color: #fff;">18min</span>
                 </div>
                 <div style="font-size: 0.7em; color: #ffaa00; margin-top: 4px;">Smart Money: 90% hidden (layered)</div>
             </div>
             <div style="margin-top: 12px; padding-top: 12px; border-top: 2px solid #333; text-align: center;">
-                <div style="font-size: 0.8em; color: #888;">NET FLOW:</div>
+                <div style="font-size: 0.8em; color: #fff;">NET FLOW:</div>
                 <div style="font-size: 1.3em; color: #00ff41; font-weight: 900;">+2,460 BTC</div>
                 <div style="font-size: 0.85em; color: #00ff41; font-weight: 700;">BULLISH</div>
             </div>
@@ -1708,7 +1708,7 @@
             <div style="text-align: center; padding: 10px; background: rgba(0,255,65,0.15); border-radius: 6px; margin-bottom: 10px;">
                 <div style="color: #00ff41; font-weight: 900; font-size: 1.1em;">⚡ BULLS DOMINANCE</div>
             </div>
-            <div style="text-align: center; font-size: 0.8em; color: #888; margin-bottom: 12px;">
+            <div style="text-align: center; font-size: 0.8em; color: #fff; margin-bottom: 12px;">
                 Total Volume 24h:<br>
                 <span style="color: #00ff41; font-weight: 900; font-size: 1.3em;">$2.4B</span>
             </div>
@@ -1743,25 +1743,25 @@
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: #00ff41; font-weight: 800;">BID</span>
                     <span style="color: #fff; font-weight: 900;">$96,200</span>
-                    <span style="font-size: 0.85em; color: #888;">450 BTC</span>
+                    <span style="font-size: 0.85em; color: #fff;">450 BTC</span>
                 </div>
             </div>
             <div style="margin-bottom: 12px; padding: 8px; background: rgba(255,0,51,0.1); border-radius: 4px; border-left: 3px solid #ff0033;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: #ff0033; font-weight: 800;">ASK</span>
                     <span style="color: #fff; font-weight: 900;">$97,100</span>
-                    <span style="font-size: 0.85em; color: #888;">380 BTC</span>
+                    <span style="font-size: 0.85em; color: #fff;">380 BTC</span>
                 </div>
             </div>
             <div style="margin-bottom: 10px; padding: 10px; background: rgba(0,212,255,0.1); border-radius: 4px;">
-                <div style="font-size: 0.75em; color: #888; margin-bottom: 3px;">OPEN INTEREST:</div>
+                <div style="font-size: 0.75em; color: #fff; margin-bottom: 3px;">OPEN INTEREST:</div>
                 <div style="color: #ffff00; font-weight: 900; font-size: 1.2em;">$12.4B</div>
                 <div style="font-size: 0.75em; color: #00ff41;">+2.3% (24h)</div>
             </div>
             <div style="padding: 10px; background: rgba(0,255,65,0.1); border-radius: 4px;">
-                <div style="font-size: 0.75em; color: #888; margin-bottom: 3px;">FUNDING RATE:</div>
+                <div style="font-size: 0.75em; color: #fff; margin-bottom: 3px;">FUNDING RATE:</div>
                 <div style="color: #00ff41; font-weight: 900; font-size: 1.2em;">+0.0082%</div>
-                <div style="font-size: 0.75em; color: #888;">Longs paying Shorts</div>
+                <div style="font-size: 0.75em; color: #fff;">Longs paying Shorts</div>
             </div>
         </div>
     </div>
@@ -1773,7 +1773,7 @@
             <div style="color: #ff00ff; font-size: 1.1em; font-weight: 700; margin-bottom: 15px; text-transform: uppercase;">💭 SENTYMENT RYNKOWY</div>
             
             <div style="margin-bottom: 15px;">
-                <div style="font-size: 0.8em; color: #888; margin-bottom: 5px;">Niedźwiedzie / Bycze</div>
+                <div style="font-size: 0.8em; color: #fff; margin-bottom: 5px;">Niedźwiedzie / Bycze</div>
                 <div style="height: 20px; background: #0f0f0f; border-radius: 5px; overflow: hidden; display: flex;">
                     <div style="width: 42%; background: #ff0033;"></div>
                     <div style="width: 58%; background: #00ff00;"></div>
@@ -1852,7 +1852,7 @@
                 
                 <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #00d4ff;">
                     <div><span style="color: #00d4ff; font-weight: 700;">TOMORROW 13:30 UTC</span></div>
-                    <div style="font-size: 0.75em; color: #ddd;">Fed Speakers 🎙️ <span style="color: #888;">MEDIUM IMPACT</span></div>
+                    <div style="font-size: 0.75em; color: #ddd;">Fed Speakers 🎙️ <span style="color: #fff;">MEDIUM IMPACT</span></div>
                 </div>
 
                 <div style="background: rgba(0,255,65,0.1); padding: 8px; border-radius: 4px; border-left: 3px solid #00ff41;">
@@ -1870,7 +1870,7 @@
                             <span style="color: #ff0033;">HIGH IMPACT</span>
                         </div>
                         <div style="color: #fff; font-weight: 700;">USA CPI (m/m)</div>
-                        <div style="color: #aaa;">Prog: 0.2% • Poprz: 0.1% • Rynek patrzy na presję inflacyjną</div>
+                        <div style="color: #fff;">Prog: 0.2% • Poprz: 0.1% • Rynek patrzy na presję inflacyjną</div>
                     </div>
                     <div style="background: rgba(0,255,65,0.07); border-left: 3px solid #00ff41; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
                         <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
@@ -1878,7 +1878,7 @@
                             <span style="color: #ffaa00;">MEDIUM</span>
                         </div>
                         <div style="color: #fff; font-weight: 700;">USA PPI (m/m)</div>
-                        <div style="color: #aaa;">Prog: 0.1% • Poprz: -0.1% • Wpływ na oczekiwania inflacyjne</div>
+                        <div style="color: #fff;">Prog: 0.1% • Poprz: -0.1% • Wpływ na oczekiwania inflacyjne</div>
                     </div>
                     <div style="background: rgba(0,212,255,0.07); border-left: 3px solid #00d4ff; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
                         <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
@@ -1886,7 +1886,7 @@
                             <span style="color: #ff0033;">HIGH</span>
                         </div>
                         <div style="color: #fff; font-weight: 700;">FOMC Minutes</div>
-                        <div style="color: #aaa;">Sygnały dot. ścieżki stóp i bilansu Fed</div>
+                        <div style="color: #fff;">Sygnały dot. ścieżki stóp i bilansu Fed</div>
                     </div>
                     <div style="background: rgba(255,0,51,0.07); border-left: 3px solid #ff0033; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
                         <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
@@ -1894,7 +1894,7 @@
                             <span style="color: #ff0033;">HIGH</span>
                         </div>
                         <div style="color: #fff; font-weight: 700;">USA Initial Jobless Claims</div>
-                        <div style="color: #aaa;">Prog: 215k • Poprz: 210k • Wrażliwe na sentyment risk-on/off</div>
+                        <div style="color: #fff;">Prog: 215k • Poprz: 210k • Wrażliwe na sentyment risk-on/off</div>
                     </div>
                     <div style="background: rgba(255,255,0,0.07); border-left: 3px solid #ffff00; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
                         <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
@@ -1902,7 +1902,7 @@
                             <span style="color: #ffaa00;">MEDIUM</span>
                         </div>
                         <div style="color: #fff; font-weight: 700;">UMich Sentiment</div>
-                        <div style="color: #aaa;">Prog: 72.0 • Poprz: 71.6 • Oczekiwania inflacyjne konsumentów</div>
+                        <div style="color: #fff;">Prog: 72.0 • Poprz: 71.6 • Oczekiwania inflacyjne konsumentów</div>
                     </div>
                     <div style="background: rgba(255,170,0,0.07); border-left: 3px solid #ffaa00; padding: 8px; border-radius: 4px;">
                         <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
@@ -1910,12 +1910,12 @@
                             <span style="color: #ffaa00;">MEDIUM</span>
                         </div>
                         <div style="color: #fff; font-weight: 700;">Fed Speaker</div>
-                        <div style="color: #aaa;">Wystąpienie nt. ścieżki stóp i QT • możliwe wskazówki dot. cięć w Q2</div>
+                        <div style="color: #fff;">Wystąpienie nt. ścieżki stóp i QT • możliwe wskazówki dot. cięć w Q2</div>
                     </div>
                 </div>
             </div>
 
-            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #333; font-size: 0.75em; color: #888;">
+            <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #333; font-size: 0.75em; color: #fff;">
                 💡 Tip: Volatility often increases before/after major economic releases. Plan your trades accordingly!
             </div>
         </div>
@@ -2016,7 +2016,7 @@
                     <span class="liquidation-price">$97,350</span>
                     <span>SHORT 850 BTC</span>
                 </div>
-                <div style="font-size: 0.7em; color: #888; margin-top: 3px;">⏱️ ~5min stąd • HIGH IMPACT</div>
+                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~5min stąd • HIGH IMPACT</div>
             </div>
             
             <div class="liquidation-item">
@@ -2024,7 +2024,7 @@
                     <span class="liquidation-price">$96,200</span>
                     <span>LONG 1,200 BTC</span>
                 </div>
-                <div style="font-size: 0.7em; color: #888; margin-top: 3px;">⏱️ ~12min stąd • CRITICAL</div>
+                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~12min stąd • CRITICAL</div>
             </div>
             
             <div class="liquidation-item">
@@ -2032,7 +2032,7 @@
                     <span class="liquidation-price">$94,950</span>
                     <span>SHORT 650 BTC</span>
                 </div>
-                <div style="font-size: 0.7em; color: #888; margin-top: 3px;">⏱️ ~22min stąd • MEDIUM</div>
+                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~22min stąd • MEDIUM</div>
             </div>
             
             <div class="liquidation-item" style="border-left-color: #00ff00;">
@@ -2040,7 +2040,7 @@
                     <span style="color: #00ff00; font-weight: 900; font-size: 1.1em;">$93,500</span>
                     <span style="color: #00ff00;">SHORT 450 BTC</span>
                 </div>
-                <div style="font-size: 0.7em; color: #888; margin-top: 3px;">⏱️ ~45min stąd • LOW RISK</div>
+                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~45min stąd • LOW RISK</div>
             </div>
         </div>
         
@@ -2094,14 +2094,14 @@
             <!-- TIMEFRAME SELECTOR & SMT ANALYSIS -->
             <div class="timeframe-selector" style="display: flex; gap: 10px; margin-bottom: 0px; flex-wrap: wrap; align-items: center;">
                 <span style="color: #00ffff; font-weight: 700; font-size: 0.9em; margin-right: 10px;">⏱️ TIMEFRAME:</span>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #999; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1M</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '5m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #999; cursor: pointer; border-radius: 4px; font-size: 0.85em;">5M</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '15m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #999; cursor: pointer; border-radius: 4px; font-size: 0.85em;">15M</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '30m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #999; cursor: pointer; border-radius: 4px; font-size: 0.85em;">30M</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '1m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1M</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '5m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">5M</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '15m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">15M</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '30m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">30M</button>
                 <button class="timeframe-btn" onclick="switchTimeframe(event, '1h')" style="padding: 8px 12px; background: #00d4ff; border: 2px solid #00d4ff; color: #0a0a0a; cursor: pointer; border-radius: 4px; font-weight: 700; font-size: 0.85em; box-shadow: 0 0 15px rgba(0,212,255,0.5);">1H</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '4h')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #999; cursor: pointer; border-radius: 4px; font-size: 0.85em;">4H</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1d')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #999; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1D</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1w')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #999; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1W</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '4h')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">4H</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '1d')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1D</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '1w')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1W</button>
                 <span style="margin-left: 20px; color: #00ff41; font-weight: 700; font-size: 0.9em;">📊 SMART MONEY LEVELS</span>
                 <!-- CUSTOM LEGEND -->
                 <div style="display: inline-flex; gap: 15px; margin-left: 30px; align-items: center; flex-wrap: wrap;">
@@ -2832,7 +2832,7 @@
                 </div>
                 <div id="timeframe-zone-content" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,212,255,0.3);">
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
-                        <div style="font-size: 0.65em; color: #888;">1m • 5m • 15m • 30m • 1h • 4h • 1d • 1M • 3M • 1Y</div>
+                        <div style="font-size: 0.65em; color: #fff;">1m • 5m • 15m • 30m • 1h • 4h • 1d • 1M • 3M • 1Y</div>
                     </div>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px;">
                         <div id="1m" style="background: rgba(0,255,65,0.06); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
@@ -3062,7 +3062,7 @@
                                 <span>RSI 55-60:</span>
                                 <span style="color: #ffaa00; font-weight: 700;">Medium Resistance</span>
                             </div>
-                            <div style="font-size: 0.65em; color: #888; margin-top: 8px; padding: 6px; background: rgba(20,0,0,0.5); border-radius: 3px;">
+                            <div style="font-size: 0.65em; color: #fff; margin-top: 8px; padding: 6px; background: rgba(20,0,0,0.5); border-radius: 3px;">
                                 💡 Gdy RSI osiąga te poziomy, spodziewaj się korekty lub spadku. Rozważ SHORT setup.
                             </div>
                         </div>
@@ -3084,7 +3084,7 @@
                                 <span>RSI 40-45:</span>
                                 <span style="color: #0096ff; font-weight: 700;">Medium Support</span>
                             </div>
-                            <div style="font-size: 0.65em; color: #888; margin-top: 8px; padding: 6px; background: rgba(0,20,0,0.5); border-radius: 3px;">
+                            <div style="font-size: 0.65em; color: #fff; margin-top: 8px; padding: 6px; background: rgba(0,20,0,0.5); border-radius: 3px;">
                                 💡 Gdy RSI spada do tych poziomów, spodziewaj się odbicia lub wzrostu. Rozważ LONG setup.
                             </div>
                         </div>
@@ -3096,19 +3096,19 @@
                     <div style="font-size: 0.8em; color: #00d4ff; font-weight: 700; margin-bottom: 10px;">📍 CURRENT RSI STATUS (BTC/USDT)</div>
                     <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; font-family: 'Roboto Mono';">
                         <div style="text-align: center;">
-                            <div style="font-size: 0.65em; color: #888;">RSI(14):</div>
+                            <div style="font-size: 0.65em; color: #fff;">RSI(14):</div>
                             <div style="font-size: 1.1em; color: #ffaa00; font-weight: 900;">41.8</div>
                         </div>
                         <div style="text-align: center;">
-                            <div style="font-size: 0.65em; color: #888;">Zone:</div>
+                            <div style="font-size: 0.65em; color: #fff;">Zone:</div>
                             <div style="font-size: 0.8em; color: #00d4ff; font-weight: 700;">NEUTRAL</div>
                         </div>
                         <div style="text-align: center;">
-                            <div style="font-size: 0.65em; color: #888;">Next Support:</div>
+                            <div style="font-size: 0.65em; color: #fff;">Next Support:</div>
                             <div style="font-size: 0.8em; color: #00ff41; font-weight: 700;">RSI 40</div>
                         </div>
                         <div style="text-align: center;">
-                            <div style="font-size: 0.65em; color: #888;">Next Resistance:</div>
+                            <div style="font-size: 0.65em; color: #fff;">Next Resistance:</div>
                             <div style="font-size: 0.8em; color: #ff0033; font-weight: 700;">RSI 55</div>
                         </div>
                     </div>
@@ -3134,7 +3134,7 @@
                         <div style="color: #ccc;">ADX (14): <span style="color: #00d4ff; font-weight: 700;">28.4 (Strong)</span></div>
                         <div style="color: #ccc;">Price vs MA200: <span style="color: #00ff41; font-weight: 700;">+$1,250 Above</span></div>
                     </div>
-                    <div style="margin-top: 8px; font-size: 0.7em; color: #888; padding: 6px; background: rgba(255,170,0,0.1); border-radius: 3px;">
+                    <div style="margin-top: 8px; font-size: 0.7em; color: #fff; padding: 6px; background: rgba(255,170,0,0.1); border-radius: 3px;">
                         💡 Stoch wysoki = overbought momentum. Mogą być pullback'i ale trend BULLISH potwierdzon.
                     </div>
                 </div>
@@ -3146,7 +3146,7 @@
                         <div style="background: rgba(255,0,51,0.1); padding: 8px; border-radius: 3px; border-left: 2px solid #ff0033;">
                             <div style="color: #ff0033; font-weight: 700; margin-bottom: 3px;">📉 BEARISH DIV</div>
                             <div style="color: #ccc;">Price ↗ RSI ↘</div>
-                            <div style="font-size: 0.7em; color: #888; margin-top: 3px;">NOT DETECTED ✓</div>
+                            <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">NOT DETECTED ✓</div>
                         </div>
                         
                         <div style="background: rgba(0,255,65,0.1); padding: 8px; border-radius: 3px; border-left: 2px solid #00ff41;">
@@ -3158,7 +3158,7 @@
                         <div style="background: rgba(255,170,0,0.1); padding: 8px; border-radius: 3px; border-left: 2px solid #ffaa00;">
                             <div style="color: #ffaa00; font-weight: 700; margin-bottom: 3px;">🔶 HIDDEN DIV</div>
                             <div style="color: #ccc;">Trend Continuation</div>
-                            <div style="font-size: 0.7em; color: #888; margin-top: 3px;">NOT DETECTED ✓</div>
+                            <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">NOT DETECTED ✓</div>
                         </div>
                         
                         <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 3px; border-left: 2px solid #00d4ff;">
@@ -3205,7 +3205,7 @@
                                 <div style="color: #fff; font-weight: 700; margin-top: 2px;">$97,450</div>
                             </div>
                             <div style="text-align: center; padding: 6px; background: rgba(100,100,100,0.1); border-radius: 3px; border: 1px solid #888;">
-                                <div style="color: #888; font-size: 0.7em;">RSI 50</div>
+                                <div style="color: #fff; font-size: 0.7em;">RSI 50</div>
                                 <div style="color: #fff; font-weight: 700; margin-top: 2px;">$96,200</div>
                             </div>
                             <div style="text-align: center; padding: 6px; background: rgba(0,212,255,0.1); border-radius: 3px; border: 1px solid #00d4ff;">
@@ -3221,7 +3221,7 @@
                                 <div style="color: #00ff41; font-weight: 700; margin-top: 2px;">$96,850</div>
                             </div>
                         </div>
-                        <div style="margin-top: 8px; font-size: 0.7em; color: #888; text-align: center;">
+                        <div style="margin-top: 8px; font-size: 0.7em; color: #fff; text-align: center;">
                             💡 Current price at RSI ~58 zone = healthy bullish momentum, room to $98k
                         </div>
                     </div>
@@ -3277,11 +3277,11 @@
                     <div style="font-size: 0.9em; color: #00ff41; margin-bottom: 6px; font-weight: 700;">📖 ORDER BOOK IMBALANCE:</div>
                     <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">BID Depth:</span>
+                            <span style="color: #fff;">BID Depth:</span>
                             <span style="color: #00ff41;">$245M (2%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">ASK Depth:</span>
+                            <span style="color: #fff;">ASK Depth:</span>
                             <span style="color: #ff0033;">$182M (2%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3296,11 +3296,11 @@
                     <div style="font-size: 0.9em; color: #ff00ff; margin-bottom: 6px; font-weight: 700;">💬 SOCIAL SENTIMENT:</div>
                     <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Twitter Vol:</span>
+                            <span style="color: #fff;">Twitter Vol:</span>
                             <span style="color: #ffaa00;">+145K ✍️</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Sentiment:</span>
+                            <span style="color: #fff;">Sentiment:</span>
                             <span style="color: #00ff41; font-weight: bold;">72/100 🟢</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3337,11 +3337,11 @@
                     <div style="font-size: 0.9em; color: #00d4ff; margin-bottom: 6px; font-weight: 700;">🏗️ MARKET STRUCTURE:</div>
                     <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Last BOS:</span>
+                            <span style="color: #fff;">Last BOS:</span>
                             <span style="color: #00ff41;">$96,800 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">CHoCH:</span>
+                            <span style="color: #fff;">CHoCH:</span>
                             <span style="color: #ffaa00;">PENDING ⏳</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3356,11 +3356,11 @@
                     <div style="font-size: 0.9em; color: #0096ff; margin-bottom: 6px; font-weight: 700;">⛏️ NETWORK HEALTH:</div>
                     <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Hashrate:</span>
+                            <span style="color: #fff;">Hashrate:</span>
                             <span style="color: #0096ff;">425 EH/s 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Difficulty:</span>
+                            <span style="color: #fff;">Difficulty:</span>
                             <span style="color: #0096ff;">68.5T 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3375,11 +3375,11 @@
                     <div style="font-size: 0.9em; color: #ffff00; margin-bottom: 6px; font-weight: 700;">📊 DERIVATIVES PREMIUM:</div>
                     <div style="font-size: 0.85em; line-height: 1.6; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Futures:</span>
+                            <span style="color: #fff;">Futures:</span>
                             <span style="color: #ffff00;">+$45 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Perp:</span>
+                            <span style="color: #fff;">Perp:</span>
                             <span style="color: #ffff00;">+$32 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3394,7 +3394,7 @@
             <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 5px;">
                 <!-- Market Regime -->
                 <div style="background: #0f0f0f; padding: 10px; border-radius: 6px; border-left: 3px solid #ff00ff;">
-                    <div style="font-size: 0.9em; color: #888; margin-bottom: 4px;">MARKET REGIME:</div>
+                    <div style="font-size: 0.9em; color: #fff; margin-bottom: 4px;">MARKET REGIME:</div>
                     <div style="font-size: 1.05em; color: #ff00ff; font-weight: 700;">ACCUMULATION / SPRING</div>
                 </div>
                 
@@ -3422,15 +3422,15 @@
                     <div style="font-size: 0.9em; color: #00ff41; margin-bottom: 6px; font-weight: 700;">🔄 EXCHANGE FLOW:</div>
                     <div style="font-size: 0.9em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">IN:</span>
+                            <span style="color: #fff;">IN:</span>
                             <span style="color: #ff0033; font-weight: bold;">-4,250 BTC</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">OUT:</span>
+                            <span style="color: #fff;">OUT:</span>
                             <span style="color: #00ff41; font-weight: bold;">+8,420 BTC</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">NET:</span>
+                            <span style="color: #fff;">NET:</span>
                             <span style="color: #00ff41; font-weight: bold;">+4,170🔼</span>
                         </div>
                     </div>
@@ -3441,15 +3441,15 @@
                     <div style="font-size: 0.9em; color: #ffaa00; margin-bottom: 6px; font-weight: 700;">📈 VOLATILITY:</div>
                     <div style="font-size: 0.9em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">ATR(14):</span>
+                            <span style="color: #fff;">ATR(14):</span>
                             <span style="color: #ffaa00; font-weight: bold;">$1,245</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">RealVol:</span>
+                            <span style="color: #fff;">RealVol:</span>
                             <span style="color: #ffaa00; font-weight: bold;">42.5%</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">BW:</span>
+                            <span style="color: #fff;">BW:</span>
                             <span style="color: #00d4ff; font-weight: bold;">2.8%</span>
                         </div>
                     </div>
@@ -3463,25 +3463,25 @@
                     <div style="background: rgba(255,170,0,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ffaa00;">
                         <div style="color: #ffaa00; font-weight: 700; margin-bottom: 2px;">🇬🇧 LONDON</div>
                         <div style="color: #ccc;">07:00-09:00 UTC</div>
-                        <div style="color: #888; font-size: 0.75em; margin-top: 3px;">Volatility: HIGH | Swing trades</div>
+                        <div style="color: #fff; font-size: 0.75em; margin-top: 3px;">Volatility: HIGH | Swing trades</div>
                     </div>
                     
                     <div style="background: rgba(255,0,51,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ff0033;">
                         <div style="color: #ff0033; font-weight: 700; margin-bottom: 2px;">🇺🇸 NY OPEN</div>
                         <div style="color: #ccc;">12:30-14:30 UTC</div>
-                        <div style="color: #888; font-size: 0.75em; margin-top: 3px;">Volatility: EXTREME | Scalps</div>
+                        <div style="color: #fff; font-size: 0.75em; margin-top: 3px;">Volatility: EXTREME | Scalps</div>
                     </div>
                     
                     <div style="background: rgba(255,100,0,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ff6600;">
                         <div style="color: #ff6600; font-weight: 700; margin-bottom: 2px;">⚠️ LUNCH SLUMP</div>
                         <div style="color: #ccc;">16:30-17:30 UTC</div>
-                        <div style="color: #888; font-size: 0.75em; margin-top: 3px;">Volatility: LOW | AVOID</div>
+                        <div style="color: #fff; font-size: 0.75em; margin-top: 3px;">Volatility: LOW | AVOID</div>
                     </div>
                     
                     <div style="background: rgba(0,212,255,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #00d4ff;">
                         <div style="color: #00d4ff; font-weight: 700; margin-bottom: 2px;">⭐ GOLDEN WIN</div>
                         <div style="color: #ccc;">12:00-14:00 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">MAX momentum + liquidity</div>
+                        <div style="color: #fff; font-size: 0.6em; margin-top: 2px;">MAX momentum + liquidity</div>
                     </div>
                 </div>
             </div>
@@ -3491,18 +3491,18 @@
                     <div style="font-size: 0.75em; color: #00d4ff; margin-bottom: 6px; font-weight: 700;">💰 FUNDING RATE:</div>
                     <div style="font-size: 0.7em; line-height: 1.5; display: flex; gap: 15px;">
                         <div style="display: flex; justify-content: space-between; flex: 1;">
-                            <span style="color: #888;">Now:</span>
+                            <span style="color: #fff;">Now:</span>
                             <span style="color: #00ff41; font-weight: bold;">+0.0082%</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; flex: 1;">
-                            <span style="color: #888;">8h Avg:</span>
+                            <span style="color: #fff;">8h Avg:</span>
                             <span style="color: #00ff41; font-weight: bold;">+0.0065%</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; flex: 1;">
-                            <span style="color: #888;">Trend:</span>
+                            <span style="color: #fff;">Trend:</span>
                             <span style="color: #00ff41; font-weight: bold;">RISING 🔼</span>
                         </div>
-                        <div style="font-size: 0.7em; color: #888; margin-top: 5px;">+ Funding = Longi płacą Shortom</div>
+                        <div style="font-size: 0.7em; color: #fff; margin-top: 5px;">+ Funding = Longi płacą Shortom</div>
                     </div>
                 </div>
             </div>
@@ -3571,27 +3571,27 @@
             
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; font-family: 'Roboto Mono', monospace;">
                 <div style="background: rgba(0,255,65,0.1); padding: 14px; border-radius: 6px; border-left: 4px solid #00ff41;">
-                    <div style="font-size: 0.75em; color: #888; margin-bottom: 6px;">Phase:</div>
+                    <div style="font-size: 0.75em; color: #fff; margin-bottom: 6px;">Phase:</div>
                     <div style="color: #00ff41; font-weight: 900; font-size: 1.15em; margin-bottom: 10px;">ACCUMULATION</div>
                     <div style="font-size: 0.7em; color: #ccc; line-height: 1.4; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 3px;">Faza gdzie smart money gromadzi pozycje przed wzrostem. Cena niska, wolumen rosnący, brak publicznego zainteresowania.</div>
                 </div>
                 <div style="background: rgba(0,212,255,0.1); padding: 14px; border-radius: 6px; border-left: 4px solid #00d4ff;">
-                    <div style="font-size: 0.75em; color: #888; margin-bottom: 6px;">Wyckoff Method:</div>
+                    <div style="font-size: 0.75em; color: #fff; margin-bottom: 6px;">Wyckoff Method:</div>
                     <div style="color: #00d4ff; font-weight: 900; font-size: 1.15em; margin-bottom: 10px;">SPRING</div>
                     <div style="font-size: 0.7em; color: #ccc; line-height: 1.4; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 3px;">Fałszywy breakout w dół aby zlikwidować stop losy drobnych traderów. Po Spring następuje wzrost.</div>
                 </div>
                 <div style="background: rgba(255,170,0,0.1); padding: 14px; border-radius: 6px; border-left: 4px solid #ffaa00;">
-                    <div style="font-size: 0.75em; color: #888; margin-bottom: 6px;">EQH (Equal High):</div>
+                    <div style="font-size: 0.75em; color: #fff; margin-bottom: 6px;">EQH (Equal High):</div>
                     <div style="color: #ffaa00; font-weight: 900; font-size: 1.15em; margin-bottom: 10px;">$97,583</div>
                     <div style="font-size: 0.7em; color: #ccc; line-height: 1.4; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 3px;">Opór na wysokości poprzedniego szczytu. Jeśli przebite → potencjalny wzrost do nowych ALL TIME HIGH.</div>
                 </div>
                 <div style="background: rgba(255,170,0,0.1); padding: 14px; border-radius: 6px; border-left: 4px solid #ffaa00;">
-                    <div style="font-size: 0.75em; color: #888; margin-bottom: 6px;">EQL (Equal Low):</div>
+                    <div style="font-size: 0.75em; color: #fff; margin-bottom: 6px;">EQL (Equal Low):</div>
                     <div style="color: #ffaa00; font-weight: 900; font-size: 1.15em; margin-bottom: 10px;">$94,800</div>
                     <div style="font-size: 0.7em; color: #ccc; line-height: 1.4; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 3px;">Wsparcie na wysokości poprzedniego dołka. Jeśli przebite w dół → ryzyko dalszego spadku do nowych minimów.</div>
                 </div>
                 <div style="background: rgba(0,255,65,0.1); padding: 14px; border-radius: 6px; border-left: 4px solid #00ff41;">
-                    <div style="font-size: 0.75em; color: #888; margin-bottom: 6px;">Trend:</div>
+                    <div style="font-size: 0.75em; color: #fff; margin-bottom: 6px;">Trend:</div>
                     <div style="color: #00ff41; font-weight: 900; font-size: 1.15em; margin-bottom: 10px;">📈 BULLISH</div>
                     <div style="font-size: 0.7em; color: #ccc; line-height: 1.4; background: rgba(0,0,0,0.3); padding: 8px; border-radius: 3px;">Rosnące szczyty i doliny. Kupujący są w kontroli. Scenariusz sprzyjający LONG pozycjom.</div>
                 </div>
@@ -3678,7 +3678,7 @@
                             <span>• Bearish OB:</span>
                             <span style="color: #ff0033; font-weight: 700;">$96,800 - $97,200</span>
                         </div>
-                        <div style="margin-top: 5px; font-size: 0.65em; color: #888; font-style: italic;">
+                        <div style="margin-top: 5px; font-size: 0.65em; color: #fff; font-style: italic;">
                             Ostatnia strefa gdzie banki/wieloryby złożyły zlecenia. Często cena wraca do OB przed kontynuacją trendu.
                         </div>
                     </div>
@@ -3696,7 +3696,7 @@
                             <span>• Bearish FVG:</span>
                             <span style="color: #ff0033; font-weight: 700;">$96,400 - $96,650</span>
                         </div>
-                        <div style="margin-top: 5px; font-size: 0.65em; color: #888; font-style: italic;">
+                        <div style="margin-top: 5px; font-size: 0.65em; color: #fff; font-style: italic;">
                             Luki cenowe powstałe przez silny ruch. Cena często wraca aby "wypełnić" te luki zanim kontynuuje.
                         </div>
                     </div>
@@ -3710,7 +3710,7 @@
                             <span>Ostatni BOS:</span>
                             <span style="color: #00ff41; font-weight: 700;">BULLISH ↑ $95,800</span>
                         </div>
-                        <div style="margin-top: 5px; font-size: 0.65em; color: #888; font-style: italic;">
+                        <div style="margin-top: 5px; font-size: 0.65em; color: #fff; font-style: italic;">
                             Przełamanie poprzedniego High/Low = zmiana struktury rynku. BOS potwierdza kierunek Smart Money.
                         </div>
                     </div>
@@ -3738,28 +3738,28 @@
                 <div style="background: rgba(0,255,65,0.1); padding: 10px; border-radius: 5px; border-left: 2px solid #00ff41;">
                     <div style="color: #00ff41; font-weight: 700; margin-bottom: 5px;">✓ MACD</div>
                     <div style="color: #ccc;">ABOVE 0-line</div>
-                    <div style="font-size: 0.7em; color: #888; margin-top: 3px;">Momentum BULLISH</div>
+                    <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">Momentum BULLISH</div>
                 </div>
                 
                 <!-- Volume Confirmation -->
                 <div style="background: rgba(0,212,255,0.1); padding: 10px; border-radius: 5px; border-left: 2px solid #00d4ff;">
                     <div style="color: #00d4ff; font-weight: 700; margin-bottom: 5px;">⚡ VOLUME</div>
                     <div style="color: #ccc;">ABOVE 20MA</div>
-                    <div style="font-size: 0.7em; color: #888; margin-top: 3px;">Strong move incoming</div>
+                    <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">Strong move incoming</div>
                 </div>
                 
                 <!-- Divergence Status -->
                 <div style="background: rgba(255,170,0,0.1); padding: 10px; border-radius: 5px; border-left: 2px solid #ffaa00;">
                     <div style="color: #ffaa00; font-weight: 700; margin-bottom: 5px;">⚠ DIV CHECK</div>
                     <div style="color: #ccc;">NO RSI/Price DIV</div>
-                    <div style="font-size: 0.7em; color: #888; margin-top: 3px;">Trend confirmed</div>
+                    <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">Trend confirmed</div>
                 </div>
                 
                 <!-- S/R Confluence -->
                 <div style="background: rgba(255,0,51,0.1); padding: 10px; border-radius: 5px; border-left: 2px solid #ff0033;">
                     <div style="color: #ff0033; font-weight: 700; margin-bottom: 5px;">📍 S/R HIT</div>
                     <div style="color: #ccc;">RSI 50 + Price</div>
-                    <div style="font-size: 0.7em; color: #888; margin-top: 3px;">Strong entry point</div>
+                    <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">Strong entry point</div>
                 </div>
             </div>
             
@@ -3802,11 +3802,11 @@
                     <div style="font-size: 0.7em; color: #00ff41; margin-bottom: 4px; font-weight: 700;">📖 ORDER BOOK IMBALANCE:</div>
                     <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">BID Depth:</span>
+                            <span style="color: #fff;">BID Depth:</span>
                             <span style="color: #00ff41;">$245M (2%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">ASK Depth:</span>
+                            <span style="color: #fff;">ASK Depth:</span>
                             <span style="color: #ff0033;">$182M (2%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3821,11 +3821,11 @@
                     <div style="font-size: 0.7em; color: #ff00ff; margin-bottom: 4px; font-weight: 700;">💬 SOCIAL SENTIMENT:</div>
                     <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Twitter Vol:</span>
+                            <span style="color: #fff;">Twitter Vol:</span>
                             <span style="color: #ffaa00;">+145K ✍️</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Sentiment:</span>
+                            <span style="color: #fff;">Sentiment:</span>
                             <span style="color: #00ff41; font-weight: bold;">72/100 🟢</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3862,11 +3862,11 @@
                     <div style="font-size: 0.7em; color: #00d4ff; margin-bottom: 4px; font-weight: 700;">🏗️ MARKET STRUCTURE:</div>
                     <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Last BOS:</span>
+                            <span style="color: #fff;">Last BOS:</span>
                             <span style="color: #00ff41;">$96,800 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">CHoCH:</span>
+                            <span style="color: #fff;">CHoCH:</span>
                             <span style="color: #ffaa00;">PENDING ⏳</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3881,11 +3881,11 @@
                     <div style="font-size: 0.7em; color: #0096ff; margin-bottom: 4px; font-weight: 700;">⛏️ NETWORK HEALTH:</div>
                     <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Hashrate:</span>
+                            <span style="color: #fff;">Hashrate:</span>
                             <span style="color: #0096ff;">425 EH/s 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Difficulty:</span>
+                            <span style="color: #fff;">Difficulty:</span>
                             <span style="color: #0096ff;">68.5T 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3900,11 +3900,11 @@
                     <div style="font-size: 0.7em; color: #ffff00; margin-bottom: 4px; font-weight: 700;">📊 DERIVATIVES PREMIUM:</div>
                     <div style="font-size: 0.65em; line-height: 1.4; font-family: 'Roboto Mono';">
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Futures:</span>
+                            <span style="color: #fff;">Futures:</span>
                             <span style="color: #ffff00;">+$45 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0;">
-                            <span style="color: #888;">Perp:</span>
+                            <span style="color: #fff;">Perp:</span>
                             <span style="color: #ffff00;">+$32 🔼</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 2px 0; padding-top: 3px; border-top: 1px solid #333;">
@@ -3919,7 +3919,7 @@
             <div style="padding: 10px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-top: 5px;">
                 <!-- Market Regime -->
                 <div style="background: #0f0f0f; padding: 8px; border-radius: 5px; border-left: 3px solid #ff00ff;">
-                    <div style="font-size: 0.7em; color: #888; margin-bottom: 3px;">MARKET REGIME:</div>
+                    <div style="font-size: 0.7em; color: #fff; margin-bottom: 3px;">MARKET REGIME:</div>
                     <div style="font-size: 0.85em; color: #ff00ff; font-weight: 700;">ACCUMULATION / SPRING</div>
                 </div>
                 
@@ -3947,15 +3947,15 @@
                     <div style="font-size: 0.7em; color: #00ff41; margin-bottom: 4px; font-weight: 700;">🔄 EXCHANGE FLOW:</div>
                     <div style="font-size: 0.7em; line-height: 1.5;">
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">IN:</span>
+                            <span style="color: #fff;">IN:</span>
                             <span style="color: #ff0033; font-weight: bold;">-4,250 BTC</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">OUT:</span>
+                            <span style="color: #fff;">OUT:</span>
                             <span style="color: #00ff41; font-weight: bold;">+8,420 BTC</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">NET:</span>
+                            <span style="color: #fff;">NET:</span>
                             <span style="color: #00ff41; font-weight: bold;">+4,170🔼</span>
                         </div>
                     </div>
@@ -3966,15 +3966,15 @@
                     <div style="font-size: 0.7em; color: #ffaa00; margin-bottom: 4px; font-weight: 700;">📈 VOLATILITY:</div>
                     <div style="font-size: 0.7em; line-height: 1.5;">
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">ATR(14):</span>
+                            <span style="color: #fff;">ATR(14):</span>
                             <span style="color: #ffaa00; font-weight: bold;">$1,245</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">RealVol:</span>
+                            <span style="color: #fff;">RealVol:</span>
                             <span style="color: #ffaa00; font-weight: bold;">42.5%</span>
                         </div>
                         <div style="display: flex; justify-content: space-between;">
-                            <span style="color: #888;">BW:</span>
+                            <span style="color: #fff;">BW:</span>
                             <span style="color: #00d4ff; font-weight: bold;">2.8%</span>
                         </div>
                     </div>
@@ -3988,25 +3988,25 @@
                     <div style="background: rgba(255,170,0,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ffaa00;">
                         <div style="color: #ffaa00; font-weight: 700; margin-bottom: 2px;">🇬🇧 LONDON</div>
                         <div style="color: #ccc;">07:00-09:00 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">Volatility: HIGH | Swing trades</div>
+                        <div style="color: #fff; font-size: 0.6em; margin-top: 2px;">Volatility: HIGH | Swing trades</div>
                     </div>
                     
                     <div style="background: rgba(255,0,51,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ff0033;">
                         <div style="color: #ff0033; font-weight: 700; margin-bottom: 2px;">🇺🇸 NY OPEN</div>
                         <div style="color: #ccc;">12:30-14:30 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">Volatility: EXTREME | Scalps</div>
+                        <div style="color: #fff; font-size: 0.6em; margin-top: 2px;">Volatility: EXTREME | Scalps</div>
                     </div>
                     
                     <div style="background: rgba(255,100,0,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #ff6600;">
                         <div style="color: #ff6600; font-weight: 700; margin-bottom: 2px;">⚠️ LUNCH SLUMP</div>
                         <div style="color: #ccc;">16:30-17:30 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">Volatility: LOW | AVOID</div>
+                        <div style="color: #fff; font-size: 0.6em; margin-top: 2px;">Volatility: LOW | AVOID</div>
                     </div>
                     
                     <div style="background: rgba(0,212,255,0.15); padding: 6px; border-radius: 3px; border-left: 2px solid #00d4ff;">
                         <div style="color: #00d4ff; font-weight: 700; margin-bottom: 2px;">⭐ GOLDEN WIN</div>
                         <div style="color: #ccc;">12:00-14:00 UTC</div>
-                        <div style="color: #888; font-size: 0.6em; margin-top: 2px;">MAX momentum + liquidity</div>
+                        <div style="color: #fff; font-size: 0.6em; margin-top: 2px;">MAX momentum + liquidity</div>
                     </div>
                 </div>
             </div>
@@ -4016,18 +4016,18 @@
                     <div style="font-size: 0.75em; color: #00d4ff; margin-bottom: 6px; font-weight: 700;">💰 FUNDING RATE:</div>
                     <div style="font-size: 0.7em; line-height: 1.5; display: flex; gap: 15px;">
                         <div style="display: flex; justify-content: space-between; flex: 1;">
-                            <span style="color: #888;">Now:</span>
+                            <span style="color: #fff;">Now:</span>
                             <span style="color: #00ff41; font-weight: bold;">+0.0082%</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; flex: 1;">
-                            <span style="color: #888;">8h Avg:</span>
+                            <span style="color: #fff;">8h Avg:</span>
                             <span style="color: #00ff41; font-weight: bold;">+0.0065%</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; flex: 1;">
-                            <span style="color: #888;">Trend:</span>
+                            <span style="color: #fff;">Trend:</span>
                             <span style="color: #00ff41; font-weight: bold;">RISING 🔼</span>
                         </div>
-                        <div style="font-size: 0.7em; color: #888; margin-top: 5px;">+ Funding = Longi płacą Shortom</div>
+                        <div style="font-size: 0.7em; color: #fff; margin-top: 5px;">+ Funding = Longi płacą Shortom</div>
                     </div>
                 </div>
                 
@@ -4036,15 +4036,15 @@
                     <div style="font-size: 0.75em; color: #ff00ff; margin-bottom: 8px; font-weight: 700;">📖 ORDER BOOK IMBALANCE:</div>
                     <div style="font-size: 0.8em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">BID Depth:</span>
+                            <span style="color: #fff;">BID Depth:</span>
                             <span style="color: #00ff41; font-weight: bold;">$245M (2%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">ASK Depth:</span>
+                            <span style="color: #fff;">ASK Depth:</span>
                             <span style="color: #ff0033; font-weight: bold;">$182M (2%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Ratio:</span>
+                            <span style="color: #fff;">Ratio:</span>
                             <span style="color: #00ff41; font-weight: bold;">1.35:1 (BUY PRESSURE)</span>
                         </div>
                     </div>
@@ -4055,15 +4055,15 @@
                     <div style="font-size: 0.75em; color: #ffff00; margin-bottom: 8px; font-weight: 700;">💬 SOCIAL SENTIMENT:</div>
                     <div style="font-size: 0.8em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Twitter Volume:</span>
+                            <span style="color: #fff;">Twitter Volume:</span>
                             <span style="color: #00d4ff; font-weight: bold;">+145K mentions</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Sentiment Score:</span>
+                            <span style="color: #fff;">Sentiment Score:</span>
                             <span style="color: #00ff41; font-weight: bold;">72/100 (BULLISH)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Whale Alert:</span>
+                            <span style="color: #fff;">Whale Alert:</span>
                             <span style="color: #ff00ff; font-weight: bold;">12 Large Txs</span>
                         </div>
                     </div>
@@ -4074,15 +4074,15 @@
                     <div style="font-size: 0.75em; color: #ff0033; margin-bottom: 8px; font-weight: 700;">💥 LIQUIDATION CLUSTERS:</div>
                     <div style="font-size: 0.8em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Above $97.4k:</span>
+                            <span style="color: #fff;">Above $97.4k:</span>
                             <span style="color: #ff0033; font-weight: bold;">$145M Shorts</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Below $94.8k:</span>
+                            <span style="color: #fff;">Below $94.8k:</span>
                             <span style="color: #00ff41; font-weight: bold;">$220M Longs</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Risk Zone:</span>
+                            <span style="color: #fff;">Risk Zone:</span>
                             <span style="color: #ffaa00; font-weight: bold;">BALANCED</span>
                         </div>
                     </div>
@@ -4093,18 +4093,18 @@
                     <div style="font-size: 0.75em; color: #00ffff; margin-bottom: 8px; font-weight: 700;">🏗️ MARKET STRUCTURE:</div>
                     <div style="font-size: 0.8em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Last BOS:</span>
+                            <span style="color: #fff;">Last BOS:</span>
                             <span style="color: #00ff41; font-weight: bold;">$96,800 (BULL)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">CHoCH Status:</span>
+                            <span style="color: #fff;">CHoCH Status:</span>
                             <span style="color: #ffaa00; font-weight: bold;">PENDING</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Structure:</span>
+                            <span style="color: #fff;">Structure:</span>
                             <span style="color: #00ff41; font-weight: bold;">HH/HL (UPTREND)</span>
                         </div>
-                        <div style="font-size: 0.7em; color: #888; margin-top: 5px;">BOS = Break of Structure, CHoCH = Change of Character</div>
+                        <div style="font-size: 0.7em; color: #fff; margin-top: 5px;">BOS = Break of Structure, CHoCH = Change of Character</div>
                     </div>
                 </div>
                 
@@ -4113,18 +4113,18 @@
                     <div style="font-size: 0.75em; color: #9900ff; margin-bottom: 8px; font-weight: 700;">⛏️ NETWORK HEALTH:</div>
                     <div style="font-size: 0.8em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Hashrate:</span>
+                            <span style="color: #fff;">Hashrate:</span>
                             <span style="color: #00ff41; font-weight: bold;">425 EH/s (+2.4%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Difficulty:</span>
+                            <span style="color: #fff;">Difficulty:</span>
                             <span style="color: #00d4ff; font-weight: bold;">68.5T (+1.8%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Tx Volume:</span>
+                            <span style="color: #fff;">Tx Volume:</span>
                             <span style="color: #ffaa00; font-weight: bold;">$42.5B (24h)</span>
                         </div>
-                        <div style="font-size: 0.7em; color: #888; margin-top: 5px;">Silny hashrate = bezpieczna sieć</div>
+                        <div style="font-size: 0.7em; color: #fff; margin-top: 5px;">Silny hashrate = bezpieczna sieć</div>
                     </div>
                 </div>
                 
@@ -4133,22 +4133,22 @@
                     <div style="font-size: 0.75em; color: #ff6600; margin-bottom: 8px; font-weight: 700;">📊 DERIVATIVES PREMIUM:</div>
                     <div style="font-size: 0.8em; line-height: 1.6;">
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Futures Premium:</span>
+                            <span style="color: #fff;">Futures Premium:</span>
                             <span style="color: #00ff41; font-weight: bold;">+$45 (+0.047%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Perp Premium:</span>
+                            <span style="color: #fff;">Perp Premium:</span>
                             <span style="color: #00ff41; font-weight: bold;">+$32 (+0.033%)</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin: 4px 0;">
-                            <span style="color: #888;">Basis (Ann.):</span>
+                            <span style="color: #fff;">Basis (Ann.):</span>
                             <span style="color: #00ff41; font-weight: bold;">+12.5% (HEALTHY)</span>
                         </div>
-                        <div style="font-size: 0.7em; color: #888; margin-top: 5px;">+ Premium = rynek płaci za exposure</div>
+                        <div style="font-size: 0.7em; color: #fff; margin-top: 5px;">+ Premium = rynek płaci za exposure</div>
                     </div>
                 </div>
                 
-                <div style="margin-top: 12px; font-size: 0.7em; color: #666; text-align: center;">
+                <div style="margin-top: 12px; font-size: 0.7em; color: #fff; text-align: center;">
                     Powered by Bloomberg AI Engine • Real-time market analysis
                 </div>
             </div>
@@ -4342,11 +4342,11 @@
                 <!-- Order Flow Insights -->
                 <div style="margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                     <div style="background: rgba(0,255,65,0.08); padding: 8px; border-radius: 5px; border-left: 3px solid #00ff41;">
-                        <div style="font-size: 0.7em; color: #888; margin-bottom: 3px;">💧 WHALE ACTIVITY:</div>
+                        <div style="font-size: 0.7em; color: #fff; margin-bottom: 3px;">💧 WHALE ACTIVITY:</div>
                         <div style="color: #00ff41; font-weight: 700; font-size: 0.85em;">ACCUMULATING</div>
                     </div>
                     <div style="background: rgba(255,170,0,0.08); padding: 8px; border-radius: 5px; border-left: 3px solid #ffaa00;">
-                        <div style="font-size: 0.7em; color: #888; margin-bottom: 3px;">⚡ LIQUIDATION RISK:</div>
+                        <div style="font-size: 0.7em; color: #fff; margin-bottom: 3px;">⚡ LIQUIDATION RISK:</div>
                         <div style="color: #ffaa00; font-weight: 700; font-size: 0.85em;">$98,200+</div>
                     </div>
                 </div>
@@ -4478,27 +4478,27 @@
             <div style="font-size: 0.7em; line-height: 1.8; max-height: 220px; overflow-y: auto;">
                 <div style="margin-bottom: 10px; padding: 8px; background: rgba(255,0,51,0.1); border-left: 3px solid #ff0033;">
                     <div style="color: #ff0033; font-weight: 700;">🔴 15 JAN 2026 - Luna 2.0 Collapse</div>
-                    <div style="color: #888; font-size: 0.95em;">-89% w 48h. $4.2B wyparowane. Cascading liquidations.</div>
+                    <div style="color: #fff; font-size: 0.95em;">-89% w 48h. $4.2B wyparowane. Cascading liquidations.</div>
                 </div>
                 <div style="margin-bottom: 10px; padding: 8px; background: rgba(0,255,65,0.1); border-left: 3px solid #00ff41;">
                     <div style="color: #00ff41; font-weight: 700;">🟢 03 JAN 2026 - BlackRock Bitcoin Rally</div>
-                    <div style="color: #888; font-size: 0.95em;">+$12k w 72h po ogłoszeniu zakupu 50k BTC przez BlackRock.</div>
+                    <div style="color: #fff; font-size: 0.95em;">+$12k w 72h po ogłoszeniu zakupu 50k BTC przez BlackRock.</div>
                 </div>
                 <div style="margin-bottom: 10px; padding: 8px; background: rgba(255,0,51,0.1); border-left: 3px solid #ff0033;">
                     <div style="color: #ff0033; font-weight: 700;">🔴 28 DEC 2025 - Flash Crash $88k→$72k</div>
-                    <div style="color: #888; font-size: 0.95em;">-18% w 15 minut. $3.8B liquidations. Binance lag 40s.</div>
+                    <div style="color: #fff; font-size: 0.95em;">-18% w 15 minut. $3.8B liquidations. Binance lag 40s.</div>
                 </div>
                 <div style="margin-bottom: 10px; padding: 8px; background: rgba(0,212,255,0.1); border-left: 3px solid #00d4ff;">
                     <div style="color: #00d4ff; font-weight: 700;">🔵 15 NOV 2025 - Bitcoin $100k First Time</div>
-                    <div style="color: #888; font-size: 0.95em;">Historyczny moment! FOMO buying przez retail. Volume ATH.</div>
+                    <div style="color: #fff; font-size: 0.95em;">Historyczny moment! FOMO buying przez retail. Volume ATH.</div>
                 </div>
                 <div style="margin-bottom: 10px; padding: 8px; background: rgba(255,0,51,0.1); border-left: 3px solid #ff0033;">
                     <div style="color: #ff0033; font-weight: 700;">🔴 05 NOV 2025 - FTX 2.0 Hack</div>
-                    <div style="color: #888; font-size: 0.95em;">$1.2B skradziono z FTX relaunch. Panic selling -22% w 8h.</div>
+                    <div style="color: #fff; font-size: 0.95em;">$1.2B skradziono z FTX relaunch. Panic selling -22% w 8h.</div>
                 </div>
                 <div style="margin-bottom: 10px; padding: 8px; background: rgba(0,255,65,0.1); border-left: 3px solid #00ff41;">
                     <div style="color: #00ff41; font-weight: 700;">🟢 12 AUG 2025 - ETF Approval Pump</div>
-                    <div style="color: #888; font-size: 0.95em;">SEC zatwierdza Bitcoin Spot ETF. +34% w 5 dni. Institutions rush.</div>
+                    <div style="color: #fff; font-size: 0.95em;">SEC zatwierdza Bitcoin Spot ETF. +34% w 5 dni. Institutions rush.</div>
                 </div>
             </div>
         </div>
@@ -4510,17 +4510,17 @@
                 <div style="display: flex; justify-content: space-between; margin: 5px 0; padding: 5px; background: rgba(0,255,0,0.1); border-left: 2px solid #00ff00;">
                     <span style="color: #00ff00;">BUY 95,501</span>
                     <span style="color: #ffff00; font-weight: bold;">142 BTC</span>
-                    <span style="color: #888;">0.2s</span>
+                    <span style="color: #fff;">0.2s</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin: 5px 0; padding: 5px; background: rgba(255,0,51,0.1); border-left: 2px solid #ff0033;">
                     <span style="color: #ff0033;">SELL 95,498</span>
                     <span style="color: #ffff00; font-weight: bold;">89 BTC</span>
-                    <span style="color: #888;">0.5s</span>
+                    <span style="color: #fff;">0.5s</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin: 5px 0; padding: 5px; background: rgba(0,255,0,0.1); border-left: 2px solid #00ff00;">
                     <span style="color: #00ff00;">BUY 95,502</span>
                     <span style="color: #ffff00; font-weight: bold;">256 BTC</span>
-                    <span style="color: #888;">1.1s</span>
+                    <span style="color: #fff;">1.1s</span>
                 </div>
             </div>
             <div style="margin-top: 10px; padding-top: 8px; border-top: 1px solid #333; font-size: 0.75em;">
@@ -4548,7 +4548,7 @@
                 </div>
             </div>
             <div style="margin-top: 10px; padding: 8px; background: rgba(0,255,0,0.1); border-radius: 4px;">
-                <span style="color: #888; font-size: 0.7em;">BID/ASK RATIO:</span>
+                <span style="color: #fff; font-size: 0.7em;">BID/ASK RATIO:</span>
                 <span style="color: #00ff00; font-weight: 900; margin-left: 5px;">1.35:1 BULLISH</span>
             </div>
         </div>
@@ -4558,19 +4558,19 @@
             <div style="font-size: 1em; color: #ffaa00; margin-bottom: 12px; font-weight: 700;">💰 SPREAD & LIQUIDITY</div>
             <div style="font-size: 0.8em; line-height: 1.8;">
                 <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                    <span style="color: #888;">Spread:</span>
+                    <span style="color: #fff;">Spread:</span>
                     <span style="color: #00ff00; font-weight: bold;">$0.50 (LOW)</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                    <span style="color: #888;">Slippage 100 BTC:</span>
+                    <span style="color: #fff;">Slippage 100 BTC:</span>
                     <span style="color: #ffaa00; font-weight: bold;">0.08%</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                    <span style="color: #888;">Liquidity Score:</span>
+                    <span style="color: #fff;">Liquidity Score:</span>
                     <span style="color: #00ff00; font-weight: bold;">95/100 EXCELLENT</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin: 5px 0;">
-                    <span style="color: #888;">Active Traders:</span>
+                    <span style="color: #fff;">Active Traders:</span>
                     <span style="color: #00d4ff; font-weight: bold;">12,450 (PEAK)</span>
                 </div>
             </div>
@@ -4583,7 +4583,7 @@
                 <div style="display: flex; justify-content: space-between; margin: 8px 0; padding: 8px; background: rgba(0,255,65,0.1); border-left: 3px solid #00ff41;">
                     <div>
                         <div style="color: #00ff41; font-weight: 700;">GRAYSCALE</div>
-                        <div style="color: #888; font-size: 0.9em;">2 min temu</div>
+                        <div style="color: #fff; font-size: 0.9em;">2 min temu</div>
                     </div>
                     <div style="text-align: right;">
                         <div style="color: #ffff00; font-weight: 900;">+850 BTC</div>
@@ -4593,7 +4593,7 @@
                 <div style="display: flex; justify-content: space-between; margin: 8px 0; padding: 8px; background: rgba(255,0,51,0.1); border-left: 3px solid #ff0033;">
                     <div>
                         <div style="color: #ff0033; font-weight: 700;">MICROSTRATEGY</div>
-                        <div style="color: #888; font-size: 0.9em;">8 min temu</div>
+                        <div style="color: #fff; font-size: 0.9em;">8 min temu</div>
                     </div>
                     <div style="text-align: right;">
                         <div style="color: #ffff00; font-weight: 900;">-420 BTC</div>
@@ -4617,7 +4617,7 @@
             <div class="key-level-item current">
                 <span style="color: #ffaa00;">● CURRENT</span>
                 <span style="color: #ffff00; font-weight: bold;">$95,501</span>
-                <span style="font-size: 0.75em; color: #888;">PRICE ACTION</span>
+                <span style="font-size: 0.75em; color: #fff;">PRICE ACTION</span>
             </div>
             <div class="key-level-item support">
                 <span style="color: #00ff00;">▼ SUPPORT</span>
@@ -4749,7 +4749,7 @@
                 </div>
                 <div class="trade-details">
                     <span style="color: #00ff41; font-weight: 700;">12.50 BTC</span>
-                    <span style="color: #666;"> @ $95,551</span>
+                    <span style="color: #fff;"> @ $95,551</span>
                 </div>
             </div>
             
@@ -4760,7 +4760,7 @@
                 </div>
                 <div class="trade-details">
                     <span style="color: #ff0033; font-weight: 700;">8.90 BTC</span>
-                    <span style="color: #666;"> @ $95,471</span>
+                    <span style="color: #fff;"> @ $95,471</span>
                 </div>
             </div>
             
@@ -4771,7 +4771,7 @@
                 </div>
                 <div class="trade-details">
                     <span style="color: #00ff41; font-weight: 700;">15.20 BTC</span>
-                    <span style="color: #666;"> @ $95,521</span>
+                    <span style="color: #fff;"> @ $95,521</span>
                 </div>
             </div>
             
@@ -4782,7 +4782,7 @@
                 </div>
                 <div class="trade-details">
                     <span style="color: #ff0033; font-weight: 700;">6.70 BTC</span>
-                    <span style="color: #666;"> @ $95,491</span>
+                    <span style="color: #fff;"> @ $95,491</span>
                 </div>
             </div>
             
@@ -4793,7 +4793,7 @@
                 </div>
                 <div class="trade-details">
                     <span style="color: #00ff41; font-weight: 700;">22.30 BTC</span>
-                    <span style="color: #666;"> @ $95,601</span>
+                    <span style="color: #fff;"> @ $95,601</span>
                 </div>
             </div>
             
@@ -4869,14 +4869,14 @@
                 </div>
 
                 <div style="margin-top: 12px; padding: 10px; background: rgba(0,212,255,0.05); border-radius: 4px; border-left: 3px solid #00d4ff;">
-                    <div style="font-size: 0.75em; color: #888;">
+                    <div style="font-size: 0.75em; color: #fff;">
                         ⚠️ <strong>Disclaimer:</strong> AI recommendations are educational only. Not financial advice. Always manage risk and use stop losses. Past performance ≠ future results.
                     </div>
                 </div>
             </div>
         </div>
 
-        <p style="font-size: 0.85em; color: #666; text-align: center;">
+        <p style="font-size: 0.85em; color: #fff; text-align: center;">
             🐹 Hamster Terminal v3.0 • hamsterterminal.com • 2026 • Real-Time Analysis Engine • Powered by Binance API
         </p>
     </div>
@@ -6365,7 +6365,7 @@
         <div style="font-family: 'Roboto Mono', monospace; font-size: 1.5em; color: #ffaa00; font-weight: 700; text-shadow: 2px 2px 0 rgba(0,0,0,0.8); margin-bottom: 15px; animation: pulse 2s infinite;">
             💰 WPŁAĆ DEPOZYT, ABY KONTYNUOWAĆ 💰
         </div>
-        <div style="font-size: 0.9em; color: #888; line-height: 1.8; max-width: 600px; margin: 0 auto;">
+        <div style="font-size: 0.9em; color: #fff; line-height: 1.8; max-width: 600px; margin: 0 auto;">
             <div style="margin: 10px 0;">🎮 INSERT COIN TO CONTINUE</div>
             <div style="margin: 10px 0;">📊 Trading wymaga kapitału. Zarządzaj ryzykiem mądrze.</div>
             <div style="margin: 10px 0; color: #00ff41;">🏆 Pamiętaj: Market makers always win. Don't fight the tape!</div>
