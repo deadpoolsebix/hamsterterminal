@@ -2821,7 +2821,7 @@
                 <div onclick="toggleTimeframeZone()" style="display: flex; justify-content: space-between; align-items: center;">
                     <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
                         <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800;">📊 TIMEFRAME ZONE • MULTI-TF ANALYSIS</div>
-                        <div style="font-size: 0.85em; color: #33bbdd; font-family: 'Roboto Mono', monospace;">
+                        <div style="font-size: 1em; color: #fff; font-family: 'Roboto Mono', monospace; font-weight: 600;">
                             Sygnały z 10 interwałów czasowych: 1m do 1Y
                         </div>
                     </div>
@@ -2831,85 +2831,105 @@
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
                         <div style="font-size: 0.65em; color: #fff;">1m • 5m • 15m • 30m • 1h • 4h • 1d • 1M • 3M • 1Y</div>
                     </div>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 8px;">
-                        <div id="1m" style="background: rgba(0,255,65,0.06); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1m</div>
-                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px;">
+                        <div id="1m" style="background: rgba(0,255,65,0.06); border-left: 3px solid #00ff41; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 1em; margin-bottom: 3px;">1m</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 3px;">✓ BULL</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">58</span></div>
                             <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
                             <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">72/68</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">↑</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Upper</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
                         </div>
-                        <div id="5m" style="background: rgba(0,255,65,0.06); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">5m</div>
-                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                        <div id="5m" style="background: rgba(0,255,65,0.06); border-left: 3px solid #00ff41; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 1em; margin-bottom: 3px;">5m</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 3px;">✓ BULL</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">54</span></div>
                             <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
                             <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">65/60</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">↑</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Mid</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
                         </div>
-                        <div id="15m" style="background: rgba(0,255,65,0.07); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">15m</div>
-                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                        <div id="15m" style="background: rgba(0,255,65,0.07); border-left: 3px solid #00ff41; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 1em; margin-bottom: 3px;">15m</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 3px;">✓ BULL</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">56</span></div>
                             <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
                             <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">58/52</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">↑</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Mid</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
                         </div>
-                        <div id="30m" style="background: rgba(255,170,0,0.07); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">30m</div>
-                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">→ NEUTRAL</div>
+                        <div id="30m" style="background: rgba(255,170,0,0.07); border-left: 3px solid #ffaa00; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #ffaa00; font-weight: 700; font-size: 1em; margin-bottom: 3px;">30m</div>
+                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 3px;">→ NEUTRAL</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">51</span></div>
                             <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
                             <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">48/50</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">→</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Mid</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
                         </div>
-                        <div id="1h" style="background: rgba(255,170,0,0.08); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1h</div>
-                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">↔ SIDEWAYS</div>
+                        <div id="1h" style="background: rgba(255,170,0,0.08); border-left: 3px solid #ffaa00; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #ffaa00; font-weight: 700; font-size: 1em; margin-bottom: 3px;">1h</div>
+                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 3px;">↔ SIDEWAYS</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">47</span></div>
                             <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
                             <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">44/45</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">→</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Lower</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
                         </div>
-                        <div id="4h" style="background: rgba(0,212,255,0.08); border-left: 2px solid #00d4ff; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">4h</div>
-                            <div style="color: #00d4ff; font-weight: 600; margin-bottom: 2px;">→ NEUTRAL</div>
+                        <div id="4h" style="background: rgba(0,212,255,0.08); border-left: 3px solid #00d4ff; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #00d4ff; font-weight: 700; font-size: 1em; margin-bottom: 3px;">4h</div>
+                            <div style="color: #00d4ff; font-weight: 600; margin-bottom: 3px;">→ NEUTRAL</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">48</span></div>
                             <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↓-</span></div>
                             <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">40/42</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">↓</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Lower</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
                         </div>
-                        <div id="1d" style="background: rgba(255,0,51,0.08); border-left: 2px solid #ff0033; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1d</div>
-                            <div style="color: #ff0033; font-weight: 600; margin-bottom: 2px;">✗ BEAR</div>
+                        <div id="1d" style="background: rgba(255,0,51,0.08); border-left: 3px solid #ff0033; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #ff0033; font-weight: 700; font-size: 1em; margin-bottom: 3px;">1d</div>
+                            <div style="color: #ff0033; font-weight: 600; margin-bottom: 3px;">✗ BEAR</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">42</span></div>
                             <div style="color: #ff0033; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↓-</span></div>
                             <div style="color: #ff0033; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">35/38</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">↓</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Lower</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">→MED</span></div>
                         </div>
-                        <div id="1M" style="background: rgba(0,255,65,0.08); border-left: 2px solid #00ff41; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1M</div>
-                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                        <div id="1M" style="background: rgba(0,255,65,0.08); border-left: 3px solid #00ff41; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #00ff41; font-weight: 700; font-size: 1em; margin-bottom: 3px;">1M</div>
+                            <div style="color: #00ff41; font-weight: 600; margin-bottom: 3px;">✓ BULL</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">62</span></div>
                             <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑+</span></div>
                             <div style="color: #00ff41; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">78/75</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">↑</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Upper</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
                         </div>
-                        <div id="3M" style="background: rgba(255,0,255,0.08); border-left: 2px solid #ff00ff; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #ff00ff; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">3M</div>
-                            <div style="color: #ff00ff; font-weight: 600; margin-bottom: 2px;">✓ BULL</div>
+                        <div id="3M" style="background: rgba(255,0,255,0.08); border-left: 3px solid #ff00ff; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #ff00ff; font-weight: 700; font-size: 1em; margin-bottom: 3px;">3M</div>
+                            <div style="color: #ff00ff; font-weight: 600; margin-bottom: 3px;">✓ BULL</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">68</span></div>
                             <div style="color: #00ff41; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">↑++</span></div>
                             <div style="color: #00ff41; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">85/82</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">↑↑</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Upper</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↑HIGH</span></div>
                         </div>
-                        <div id="1Y" style="background: rgba(255,170,0,0.10); border-left: 2px solid #ffaa00; padding: 8px; border-radius: 4px; font-size: 0.7em;">
-                            <div style="color: #ffaa00; font-weight: 700; font-size: 0.9em; margin-bottom: 2px;">1Y</div>
-                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 2px;">◈ KONSOL.</div>
+                        <div id="1Y" style="background: rgba(255,170,0,0.10); border-left: 3px solid #ffaa00; padding: 10px; border-radius: 6px; font-size: 0.8em;">
+                            <div style="color: #ffaa00; font-weight: 700; font-size: 1em; margin-bottom: 3px;">1Y</div>
+                            <div style="color: #ffaa00; font-weight: 600; margin-bottom: 3px;">◈ KONSOL.</div>
                             <div style="color: #ffaa00; margin-bottom: 1px;">RSI: <span style="font-weight: 700;">55</span></div>
                             <div style="color: #cccccc; margin-bottom: 1px;">MACD: <span style="font-weight: 700;">→0</span></div>
                             <div style="color: #00d4ff; margin-bottom: 1px;">K%D: <span style="font-weight: 700;">52/55</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">EMA: <span style="font-weight: 700;">→</span></div>
+                            <div style="color: #fff; margin-bottom: 1px;">BB: <span style="font-weight: 700;">Mid</span></div>
                             <div style="color: #cccccc;">Vol: <span style="font-weight: 700;">↓LOW</span></div>
                         </div>
                     </div>
