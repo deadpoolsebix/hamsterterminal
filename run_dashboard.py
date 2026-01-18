@@ -5,9 +5,10 @@ Public Dashboard - Works 24/7!
 Najprostsze rozwiązanie - tylko Python, bez dodatkowych instalacji!
 """
 
-from flask import Flask, send_file, send_from_directory, jsonify
+from flask import Flask, send_file, send_from_directory, jsonify, request
 import os
 import time
+import requests
 
 # Lazy import for optional dependency
 _yf = None
@@ -23,6 +24,16 @@ def _get_yf():
     return _yf
 
 app = Flask(__name__, static_folder='.')
+
+
+def _http_json(url, params=None, timeout=6):
+    """Small helper to fetch JSON with timeout and clear error reporting."""
+    try:
+        res = requests.get(url, params=params or {}, timeout=timeout)
+        res.raise_for_status()
+        return res.json(), None
+    except Exception as e:
+        return None, str(e)
 
 @app.route('/')
 def index():
@@ -130,6 +141,117 @@ def api_commodities():
             "error": "fetch_failed",
             "detail": str(e)
         }), 500
+
+
+# =====================
+# PROXY: BINANCE + COINGECKO + FNG (CORS SAFE)
+# =====================
+
+@app.route('/api/binance/summary')
+def api_binance_summary():
+    symbol_btc = request.args.get('btc', 'BTCUSDT')
+    symbol_eth = request.args.get('eth', 'ETHUSDT')
+
+    base = 'https://api.binance.com/api/v3'
+
+    btc24, err = _http_json(f"{base}/ticker/24hr", params={'symbol': symbol_btc})
+    if err:
+        print(f"❌ BTC24h error: {err}")
+        return jsonify({"ok": False, "error": "btc24", "detail": err}), 502
+
+    btc_price, err = _http_json(f"{base}/ticker/price", params={'symbol': symbol_btc})
+    if err:
+        print(f"❌ BTC price error: {err}")
+        return jsonify({"ok": False, "error": "btc_price", "detail": err}), 502
+
+    eth24, err = _http_json(f"{base}/ticker/24hr", params={'symbol': symbol_eth})
+    if err:
+        print(f"❌ ETH24h error: {err}")
+        return jsonify({"ok": False, "error": "eth24", "detail": err}), 502
+
+    eth_price, err = _http_json(f"{base}/ticker/price", params={'symbol': symbol_eth})
+    if err:
+        print(f"❌ ETH price error: {err}")
+        return jsonify({"ok": False, "error": "eth_price", "detail": err}), 502
+
+    try:
+        payload = {
+            "ok": True,
+            "btcPrice": float(btc_price.get('price', 0)),
+            "btcChange24h": float(btc24.get('priceChangePercent', 0)),
+            "btcVolume24h": float(btc24.get('quoteVolume', 0)),
+            "ethPrice": float(eth_price.get('price', 0)),
+            "ethChange24h": float(eth24.get('priceChangePercent', 0)),
+            "ethVolume24h": float(eth24.get('quoteVolume', 0)),
+        }
+        print(f"✅ BTC: ${payload['btcPrice']:.2f} ({payload['btcChange24h']:+.2f}%) | ETH: ${payload['ethPrice']:.2f}")
+        return jsonify(payload)
+    except Exception as e:
+        print(f"❌ Parse error: {str(e)}")
+        return jsonify({"ok": False, "error": "parse", "detail": str(e)}), 500
+
+
+@app.route('/api/binance/price')
+def api_binance_price():
+    symbol = request.args.get('symbol', 'BTCUSDT')
+    data, err = _http_json('https://api.binance.com/api/v3/ticker/price', params={'symbol': symbol})
+    if err:
+        return jsonify({"ok": False, "error": err}), 502
+    try:
+        return jsonify({"ok": True, "price": float(data.get('price', 0))})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route('/api/binance/funding')
+def api_binance_funding():
+    symbol = request.args.get('symbol', 'BTCUSDT')
+    data, err = _http_json('https://api.binance.com/fapi/v1/premiumIndex', params={'symbol': symbol})
+    if err:
+        return jsonify({"ok": False, "error": err}), 502
+    try:
+        return jsonify({
+            "ok": True,
+            "lastFundingRate": float(data.get('lastFundingRate', 0)),
+            "nextFundingTime": data.get('nextFundingTime')
+        })
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route('/api/binance/oi')
+def api_binance_oi():
+    symbol = request.args.get('symbol', 'BTCUSDT')
+    data, err = _http_json('https://api.binance.com/fapi/v1/openInterest', params={'symbol': symbol})
+    if err:
+        return jsonify({"ok": False, "error": err}), 502
+    try:
+        return jsonify({"ok": True, "openInterest": float(data.get('openInterest', 0))})
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
+
+
+@app.route('/api/coingecko/simple')
+def api_coingecko_simple():
+    params = {
+        'ids': 'bitcoin,ethereum',
+        'vs_currencies': 'usd',
+        'include_market_cap': 'true',
+        'include_24hr_vol': 'true',
+        'include_24hr_change': 'true'
+    }
+    data, err = _http_json('https://api.coingecko.com/api/v3/simple/price', params=params)
+    if err:
+        return jsonify({"ok": False, "error": err}), 502
+    return jsonify({"ok": True, "data": data})
+
+
+@app.route('/api/fng')
+def api_fng():
+    data, err = _http_json('https://api.alternative.me/fng/', params={'limit': 1})
+    if err:
+        return jsonify({"ok": False, "error": err}), 502
+    return jsonify({"ok": True, "data": data})
 
 @app.route('/health')
 def health():
