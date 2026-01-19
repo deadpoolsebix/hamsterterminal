@@ -1452,12 +1452,12 @@
         </div>
     </div>
 
-    <!-- SESSION MARKETS • CHRONOLOGICAL ORDER (Tokyo → London → NY) -->
+    <!-- SESSION MARKETS • CHRONOLOGICAL FROM EUROPE TIME -->
     <div class="metrics-panel">
         <div class="metric-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%); border: 3px solid #00d4ff; box-shadow: 0 0 32px rgba(0, 212, 255, 0.32), 0 0 48px rgba(0, 212, 255, 0.2), 0 0 64px rgba(0, 212, 255, 0.12), inset 0 0 15px rgba(0, 0, 0, 0.8); padding: 15px; transition: border-color 8s ease-in-out infinite, box-shadow 8s ease-in-out infinite !important; animation: btcPanelColorCycle 8s ease-in-out infinite !important; * { animation: none !important; transition: none !important; }">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; animation: none !important; transition: none !important;">
-                <div class="metric-label" style="color: #00d4ff; letter-spacing: 1px; animation: none !important; transition: none !important;"><span style="display: inline-block; animation: none !important; transition: none !important; color: #ffff00; font-weight: 900;">SESJE RYNKOWE</span> • CHRONOLOGICZNIE</div>
-                <div style="font-size: 0.75em; color: #fff; animation: none !important; transition: none !important;">Tokyo → London → NY • CVD, OI, FVG, SR</div>
+                <div class="metric-label" style="color: #00d4ff; letter-spacing: 1px; animation: none !important; transition: none !important;"><span style="display: inline-block; animation: none !important; transition: none !important; color: #ffff00; font-weight: 900;">SESJE RYNKOWE</span> • CZAS EUROPEJSKI</div>
+                <div style="font-size: 0.75em; color: #fff; animation: none !important; transition: none !important;">London (08:00) → NY (14:30) → Tokyo (00:00 CET+1)</div>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; animation: none !important; transition: none !important;">
                 <!-- Active Session Panel -->
@@ -1470,60 +1470,60 @@
                         Likwidność: <span id="active-liquidity" style="color: #00ff41;">--</span>
                     </div>
                 </div>
-                <!-- 1. Tokyo Session (00:00 JST - earliest) -->
-                <div style="background: linear-gradient(135deg, #1a0a1a 0%, #0f0f0f 100%); padding: 12px; border-radius: 6px; border-left: 3px solid #ffaa00;">
-                    <div style="font-size: 0.85em; color: #ffaa00; font-weight: 700;">🐉 AZJA - Tokyo (00:00-15:00 JST)</div>
-                    <div style="color: #ffff00; font-weight: 800;" id="asia-time-panel">--:-- JST</div>
-                    <div style="font-size: 0.8em; color: #ccc; line-height: 1.4; margin-top: 6px;">
-                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                            <span>Aktywność 24h:</span>
-                            <span style="color: #ffaa00; font-weight: 700;">DYSTRYBUCJA</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
-                            <span>Large Candle:</span>
-                            <span style="color: #ff6600;">-$2,110 (RED)</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
-                            <span>Volume:</span>
-                            <span style="color: #ff0033;">Below AVG (-15%)</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- 2. London Session (08:00 GMT) -->
+                <!-- 1. London Session (08:00 GMT - first in Europe) -->
                 <div style="background: linear-gradient(135deg, #1a0f0a 0%, #0f0f0f 100%); padding: 12px; border-radius: 6px; border-left: 3px solid #00ff41;">
-                    <div style="font-size: 0.85em; color: #00ff41; font-weight: 700;">🇬🇧 LONDYN - LSE (08:00-16:30 LT)</div>
+                    <div style="font-size: 0.85em; color: #00ff41; font-weight: 700;">🇬🇧 LONDYN (08:00-16:30 GMT)</div>
                     <div style="color: #ffff00; font-weight: 800;" id="london-time-panel">--:-- GMT</div>
                     <div style="font-size: 0.8em; color: #ccc; line-height: 1.4; margin-top: 6px;">
                         <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                            <span>Aktywność 24h:</span>
-                            <span style="color: #00ff41; font-weight: 700;">AKUMULACJA</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
-                            <span>Large Buy:</span>
-                            <span style="color: #00ff41;">+2,450 BTC</span>
+                            <span>Czas do startu:</span>
+                            <span id="london-countdown" style="color: #00d4ff; font-weight: 700;">--</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 3px;">
                             <span>Status:</span>
-                            <span id="london-status-panel" style="color: #00ff41; font-weight: 800;">BULLISH</span>
+                            <span id="london-status-panel" style="color: #00ff41; font-weight: 800;">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
+                            <span>Kluczowy poziom:</span>
+                            <span id="london-key-level" style="color: #ffaa00;">$95,850</span>
                         </div>
                     </div>
                 </div>
-                <!-- 3. New York Session (09:30 ET - latest) -->
+                <!-- 2. New York Session (14:30 CET - second) -->
                 <div style="background: linear-gradient(135deg, #1a0a0a 0%, #0f0f0f 100%); padding: 12px; border-radius: 6px; border-left: 3px solid #ff00ff;">
-                    <div style="font-size: 0.85em; color: #ff00ff; font-weight: 700;">🗽 NY - Wall Street (09:30-16:00 ET)</div>
+                    <div style="font-size: 0.85em; color: #ff00ff; font-weight: 700;">🗽 NOWY JORK (14:30-22:00 CET)</div>
                     <div style="color: #ffff00; font-weight: 800;" id="ny-time-panel">--:-- EST</div>
                     <div style="font-size: 0.8em; color: #ccc; line-height: 1.4; margin-top: 6px;">
                         <div style="display: flex; justify-content: space-between; margin-top: 4px;">
-                            <span>Aktywność 24h:</span>
-                            <span style="color: #ff00ff; font-weight: 700;">MANIPULACJA</span>
-                        </div>
-                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
-                            <span>Wick Level:</span>
-                            <span style="color: #ff6600;">$96,850 (4 razy)</span>
+                            <span>Czas do startu:</span>
+                            <span id="ny-countdown" style="color: #00d4ff; font-weight: 700;">--</span>
                         </div>
                         <div style="display: flex; justify-content: space-between; margin-top: 3px;">
                             <span>Status:</span>
-                            <span id="ny-status-panel" style="color: #ff00ff; font-weight: 800;">ACTIVE</span>
+                            <span id="ny-status-panel" style="color: #ff00ff; font-weight: 800;">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
+                            <span>Kluczowy poziom:</span>
+                            <span id="ny-key-level" style="color: #ffaa00;">$96,200</span>
+                        </div>
+                    </div>
+                </div>
+                <!-- 3. Tokyo Session (00:00 JST = 16:00 CET poprzedniego dnia - last) -->
+                <div style="background: linear-gradient(135deg, #1a0a1a 0%, #0f0f0f 100%); padding: 12px; border-radius: 6px; border-left: 3px solid #ffaa00;">
+                    <div style="font-size: 0.85em; color: #ffaa00; font-weight: 700;">🐉 TOKIO (00:00-09:00 JST)</div>
+                    <div style="color: #ffff00; font-weight: 800;" id="asia-time-panel">--:-- JST</div>
+                    <div style="font-size: 0.8em; color: #ccc; line-height: 1.4; margin-top: 6px;">
+                        <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+                            <span>Czas do startu:</span>
+                            <span id="tokyo-countdown" style="color: #00d4ff; font-weight: 700;">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
+                            <span>Status:</span>
+                            <span id="tokyo-status-panel" style="color: #ffaa00; font-weight: 800;">--</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 3px;">
+                            <span>Kluczowy poziom:</span>
+                            <span id="tokyo-key-level" style="color: #ffaa00;">$94,500</span>
                         </div>
                     </div>
                 </div>
@@ -2734,6 +2734,7 @@
             // Update panel godziny - LONDON (zamyka 16:30)
             const lt = document.getElementById('london-time-panel');
             const ls = document.getElementById('london-status-panel');
+            const lc = document.getElementById('london-countdown');
             if (lt) {
                 const isWeekend = london.weekday === 'Sat' || london.weekday === 'Sun';
                 if (isWeekend) {
@@ -2747,13 +2748,37 @@
                     ((london.hour > 8 && london.hour < 16) ||
                         (london.hour === 8 && london.minute >= 0) ||
                         (london.hour === 16 && london.minute <= 30));
-                ls.textContent = londonOpen ? 'STATUS: LSE OPEN ✓' : 'STATUS: LSE CLOSED';
+                ls.textContent = londonOpen ? 'OTWARTA ✓' : 'ZAMKNIĘTA';
                 ls.style.color = londonOpen ? '#00ff41' : '#ff0033';
+            }
+            if (lc) {
+                // Time until 08:00 GMT if closed
+                const now = new Date();
+                const londonNow = new Date(now.toLocaleString('en-US', {timeZone: 'Europe/London'}));
+                const londonOpen = (london.weekday !== 'Sat' && london.weekday !== 'Sun') &&
+                    ((london.hour > 8 && london.hour < 16) || (london.hour === 8 && london.minute >= 0) || (london.hour === 16 && london.minute <= 30));
+                
+                if (londonOpen) {
+                    lc.textContent = 'OTWARTA';
+                    lc.style.color = '#00ff41';
+                } else {
+                    let nextOpen = new Date(londonNow);
+                    nextOpen.setHours(8, 0, 0, 0);
+                    if (londonNow.getHours() >= 17) nextOpen.setDate(nextOpen.getDate() + 1);
+                    while (nextOpen.getDay() === 0 || nextOpen.getDay() === 6) nextOpen.setDate(nextOpen.getDate() + 1);
+                    
+                    const diff = nextOpen - londonNow;
+                    const hours = Math.floor(diff / 3600000);
+                    const mins = Math.floor((diff % 3600000) / 60000);
+                    lc.textContent = `${hours}h ${mins}m`;
+                    lc.style.color = '#00d4ff';
+                }
             }
 
             // Update panel godziny - TOKYO (zamyka 15:00)
             const at = document.getElementById('asia-time-panel');
-            const as = document.getElementById('asia-status-panel');
+            const as = document.getElementById('tokyo-status-panel');
+            const tc = document.getElementById('tokyo-countdown');
             if (at) {
                 const isWeekend = tokyo.weekday === 'Sat' || tokyo.weekday === 'Sun';
                 if (isWeekend) {
@@ -2767,8 +2792,59 @@
                     ((tokyo.hour > 9 && tokyo.hour < 15) ||
                         (tokyo.hour === 9 && tokyo.minute >= 0) ||
                         (tokyo.hour === 15 && tokyo.minute === 0));
-                as.textContent = tokyoOpen ? 'STATUS: TSE OPEN ✓' : 'STATUS: TSE CLOSED';
+                as.textContent = tokyoOpen ? 'OTWARTA ✓' : 'ZAMKNIĘTA';
                 as.style.color = tokyoOpen ? '#00ff41' : '#ff0033';
+            }
+            if (tc) {
+                // Time until 00:00 JST (midnight) if closed
+                const now = new Date();
+                const tokyoNow = new Date(now.toLocaleString('en-US', {timeZone: 'Asia/Tokyo'}));
+                const tokyoOpen = (tokyo.weekday !== 'Sat' && tokyo.weekday !== 'Sun') &&
+                    ((tokyo.hour > 9 && tokyo.hour < 15) || (tokyo.hour === 9 && tokyo.minute >= 0) || (tokyo.hour === 15 && tokyo.minute === 0));
+                
+                if (tokyoOpen) {
+                    tc.textContent = 'OTWARTA';
+                    tc.style.color = '#00ff41';
+                } else {
+                    let nextOpen = new Date(tokyoNow);
+                    nextOpen.setHours(0, 0, 0, 0);
+                    if (tokyoNow.getHours() >= 15) nextOpen.setDate(nextOpen.getDate() + 1);
+                    while (nextOpen.getDay() === 0 || nextOpen.getDay() === 6) nextOpen.setDate(nextOpen.getDate() + 1);
+                    
+                    const diff = nextOpen - tokyoNow;
+                    const hours = Math.floor(diff / 3600000);
+                    const mins = Math.floor((diff % 3600000) / 60000);
+                    tc.textContent = `${hours}h ${mins}m`;
+                    tc.style.color = '#00d4ff';
+                }
+            }
+            
+            // Update NY countdown
+            const nc = document.getElementById('ny-countdown');
+            if (nc) {
+                // Time until 09:30 ET if closed
+                const now = new Date();
+                const nyNow = new Date(now.toLocaleString('en-US', {timeZone: 'America/New_York'}));
+                const nyOpen = (ny.weekday !== 'Sat' && ny.weekday !== 'Sun') &&
+                    ((ny.hour > 9 || (ny.hour === 9 && ny.minute >= 30)) && ny.hour < 16);
+                
+                if (nyOpen) {
+                    nc.textContent = 'OTWARTA';
+                    nc.style.color = '#00ff41';
+                } else {
+                    let nextOpen = new Date(nyNow);
+                    nextOpen.setHours(9, 30, 0, 0);
+                    if (nyNow.getHours() >= 16 || (nyNow.getHours() < 9) || (nyNow.getHours() === 9 && nyNow.getMinutes() < 30)) {
+                        if (nyNow.getHours() >= 16) nextOpen.setDate(nextOpen.getDate() + 1);
+                    }
+                    while (nextOpen.getDay() === 0 || nextOpen.getDay() === 6) nextOpen.setDate(nextOpen.getDate() + 1);
+                    
+                    const diff = nextOpen - nyNow;
+                    const hours = Math.floor(diff / 3600000);
+                    const mins = Math.floor((diff % 3600000) / 60000);
+                    nc.textContent = `${hours}h ${mins}m`;
+                    nc.style.color = '#00d4ff';
+                }
             }
         }
 
@@ -6541,15 +6617,15 @@
                 const tickers = [
                     {
                         symbol: 'BTC',
-                        price: (window.tickerData?.BTC?.price || marketData.btcPrice || 95500).toFixed(0),
-                        change: (window.tickerData?.BTC?.change ?? marketData.btcChange24h ?? 0).toFixed(2),
+                        price: marketData.btcPrice.toFixed(0),
+                        change: marketData.btcChange24h.toFixed(2),
                         color: '#ff8800',
                         emoji: '₿'
                     },
                     {
                         symbol: 'ETH',
-                        price: (window.tickerData?.ETH?.price || marketData.ethPrice || 2845).toFixed(0),
-                        change: (window.tickerData?.ETH?.change ?? 0).toFixed(2),
+                        price: marketData.ethPrice.toFixed(0),
+                        change: marketData.ethChange24h.toFixed(2),
                         color: '#627eea',
                         emoji: '⟠'
                     },
@@ -6591,6 +6667,20 @@
                         change: (-0.6).toFixed(1),
                         color: '#ffaa00',
                         emoji: '🇩🇪'
+                    },
+                    {
+                        symbol: 'BULLS',
+                        price: '62',
+                        change: '+4.2',
+                        color: '#00ff41',
+                        emoji: '🐂'
+                    },
+                    {
+                        symbol: 'BEARS',
+                        price: '38',
+                        change: '-4.2',
+                        color: '#ff0033',
+                        emoji: '🐻'
                     }
                 ];
                 
@@ -6598,7 +6688,7 @@
                     const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';
                     const idAttr = ticker.idPrice ? ` id="${ticker.idPrice}"` : '';
                     const changeIdAttr = ticker.idChange ? ` id="${ticker.idChange}"` : '';
-                    html += `<div class="pixel-instrument"${idAttr} style="color: ${ticker.color};">` +
+                    html += `<div class="pixel-instrument"${idAttr} style="color: ${ticker.color}; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">` +
                             `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +
                             `<span${changeIdAttr} style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
                             `</div>`;
@@ -6609,7 +6699,7 @@
                     const changeClass = ticker.change >= 0 ? 'color: #00ff41;' : 'color: #ff0033;';
                     const idAttr = ticker.idPrice ? ` id="${ticker.idPrice}"` : '';
                     const changeIdAttr = ticker.idChange ? ` id="${ticker.idChange}"` : '';
-                    html += `<div class="pixel-instrument"${idAttr} style="color: ${ticker.color};">` +
+                    html += `<div class="pixel-instrument"${idAttr} style="color: ${ticker.color}; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">` +
                             `${ticker.emoji} ${ticker.symbol} $${ticker.price} ` +
                             `<span${changeIdAttr} style="${changeClass}">${ticker.change >= 0 ? '+' : ''}${ticker.change}%</span>` +
                             `</div>`;
