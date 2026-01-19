@@ -2141,8 +2141,8 @@
                 </div>
             </div>
             
-            <!-- CHART ACTIVE: FVG, Support/Resistance, Liquidity Grab, Large Liquidation Levels + SMT -->
-            <div id="main-chart" style="height:650px; width:100%; display:block; overflow:visible;"></div>
+            <!-- CHART ACTIVE: FVG, Support/Resistance, Liquidity Grab, Large Liquidation Levels + SMT + BUY/SELL Signals -->
+            <div id="main-chart" style="height:650px; width:100%; display:block; overflow:visible; background: #0a0a0a;"></div>
             
             <!-- 🐹 AI GENIUS HAMSTER • MARKET COMMENTARY & SIGNALS (Below Chart) -->
             <div style="padding: 15px; background: #0a0a0a; border: 2px solid #bb86fc; border-radius: 8px; margin-top: 15px; margin-bottom: 15px;">
@@ -2181,7 +2181,19 @@
                 };
                 
                 const tfMap = {
-                    '1m': '1m', '5m': '5m', '15m': '15m', '30m': '30m',
+                    '1m': '1', '5m': '5', '15m': '15', '30m': '30',
+                    '1h': '60', '4h': '240', '1d': 'D', '1w': 'W', '1M': 'M'
+                };
+                
+                // TradingView widget reference
+                let tvWidget = null;
+                
+                function switchTimeframe(event, tf) {
+                    try {
+                        currentTimeframe = tf;
+                        document.querySelectorAll('.timeframe-btn').forEach(btn => {
+                            btn.style.background = '#1a1a1a';
+                            m', '5m': '5m', '15m': '15m', '30m': '30m',
                     '1h': '1h', '4h': '4h', '1d': '1d', '1w': '1w', '1M': '1M'
                 };
                 
@@ -2200,19 +2212,7 @@
                         event.target.style.color = '#0a0a0a';
                         event.target.style.boxShadow = '0 0 15px rgba(0,212,255,0.5)';
                         event.target.style.fontWeight = '700';
-                        reloadChartData(tf);
-                    } catch(e) { console.error('Timeframe switch error:', e); }
-                }
-                
-                async function reloadChartData(tf) {
-                    try {
-                        let limit = 300;
-                        if(tf === '1m' || tf === '5m') limit = 500;
-                        if(tf === '15m' || tf === '30m') limit = 400;
-                        if(tf === '1w') limit = 200;
-                        
-                        const interval = tfMap[tf];
-                        const url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=${limit}`;
+                        reloadChartData(tf);onst url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=${limit}`;
                         
                         const res = await fetch(url);
                         const klines = await res.json();
@@ -2522,118 +2522,130 @@
                 
                 window.PLOTLYENV = window.PLOTLYENV || {};
                 
-                // Wait for DOM and Plotly to be ready
-                function initializeChart() {
+                // TradingView Chart Initialization
+                function initializeTradingViewChart() {
+                    try {
+                        if (typeof TradingView === 'undefined') {
+                            console.warn('TradingView not loaded yet, retrying...');
+                            setTimeout(initializeTradingViewChart, 100);
+                            return;
+                        }
+                        
+                        console.log('🚀 Initializing TradingView Advanced Chart...');
+                        
+                        new TradingView.widget({
+                            "width": "100%",
+                            "height": 618,
+                            "symbol": "BINANCE:BTCUSDT",
+                            "interval": "60",
+                            "timezone": "Europe/Warsaw",
+                            "theme": "dark",
+                            "style": "1",
+                            "locale": "pl",
+                            "toolbar_bg": "#0a0a0a",
+                            "enable_publishing": false,
+                            "backgroundColor": "#0a0a0a",
+                            "gridColor": "#1a1a1a",
+                            "hide_top_toolbar": false,
+                            "hide_legend": false,
+                            "save_image": false,
+                            "container_id": "tradingview_chart",
+                            "studies": [
+                                "STD;EMA",
+                                "STD;RSI",
+                                "STD;Volume"
+                            ],
+                            "show_popup_button": true,
+                            "popup_width": "1000",
+                            "popup_height": "650",
+                            "support_host": "https://www.tradingview.com",
+                            "overrides": {
+                                "mainSeriesProperties.candleStyle.upColor": "#00ff41",
+                                "mainSeriesProperties.candleStyle.downColor": "#ff0033",
+                                "mainSeriesProperties.candleStyle.borderUpColor": "#00ff41",
+                                "mainSeriesProperties.candleStyle.borderDownColor": "#ff0033",
+                                "mainSeriesProperties.candleStyle.wickUpColor": "#00ff41",
+                                "mainSeriesProperties.candleStyle.wickDownColor": "#ff0033",
+                                "paneProperties.background": "#0a0a0a",
+                                "paneProperties.vertGridProperties.color": "#1a1a1a",
+                                "paneProperties.horzGridProperties.color": "#1a1a1a",
+                                "scalesProperties.textColor": "#ffffff",
+                                "scalesProperties.backgroundColor": "#0a0a0a"
+                            }
+                        });
+                        
+                        console.log('✅ TradingView Chart loaded successfully!');
+                        chartInitialized = true;
+                        
+                    } catch (e) {
+                        console.error('❌ TradingView Chart initialization failed:', e);
+                        // Fallback to Plotly
+                        console.log('📊 Switching to Plotly fallback chart...');
+                        document.getElementById('tradingview-chart-container').style.display = 'none';
+                        document.getElementById('main-chart').style.display = 'block';
+                        initializePlotlyChart();
+                    }
+                }
+                
+                // Plotly Fallback Chart (original code)
+                function initializePlotlyChart() {
                     if (!document.getElementById("main-chart")) {
                         console.error('Chart container not found');
                         return;
                     }
+                   Wait for DOM and Plotly to be ready
+                function initializeChart() {
+                    const chartContainer = document.getElementById("main-chart");
                     
-                    if (typeof Plotly === 'undefined') {
-                        console.warn('Plotly not loaded yet, retrying...');
+                    if (!chartContainer) {
+                        console.error('❌ Chart container #main-chart not found in DOM');
                         setTimeout(initializeChart, 100);
                         return;
                     }
                     
+                    if (typeof Plotly === 'undefined') {
+                        console.warn('⏳ Plotly library not loaded yet, retrying...');
+                        setTimeout(initializeChart, 100);
+                        return;
+                    }
+                    
+                    console.log('✅ Chart container found, Plotly loaded');
+                    console.log('📊 Starting chart initialization...');
+                    
                     (async () => {
                         try {
-                            console.log('Initializing chart...');
                             await reloadChartData('1h');
-                            console.log('Chart initialized successfully');
+                            console.log('✅ Chart initialized successfully with 1h timeframe');
                             
+                            // Auto-refresh chart every 60 seconds
                             setInterval(async () => {
                                 try {
                                     if(currentTimeframe && chartInitialized) {
                                         await reloadChartData(currentTimeframe);
+                                        console.log('🔄 Chart auto-refreshed');
                                     }
                                 } catch (e) { 
-                                    console.warn('Refresh failed:', e); 
+                                    console.warn('⚠️ Chart refresh failed:', e); 
                                 }
                             }, 60000);
                             
                         } catch (e) {
-                            console.error('Chart initialization failed:', e);
+                            console.error('❌ Chart initialization FAILED:', e);
+                            console.error('Error details:', e.stack);
                         }
                     })();
                 }
                 
                 // Start initialization when DOM is ready
                 if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', initializeChart);
+                    console.log('⏳ DOM still loading, waiting...');
+                    document.addEventListener('DOMContentLoaded', () => {
+                        console.log('✅ DOM loaded, initializing chart...');
+                        initializeChart();
+                    });
                 } else {
-                    // DOM already loaded
-                    setTimeout(initializeChart, 250);
-                }
-            </script>
-
-    </div>
-
-<script>
-    (function() {
-        function parts(dt, timeZone) {
-            const p = new Intl.DateTimeFormat('en-US', {
-                timeZone,
-                hour12: false,
-                hour: '2-digit', minute: '2-digit', second: '2-digit', weekday: 'short'
-            }).formatToParts(dt);
-            const get = (type) => p.find((x) => x.type === type)?.value;
-            return {
-                hour: parseInt(get('hour') || '0', 10),
-                minute: parseInt(get('minute') || '0', 10),
-                second: parseInt(get('second') || '0', 10),
-                weekday: get('weekday') || '',
-                text: `${get('hour')}:${get('minute')}:${get('second')}`
-            };
-        }
-
-        function tick() {
-            const now = new Date();
-            const zurich = parts(now, 'Europe/Zurich');
-            const ny = parts(now, 'America/New_York');
-            const london = parts(now, 'Europe/London');
-            const tokyo = parts(now, 'Asia/Tokyo');
-
-            // Helper function to calculate time remaining until session end
-            function timeRemaining(currentTime, endHour, endMinute = 0) {
-                const hoursLeft = endHour - currentTime.hour;
-                const minutesLeft = endMinute - currentTime.minute;
-                
-                let totalMinutes = hoursLeft * 60 + minutesLeft;
-                if (totalMinutes < 0) totalMinutes += 24 * 60; // Next day
-                
-                const hours = Math.floor(totalMinutes / 60);
-                const minutes = totalMinutes % 60;
-                
-                if (hours > 0) {
-                    return `Zostało: ${hours}h ${minutes}min`;
-                } else if (minutes > 0) {
-                    return `Zostało: ${minutes}min`;
-                } else {
-                    return 'Sesja zakończona';
-                }
-            }
-
-            // Update dynamic world clock - COUNTDOWN TO END OF LONDON SESSION
-            if (!window.manualTimezoneSelected) {
-                const clockTime = document.getElementById('clock-time');
-                const clockZone = document.getElementById('clock-zone');
-                if (clockTime && clockZone && clockTime.dataset.staticClock !== 'true') {
-                    const isWeekend = london.weekday === 'Sat' || london.weekday === 'Sun';
-                    if (isWeekend) {
-                        clockTime.textContent = 'WEEKEND';
-                        clockZone.textContent = '� LONDON (ZAMKNIĘTA)';
-                    } else {
-                        clockTime.textContent = timeRemaining(london, 16, 30);
-                        clockZone.textContent = '� LONDON';
-                    }
-                }
-            }
-
-            // Update panel godziny - ZURICH (zamyka 22:00)
-            const zt = document.getElementById('zurich-time-panel');
-            if (zt) {
-                const isWeekend = zurich.weekday === 'Sat' || zurich.weekday === 'Sun';
-                if (isWeekend) {
+                    console.log('✅ DOM already loaded, initializing chart immediately...');
+                    setTimeout(initialize
                     zt.textContent = 'Weekend - giełda zamknięta';
                 } else {
                     zt.textContent = timeRemaining(zurich, 22, 0);

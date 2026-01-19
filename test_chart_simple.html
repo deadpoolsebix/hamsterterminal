@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Chart</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body style="background: #000; color: #fff;">
+    <h1>Test Wykresu Plotly</h1>
+    <div id="test-chart" style="width: 100%; height: 600px; background: #1a1a1a;"></div>
+    
+    <script>
+        console.log('Testing chart...');
+        console.log('Plotly available:', typeof Plotly !== 'undefined');
+        
+        async function testChart() {
+            try {
+                // Fetch BTC data from Binance
+                const url = 'https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=1h&limit=100';
+                const res = await fetch(url);
+                const klines = await res.json();
+                
+                console.log('Data fetched:', klines.length, 'candles');
+                
+                const x = klines.map(k => new Date(k[0]));
+                const open = klines.map(k => parseFloat(k[1]));
+                const high = klines.map(k => parseFloat(k[2]));
+                const low = klines.map(k => parseFloat(k[3]));
+                const close = klines.map(k => parseFloat(k[4]));
+                
+                const trace = {
+                    type: 'candlestick',
+                    x: x,
+                    open: open,
+                    high: high,
+                    low: low,
+                    close: close,
+                    increasing: { line: { color: '#00ff41' } },
+                    decreasing: { line: { color: '#ff0033' } }
+                };
+                
+                const layout = {
+                    title: 'BTC/USDT Test Chart',
+                    paper_bgcolor: '#0a0a0a',
+                    plot_bgcolor: '#0a0a0a',
+                    font: { color: '#ffffff' },
+                    xaxis: {
+                        gridcolor: '#333333',
+                        showgrid: true
+                    },
+                    yaxis: {
+                        gridcolor: '#333333',
+                        showgrid: true
+                    }
+                };
+                
+                const config = {
+                    responsive: true,
+                    displayModeBar: true
+                };
+                
+                Plotly.newPlot('test-chart', [trace], layout, config);
+                console.log('✅ Chart created successfully!');
+                
+            } catch (e) {
+                console.error('❌ Chart error:', e);
+                document.getElementById('test-chart').innerHTML = '<p style="color: red; padding: 20px;">ERROR: ' + e.message + '</p>';
+            }
+        }
+        
+        // Wait for Plotly to load
+        if (typeof Plotly !== 'undefined') {
+            testChart();
+        } else {
+            setTimeout(testChart, 500);
+        }
+    </script>
+</body>
+</html>
