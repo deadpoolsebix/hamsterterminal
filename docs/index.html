@@ -716,6 +716,57 @@
       if (data.ethPrice) {
         document.getElementById('ticker-eth').textContent = `$${data.ethPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
       }
+
+      // Derived simple tickers (placeholder spreads for non-crypto assets)
+      const spy = data.btcPrice ? (data.btcPrice / 50).toFixed(2) : '500.00';
+      const gold = data.btcPrice ? (data.btcPrice / 50).toFixed(1) : '2000.0';
+      const eurusd = data.btcPrice ? (1.05 + (data.btcChange24h || 0) * 0.0001).toFixed(4) : '1.0850';
+      document.getElementById('ticker-spy').textContent = `$${spy}`;
+      document.getElementById('ticker-gold').textContent = `$${gold}`;
+      document.getElementById('ticker-eur').textContent = eurusd;
+
+      // LIVE NEWS (auto-generated from data)
+      const newsLeft = document.querySelector('.news:nth-of-type(1)');
+      if (newsLeft) {
+        const price = data.btcPrice ? `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}` : 'BTC';
+        const changeTxt = data.btcChange24h !== undefined ? `${data.btcChange24h > 0 ? '▲' : '▼'} ${Math.abs(data.btcChange24h).toFixed(2)}%` : '';
+        const volTxt = data.btcVolume ? `24h vol ${(data.btcVolume / 1e9).toFixed(1)}B` : '24h vol --';
+        newsLeft.innerHTML = `
+          <h4>LIVE NEWS</h4>
+          <div class="news-item">BTC trades at ${price} ${changeTxt}</div>
+          <div class="news-item">ETH prints ${document.getElementById('ticker-eth').textContent || '$--'} intraday</div>
+          <div class="news-item">${volTxt} on majors</div>
+          <div class="news-item">Fear & Greed: ${data.fear_greed ?? '--'}</div>
+          <div class="news-item">API status: ${apiConnected ? 'Live' : 'Mock'} data</div>
+        `;
+      }
+
+      // MARKET ALERTS (simple auto content)
+      const newsRight = document.querySelector('.news:nth-of-type(2)');
+      if (newsRight) {
+        const mc = data.btcMarketCap ? `$${(data.btcMarketCap / 1e12).toFixed(2)}T` : '$--';
+        const fngLabel = data.fear_greed !== undefined
+          ? (data.fear_greed < 25 ? 'Extreme Fear' : data.fear_greed < 45 ? 'Fear' : data.fear_greed < 55 ? 'Neutral' : data.fear_greed < 75 ? 'Greed' : 'Extreme Greed')
+          : '--';
+        newsRight.innerHTML = `
+          <h4>MARKET ALERTS</h4>
+          <div class="news-item">Market Cap: ${mc}</div>
+          <div class="news-item">Sentiment: ${fngLabel}</div>
+          <div class="news-item">Liquidity watch: BTC support $94k–$96k</div>
+          <div class="news-item">Volatility check: keep stops dynamic</div>
+          <div class="news-item">Data refreshed: ${new Date().toUTCString().slice(17,25)} UTC</div>
+        `;
+      }
+
+      // GENIUS AI CARDS (lite dynamic text)
+      const geniusCards = document.querySelectorAll('.genius-card-content');
+      if (geniusCards.length >= 4) {
+        const priceStr = data.btcPrice ? `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}` : 'BTC';
+        geniusCards[0].textContent = `Momentum tracking: ${priceStr} with change ${(data.btcChange24h ?? 0).toFixed(2)}%.`;
+        geniusCards[1].textContent = data.btcVolume ? `Liquidity: ${(data.btcVolume / 1e9).toFixed(1)}B 24h volume, watch walls at $95k/$97k.` : 'Liquidity steady, monitoring orderbook levels.';
+        geniusCards[2].textContent = data.fear_greed !== undefined ? `Sentiment gauge: ${data.fear_greed} F&G — ${document.getElementById('fng-label').textContent}.` : 'Sentiment neutral baseline.';
+        geniusCards[3].textContent = data.btcMarketCap ? `Risk: Market cap ${ (data.btcMarketCap / 1e12).toFixed(2)}T, adjust size to volatility.` : 'Risk: size positions based on volatility bands.';
+      }
       
       // Sentiment (random for demo)
       const bulls = Math.floor(40 + Math.random() * 30);
