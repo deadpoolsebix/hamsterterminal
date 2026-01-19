@@ -1,457 +1,9 @@
 ﻿
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <title>Hamster Terminal - Trading Dashboard Pro | hamsterterminal.com</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Roboto Mono', monospace;
-            background: #0a0a0a;
-            color: #e0e0e0;
-            overflow-x: hidden;
-        }
-        
-        .terminal-header {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .terminal-title {
-            font-size: 1.8em;
-            font-weight: 800;
-            color: #00d4ff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-family: 'Roboto Mono', monospace;
-        }
-        
-        .terminal-time {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.9em;
-            color: #fff;
-            animation: none !important;
-            transition: none !important;
-        }
-        
-        #clock-time, #clock-zone {
-            animation: none !important;
-            transition: none !important;
-        }
-        
-        /* CLOCK & TIME ELEMENTS - NO TRANSITIONS/ANIMATIONS */
-        #terminal-clock, #terminal-clock * {
-            animation: none !important;
-            transition: none !important;
-        }
-        
-        .metrics-panel {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            padding: 20px 30px;
-            background: #0f0f0f;
-        }
-        
-        .metric-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 15px;
-            transition: all 0.3s ease;
-        }
-        
-        /* BTC ONE-PANEL: DISABLE TRANSITION */
-        .metrics-panel > .metric-card[style*="grid-column: 1 / -1"] {
-            transition: none !important;
-        }
-        
-        .metric-card:hover {
-            transform: translateY(-2px);
-            border-color: #00d4ff;
-            box-shadow: 0 5px 15px rgba(0,212,255,0.2);
-        }
-        
-        }
-        
-        .sentiment-fill {
-            height: 100%;
-            transition: width 0.5s ease;
-        }
-        
-        .main-content {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 0px;
-            padding: 0px;
-        }
-        
-        .chart-container {
-            background: #0a0a0a;
-            border: none;
-            border-radius: 0px;
-            padding: 0px;
-        }
-        
-        .timeframe-selector {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 0px;
-            flex-wrap: wrap;
-        }
-        
-        .timeframe-btn {
-            padding: 8px 16px;
-            background: #1a1a1a;
-            border: 2px solid #333;
-            color: #fff;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 0.85em;
-            transition: all 0.3s ease;
-        }
-        
-        .timeframe-btn:hover {
-            border-color: #00d4ff;
-            color: #00d4ff;
-        }
-        
-        .timeframe-btn.active {
-            background: #00d4ff;
-            border-color: #00d4ff;
-            color: #0a0a0a;
-            box-shadow: 0 0 15px rgba(0,212,255,0.5);
-        }
-        
-        .news-panel {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            border: 1px solid #333;
-            border-radius: 8px;
-            padding: 20px;
-            max-height: 1400px;
-            overflow-y: auto;
-        }
-        
-        .news-header {
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #00d4ff;
-        }
-        
-        .news-header h3 {
-            color: #00d4ff;
-            font-size: 1.2em;
-            font-weight: 700;
-        }
-        
-        .news-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .news-item {
-            background: #0f0f0f;
-            border-left: 3px solid #00d4ff;
-            padding: 12px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
-        
-        .news-item:hover {
-            background: #1a1a1a;
-            transform: translateX(5px);
-        }
-        
-        .news-meta {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 8px;
-            font-size: 0.75em;
-        }
-        
-        .news-time {
-            color: #fff;
-        }
-        
-        .news-source {
-            color: #00d4ff;
-            font-weight: 600;
-        }
-        
-        .news-impact {
-            margin-left: auto;
-            font-weight: 700;
-        }
-        
-        .news-headline {
-            color: #e0e0e0;
-            font-size: 0.9em;
-            line-height: 1.4;
-        }
-        
-        /* Order Book Styles */
-        .orderbook-container {
-            font-family: 'Roboto Mono', monospace;
-            font-size: 0.85em;
-        }
-        
-        .orderbook-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 8px;
-            position: relative;
-            transition: all 0.2s ease;
-        }
-        
-        .orderbook-row:hover {
-            background: #1a1a1a;
-        }
-        
-        .ob-bar {
-            position: absolute;
-            right: 0;
-            top: 0;
-            height: 100%;
-            opacity: 0.2;
-            transition: width 0.3s ease;
-        }
-        
-        .orderbook-row.bid .ob-bar {
-            background: #00ff41;
-        }
-        
-        .orderbook-row.ask .ob-bar {
-            background: #ff0033;
-        }
-        
-        .orderbook-row.bid .ob-price {
-            color: #00ff41;
-        }
-        
-        .orderbook-row.ask .ob-price {
-            color: #ff0033;
-        }
-        
-        .ob-amount {
-            color: #fff;
-            z-index: 1;
-        }
-        
-        .ob-price {
-            font-weight: 600;
-            z-index: 1;
-        }
-        
-        .orderbook-current-price {
-            text-align: center;
-            padding: 12px;
-            margin: 8px 0;
-            background: linear-gradient(90deg, transparent, #00d4ff22, transparent);
-            border-top: 1px solid #00d4ff;
-            border-bottom: 1px solid #00d4ff;
-        }
-        
-        /* Trades Feed */
-        .trades-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-        
-        .trade-item {
-            background: #0f0f0f;
-            padding: 10px;
-            border-radius: 4px;
-            border-left: 3px solid #ffaa00;
-            transition: all 0.2s ease;
-        }
-        
-        .trade-item:hover {
-            background: #1a1a1a;
-            transform: translateX(3px);
-        }
-        
-        .trade-meta {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 5px;
-            font-size: 0.8em;
-        }
-        
-        .trade-time {
-            color: #fff;
-            font-family: 'Roboto Mono', monospace;
-        }
-        
-        .trade-side {
-            font-weight: 700;
-        }
-        
-        .trade-details {
-            font-size: 0.9em;
-        }
-        
-        /* Positions Feed */
-        .positions-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        
-        .position-item {
-            background: #0f0f0f;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid #333;
-            transition: all 0.2s ease;
-        }
-        
-        .position-item:hover {
-            background: #1a1a1a;
-            border-color: #ff00ff;
-        }
-        
-        .footer {
-            text-align: center;
-            padding: 20px;
-            border-top: 1px solid #333;
-            color: #fff;
-            font-size: 0.85em;
-        }
-        
-        /* AI PORADA - Game Boy Style */
-        .ai-porada-card {
-            grid-column: span 2;
-            background: #000000;
-            border: 8px solid #00ffff !important;
-            box-shadow: 
-                inset 0 0 0 4px #000,
-                inset 0 0 0 8px #00ffff,
-                inset 0 0 0 12px #000,
-                inset 0 0 0 16px #00ffff,
-                0 0 30px rgba(0, 255, 255, 0.8),
-                0 0 60px rgba(0, 255, 255, 0.5);
-            padding: 25px;
-        }
-        
-        .gameboy-screen {
-            background: #0a0a14;
-            border: 5px solid #00ffff;
-            padding: 15px;
-            margin-bottom: 15px;
-            text-align: center;
-            box-shadow: 
-                inset 0 0 0 2px #000,
-                inset 0 0 0 5px #00ffff,
-                inset 0 0 0 7px #ff00ff,
-                inset 0 0 15px rgba(0, 255, 255, 0.3);
-            border-radius: 8px;
-        }
-        
-        .gameboy-title {
-            font-size: 0.9em;
-            color: #00ffff;
-            text-shadow: 0 0 10px #00ffff, 0 0 20px #ff00ff;
-            margin-bottom: 8px;
-            animation: glow 2s infinite;
-            font-weight: 700;
-            font-family: 'Courier New', monospace;
-            letter-spacing: 2px;
-        }
-        
-        .btc-display {
-            font-size: 1.8em;
-            color: #ffff00;
-            text-shadow: 0 0 15px #ffff00, 0 0 30px #ffaa00;
-            font-weight: 900;
-            margin: 10px 0;
-            font-family: 'Roboto Mono', monospace;
-        }
-        
-        .signal-display {
-            font-size: 1em;
-            color: #00ff00;
-            text-shadow: 0 0 12px #00ff00;
-            animation: pulse 1s infinite;
-            margin: 10px 0;
-            font-weight: 700;
-        }
-        
-        .led-panel {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 20px 0;
-        }
-        
-        .led {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 2px solid #00ffff;
-            animation: blink 0.8s infinite;
-            box-shadow: 0 0 10px currentColor;
-        }
-        
-        .led.red { background: #ff0033; }
-        .led.cyan { background: #00ffff; animation-delay: 0.2s; }
-        .led.white { background: #ffffff; animation-delay: 0.4s; }
-        .led.green { background: #00ff00; animation-delay: 0.6s; }
-        
-        .ai-porada-header {
-            font-size: 1.1em;
-            color: #00ffff;
-            margin-bottom: 15px;
-            text-shadow: 0 0 10px #00ffff;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
         
-        .ai-instruction {
-            margin: 10px 0;
-            padding: 12px;
-            border-left: 4px solid;
-            background: rgba(0, 0, 0, 0.5);
-            font-size: 0.9em;
-            color: #ffffff;
-            line-height: 1.6;
+            } catch (error) {
+                console.error('❌ Yahoo Finance ticker error:', error.message);
+            }
         }
-        
-        .ai-instruction.orange { border-left-color: #ffaa00; }
-        .ai-instruction.green { border-left-color: #00ff00; }
-        .ai-instruction.red { border-left-color: #ff0033; }
-        
-        @keyframes glow {
-            0%, 100% { text-shadow: 0 0 15px #00ffff; }
-            50% { text-shadow: 0 0 30px #00ffff, 0 0 50px #ff00ff; }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        
-        @keyframes ticker-scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
         }
         
         /* Key Levels Panel */
@@ -785,132 +337,7 @@
             font-weight: 900;
         }
         
-        /* SQUEEZE INDICATORS */
-        .squeeze-alert {
-            background: linear-gradient(135deg, rgba(255,0,255,0.15), rgba(255,100,0,0.15));
-            border: 2px solid #ff00ff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-        }
         
-        .squeeze-alert.short {
-            border-color: #ff6600;
-            background: linear-gradient(135deg, rgba(255,100,0,0.15), rgba(255,0,0,0.15));
-        }
-        
-        .squeeze-alert.long {
-            border-color: #00ffff;
-            background: linear-gradient(135deg, rgba(0,255,255,0.15), rgba(0,100,255,0.15));
-        }
-        
-        .squeeze-title {
-            font-size: 1em;
-            font-weight: 700;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .squeeze-alert.short .squeeze-title {
-            color: #ff6600;
-        }
-        
-        .squeeze-alert.long .squeeze-title {
-            color: #00ffff;
-        }
-        
-        .squeeze-meter {
-            height: 25px;
-            background: #0f0f0f;
-            border-radius: 5px;
-            overflow: hidden;
-            margin-bottom: 10px;
-            border: 1px solid #333;
-            position: relative;
-        }
-        
-        .squeeze-fill {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7em;
-            font-weight: 900;
-            color: #000;
-        }
-        
-        .squeeze-short-fill {
-            background: linear-gradient(90deg, #ff6600, #ff3300);
-            color: #fff;
-        }
-        
-        .squeeze-long-fill {
-            background: linear-gradient(90deg, #00ffff, #00dd88);
-            color: #000;
-        }
-        
-        .squeeze-details {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            font-size: 0.75em;
-            margin-top: 10px;
-        }
-        
-        .squeeze-detail-item {
-            background: #0f0f0f;
-            padding: 8px;
-            border-radius: 4px;
-            border-left: 2px solid #ff00ff;
-        }
-        
-        .squeeze-detail-label {
-            color: #fff;
-            margin-bottom: 2px;
-        }
-        
-        .squeeze-detail-value {
-            color: #ffff00;
-            font-weight: 900;
-            font-size: 1.1em;
-        }
-        
-        .cvd-stat-value {
-            color: #ffff00;
-            font-weight: 900;
-        }
-        
-        /* GAME BOY TERMINAL - PIXEL ART STYLE */
-        @keyframes gameboy-blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.3; }
-        }
-        
-        .gameboy-display {
-            font-size: 2em;
-            display: inline-block;
-            filter: contrast(1.2) brightness(1.1);
-            text-shadow: 2px 2px 0 rgba(0,0,0,0.5);
-            animation: gameboy-blink 2s ease-in-out infinite;
-        }
-        
-        .gameboy-container {
-            display: inline-block;
-            width: 45px;
-            height: 45px;
-            border: 3px solid #00ff41;
-            border-radius: 8px;
-            padding: 5px;
-            background: linear-gradient(135deg, #1a1a1a, #0a0a0a);
-            box-shadow: 0 0 20px rgba(0, 255, 65, 0.6), inset 0 0 15px rgba(0,0,0,0.8);
-            position: relative;
-        }
-        
-        .gameboy-container::after {
-            content: '';
-            position: absolute;
-            top: 2px;
             right: 2px;
             width: 6px;
             height: 6px;
@@ -1087,138 +514,6 @@
             opacity: 1 !important;
         }
         
-        /* BTC PANEL TIME DISPLAYS - FORCE VISIBLE */
-        #asia-time-panel,
-        #zurich-time-panel,
-        #london-time-panel,
-        #ny-time-panel {
-            display: inline !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            color: #ffff00 !important;
-            font-weight: 800 !important;
-            pointer-events: none !important;
-            animation: none !important;
-            transition: none !important;
-        }
-        
-        #asia-status-panel,
-        #london-status-panel,
-        #ny-status-panel {
-            display: inline !important;
-            visibility: visible !important;
-            opacity: 1 !important;
-            font-weight: 800 !important;
-            pointer-events: none !important;
-            animation: none !important;
-            transition: none !important;
-        }
-    </style>
-    
-    <!-- ATARI ACTION BUTTONS + BTC COIN -->
-    <div style="padding: 12px 30px; display: flex; gap: 12px; flex-wrap: wrap; align-items: center; justify-content: center; background: #0a0a0a;">
-        <div style="display: flex; gap: 10px; align-items: center;">
-            <button onclick="playBeep(880, 100);" style="background: linear-gradient(135deg, #00ff41, #008f2a); color: #000; font-weight: 900; border: 3px solid #00ff41; padding: 12px 24px; border-radius: 0; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 20px rgba(0,255,65,0.6), inset 0 0 20px rgba(0,255,65,0.2); animation: pulse 1.2s infinite; cursor: pointer; font-size: 1em; transition: all 0.1s; display: inline-flex; align-items: center; gap: 8px;" onmouseover="this.style.boxShadow='0 0 30px rgba(0,255,65,0.8), inset 0 0 30px rgba(0,255,65,0.3)'" onmouseout="this.style.boxShadow='0 0 20px rgba(0,255,65,0.6), inset 0 0 20px rgba(0,255,65,0.2)'">
-                <span>▶ BUY</span>
-            </button>
-            <button onclick="playBeep(440, 100);" style="background: linear-gradient(135deg, #ff0033, #7f001a); color: #fff; font-weight: 900; border: 3px solid #ff0033; padding: 12px 24px; border-radius: 0; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 20px rgba(255,0,51,0.6), inset 0 0 20px rgba(255,0,51,0.2); animation: pulse 1.2s infinite; cursor: pointer; font-size: 1em; transition: all 0.1s;" onmouseover="this.style.boxShadow='0 0 30px rgba(255,0,51,0.8), inset 0 0 30px rgba(255,0,51,0.3)'" onmouseout="this.style.boxShadow='0 0 20px rgba(255,0,51,0.6), inset 0 0 20px rgba(255,0,51,0.2)'">⏹ SELL</button>
-            <button onclick="playBeep(320, 80);" style="background: linear-gradient(135deg, #ffaa00, #884400); color: #000; font-weight: 900; border: 3px solid #ffaa00; padding: 12px 24px; border-radius: 0; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 20px rgba(255,170,0,0.6), inset 0 0 20px rgba(255,170,0,0.2); animation: blink 1.4s infinite; cursor: pointer; font-size: 1em; transition: all 0.1s;" onmouseover="this.style.boxShadow='0 0 30px rgba(255,170,0,0.8), inset 0 0 30px rgba(255,170,0,0.3)'" onmouseout="this.style.boxShadow='0 0 20px rgba(255,170,0,0.6), inset 0 0 20px rgba(255,170,0,0.2)'">◄ NOPE</button>
-            <span style="font-family: 'Press Start 2P', 'Courier New', monospace; font-size: 0.7em; color: #ffaa00; letter-spacing: 2px; text-shadow: 2px 2px 0 #5a2b00, 0 0 10px rgba(255,170,0,0.7); padding-left: 8px;">NEVER MIND</span>
-        </div>
-        <!-- Bitcoin Coin only -->
-        <div style="margin-left: 20px; display: flex; align-items: center; gap: 20px; height: 50px;">
-            <div style="font-size: 3em; animation: btcRotate 3s linear infinite; filter: drop-shadow(0 0 15px rgba(255,200,0,0.9)); color: #ffd700; text-shadow: 2px 2px 0 #ff9900, 4px 4px 0 #ffaa00; font-weight: 900; cursor: pointer;" title="HODL!">₿</div>
-        </div>
-    </div>
-
-    <!-- LIVE BTC PRICE - MAIN DISPLAY -->
-    <div class="panel" style="margin: 15px 30px; padding: 28px; background: linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%); border-radius: 12px; position: relative; box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.8);">
-        <div style="display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 20px; align-items: start;">
-            <!-- Left: BTC Price -->
-            <div>
-                <div style="font-size: 0.95em; color: #00d4ff; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px;">₿ BTC/USDT <span style="color: #00ff41;">(LIVE)</span></div>
-                <div class="metric-value btc-price current-price" style="color: #ffff00; font-size: 3em; font-weight: 900; text-shadow: 0 0 20px rgba(255, 255, 0, 0.7); animation: hamsterPush 3s ease-in-out infinite; display: inline-block; animation-delay: 0s;">$95,501.20</div>
-                <div class="metric-change change-24h positive" style="font-size: 1.4em; font-weight: 700; margin-top: 8px;">+2.45%</div>
-            </div>
-            <!-- Right: Data Grid (larger, compact) -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px;">
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">24h High</div>
-                    <div style="color: #00ff41; font-size: 1.25em; font-weight: 900;">$97,861</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">24h Low</div>
-                    <div style="color: #00d4ff; font-size: 1.25em; font-weight: 900;">$94,650</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">Volume 24h</div>
-                    <div style="color: #9b59b6; font-size: 1.25em; font-weight: 900;">$18.28B</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">RSI (14)</div>
-                    <div style="color: #ffaa00; font-size: 1.25em; font-weight: 900;">41.8</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">Resistance</div>
-                    <div style="color: #ff4444; font-size: 1.25em; font-weight: 900;">$98,500</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">Support</div>
-                    <div style="color: #00ff41; font-size: 1.25em; font-weight: 900;">$93,200</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">Open Interest</div>
-                    <div style="color: #00d4ff; font-size: 1.25em; font-weight: 900;">$12.4B</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">Funding Rate</div>
-                    <div style="color: #ffaa00; font-size: 1.25em; font-weight: 900;">+0.0082%</div>
-                </div>
-            </div>
-        </div>
-        <div style="font-size: 0.85em; color: #fff; margin-top: 15px;">Data Source: <span style="color: #00d4ff;">Binance API</span> • Updated every 2 seconds</div>
-    </div>
-
-    <!-- LIVE ETH PRICE - MAIN DISPLAY (same size as BTC with hamster push effect) -->
-    <div class="panel" style="margin: 15px 30px; padding: 28px; background: linear-gradient(135deg, #1a0a1a 0%, #0a0a0a 100%); border-radius: 8px; position: relative; box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.8);">
-        <div style="display: grid; grid-template-columns: 0.6fr 1.4fr; gap: 20px; align-items: start;">
-            <!-- Left: ETH Price -->
-            <div>
-                <div style="font-size: 0.95em; color: #00d4ff; font-weight: 700; letter-spacing: 2px; margin-bottom: 8px;">🔷 ETH/USDT <span style="color: #00ff41;">(LIVE)</span></div>
-                <div class="metric-value eth-price" style="color: #9b59b6; font-size: 3em; font-weight: 900; text-shadow: 0 0 20px rgba(155, 89, 182, 0.7); animation: hamsterPush 3s ease-in-out infinite; display: inline-block; animation-delay: 1.5s;">$2,845.32</div>
-                <div class="eth-change" style="font-size: 1.4em; font-weight: 700; margin-top: 8px; color: #00ff41;">+1.8%</div>
-            </div>
-            <!-- Right: Data Grid (larger, compact) -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 8px;">
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">24h High</div>
-                    <div style="color: #00ff41; font-size: 1.25em; font-weight: 900;">$2,920</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.85em; margin-bottom: 2px;">24h Low</div>
-                    <div style="color: #00d4ff; font-size: 1.25em; font-weight: 900;">$2,780</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Volume 24h</div>
-                    <div style="color: #9b59b6; font-size: 1.1em; font-weight: 900;">$18.5B</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">CVD 24h</div>
-                    <div style="color: #00ff41; font-size: 1.1em; font-weight: 900;">+12.4K</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Resistance</div>
-                    <div style="color: #ff4444; font-size: 1.1em; font-weight: 900;">$2,980</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Support</div>
-                    <div style="color: #00ff41; font-size: 1.1em; font-weight: 900;">$2,720</div>
-                </div>
-                <div style="line-height: 1.2;">
-                    <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Open Interest</div>
-                    <div style="color: #00d4ff; font-size: 1.1em; font-weight: 900;">$8.2B</div>
-                </div>
-                <div style="line-height: 1.2;">
                     <div style="color: #fff; font-size: 0.75em; margin-bottom: 2px;">Funding Rate</div>
                     <div style="color: #ffaa00; font-size: 1.1em; font-weight: 900;">+0.0065%</div>
                 </div>
@@ -1255,6 +550,9 @@
         @keyframes glitch { 0%, 100% { text-shadow: 0 0 10px rgba(255,170,0,0.8); } 50% { text-shadow: 0 0 20px rgba(255,170,0,1), 3px 0 15px rgba(255,100,0,0.6); } }
     </style>
     <script>
+        // Simple beep helper used by alerts
+        function playBeep(freq = 440, duration = 120) {
+            try {
                 const audioContext = new (window.AudioContext || window.webkitAudioContext)();
                 const osc = audioContext.createOscillator();
                 const gain = audioContext.createGain();
@@ -1315,128 +613,6 @@
     </div>
 
 
-    <!-- LIVE EVENTS & INSTRUMENTS TICKER - PIXEL STYLE ANIMATED -->
-    <style>
-        @keyframes scrollLeft {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        @keyframes bullBounce {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
-        }
-        @keyframes shadowPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.8); }
-            50% { box-shadow: 0 0 35px rgba(0, 212, 255, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.8); }
-        }
-        .pixel-ticker-container {
-            margin-top: 10px;
-            margin-left: 30px;
-            margin-right: 30px;
-            padding: 8px 15px;
-            background: linear-gradient(90deg, #000000 0%, #0a0a0a 50%, #000000 100%);
-            border: none;
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-            font-family: 'Roboto Mono', 'Courier New', monospace;
-        }
-        .pixel-ticker-content {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            animation: scrollLeft 35s linear infinite;
-            white-space: nowrap;
-            font-size: 1.334025em;
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
-        .pixel-bull {
-            font-size: 2.2em;
-            animation: bullBounce 0.6s ease-in-out infinite;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-        .pixel-instrument {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-            padding: 3px 8px;
-            border: 1px solid currentColor;
-            background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 10px currentColor, inset 0 0 8px rgba(0, 0, 0, 0.8);
-        }
-        .pixel-ticker-container:hover .pixel-ticker-content {
-            animation-play-state: paused;
-        }
-    </style>
-    <div class="pixel-ticker-container">
-        <div class="pixel-ticker-content">
-            <span class="pixel-bull">�</span>
-            
-            <div class="pixel-instrument" id="ticker-gold-price" style="color: #ffff00;">
-                🪙 GOLD $2,650 <span id="ticker-gold-change" style="color: #00ff41;">+0.5%</span>
-            </div>
-            
-            <div class="pixel-instrument" id="ticker-silver-price" style="color: #c0c0c0;">
-                🪙 SILVER $31.50 <span id="ticker-silver-change" style="color: #ff0033;">+0.3%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ff8800;">
-                OIL $78.35 <span style="color: #00ff41;">+2.2%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00d4ff;">
-                S&P500 5,847 <span style="color: #00ff41;">+1.4%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00ff41;">
-                NASDAQ 18,542 <span style="color: #00ff41;">+1.9%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ffaa00;">
-                DAX 18,234 <span style="color: #ff0033;">-0.6%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ff5555;">
-                TESLA $347.85 <span style="color: #00ff41;">+4.3%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #cccccc;">
-                APPLE $234.56 <span style="color: #00ff41;">+2.2%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ffaa33;">
-                AMAZON $456.78 <span style="color: #ff0033;">-1.5%</span>
-            </div>
-
-            <!-- Repeat for continuous loop effect -->
-            <span class="pixel-bull">$</span>
-            
-            <div class="pixel-instrument" style="color: #ffff00;">
-                GOLD $2,650 <span style="color: #00ff41;">+0.5%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #c0c0c0;">
-                🔱 SILVER $31.50 <span style="color: #ff0033;">+0.3%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ff8800;">
-                🛢️ OIL $78.35 <span style="color: #00ff41;">+2.2%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00d4ff;">
-                � WALL STREET S&P500 5,847 <span style="color: #00ff41;">+1.4%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00ff41;">
-                💻 NASDAQ 18,542 <span style="color: #00ff41;">+1.9%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ffaa00;">
-                🇩🇪 DAX 18,234 <span style="color: #ff0033;">-0.6%</span>
-            </div>
             
             <div class="pixel-instrument" style="color: #ff5555;">
                 ⚡ TESLA $347.85 <span style="color: #00ff41;">+4.3%</span>
@@ -1450,6 +626,17 @@
                 📦 AMAZON $456.78 <span style="color: #ff0033;">-1.5%</span>
             </div>
         </div>
+    </div>
+
+    <!-- ===== BLOOMBERG TICKER ===== -->
+    <div class="bloomberg-ticker-wrapper" id="bloombergTicker">
+        <div class="ticker-loading">Ladowanie Bloomberg Ticker...</div>
+    </div>
+
+    <!-- ===== BREAKING NEWS ===== -->
+    <div class="breaking-news-wrapper" id="breakingNewsWrapper">
+        <span class="breaking-news-label">BREAKING NEWS</span>
+        <div class="news-loading">Ladowanie wiadomosci...</div>
     </div>
 
     <!-- SESSION MARKETS • CHRONOLOGICAL FROM EUROPE TIME -->
@@ -1765,138 +952,6 @@
     
     <!-- MIDDLE PANEL: CURRENT SESSION + SENTIMENT -->
     <div style="padding: 15px 30px; background: #0a0a0a; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <!-- SENTIMENT + TRAPS -->
-        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border: 1px solid #ff00ff; border-radius: 8px; padding: 20px; grid-column: 1 / -1; grid-row: 1;">
-            <div style="color: #ff00ff; font-size: 1.1em; font-weight: 700; margin-bottom: 15px; text-transform: uppercase;">💭 SENTYMENT RYNKOWY</div>
-            
-            <div style="margin-bottom: 15px;">
-                <div style="font-size: 0.8em; color: #fff; margin-bottom: 5px;">Niedźwiedzie / Bycze</div>
-                <div style="height: 20px; background: #0f0f0f; border-radius: 5px; overflow: hidden; display: flex;">
-                    <div style="width: 42%; background: #ff0033;"></div>
-                    <div style="width: 58%; background: #00ff00;"></div>
-                </div>
-                <div style="font-size: 0.75em; margin-top: 3px; text-align: center; color: #ffaa00;">42% BEARS • 58% BULLS</div>
-            </div>
-            
-            <div style="display: flex; gap: 15px; margin-top: 15px;">
-                <div class="trap-alert trap-2" style="background: linear-gradient(135deg, rgba(255,170,0,0.15), rgba(255,100,0,0.1)); border: 1px solid #ffaa00; flex: 1; padding: 12px; display: flex; align-items: center; gap: 10px;">
-                    <div style="color: #ffaa00; font-size: 1.3em; flex-shrink: 0;">⚠️</div>
-                    <div>
-                        <div class="trap-label" style="color: #ffaa00; font-size: 0.9em; font-weight: 800; margin-bottom: 2px;">BEAR TRAP MONITOR</div>
-                        <div style="font-size: 0.9em; color: #ffaa00; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;">Wsparcie $94,8k mocne. Złamie = SHORT. Delta +</div>
-                    </div>
-                </div>
-                
-                <div class="trap-alert trap-1" style="flex: 1; padding: 12px; background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(0,100,255,0.1)); border: 1px solid #00d4ff; display: flex; align-items: center; gap: 10px;">
-                    <div style="color: #00d4ff; font-size: 1.3em; flex-shrink: 0;">⚠️</div>
-                    <div>
-                        <div class="trap-label" style="color: #00d4ff; font-size: 0.9em; font-weight: 800; margin-bottom: 2px;">BULL TRAP RISK</div>
-                        <div style="font-size: 0.9em; color: #00d4ff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-weight: 600;">Cena bliska $97,4k. Pullback do $96,2k. Ostrożnie z LONG!</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- BULLS vs BEARS PSYCHOLOGY -->
-            <div style="margin-top: 15px; padding: 15px; background: linear-gradient(135deg, #1a0a0a 0%, #0f0f0f 100%); border-radius: 8px; border: 2px solid #ff6600;">
-                <div style="font-size: 0.9em; color: #ff6600; margin-bottom: 12px; font-weight: 700; text-transform: uppercase;">
-                    👥 STAN PSYCHOLOGICZNY • BULLS vs BEARS
-                </div>
-                
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <!-- BULLS Psychology -->
-                    <div style="background: rgba(0,255,65,0.1); padding: 12px; border-radius: 5px; border-left: 3px solid #00ff41;">
-                        <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 8px;">🟢 BULLS (58%)</div>
-                        <div style="font-size: 0.75em; color: #ccc; line-height: 1.5;">
-                            <div>• <strong>Nastrój:</strong> Optymistyczny 💪</div>
-                            <div>• <strong>Target:</strong> $98,500-$99,200</div>
-                            <div>• <strong>Akcja:</strong> Akumulacja + hold</div>
-                            <div>• <strong>Fear:</strong> Manipulation at $96,850</div>
-                            <div>• <strong>Oczekiwanie:</strong> Break & Rally</div>
-                        </div>
-                    </div>
-                    
-                    <!-- BEARS Psychology -->
-                    <div style="background: rgba(255,0,51,0.1); padding: 12px; border-radius: 5px; border-left: 3px solid #ff0033;">
-                        <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 8px;">🔴 BEARS (42%)</div>
-                        <div style="font-size: 0.75em; color: #ccc; line-height: 1.5;">
-                            <div>• <strong>Nastrój:</strong> Ostrożny ⚠️</div>
-                            <div>• <strong>Target:</strong> $93,500-$94,800</div>
-                            <div>• <strong>Akcja:</strong> Shorty + wait</div>
-                            <div>• <strong>Fear:</strong> Squeeze shorts</div>
-                            <div>• <strong>Oczekiwanie:</strong> Pullback soon</div>
-                        </div>
-                    </div>
-                </div>
-
-                <div style="margin-top: 10px; padding: 10px; background: rgba(255,170,0,0.12); border-left: 3px solid #ffaa00; color: #ffaa00; font-size: 0.95em; font-weight: 700; line-height: 1.7;">
-                    ⚡ MARKET REALITY: Dominacja BULLS, ale BEARS kontrolują support levels. Stalemate = SCALP OPPORTUNITY!
-                </div>
-            </div>
-        </div>
-        
-        <!-- ECONOMIC CALENDAR & KEY EVENTS -->
-        <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border: 1px solid #00d4ff; border-radius: 8px; padding: 20px; grid-column: 1; grid-row: 2;">
-            <div onclick="toggleMacroCalendar()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; -webkit-user-select: none; user-select: none;">
-                <div style="color: #00d4ff; font-size: 1.1em; font-weight: 700; text-transform: uppercase;">📅 ECONOMIC CALENDAR & KEY EVENTS</div>
-                <div id="macro-toggle-icon" style="color: #00d4ff; font-size: 1.8em; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; display: inline-block; min-width: 30px; text-align: center; font-weight: bold;">▼</div>
-            </div>
-            
-            <div style="font-size: 0.8em; line-height: 2; color: #ccc; font-family: 'Roboto Mono', monospace;">
-                <div style="background: rgba(255,170,0,0.1); padding: 8px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #ffaa00;">
-                    <div><span style="color: #ffaa00; font-weight: 700;">TODAY 20:00 UTC</span></div>
-                    <div style="font-size: 0.75em; color: #ddd;">US Core Inflation (CPI) 📊 <span style="color: #ff6600;">HIGH IMPACT</span></div>
-                </div>
-                
-                <div style="background: rgba(0,212,255,0.1); padding: 8px; border-radius: 4px; margin-bottom: 8px; border-left: 3px solid #00d4ff;">
-                    <div><span style="color: #00d4ff; font-weight: 700;">TOMORROW 13:30 UTC</span></div>
-                    <div style="font-size: 0.75em; color: #ddd;">Fed Speakers 🎙️ <span style="color: #fff;">MEDIUM IMPACT</span></div>
-                </div>
-
-                <div style="background: rgba(0,255,65,0.1); padding: 8px; border-radius: 4px; border-left: 3px solid #00ff41;">
-                    <div><span style="color: #00ff41; font-weight: 700;">FRIDAY 10:30 UTC</span></div>
-                    <div style="font-size: 0.75em; color: #ddd;">Jobs Report 💼 <span style="color: #ff0033;">CRITICAL</span></div>
-                </div>
-            </div>
-
-            <div id="macro-calendar-extended" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid #333;">
-                <div style="font-size: 0.85em; color: #ffaa00; font-weight: 700; margin-bottom: 10px;">🗓️ MACRO CALENDAR • THIS WEEK</div>
-                <div class="news-feed" style="gap: 10px; font-size: 0.78em; line-height: 1.6; color: #ddd;">
-                    <div style="background: rgba(255,170,0,0.07); border-left: 3px solid #ffaa00; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
-                            <span>Pon 08:30 ET</span>
-                            <span style="color: #ff0033;">HIGH IMPACT</span>
-                        </div>
-                        <div style="color: #fff; font-weight: 700;">USA CPI (m/m)</div>
-                        <div style="color: #fff;">Prog: 0.2% • Poprz: 0.1% • Rynek patrzy na presję inflacyjną</div>
-                    </div>
-                    <div style="background: rgba(0,255,65,0.07); border-left: 3px solid #00ff41; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
-                            <span>Wto 10:00 ET</span>
-                            <span style="color: #ffaa00;">MEDIUM</span>
-                        </div>
-                        <div style="color: #fff; font-weight: 700;">USA PPI (m/m)</div>
-                        <div style="color: #fff;">Prog: 0.1% • Poprz: -0.1% • Wpływ na oczekiwania inflacyjne</div>
-                    </div>
-                    <div style="background: rgba(0,212,255,0.07); border-left: 3px solid #00d4ff; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
-                            <span>Śro 14:00 ET</span>
-                            <span style="color: #ff0033;">HIGH</span>
-                        </div>
-                        <div style="color: #fff; font-weight: 700;">FOMC Minutes</div>
-                        <div style="color: #fff;">Sygnały dot. ścieżki stóp i bilansu Fed</div>
-                    </div>
-                    <div style="background: rgba(255,0,51,0.07); border-left: 3px solid #ff0033; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
-                            <span>Czw 08:30 ET</span>
-                            <span style="color: #ff0033;">HIGH</span>
-                        </div>
-                        <div style="color: #fff; font-weight: 700;">USA Initial Jobless Claims</div>
-                        <div style="color: #fff;">Prog: 215k • Poprz: 210k • Wrażliwe na sentyment risk-on/off</div>
-                    </div>
-                    <div style="background: rgba(255,255,0,0.07); border-left: 3px solid #ffff00; padding: 8px; border-radius: 4px; margin-bottom: 8px;">
-                        <div style="display: flex; justify-content: space-between; color: #ccc; font-weight: 700;">
-                            <span>Pt 10:00 ET</span>
-                            <span style="color: #ffaa00;">MEDIUM</span>
                         </div>
                         <div style="color: #fff; font-weight: 700;">UMich Sentiment</div>
                         <div style="color: #fff;">Prog: 72.0 • Poprz: 71.6 • Oczekiwania inflacyjne konsumentów</div>
@@ -2002,138 +1057,6 @@
 
     </div>
     
-    <!-- LIQUIDATIONS & GAPS -->
-    <div style="padding: 15px 30px; background: #0a0a0a; display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-        <!-- BIGGEST LIQUIDATIONS -->
-        <div style="background: linear-gradient(135deg, #1a001a 0%, #0a0a0a 100%); border: 1px solid #ff0033; border-radius: 8px; padding: 20px;">
-            <div style="color: #ff0033; font-size: 1.1em; font-weight: 700; margin-bottom: 15px; text-transform: uppercase;">💥 NAJBLIŻSZE DUŻE LIKWIDACJE</div>
-            
-            <div class="liquidation-item">
-                <div style="display: flex; justify-content: space-between;">
-                    <span class="liquidation-price">$97,350</span>
-                    <span>SHORT 850 BTC</span>
-                </div>
-                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~5min stąd • HIGH IMPACT</div>
-            </div>
-            
-            <div class="liquidation-item">
-                <div style="display: flex; justify-content: space-between;">
-                    <span class="liquidation-price">$96,200</span>
-                    <span>LONG 1,200 BTC</span>
-                </div>
-                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~12min stąd • CRITICAL</div>
-            </div>
-            
-            <div class="liquidation-item">
-                <div style="display: flex; justify-content: space-between;">
-                    <span class="liquidation-price">$94,950</span>
-                    <span>SHORT 650 BTC</span>
-                </div>
-                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~22min stąd • MEDIUM</div>
-            </div>
-            
-            <div class="liquidation-item" style="border-left-color: #00ff00;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: #00ff00; font-weight: 900; font-size: 1.1em;">$93,500</span>
-                    <span style="color: #00ff00;">SHORT 450 BTC</span>
-                </div>
-                <div style="font-size: 0.7em; color: #fff; margin-top: 3px;">⏱️ ~45min stąd • LOW RISK</div>
-            </div>
-        </div>
-        
-        <!-- GAPS & OPPORTUNITIES -->
-        <div style="background: linear-gradient(135deg, #001a1a 0%, #0a0a0a 100%); border: 1px solid #00ffff; border-radius: 8px; padding: 20px;">
-            <div style="color: #00ffff; font-size: 1.1em; font-weight: 700; margin-bottom: 15px; text-transform: uppercase;">📍 MOŻLIWE GAP'I I OKAZJE</div>
-            
-            <div class="liquidation-item" style="border-left-color: #00d4ff;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: #00d4ff; font-weight: 700;">GAP UP</span>
-                    <span class="liquidation-price">$98,200 - $98,500</span>
-                </div>
-                <div style="font-size: 0.7em; color: #00d4ff; margin-top: 3px;">📊 Po przełamaniu oporów. Szansa na RALLY</div>
-            </div>
-            
-            <div class="liquidation-item" style="border-left-color: #ffaa00;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: #ffaa00; font-weight: 700;">FAIR VALUE GAP</span>
-                    <span style="color: #ffff00; font-weight: bold;">$95,600-$95,800</span>
-                </div>
-                <div style="font-size: 0.7em; color: #ffaa00; margin-top: 3px;">⚡ Idealne miejsce na SCALP BUY</div>
-            </div>
-            
-            <div class="liquidation-item" style="border-left-color: #ff0033;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: #ff0033; font-weight: 700;">GAP DOWN</span>
-                    <span class="liquidation-price">$93,200 - $93,800</span>
-                </div>
-                <div style="font-size: 0.7em; color: #ff0033; margin-top: 3px;">💀 Jeśli ktoś go złamie. ULTIMATE SUPPORT</div>
-            </div>
-            
-            <div class="liquidation-item" style="border-left-color: #00ff41;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: #00ff41; font-weight: 700;">OVERNIGHT GAP</span>
-                    <span style="color: #00ff41; font-weight: bold;">+$340 (Możliwy)</span>
-                </div>
-                <div style="font-size: 0.7em; color: #00ff41; margin-top: 3px;">🎯 Jeśli będzie BULLISH news w nocy</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- FOOTER WITH LOGO & CLOCK -->
-    <div class="footer-logo" id="footer-section">
-        <span>🐹</span>
-        <span>HAMSTER TRADING</span>
-        <span>💎</span>
-    </div>
-        
-    <div class="main-content">
-        <div class="chart-container">
-            <!-- TIMEFRAME SELECTOR & SMT ANALYSIS -->
-            <div class="timeframe-selector" style="display: flex; gap: 10px; margin-bottom: 0px; flex-wrap: wrap; align-items: center;">
-                <span style="color: #00ffff; font-weight: 700; font-size: 0.9em; margin-right: 10px;">⏱️ TIMEFRAME:</span>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1M</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '5m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">5M</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '15m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">15M</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '30m')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">30M</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1h')" style="padding: 8px 12px; background: #00d4ff; border: 2px solid #00d4ff; color: #0a0a0a; cursor: pointer; border-radius: 4px; font-weight: 700; font-size: 0.85em; box-shadow: 0 0 15px rgba(0,212,255,0.5);">1H</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '4h')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">4H</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1d')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1D</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1w')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1W</button>
-                <button class="timeframe-btn" onclick="switchTimeframe(event, '1M')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1MONTH</button>
-                <span style="margin-left: 20px; color: #00ff41; font-weight: 700; font-size: 0.9em;">📊 SMART MONEY LEVELS</span>
-                <!-- CUSTOM LEGEND -->
-                <div style="display: inline-flex; gap: 15px; margin-left: 30px; align-items: center; flex-wrap: wrap;">
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="display: inline-block; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-bottom: 10px solid #00ff41;"></span>
-                        <span style="color: #00ff41; font-size: 0.75em; font-weight: 700;">BUY SIGNAL</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="display: inline-block; width: 0; height: 0; border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 10px solid #ff0033;"></span>
-                        <span style="color: #ff0033; font-size: 0.75em; font-weight: 700;">SELL SIGNAL</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="display: inline-block; width: 20px; height: 3px; background: #ffaa00;"></span>
-                        <span style="color: #ffaa00; font-size: 0.75em; font-weight: 600;">EMA 10</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="display: inline-block; width: 20px; height: 3px; background: #ff00ff;"></span>
-                        <span style="color: #ff00ff; font-size: 0.75em; font-weight: 600;">EMA 20</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="display: inline-block; width: 20px; height: 3px; background: #00d4ff;"></span>
-                        <span style="color: #00d4ff; font-size: 0.75em; font-weight: 600;">EMA 30</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="display: inline-block; width: 20px; height: 3px; background: #00ff41;"></span>
-                        <span style="color: #00ff41; font-size: 0.75em; font-weight: 600;">EMA 50</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span id="rsi-indicator" style="display: inline-block; padding: 3px 8px; background: rgba(255, 170, 0, 0.2); border: 1px solid #ffaa00; border-radius: 3px; font-size: 0.7em; font-weight: 700; color: #ffaa00;">RSI: --</span>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 5px;">
-                        <span style="display: inline-block; width: 15px; height: 15px; background: rgba(0, 255, 65, 0.3); border: 1px solid #00ff41;"></span>
-                        <span style="color: #00ff41; font-size: 0.75em; font-weight: 600;">FVG BULL</span>
-                    </div>
                     <div style="display: flex; align-items: center; gap: 5px;">
                         <span style="display: inline-block; width: 15px; height: 15px; background: rgba(255, 0, 51, 0.3); border: 1px solid #ff0033;"></span>
                         <span style="color: #ff0033; font-size: 0.75em; font-weight: 600;">FVG BEAR</span>
@@ -2185,18 +1108,9 @@
                     '1h': '60', '4h': '240', '1d': 'D', '1w': 'W', '1M': 'M'
                 };
                 
-                // TradingView widget reference
+                // TradingView widget reference (unused here but kept for future)
                 let tvWidget = null;
-                
-                function switchTimeframe(event, tf) {
-                    try {
-                        currentTimeframe = tf;
-                        document.querySelectorAll('.timeframe-btn').forEach(btn => {
-                            btn.style.background = '#1a1a1a';
-                            m', '5m': '5m', '15m': '15m', '30m': '30m',
-                    '1h': '1h', '4h': '4h', '1d': '1d', '1w': '1w', '1M': '1M'
-                };
-                
+
                 function switchTimeframe(event, tf) {
                     try {
                         currentTimeframe = tf;
@@ -2207,30 +1121,40 @@
                             btn.style.boxShadow = 'none';
                             btn.style.fontWeight = 'normal';
                         });
-                        event.target.style.background = '#00d4ff';
-                        event.target.style.borderColor = '#00d4ff';
-                        event.target.style.color = '#0a0a0a';
-                        event.target.style.boxShadow = '0 0 15px rgba(0,212,255,0.5)';
-                        event.target.style.fontWeight = '700';
-                        reloadChartData(tf);onst url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=${limit}`;
-                        
+                        if (event && event.target) {
+                            event.target.style.background = '#00d4ff';
+                            event.target.style.borderColor = '#00d4ff';
+                            event.target.style.color = '#0a0a0a';
+                            event.target.style.boxShadow = '0 0 15px rgba(0,212,255,0.5)';
+                            event.target.style.fontWeight = '700';
+                        }
+                        reloadChartData(tf);
+                    } catch(e) {
+                        console.error('switchTimeframe error:', e);
+                    }
+                }
+
+                async function reloadChartData(tf) {
+                    try {
+                        const interval = tfMap[tf] || '60';
+                        const limit = 200;
+                        const url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=${limit}`;
                         const res = await fetch(url);
                         const klines = await res.json();
-                        
-                        if(!klines || klines.length === 0) {
+
+                        if(!Array.isArray(klines) || klines.length === 0) {
                             console.error('No data from API');
                             return;
                         }
-                        
+
                         const x = klines.map(k => new Date(k[0]));
                         const open = klines.map(k => parseFloat(k[1]));
                         const high = klines.map(k => parseFloat(k[2]));
                         const low = klines.map(k => parseFloat(k[3]));
                         const close = klines.map(k => parseFloat(k[4]));
-                        
+
                         chartData = { x, open, high, low, close };
                         updateChartWithSMT(tf);
-                        
                     } catch(e) {
                         console.error('Chart reload error:', e);
                     }
@@ -2383,138 +1307,6 @@
                             { line: { color: "#00d4ff", dash: "dashdot", width: 2 }, type: "line", x0: 0, x1: 1, xref: "x domain", y0: smt.swing_low, y1: smt.swing_low, yref: "y" },
                             // RESISTANCE LEVELS
                             { line: { color: "#ff6b6b", dash: "solid", width: 2 }, type: "line", x0: 0, x1: 1, xref: "x domain", y0: smt.supply_zone_end, y1: smt.supply_zone_end, yref: "y" },
-                            // SUPPORT LEVELS
-                            { line: { color: "#4ecdc4", dash: "solid", width: 2 }, type: "line", x0: 0, x1: 1, xref: "x domain", y0: smt.demand_zone_start, y1: smt.demand_zone_start, yref: "y" },
-                            // PREMIUM ZONE (above SMT level) - żółta
-                            { fillcolor: "rgba(255,215,0,0.08)", layer: "below", line: { color: "rgba(255,215,0,0.5)", width: 2, dash: "dash" }, type: "rect", x0: 0, x1: 1, xref: "x domain", y0: smt.smt_level, y1: smt.swing_high + (smt.swing_high - smt.smt_level) * 0.1, yref: "y" },
-                            // DISCOUNT ZONE (below SMT level) - niebieska
-                            { fillcolor: "rgba(0,150,255,0.08)", layer: "below", line: { color: "rgba(0,150,255,0.5)", width: 2, dash: "dash" }, type: "rect", x0: 0, x1: 1, xref: "x domain", y0: smt.swing_low - (smt.smt_level - smt.swing_low) * 0.1, y1: smt.smt_level, yref: "y" },
-                            ...fvgShapes // Add FVG rectangles to shapes
-                            { fillcolor: "rgba(0,150,255,0.08)", layer: "below", line: { color: "rgba(0,150,255,0.5)", width: 2, dash: "dash" }, type: "rect", x0: 0, x1: 1, xref: "x domain", y0: smt.swing_low - (smt.smt_level - smt.swing_low) * 0.1, y1: smt.smt_level, yref: "y" }
-                        ];
-                        
-                        const layout = {
-                            xaxis: {anchor: 'y', domain: [0, 1], gridcolor: '#1a1a1a', rangeslider: {visible: false}, color: '#ffffff', fixedrange: false},
-                            yaxis: {anchor: 'x', domain: [0.50, 1.0], title: {text: 'Price (USD)', font: {color: '#ffffff', size: 12}}, gridcolor: '#1a1a1a', color: '#ffffff', fixedrange: false, scaleanchor: null},
-                            xaxis2: {anchor: 'y2', domain: [0, 1], gridcolor: '#1a1a1a', color: '#ffffff', fixedrange: false},
-                            yaxis2: {anchor: 'x2', domain: [0.37, 0.48], title: {text: 'RSI (14)', font: {color: '#ffffff', size: 11}}, range: [0, 100], gridcolor: '#1a1a1a', color: '#ffffff', fixedrange: false},
-                            xaxis3: {anchor: 'y3', domain: [0, 1], gridcolor: '#1a1a1a', color: '#ffffff', fixedrange: false},
-                            yaxis3: {anchor: 'x3', domain: [0.20, 0.35], title: {text: 'MACD', font: {color: '#ffffff', size: 11}}, gridcolor: '#1a1a1a', color: '#ffffff', fixedrange: false},
-                            xaxis4: {anchor: 'y4', domain: [0, 1], gridcolor: '#1a1a1a', color: '#ffffff', fixedrange: false},
-                            yaxis4: {anchor: 'x4', domain: [0.0, 0.18], title: {text: 'Volume', font: {color: '#ffffff', size: 11}}, gridcolor: '#1a1a1a', color: '#ffffff', fixedrange: false},
-                            height: 650,
-                            margin: {l: 50, r: 120, t: 0, b: 0},
-                            hovermode: 'x unified',
-                            dragmode: 'pan',
-                            plot_bgcolor: '#0a0a0a',
-                            paper_bgcolor: '#0a0a0a',
-                            showlegend: false,
-                            font: {color: '#ffffff'},
-                            shapes: smtShapes,
-                            annotations: [
-                                // PREMIUM ZONE label
-                                {
-                                    x: 0.02, xref: 'x domain',
-                                    y: smt.swing_high + (smt.swing_high - smt.smt_level) * 0.05, yref: 'y',
-                                    text: '🟨 PREMIUM ZONE', showarrow: false,
-                                    font: {size: 10, color: '#ffd700', family: 'Arial Black', weight: 'bold'},
-                                    bgcolor: 'rgba(0,0,0,0.7)', bordercolor: '#ffd700', borderwidth: 1, borderpad: 4
-                                },
-                                // DISCOUNT ZONE label
-                                {
-                                    x: 0.02, xref: 'x domain',
-                                    y: smt.swing_low - (smt.smt_level - smt.swing_low) * 0.05, yref: 'y',
-                                    text: '🟦 DISCOUNT ZONE', showarrow: false,
-                                    font: {size: 10, color: '#0096ff', family: 'Arial Black', weight: 'bold'},
-                                    bgcolor: 'rgba(0,0,0,0.7)', bordercolor: '#0096ff', borderwidth: 1, borderpad: 4
-                                },
-                                // RESISTANCE label
-                                {
-                                    x: 0.98, xref: 'x domain', xanchor: 'right',
-                                    y: smt.supply_zone_end, yref: 'y',
-                                    text: 'RESISTANCE 🔴', showarrow: false,
-                                    font: {size: 9, color: '#ff6b6b', family: 'Arial', weight: 'bold'},
-                                    bgcolor: 'rgba(0,0,0,0.7)', bordercolor: '#ff6b6b', borderwidth: 1, borderpad: 3
-                                },
-                                // SUPPORT label
-                                {
-                                    x: 0.98, xref: 'x domain', xanchor: 'right',
-                                    y: smt.demand_zone_start, yref: 'y',
-                                    text: 'SUPPORT 🟢', showarrow: false,
-                                    font: {size: 9, color: '#4ecdc4', family: 'Arial', weight: 'bold'},
-                                    bgcolor: 'rgba(0,0,0,0.7)', bordercolor: '#4ecdc4', borderwidth: 1, borderpad: 3
-                                }
-                            ],
-                            modebar: {
-                                bgcolor: 'rgba(0,0,0,0.8)',
-                                color: '#ffffff',
-                                activecolor: '#00d4ff'
-                            }
-                        };
-                        
-                        // Use newPlot for first render, react for updates
-                        const plotData = [trace, ema10Trace, ema20Trace, ema30Trace, ema50Trace, buyTrace, sellTrace];
-                        const config = {
-                            scrollZoom: true,
-                            responsive: true,
-                            displayModeBar: true,
-                            displaylogo: false,
-                            modeBarButtonsToAdd: [
-                                {
-                                    name: 'Zoom In Y',
-                                    icon: {width: 500, height: 600, path: 'M448 192l-128 0 0-128-64 0 0 128-128 0 0 64 128 0 0 128 64 0 0-128 128 0z'},
-                                    click: function(gd) {
-                                        const yaxis = gd.layout.yaxis;
-                                        const range = yaxis.range || [yaxis.autorange ? gd._fullLayout.yaxis.range[0] : yaxis.range[0], yaxis.autorange ? gd._fullLayout.yaxis.range[1] : yaxis.range[1]];
-                                        const mid = (range[0] + range[1]) / 2;
-                                        const span = (range[1] - range[0]) * 0.8; // Zoom in by 20%
-                                        Plotly.relayout(gd, {'yaxis.range': [mid - span/2, mid + span/2]});
-                                    }
-                                },
-                                {
-                                    name: 'Zoom Out Y',
-                                    icon: {width: 500, height: 600, path: 'M448 192l-320 0 0 64 320 0z'},
-                                    click: function(gd) {
-                                        const yaxis = gd.layout.yaxis;
-                                        const range = yaxis.range || [gd._fullLayout.yaxis.range[0], gd._fullLayout.yaxis.range[1]];
-                                        const mid = (range[0] + range[1]) / 2;
-                                        const span = (range[1] - range[0]) * 1.25; // Zoom out by 25%
-                                        Plotly.relayout(gd, {'yaxis.range': [mid - span/2, mid + span/2]});
-                                    }
-                                },
-                                {
-                                    name: 'Reset Y Axis',
-                                    icon: Plotly.Icons.home,
-                                    click: function(gd) {
-                                        Plotly.relayout(gd, {'yaxis.autorange': true, 'yaxis3.autorange': true, 'yaxis4.autorange': true});
-                                    }
-                                }
-                            ],
-                            modeBarButtonsToRemove: ['select2d', 'lasso2d', 'autoScale2d']
-                        };
-                        if(!chartInitialized) {
-                            Plotly.newPlot('main-chart', plotData, layout, config);
-                            chartInitialized = true;
-                        } else {
-                            Plotly.react('main-chart', plotData, layout, config);
-                        }
-                        
-                        // Update RSI indicator display
-                        if (window.lastRSI !== undefined) {
-                            const rsiIndicator = document.getElementById('rsi-indicator');
-                            if (rsiIndicator) {
-                                const rsi = window.lastRSI;
-                                let rsiColor = '#ffaa00'; // Default yellow
-                                if (rsi > 70) rsiColor = '#ff0033'; // Overbought red
-                                else if (rsi < 30) rsiColor = '#00ff41'; // Oversold green
-                                
-                                rsiIndicator.textContent = `RSI: ${rsi.toFixed(1)}`;
-                                rsiIndicator.style.color = rsiColor;
-                                rsiIndicator.style.borderColor = rsiColor;
-                                rsiIndicator.style.background = `rgba(${rsi > 70 ? '255,0,51' : rsi < 30 ? '0,255,65' : '255,170,0'}, 0.2)`;
-                            }
-                        }
-                        
                     } catch(e) {
                         console.error('SMT update error:', e);
                     }
@@ -2617,138 +1409,7 @@
                             await reloadChartData('1h');
                             console.log('✅ Chart initialized successfully with 1h timeframe');
                             
-                            // Auto-refresh chart every 60 seconds
-                            setInterval(async () => {
-                                try {
-                                    if(currentTimeframe && chartInitialized) {
-                                        await reloadChartData(currentTimeframe);
-                                        console.log('🔄 Chart auto-refreshed');
-                                    }
-                                } catch (e) { 
-                                    console.warn('⚠️ Chart refresh failed:', e); 
-                                }
-                            }, 60000);
-                            
-                        } catch (e) {
-                            console.error('❌ Chart initialization FAILED:', e);
-                            console.error('Error details:', e.stack);
-                        }
-                    })();
-                }
-                
-                // Start initialization when DOM is ready
-                if (document.readyState === 'loading') {
-                    console.log('⏳ DOM still loading, waiting...');
-                    document.addEventListener('DOMContentLoaded', () => {
-                        console.log('✅ DOM loaded, initializing chart...');
-                        initializeChart();
-                    });
-                } else {
-                    console.log('✅ DOM already loaded, initializing chart immediately...');
-                    setTimeout(initialize
-                    zt.textContent = 'Weekend - giełda zamknięta';
-                } else {
-                    zt.textContent = timeRemaining(zurich, 22, 0);
-                }
-            }
-
-            // Update panel godziny - NEW YORK (zamyka 16:00)
-            const nyt = document.getElementById('ny-time-panel');
-            const nys = document.getElementById('ny-status-panel');
-            const nyCurrentTime = document.getElementById('ny-current-time');
-            const nyVolatility = document.getElementById('ny-volatility');
-
-            // Update current local time in New York using Intl
-            if (nyCurrentTime) {
-                try {
-                    const timeStr = new Intl.DateTimeFormat('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }).format(new Date());
-                    nyCurrentTime.textContent = timeStr;
-                } catch {}
-            }
-
-            // Derive a simple volatility signal from BTC 24h change
-            if (nyVolatility) {
-                const changeAbs = Math.abs(Number(marketData?.btcChange24h ?? 0));
-                const estVol = Math.min(20, (changeAbs * 4)); // scale to a 0-20% band
-                const levelHigh = estVol >= 12;
-                nyVolatility.textContent = (levelHigh ? 'WYSOKIE' : 'NORMALNE') + ' (±' + estVol.toFixed(1) + '%)';
-                nyVolatility.style.color = levelHigh ? '#ff6600' : '#ffaa00';
-            }
-            
-            if (nyt) {
-                const isWeekend = ny.weekday === 'Sat' || ny.weekday === 'Sun';
-                if (isWeekend) {
-                    nyt.textContent = 'Weekend - giełda zamknięta';
-                } else {
-                    nyt.textContent = timeRemaining(ny, 16, 0);
-                }
-            }
-            if (nys) {
-                const openWindow = (ny.weekday !== 'Sat' && ny.weekday !== 'Sun') &&
-                    ((ny.hour > 9 || (ny.hour === 9 && ny.minute >= 30)) && ny.hour < 16);
-                nys.textContent = openWindow ? 'STATUS: NYSE OPEN ✓' : 'STATUS: NYSE CLOSED';
-                nys.style.color = openWindow ? '#00ff41' : '#ff0033';
-            }
-
-            // ===== Active Session Panel (dynamic) =====
-            const asn = document.getElementById('active-session-name');
-            const ast = document.getElementById('active-session-time');
-            const astz = document.getElementById('active-session-tz');
-            const asvol = document.getElementById('active-volatility');
-            const asliq = document.getElementById('active-liquidity');
-
-            if (asn && ast && astz && asvol && asliq) {
-                // Determine open windows
-                const nyOpen = (ny.weekday !== 'Sat' && ny.weekday !== 'Sun') && ((ny.hour > 9 || (ny.hour === 9 && ny.minute >= 30)) && ny.hour < 16);
-                const londonOpen = (london.weekday !== 'Sat' && london.weekday !== 'Sun') && (((london.hour > 8 && london.hour < 16) || (london.hour === 8 && london.minute >= 0) || (london.hour === 16 && london.minute <= 30)));
-                const zurichOpen = (zurich.weekday !== 'Sat' && zurich.weekday !== 'Sun') && (zurich.hour >= 6 && zurich.hour < 22);
-                const tokyoOpen = (tokyo.weekday !== 'Sat' && tokyo.weekday !== 'Sun') && ((tokyo.hour > 9 && tokyo.hour < 15) || (tokyo.hour === 9) || (tokyo.hour === 15 && tokyo.minute === 0));
-
-                // Precedence: New York > London > Zurich > Tokyo
-                let name = 'Brak aktywnej sesji';
-                let tz = '--';
-                let timeStr = '--:--';
-                if (nyOpen) {
-                    name = 'NEW YORK'; tz = 'EST';
-                    try { timeStr = new Intl.DateTimeFormat('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'America/New_York' }).format(new Date()); } catch {}
-                } else if (londonOpen) {
-                    name = 'EUROPA - LONDYN'; tz = 'GMT';
-                    try { timeStr = new Intl.DateTimeFormat('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/London' }).format(new Date()); } catch {}
-                } else if (zurichOpen) {
-                    name = 'EUROPA - ZURICH'; tz = 'CET';
-                    try { timeStr = new Intl.DateTimeFormat('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Zurich' }).format(new Date()); } catch {}
-                } else if (tokyoOpen) {
-                    name = 'AZJA - TOKYO'; tz = 'JST';
-                    try { timeStr = new Intl.DateTimeFormat('pl-PL', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Tokyo' }).format(new Date()); } catch {}
-                }
-
-                asn.textContent = name;
-                ast.textContent = timeStr;
-                astz.textContent = tz;
-
-                // Volatility estimate from BTC change
-                const changeAbs = Math.abs(Number(window.marketData?.btcChange24h ?? 0));
-                const estVol = Math.min(20, (changeAbs * 4));
-                const levelHigh = estVol >= 12;
-                asvol.textContent = (levelHigh ? 'WYSOKIE' : 'NORMALNE') + ' (±' + estVol.toFixed(1) + '%)';
-                asvol.style.color = levelHigh ? '#ff6600' : '#ffaa00';
-
-                // Liquidity from 24h volume
-                const vol24 = Number(window.marketData?.volume24h ?? 0);
-                let liqLabel = 'ŚREDNIA';
-                let liqColor = '#ffaa00';
-                if (vol24 > 30e9) { liqLabel = 'DOSKONAŁA'; liqColor = '#00ff41'; }
-                else if (vol24 < 15e9) { liqLabel = 'NISKA'; liqColor = '#ff0033'; }
-                asliq.textContent = liqLabel;
-                asliq.style.color = liqColor;
-            }
-
-            // Update panel godziny - LONDON (zamyka 16:30)
-            const lt = document.getElementById('london-time-panel');
-            const ls = document.getElementById('london-status-panel');
-            const lc = document.getElementById('london-countdown');
-            if (lt) {
-                const isWeekend = london.weekday === 'Sat' || london.weekday === 'Sun';
+        
                 if (isWeekend) {
                     lt.textContent = 'Weekend - giełda zamknięta';
                 } else {
@@ -3563,123 +2224,6 @@
                 </div>
                 <div id="trading-candlestick-content" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,170,0,0.3);">
                     
-                    <!-- CANDLESTICK PATTERNS -->
-                    <div style="margin-bottom: 25px;">
-                        <div style="font-size: 1.1em; color: #ffaa00; font-weight: 700; margin-bottom: 15px; font-family: 'Roboto Mono', monospace;">🕯️ WZORCE ŚWIECOWE (CANDLESTICK PATTERNS)</div>
-                        
-                        <!-- Bullish Patterns -->
-                        <div style="background: rgba(0,255,65,0.08); border-left: 4px solid #00ff41; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
-                            <div style="font-size: 0.95em; color: #00ff41; font-weight: 700; margin-bottom: 12px; font-family: 'Roboto Mono', monospace; letter-spacing: 1.2px;">📈 WZORCE BYCZE (BULLISH PATTERNS)</div>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px;">
-                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px; display: flex; gap: 10px;">
-                                    <div style="flex: 1;">
-                                        <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🔨 HAMMER (Młotek)</div>
-                                        <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
-                                            <strong>Jak rozpoznać:</strong> Mały korpus u góry świecy, długi dolny knot (2-3x dłuższy niż korpus), krótki lub brak górnego knota.<br>
-                                            <strong>Znaczenie:</strong> Sprzedający zdominowali początek sesji, ale kupujący odepchnęli cenę do góry. Silny sygnał odwrócenia trendu spadkowego.<br>
-                                            <strong>Kiedy działać:</strong> Pojawia się na dnie trendu spadkowego. Potwierdź następną zieloną świecą.
-                                        </div>
-                                    </div>
-                                    <svg width="80" height="100" viewBox="0 0 80 100" style="flex-shrink: 0;">
-                                        <!-- Dolny knot -->
-                                        <line x1="40" y1="20" x2="40" y2="70" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                        <!-- Korpus -->
-                                        <rect x="30" y="65" width="20" height="15" fill="#00ff41" stroke="#00ff41" stroke-width="1"/>
-                                        <!-- Górny knot mały -->
-                                        <line x1="40" y1="65" x2="40" y2="60" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                    </svg>
-                                </div>
-                                
-                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px; display: flex; gap: 10px;">
-                                    <div style="flex: 1;">
-                                        <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">⭐ MORNING STAR (Poranna Gwiazda)</div>
-                                        <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
-                                            <strong>Jak rozpoznać:</strong> 3 świece - długa czerwona, mała (doji/młotek), długa zielona.<br>
-                                            <strong>Znaczenie:</strong> Trend spadkowy traci momentum (mała środkowa świeca), kupujący przejmują kontrolę (trzecia świeca).<br>
-                                            <strong>Kiedy działać:</strong> Po potwierdzeniu trzecią świecą, która zamyka się powyżej środka pierwszej czerwonej świecy.
-                                        </div>
-                                    </div>
-                                    <svg width="100" height="100" viewBox="0 0 100 100" style="flex-shrink: 0;">
-                                        <!-- Świeca 1 - Czerwona długa -->
-                                        <line x1="20" y1="20" x2="20" y2="70" stroke="#ff0033" stroke-width="1" opacity="0.7"/>
-                                        <rect x="12" y="40" width="16" height="30" fill="#ff0033" stroke="#ff0033" stroke-width="1"/>
-                                        <!-- Świeca 2 - Mała Doji -->
-                                        <line x1="50" y1="50" x2="50" y2="70" stroke="#ffaa00" stroke-width="1" opacity="0.7"/>
-                                        <rect x="48" y="58" width="4" height="2" fill="#ffaa00" stroke="#ffaa00" stroke-width="1"/>
-                                        <!-- Świeca 3 - Zielona długa -->
-                                        <line x1="80" y1="20" x2="80" y2="70" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                        <rect x="72" y="25" width="16" height="45" fill="#00ff41" stroke="#00ff41" stroke-width="1"/>
-                                    </svg>
-                                </div>
-                                
-                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px; display: flex; gap: 10px;">
-                                    <div style="flex: 1;">
-                                        <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🐂 BULLISH ENGULFING (Bycze Objęcie)</div>
-                                        <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
-                                            <strong>Jak rozpoznać:</strong> Mała czerwona świeca, następnie duża zielona świeca, która całkowicie "pochłania" korpus poprzedniej.<br>
-                                            <strong>Znaczenie:</strong> Kupujący zdominowali sprzedających w bardzo silny sposób. Zmiana sentymentu rynkowego.<br>
-                                            <strong>Kiedy działać:</strong> Im większa różnica wielkości, tym silniejszy sygnał. Najlepiej przy wsparciu.
-                                        </div>
-                                    </div>
-                                    <svg width="100" height="100" viewBox="0 0 100 100" style="flex-shrink: 0;">
-                                        <!-- Świeca 1 - Mała Red -->
-                                        <line x1="25" y1="35" x2="25" y2="70" stroke="#ff0033" stroke-width="1" opacity="0.7"/>
-                                        <rect x="18" y="50" width="14" height="15" fill="#ff0033" stroke="#ff0033" stroke-width="1"/>
-                                        <!-- Świeca 2 - Duża Green -->
-                                        <line x1="75" y1="20" x2="75" y2="70" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                        <rect x="63" y="30" width="24" height="40" fill="#00ff41" stroke="#00ff41" stroke-width="1"/>
-                                    </svg>
-                                </div>
-                                
-                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px; display: flex; gap: 10px;">
-                                    <div style="flex: 1;">
-                                        <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">☁️ PIERCING LINE (Przebijająca Linia)</div>
-                                        <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
-                                            <strong>Jak rozpoznać:</strong> Długa czerwona świeca, następnie zielona otwiera się poniżej minimum czerwonej i zamyka powyżej jej środka.<br>
-                                            <strong>Znaczenie:</strong> Kupujący "przebijają" momentum spadkowe i odzyskują ponad 50% strat.<br>
-                                            <strong>Kiedy działać:</strong> Silniejsze, gdy zielona zamyka się blisko szczytu czerwonej świecy.
-                                        </div>
-                                    </div>
-                                    <svg width="100" height="100" viewBox="0 0 100 100" style="flex-shrink: 0;">
-                                        <!-- Świeca 1 - Long Red -->
-                                        <line x1="25" y1="20" x2="25" y2="70" stroke="#ff0033" stroke-width="1" opacity="0.7"/>
-                                        <rect x="17" y="35" width="16" height="35" fill="#ff0033" stroke="#ff0033" stroke-width="1"/>
-                                        <!-- Świeca 2 - Green piercing -->
-                                        <line x1="75" y1="30" x2="75" y2="70" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                        <rect x="67" y="42" width="16" height="28" fill="#00ff41" stroke="#00ff41" stroke-width="1"/>
-                                    </svg>
-                                </div>
-                                
-                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px; display: flex; gap: 10px;">
-                                    <div style="flex: 1;">
-                                        <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🌅 THREE WHITE SOLDIERS (Trzech Białych Żołnierzy)</div>
-                                        <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
-                                            <strong>Jak rozpoznać:</strong> Trzy kolejne długie zielone świece z małymi knotami, każda otwiera się w korpusie poprzedniej.<br>
-                                            <strong>Znaczenie:</strong> Bardzo silny, konsekwentny napływ kupujących przez 3 sesje. Dominacja popytu.<br>
-                                            <strong>Kiedy działać:</strong> Po drugiej lub trzeciej świecy. Rzadki wzorzec o wysokiej trafności.
-                                        </div>
-                                    </div>
-                                    <svg width="120" height="100" viewBox="0 0 120 100" style="flex-shrink: 0;">
-                                        <!-- Świeca 1 -->
-                                        <line x1="20" y1="25" x2="20" y2="70" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                        <rect x="12" y="40" width="16" height="30" fill="#00ff41" stroke="#00ff41" stroke-width="1"/>
-                                        <!-- Świeca 2 -->
-                                        <line x1="50" y1="20" x2="50" y2="70" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                        <rect x="42" y="35" width="16" height="35" fill="#00ff41" stroke="#00ff41" stroke-width="1"/>
-                                        <!-- Świeca 3 -->
-                                        <line x1="80" y1="15" x2="80" y2="70" stroke="#00ff41" stroke-width="1" opacity="0.7"/>
-                                        <rect x="72" y="28" width="16" height="42" fill="#00ff41" stroke="#00ff41" stroke-width="1"/>
-                                    </svg>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Bearish Patterns -->
-                        <div style="background: rgba(255,0,51,0.08); border-left: 4px solid #ff0033; padding: 15px; border-radius: 6px;">
-                            <div style="font-size: 0.95em; color: #ff0033; font-weight: 700; margin-bottom: 12px; font-family: 'Roboto Mono', monospace; letter-spacing: 1.2px;">📉 WZORCE NIEDŹWIEDZIE (BEARISH PATTERNS)</div>
-                            
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px;">
                                 <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px; display: flex; gap: 10px;">
                                     <div style="flex: 1;">
                                         <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🔨 SHOOTING STAR (Spadająca Gwiazda)</div>
@@ -6422,6 +4966,16 @@
         // Chart now has its own 60s refresh mechanism
         // setInterval(smoothRefresh, 3000);
         
+        // Simple clock refresher placeholder
+        function tick() {
+            try {
+                const now = new Date();
+                const time = now.toLocaleTimeString('pl-PL');
+                const el = document.getElementById('clock-display');
+                if (el) el.textContent = time;
+            } catch (e) { /* ignore */ }
+        }
+
         // Initial load animation
         document.addEventListener('DOMContentLoaded', function() {
             // Initialize clock with current time zones
@@ -6695,83 +5249,11 @@
                         console.log('✅ Crypto ticker updated - BTC: $' + btcPrice.toFixed(2));
                     }
                 }
-                updatePixelTicker();
             } catch (error) {
                 console.error('❌ Yahoo Finance ticker error:', error.message);
             }
         }
         
-        // Update pixel ticker display with real data
-        function updatePixelTicker() {
-            try {
-                const tickerContent = document.querySelector('.pixel-ticker-content');
-                if (!tickerContent) return;
-                
-                // Build dynamic ticker with current data
-                let html = '<span class=\"pixel-bull\">�</span>';
-                
-                // Use real data if available, otherwise fallback values
-                const tickers = [
-                    {
-                        symbol: 'BTC',
-                        price: marketData.btcPrice.toFixed(0),
-                        change: marketData.btcChange24h.toFixed(2),
-                        color: '#ff8800',
-                        emoji: '₿'
-                    },
-                    {
-                        symbol: 'ETH',
-                        price: marketData.ethPrice.toFixed(0),
-                        change: marketData.ethChange24h.toFixed(2),
-                        color: '#627eea',
-                        emoji: '⟠'
-                    },
-                    {
-                        symbol: 'GOLD',
-                        price: (commodityPrices?.gold ?? 2650).toFixed(2),
-                        change: (((commodityPrices?.gold ?? 2650) - (commodityPrices?.goldPrev ?? 2650)) / (commodityPrices?.goldPrev ?? 2650) * 100).toFixed(2),
-                        color: '#ffff00',
-                        emoji: '🏅',
-                        idPrice: 'ticker-gold-price',
-                        idChange: 'ticker-gold-change'
-                    },
-                    {
-                        symbol: 'SILVER',
-                        price: (commodityPrices?.silver ?? 31.5).toFixed(2),
-                        change: (((commodityPrices?.silver ?? 31.5) - (commodityPrices?.silverPrev ?? 31.5)) / (commodityPrices?.silverPrev ?? 31.5) * 100).toFixed(2),
-                        color: '#c0c0c0',
-                        emoji: '🔱',
-                        idPrice: 'ticker-silver-price',
-                        idChange: 'ticker-silver-change'
-                    },
-                    {
-                        symbol: 'S&P500',
-                        price: (5847).toFixed(0),
-                        change: (1.4).toFixed(1),
-                        color: '#00d4ff',
-                        emoji: '📊'
-                    },
-                    {
-                        symbol: 'NASDAQ',
-                        price: (18542).toFixed(0),
-                        change: (1.9).toFixed(1),
-                        color: '#00ff41',
-                        emoji: '💻'
-                    },
-                    {
-                        symbol: 'DAX',
-                        price: (18234).toFixed(0),
-                        change: (-0.6).toFixed(1),
-                        color: '#ffaa00',
-                        emoji: '🇩🇪'
-                    },
-                    {
-                        symbol: 'BULLS',
-                        price: '62',
-                        change: '+4.2',
-                        color: '#00ff41',
-                        emoji: '🐂'
-                    },
                     {
                         symbol: 'BEARS',
                         price: '38',
@@ -6846,7 +5328,6 @@
                 }
                 
                 updateCommodityDisplay();
-                updatePixelTicker();
                 
             } catch (error) {
                 console.warn('⚠️ Yahoo Finance API error (using fallback):', error);
@@ -7140,8 +5621,6 @@
                 
                 console.log('🥇 Commodity prices updated:', commodityPrices);
                 updateCommodityDisplay();
-                // Also refresh ticker so GOLD/SILVER IDs exist for DOM updates
-                updatePixelTicker();
                 
                 // Fetch all data in parallel for speed
                 await Promise.all([
@@ -7149,7 +5628,6 @@
                     fetchFearGreedIndex(),
                     fetchFundingRate(),
                     fetchOpenInterest(),
-                    fetchYahooFinanceData(),
                     fetchRealCommodityPrices()  // Yahoo Finance for Gold/Silver
                 ]);
                 
@@ -7180,7 +5658,6 @@
             
             // Initial data fetch (await to ensure completion)
             await updateAllMarketData();
-            updatePixelTicker();
             updateDashboardUI();
             updateWhaleFlow();
             updateVolumeAnalysis();
@@ -7191,9 +5668,6 @@
             setInterval(async () => {
                 await updateAllMarketData();
             }, 3000);
-            
-            // Update ticker display every 10 seconds for fresh prices
-            setInterval(updatePixelTicker, 10000);
             
             // ✅ ENABLED: UI update every 5 seconds for real-time data display
             setInterval(updateDashboardUI, 5000);
@@ -7894,8 +6368,6 @@
                 
                 console.log('🥇 Commodity prices fetched from server:', data);
                 updateCommodityDisplay();
-                // Refresh ticker to ensure DOM elements exist and reflect new values
-                updatePixelTicker();
                 return true;
             } catch (e) {
                 console.warn('⚠️ Commodity API fetch failed, using local simulation fallback', e);
@@ -8341,4 +6813,154 @@
             setInterval(updateTimeframeZone, 3000);
         }
     </script>
+
+    <!-- ===== BLOOMBERG TICKER & BREAKING NEWS SCRIPTS ===== -->
+    <script>
+        const TWELVE_DATA_KEY = '5203977ec0204755904ef326abe77e7c';
+        const TICKER_CONFIG = {
+            'METALE': { symbols: ['XAU/USD', 'XAG/USD'], color: '#ffff00' },
+            'INDEKSY': { symbols: ['SPX', 'INDU', 'IXIC', 'GDAXI'], color: '#00d4ff' },
+            'MEGA CAPS': { symbols: ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA'], color: '#cccccc' }
+        };
+        async function fetchTickerData() {
+            try {
+                const allSymbols = Object.values(TICKER_CONFIG).flatMap(g => g.symbols).join(',');
+                const url = `https://api.twelvedata.com/quote?symbol=${allSymbols}&apikey=${TWELVE_DATA_KEY}`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error('API error');
+                const data = await response.json();
+                // Normalize TwelveData response which returns an object keyed by symbol
+                let items = [];
+                if (Array.isArray(data?.results)) {
+                    items = data.results;
+                } else if (data && typeof data === 'object') {
+                    items = Object.values(data).filter(v => v && typeof v === 'object' && v.symbol && v.price);
+                }
+                if (!items || items.length === 0) {
+                    throw new Error('Empty ticker payload');
+                }
+                return items;
+            } catch (error) {
+                console.error('Ticker error, using mock:', error);
+                return getMockTickerData();
+            }
+        }
+        function getMockTickerData() {
+            return [
+                { symbol: 'XAU/USD', price: '2645.30', percent_change: '0.45' },
+                { symbol: 'XAG/USD', price: '31.25', percent_change: '0.32' },
+                { symbol: 'SPX', price: '5847.50', percent_change: '1.42' },
+                { symbol: 'INDU', price: '42850.20', percent_change: '0.87' },
+                { symbol: 'IXIC', price: '18542.30', percent_change: '1.93' },
+                { symbol: 'GDAXI', price: '18234.10', percent_change: '-0.62' },
+                { symbol: 'AAPL', price: '234.56', percent_change: '2.18' },
+                { symbol: 'MSFT', price: '445.32', percent_change: '1.87' },
+                { symbol: 'NVDA', price: '892.15', percent_change: '3.24' },
+                { symbol: 'AMZN', price: '456.78', percent_change: '-1.45' },
+                { symbol: 'TSLA', price: '347.85', percent_change: '4.32' }
+            ];
+        }
+        async function buildBloombergTicker() {
+            const priceData = await fetchTickerData();
+            const priceMap = new Map(priceData.map(item => [item.symbol, item]));
+            let html = '<div class="bloomberg-ticker-scroll">';
+            for (let loop = 0; loop < 2; loop++) {
+                if (loop === 1) html += '<div style="width: 100px;"></div>';
+                for (const [groupName, cfg] of Object.entries(TICKER_CONFIG)) {
+                    html += '<div class="bloomberg-ticker-group"><span class="ticker-group-label">' + groupName + '</span>';
+                    for (const symbol of cfg.symbols) {
+                        const data = priceMap.get(symbol);
+                        if (!data) continue;
+                        const price = parseFloat(data.price).toFixed(2);
+                        const change = parseFloat(data.percent_change);
+                        const col = change >= 0 ? '#00ff41' : '#ff0033';
+                        const sign = change >= 0 ? '+' : '';
+                        html += `<div class="ticker-instrument-item" style="border-color: ${cfg.color}33;"><span class="ticker-symbol" style="color: ${cfg.color};">${symbol}</span><span class="ticker-price">$${price}</span><span class="ticker-change ${change >= 0 ? 'positive' : 'negative'}" style="color: ${col};">${sign}${change.toFixed(2)}%</span></div>`;
+                    }
+                    html += '</div>';
+                }
+            }
+            html += '</div>';
+            const ticker = document.getElementById('bloombergTicker');
+            if (ticker) ticker.innerHTML = html;
+        }
+        buildBloombergTicker();
+        setInterval(buildBloombergTicker, 30000);
+
+        // Breaking News
+        function getImportanceLevel(h) {
+            const high = ['crash', 'surge', 'record', 'historic', 'emergency', 'halt', 'alert'];
+            const med = ['rally', 'decline', 'forecast', 'warns', 'announces'];
+            const l = h.toLowerCase();
+            return high.some(k => l.includes(k)) ? 'high' : med.some(k => l.includes(k)) ? 'medium' : 'low';
+        }
+        function categorizeNews(h) {
+            const l = h.toLowerCase();
+            if (l.includes('crypto') || l.includes('bitcoin') || l.includes('ethereum')) return 'CRYPTO';
+            if (l.includes('stock') || l.includes('apple') || l.includes('microsoft')) return 'STOCKS';
+            if (l.includes('market') || l.includes('index') || l.includes('s&p')) return 'MARKETS';
+            if (l.includes('fed') || l.includes('economy') || l.includes('inflation')) return 'ECONOMY';
+            return 'MARKETS';
+        }
+        function getRelativeTime(d) {
+            try {
+                const nd = new Date(d);
+                const now = new Date();
+                const ms = now - nd;
+                const mins = Math.floor(ms / 60000);
+                const hrs = Math.floor(ms / 3600000);
+                const days = Math.floor(ms / 86400000);
+                if (mins < 1) return 'Teraz';
+                if (mins < 60) return mins + 'm temu';
+                if (hrs < 24) return hrs + 'h temu';
+                if (days < 7) return days + 'd temu';
+                return nd.toLocaleDateString('pl-PL');
+            } catch (e) { return 'Niedawno'; }
+        }
+        async function fetchBreakingNews() {
+            try {
+                const syms = ['BTCUSD', 'ETHUSD', 'AAPL', 'MSFT', 'SPX'];
+                const reqs = syms.map(s => fetch(`https://api.twelvedata.com/stocks/news?symbol=${s}&limit=5&apikey=${TWELVE_DATA_KEY}`).then(r => r.json()).catch(() => ({ data: [] })));
+                const results = await Promise.all(reqs);
+                const news = results.flatMap(r => r.data || []).filter(a => a && a.title).slice(0, 20);
+                return news.length > 0 ? news : getMockNews();
+            } catch (e) { return getMockNews(); }
+        }
+        function getMockNews() {
+            return [
+                { title: 'Bitcoin Surges Past $95,000', source: 'Bloomberg', published_date: new Date(Date.now() - 300000).toISOString(), symbol: 'BTCUSD' },
+                { title: 'Apple Beats Q4 Earnings - Stock Soars', source: 'Reuters', published_date: new Date(Date.now() - 600000).toISOString(), symbol: 'AAPL' },
+                { title: 'Fed Signals Possible Rate Pause', source: 'FT', published_date: new Date(Date.now() - 900000).toISOString(), symbol: 'INDU' },
+                { title: 'Ethereum Network Upgrade Boosts Performance', source: 'CoinDesk', published_date: new Date(Date.now() - 1200000).toISOString(), symbol: 'ETHUSD' },
+                { title: 'S&P 500 Reaches All-Time High', source: 'MarketWatch', published_date: new Date(Date.now() - 1500000).toISOString(), symbol: 'SPX' },
+                { title: 'Microsoft AI Investment Initiative', source: 'TechCrunch', published_date: new Date(Date.now() - 1800000).toISOString(), symbol: 'MSFT' }
+            ];
+        }
+        async function buildBreakingNews() {
+            const newsData = await fetchBreakingNews();
+            if (!newsData || newsData.length === 0) {
+                const wrapper = document.getElementById('breakingNewsWrapper');
+                if (wrapper) wrapper.innerHTML = '<span class="breaking-news-label">BREAKING NEWS</span><div class="news-loading">Brak wiadomosci</div>';
+                return;
+            }
+            let html = '<div class="breaking-news-scroll">';
+            for (let loop = 0; loop < 2; loop++) {
+                for (const article of newsData) {
+                    const imp = getImportanceLevel(article.title);
+                    const cat = categorizeNews(article.title);
+                    const time = getRelativeTime(article.published_date);
+                    const src = article.source || 'News';
+                    const icon = imp === 'high' ? 'RED' : imp === 'medium' ? 'ORANGE' : 'GREEN';
+                    html += `<div class="breaking-news-item"><span class="news-importance ${imp}">${icon} ${imp.toUpperCase()}</span><span class="news-category-tag category-${cat.toLowerCase()}">${cat}</span><span class="news-source">${src}</span><span class="news-headline">${article.title}</span><span class="news-time">${time}</span></div>`;
+                }
+                html += '<div style="width: 50px; flex-shrink: 0;"></div>';
+            }
+            html += '</div>';
+            const wrapper = document.getElementById('breakingNewsWrapper');
+            if (wrapper) wrapper.innerHTML = '<span class="breaking-news-label">BREAKING NEWS</span>' + html;
+        }
+        buildBreakingNews();
+        setInterval(buildBreakingNews, 120000);
+    </script>
+
 </html>
