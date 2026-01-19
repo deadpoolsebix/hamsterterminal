@@ -1323,17 +1323,12 @@
             <div class="terminal-title" style="font-family: 'Press Start 2P', 'Courier New', monospace; font-weight: 900; letter-spacing: 4px; text-shadow: 3px 3px 0 #ff0033, 6px 6px 0 #00ff41, 0 0 30px rgba(255,0,51,0.8); color: #ffff00; font-size: 1.8em; transform: scaleY(1.1); display: flex; align-items: center; gap: 20px;">
                 <span style="animation: spinHamster 2s linear infinite; display: inline-block; font-size: 1.4em;">🐹</span>
                 <span style="animation: hamsterPush 3s ease-in-out infinite; display: inline-block; text-shadow: 0 2px 8px rgba(255,255,0,0.4), 0 4px 16px rgba(255,0,51,0.3);">HAMSTER</span> TERMINAL
-                <!-- THEME SWITCHER obok BTC -->
-                <div class="theme-switcher" style="margin-left: 30px;">
-                    <button class="theme-btn" onclick="previousTheme()">◄</button>
-                    <div class="theme-name" id="current-theme-name">MODERN</div>
-                    <button class="theme-btn" onclick="nextTheme()">►</button>
-                </div>
-            </div>
-            <!-- ANIMATED BEER 🍺 -->
-            <div style="display: inline-flex; align-items: center; gap: 10px;">
-                <span style="font-size: 1.5em; animation: beerCheers 0.6s infinite; filter: drop-shadow(0 0 15px rgba(255,170,0,0.8)); cursor: pointer; user-select: none;" title="CHEERS!">🍺</span>
-                <span style="font-family: 'Roboto Mono', monospace; font-size: 0.7em; font-weight: 700; background: linear-gradient(45deg, #ffaa00, #ff8800); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; letter-spacing: 1px; animation: glitch 0.4s infinite;">PROFIT MODE</span>
+                <span style="margin-left: 20px; display: inline-flex; align-items: center; gap: 8px; border-left: 2px solid #fff; padding-left: 20px;">
+                    <span style="font-size: 1em; font-weight: 900; color: #fff;">Ƀ</span>
+                    <button class="theme-btn" onclick="previousTheme()" style="background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; font-weight: 700; font-size: 0.8em; cursor: pointer; border-radius: 3px;">◄</button>
+                    <span style="font-size: 0.75em; color: #fff; font-weight: 700; min-width: 70px; text-align: center;" id="current-theme-name">MODERN</span>
+                    <button class="theme-btn" onclick="nextTheme()" style="background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; font-weight: 700; font-size: 0.8em; cursor: pointer; border-radius: 3px;">►</button>
+                </span>
             </div>
         </div>
         
@@ -1644,8 +1639,63 @@
     </script>
 
     <!-- ===== BLOOMBERG TICKER ===== -->
-    <div class="bloomberg-ticker-wrapper" id="bloombergTicker">
-        <div class="ticker-loading">Ladowanie Bloomberg Ticker...</div>
+    <div class="bloomberg-ticker-wrapper" id="bloombergTicker" style="margin: 15px 30px; padding: 15px; background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%); border: 2px solid #333; border-radius: 8px; overflow: hidden;">
+        <div class="bloomberg-ticker-scroll">
+            <!-- METALE -->
+            <div class="bloomberg-ticker-group" style="display: flex; align-items: center; gap: 15px;">
+                <span class="ticker-group-label" style="color: #ffff00; font-weight: 900; font-size: 0.9em; text-transform: uppercase; border-right: 2px solid #333; padding-right: 10px;">METALE</span>
+                <div class="ticker-instrument-item" id="metal-1" style="border-right: 2px solid #333; padding-right: 15px;">
+                    <span class="ticker-symbol" style="color: #ffff00;">XAU/USD</span>
+                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="metal-2">
+                    <span class="ticker-symbol" style="color: #ffff00;">XAG/USD</span>
+                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+            </div>
+            
+            <!-- INDEKSY -->
+            <div class="bloomberg-ticker-group" style="display: flex; align-items: center; gap: 15px; margin-left: 30px;">
+                <span class="ticker-group-label" style="color: #00d4ff; font-weight: 900; font-size: 0.9em; text-transform: uppercase; border-right: 2px solid #333; padding-right: 10px;">INDEKSY</span>
+                <div class="ticker-instrument-item" id="index-1" style="border-right: 2px solid #333; padding-right: 15px;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">SPX</span>
+                    <span class="ticker-price" style="margin-left: 8px;">--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="index-2" style="border-right: 2px solid #333; padding-right: 15px;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">INDU</span>
+                    <span class="ticker-price" style="margin-left: 8px;">--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="index-3">
+                    <span class="ticker-symbol" style="color: #00d4ff;">IXIC</span>
+                    <span class="ticker-price" style="margin-left: 8px;">--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+            </div>
+            
+            <!-- MEGA CAPS -->
+            <div class="bloomberg-ticker-group" style="display: flex; align-items: center; gap: 15px; margin-left: 30px;">
+                <span class="ticker-group-label" style="color: #cccccc; font-weight: 900; font-size: 0.9em; text-transform: uppercase; border-right: 2px solid #333; padding-right: 10px;">MEGA CAPS</span>
+                <div class="ticker-instrument-item" id="stock-1" style="border-right: 2px solid #333; padding-right: 15px;">
+                    <span class="ticker-symbol" style="color: #cccccc;">AAPL</span>
+                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="stock-2" style="border-right: 2px solid #333; padding-right: 15px;">
+                    <span class="ticker-symbol" style="color: #cccccc;">MSFT</span>
+                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="stock-3">
+                    <span class="ticker-symbol" style="color: #cccccc;">TSLA</span>
+                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
+                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ===== BREAKING NEWS ===== -->
@@ -8473,8 +8523,10 @@
         function applyTheme() {
             const theme = themes[currentThemeIndex];
             document.body.className = theme.class;
-            document.getElementById('current-theme-name').textContent = theme.name;
+            const nameEl = document.getElementById('current-theme-name');
+            if (nameEl) nameEl.textContent = theme.name;
             localStorage.setItem('hamsterTheme', theme.id);
+            console.log('Applied theme:', theme.name);
         }
         
         function nextTheme() {
@@ -8488,7 +8540,8 @@
         }
         
         // Load theme on page load
-        loadTheme();
+        window.addEventListener('DOMContentLoaded', loadTheme);
+        if (document.readyState !== 'loading') loadTheme();
         setInterval(flashTip, 15000);
     </script>
 
@@ -8673,50 +8726,43 @@
         }
         
         async function buildBloombergTicker() {
-            const priceData = await fetchTickerData();
-            const priceMap = new Map(priceData.map(item => [item.symbol, item]));
-            let html = '<div class="bloomberg-ticker-scroll">';
-            
-            for (let loop = 0; loop < 2; loop++) {
-                if (loop === 1) html += '<div style="width: 100px;"></div>';
+            try {
+                const priceData = await fetchTickerData();
+                const priceMap = new Map(priceData.map(item => [item.symbol, item]));
                 
-                for (const [groupName, cfg] of Object.entries(TICKER_CONFIG)) {
-                    html += '<div class="bloomberg-ticker-group"><span class="ticker-group-label">' + groupName + '</span>';
-                    
-                    for (const symbol of cfg.symbols) {
-                        const data = priceMap.get(symbol);
-                        if (!data) {
-                            console.warn('No data for symbol:', symbol);
-                            continue;
-                        }
-                        
-                        // Handle both 'price' and 'close' fields from API
-                        const priceValue = data.price || data.close;
-                        if (!priceValue) {
-                            console.warn('No price for symbol:', symbol, data);
-                            continue;
-                        }
-                        
-                        const price = parseFloat(priceValue).toFixed(2);
-                        const changeValue = data.percent_change || data.change_percent || data.percent || 0;
-                        const change = parseFloat(changeValue);
-                        const col = change >= 0 ? '#00ff41' : '#ff0033';
-                        const sign = change >= 0 ? '+' : '';
-                        
-                        html += `<div class="ticker-instrument-item" style="border-color: ${cfg.color}33;">
-                            <span class="ticker-symbol" style="color: ${cfg.color};">${symbol}</span>
-                            <span class="ticker-price">$${price}</span>
-                            <span class="ticker-change ${change >= 0 ? 'positive' : 'negative'}" style="color: ${col};">${sign}${change.toFixed(2)}%</span>
-                        </div>`;
-                    }
-                    
-                    html += '</div>';
-                }
+                // Update METALE
+                updateTickerElement('metal-1', priceMap.get('XAU/USD'), '#ffff00');
+                updateTickerElement('metal-2', priceMap.get('XAG/USD'), '#ffff00');
+                
+                // Update INDEKSY
+                updateTickerElement('index-1', priceMap.get('SPX'), '#00d4ff');
+                updateTickerElement('index-2', priceMap.get('INDU'), '#00d4ff');
+                updateTickerElement('index-3', priceMap.get('IXIC'), '#00d4ff');
+                
+                // Update MEGA CAPS
+                updateTickerElement('stock-1', priceMap.get('AAPL'), '#cccccc');
+                updateTickerElement('stock-2', priceMap.get('MSFT'), '#cccccc');
+                updateTickerElement('stock-3', priceMap.get('TSLA'), '#cccccc');
+                
+                console.log('Bloomberg ticker updated successfully');
+            } catch (error) {
+                console.error('Error building ticker:', error);
             }
+        }
+        
+        function updateTickerElement(elementId, data, color) {
+            const element = document.getElementById(elementId);
+            if (!element || !data) return;
             
-            html += '</div>';
-            const ticker = document.getElementById('bloombergTicker');
-            if (ticker) ticker.innerHTML = html;
+            const priceValue = data.price || data.close || 0;
+            const changeValue = data.percent_change || data.change_percent || data.percent || 0;
+            const change = parseFloat(changeValue);
+            const changeColor = change >= 0 ? '#00ff41' : '#ff0033';
+            const sign = change >= 0 ? '+' : '';
+            
+            element.querySelector('.ticker-price').textContent = '$' + parseFloat(priceValue).toFixed(2);
+            element.querySelector('.ticker-change').textContent = sign + change.toFixed(2) + '%';
+            element.querySelector('.ticker-change').style.color = changeColor;
         }
         
         buildBloombergTicker();
