@@ -1009,6 +1009,72 @@
       </div>
     </div>
 
+    <!-- ON-CHAIN PULSE -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">⛓️ ON-CHAIN PULSE</span>
+      <div class="sidebar-widgets">
+        <div class="widget">
+          <div class="widget-title">Active Addresses</div>
+          <div class="widget-value" id="sidebar-active-addr">--</div>
+          <div class="widget-change" id="sidebar-active-addr-chg">trend</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">NUPL</div>
+          <div class="widget-value" id="sidebar-nupl">--</div>
+          <div class="widget-change" id="sidebar-nupl-note">Neutral</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Hashrate</div>
+          <div class="widget-value" id="sidebar-hashrate">--</div>
+          <div class="widget-change" id="sidebar-hashrate-note">Secure</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GENIUS AI HINTS -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">🤖 GENIUS AI HINTS</span>
+      <div class="sidebar-widgets">
+        <div class="widget">
+          <div class="widget-title">Signal Strength</div>
+          <div class="widget-value" id="sidebar-ai-strength">--</div>
+          <div class="widget-change" id="sidebar-ai-bias">Bias</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Next Liquidity</div>
+          <div class="widget-value" id="sidebar-ai-liq">--</div>
+          <div class="widget-change" id="sidebar-ai-liq-note">Grab zone</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Risk Flag</div>
+          <div class="widget-value" id="sidebar-ai-risk">--</div>
+          <div class="widget-change" id="sidebar-ai-risk-note">Monitor</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HAMSTER PLAYGROUND -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">🐹 HAMSTER PLAYGROUND</span>
+      <div class="sidebar-widgets">
+        <div class="widget">
+          <div class="widget-title">Last Signal</div>
+          <div class="widget-value" id="sidebar-hamster-signal">--</div>
+          <div class="widget-change" id="sidebar-hamster-time">--</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Win Rate</div>
+          <div class="widget-value" id="sidebar-hamster-win">--</div>
+          <div class="widget-change" id="sidebar-hamster-note">Sim</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Mini Liquidity</div>
+          <div class="widget-value" id="sidebar-hamster-liq">--</div>
+          <div class="widget-change" id="sidebar-hamster-liq-note">Buy/Sell</div>
+        </div>
+      </div>
+    </div>
+
     <!-- CONTROLS -->
     <div class="sidebar-section">
       <span class="sidebar-label" data-i18n="sidebar-modes">🎨 VIEWS</span>
@@ -2168,6 +2234,63 @@
       if (sidebarShort) sidebarShort.textContent = shortLiq;
       if (sidebarLong) sidebarLong.textContent = longLiq;
       if (sidebarTotal) sidebarTotal.textContent = totalLiq;
+
+      // On-chain pulse (lightweight mock based on price/change)
+      const btcNum = parseFloat((btcPrice || '$0').replace(/[$,]/g, '')) || 0;
+      const chgNum = parseFloat((btcChange || '+0').replace(/[%+]/g, '')) || 0;
+
+      const activeAddr = 425000 + Math.round(btcNum * 0.8); // synthetic scale
+      const activeAddrEl = document.getElementById('sidebar-active-addr');
+      const activeAddrChgEl = document.getElementById('sidebar-active-addr-chg');
+      if (activeAddrEl) activeAddrEl.textContent = activeAddr.toLocaleString('en-US');
+      if (activeAddrChgEl) activeAddrChgEl.textContent = chgNum > 0 ? '↑ demand' : '↓ cooling';
+
+      const nuplEl = document.getElementById('sidebar-nupl');
+      const nuplNoteEl = document.getElementById('sidebar-nupl-note');
+      const nupl = (0.38 + chgNum * 0.01).toFixed(2);
+      if (nuplEl) nuplEl.textContent = nupl;
+      if (nuplNoteEl) nuplNoteEl.textContent = nupl > 0.5 ? 'Greed rising' : 'Neutral zone';
+
+      const hashEl = document.getElementById('sidebar-hashrate');
+      const hashNoteEl = document.getElementById('sidebar-hashrate-note');
+      const hash = (360 + chgNum * 8).toFixed(0) + ' EH/s';
+      if (hashEl) hashEl.textContent = hash;
+      if (hashNoteEl) hashNoteEl.textContent = chgNum >= 0 ? 'Secure' : 'Watch miners';
+
+      // Genius AI hints
+      const aiStrengthEl = document.getElementById('sidebar-ai-strength');
+      const aiBiasEl = document.getElementById('sidebar-ai-bias');
+      const aiLiqEl = document.getElementById('sidebar-ai-liq');
+      const aiLiqNoteEl = document.getElementById('sidebar-ai-liq-note');
+      const aiRiskEl = document.getElementById('sidebar-ai-risk');
+      const aiRiskNoteEl = document.getElementById('sidebar-ai-risk-note');
+
+      const bias = chgNum > 0.8 ? 'Bullish' : chgNum < -0.8 ? 'Bearish' : 'Neutral';
+      const strength = Math.min(100, Math.max(5, Math.abs(chgNum) * 18)).toFixed(0) + '%';
+      const liqZone = chgNum > 0 ? '$' + (btcNum * 1.012).toFixed(0) : '$' + (btcNum * 0.988).toFixed(0);
+
+      if (aiStrengthEl) aiStrengthEl.textContent = strength;
+      if (aiBiasEl) aiBiasEl.textContent = bias;
+      if (aiLiqEl) aiLiqEl.textContent = liqZone;
+      if (aiLiqNoteEl) aiLiqNoteEl.textContent = chgNum > 0 ? 'Take profit zone' : 'Liquidity grab';
+      if (aiRiskEl) aiRiskEl.textContent = chgNum < -1 ? 'High' : chgNum > 1 ? 'Medium' : 'Low';
+      if (aiRiskNoteEl) aiRiskNoteEl.textContent = chgNum < -1 ? 'Tight stops' : 'Normal';
+
+      // Hamster playground (fun stats)
+      const hamsterSignalEl = document.getElementById('sidebar-hamster-signal');
+      const hamsterTimeEl = document.getElementById('sidebar-hamster-time');
+      const hamsterWinEl = document.getElementById('sidebar-hamster-win');
+      const hamsterNoteEl = document.getElementById('sidebar-hamster-note');
+      const hamsterLiqEl = document.getElementById('sidebar-hamster-liq');
+      const hamsterLiqNoteEl = document.getElementById('sidebar-hamster-liq-note');
+
+      const lastDir = chgNum >= 0 ? 'BUY ▲' : 'SELL ▼';
+      if (hamsterSignalEl) hamsterSignalEl.textContent = lastDir;
+      if (hamsterTimeEl) hamsterTimeEl.textContent = 'Last: 5m ago';
+      if (hamsterWinEl) hamsterWinEl.textContent = '63%';
+      if (hamsterNoteEl) hamsterNoteEl.textContent = 'Sim backtest';
+      if (hamsterLiqEl) hamsterLiqEl.textContent = chgNum > 0 ? 'Stack bids' : 'Stack asks';
+      if (hamsterLiqNoteEl) hamsterLiqNoteEl.textContent = chgNum > 0 ? 'Target lower wick' : 'Target upper wick';
     }
 
     // ========== CLOCK ===========
