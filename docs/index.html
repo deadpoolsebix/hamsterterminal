@@ -2841,6 +2841,296 @@
     })();
     </script>
     
+        <!-- TRADING CANDLESTICK • PATTERNS & STRATEGIES (collapsible) -->
+        <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+            <div style="background: linear-gradient(135deg, #1a0f0a 0%, #0a0a0a 100%); border: 2px solid #ffaa00; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(255,170,0,0.15);">
+                <div onclick="toggleTradingCandlestick()" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                        <div style="font-size: 1.1em; color: #ffaa00; font-weight: 800;">🕯️ TRADING CANDLESTICK • PATTERNS & STRATEGIES</div>
+                        <div style="font-size: 1em; color: #fff; font-family: 'Roboto Mono', monospace; font-weight: 600;">
+                            Wzorce świecowe, strategie i formacje wykresów
+                        </div>
+                    </div>
+                    <div id="candlestick-toggle-icon" style="font-size: 1.8em; color: #ffaa00; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #ffaa00, 0 0 20px #ffaa00; animation: arrowPulse 2s ease-in-out infinite; display: inline-block; min-width: 30px; text-align: center; font-weight: bold;">▼</div>
+                </div>
+                <div id="trading-candlestick-content" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(255,170,0,0.3);">
+                    
+                    <!-- CANDLESTICK PATTERNS -->
+                    <div style="margin-bottom: 25px;">
+                        <div style="font-size: 1.1em; color: #ffaa00; font-weight: 700; margin-bottom: 15px; font-family: 'Roboto Mono', monospace;">🕯️ WZORCE ŚWIECOWE (CANDLESTICK PATTERNS)</div>
+                        
+                        <!-- Bullish Patterns -->
+                        <div style="background: rgba(0,255,65,0.08); border-left: 4px solid #00ff41; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="font-size: 0.95em; color: #00ff41; font-weight: 700; margin-bottom: 12px; font-family: 'Roboto Mono', monospace; letter-spacing: 1.2px;">📈 WZORCE BYCZE (BULLISH PATTERNS)</div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🔨 HAMMER (Młotek)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Mały korpus u góry świecy, długi dolny knot (2-3x dłuższy niż korpus), krótki lub brak górnego knota.<br>
+                                        <strong>Znaczenie:</strong> Sprzedający zdominowali początek sesji, ale kupujący odepchnęli cenę do góry. Silny sygnał odwrócenia trendu spadkowego.<br>
+                                        <strong>Kiedy działać:</strong> Pojawia się na dnie trendu spadkowego. Potwierdź następną zieloną świecą.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">⭐ MORNING STAR (Poranna Gwiazda)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> 3 świece - długa czerwona, mała (doji/młotek), długa zielona.<br>
+                                        <strong>Znaczenie:</strong> Trend spadkowy traci momentum (mała środkowa świeca), kupujący przejmują kontrolę (trzecia świeca).<br>
+                                        <strong>Kiedy działać:</strong> Po potwierdzeniu trzecią świecą, która zamyka się powyżej środka pierwszej czerwonej świecy.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🐂 BULLISH ENGULFING (Bycze Objęcie)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Mała czerwona świeca, następnie duża zielona świeca, która całkowicie "pochłania" korpus poprzedniej.<br>
+                                        <strong>Znaczenie:</strong> Kupujący zdominowali sprzedających w bardzo silny sposób. Zmiana sentymentu rynkowego.<br>
+                                        <strong>Kiedy działać:</strong> Im większa różnica wielkości, tym silniejszy sygnał. Najlepiej przy wsparciu.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">☁️ PIERCING LINE (Przebijająca Linia)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Długa czerwona świeca, następnie zielona otwiera się poniżej minimum czerwonej i zamyka powyżej jej środka.<br>
+                                        <strong>Znaczenie:</strong> Kupujący "przebijają" momentum spadkowe i odzyskują ponad 50% strat.<br>
+                                        <strong>Kiedy działać:</strong> Silniejsze, gdy zielona zamyka się blisko szczytu czerwonej świecy.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00ff41; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🌅 THREE WHITE SOLDIERS (Trzech Białych Żołnierzy)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Trzy kolejne długie zielone świece z małymi knotami, każda otwiera się w korpusie poprzedniej.<br>
+                                        <strong>Znaczenie:</strong> Bardzo silny, konsekwentny napływ kupujących przez 3 sesje. Dominacja popytu.<br>
+                                        <strong>Kiedy działać:</strong> Po drugiej lub trzeciej świecy. Rzadki wzorzec o wysokiej trafności.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Bearish Patterns -->
+                        <div style="background: rgba(255,0,51,0.08); border-left: 4px solid #ff0033; padding: 15px; border-radius: 6px;">
+                            <div style="font-size: 0.95em; color: #ff0033; font-weight: 700; margin-bottom: 12px; font-family: 'Roboto Mono', monospace; letter-spacing: 1.2px;">📉 WZORCE NIEDŹWIEDZIE (BEARISH PATTERNS)</div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🔨 SHOOTING STAR (Spadająca Gwiazda)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Mały korpus u dołu świecy, długi górny knot (2-3x dłuższy niż korpus), krótki lub brak dolnego knota.<br>
+                                        <strong>Znaczenie:</strong> Kupujący wypchnęli cenę wysoko, ale sprzedający zdominowali i zepchnęli ją w dół. Odrzucenie wyższych poziomów.<br>
+                                        <strong>Kiedy działać:</strong> Pojawia się na szczycie trendu wzrostowego. Potwierdź następną czerwoną świecą.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🌑 EVENING STAR (Wieczorna Gwiazda)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> 3 świece - długa zielona, mała (doji/shooting star), długa czerwona.<br>
+                                        <strong>Znaczenie:</strong> Trend wzrostowy słabnie (mała środkowa świeca), sprzedający przejmują kontrolę (trzecia świeca).<br>
+                                        <strong>Kiedy działać:</strong> Gdy trzecia świeca zamyka się poniżej środka pierwszej zielonej świecy. Bardzo wiarygodny wzorzec.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🐻 BEARISH ENGULFING (Niedźwiedzie Objęcie)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Mała zielona świeca, następnie duża czerwona świeca całkowicie "pochłania" korpus poprzedniej.<br>
+                                        <strong>Znaczenie:</strong> Sprzedający zdominowali kupujących. Gwałtowna zmiana z optymizmu na pesymizm.<br>
+                                        <strong>Kiedy działać:</strong> Najsilniejsze przy oporze. Im większa czerwona świeca, tym silniejszy sygnał.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">☁️ DARK CLOUD COVER (Ciemna Chmura)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Długa zielona świeca, następnie czerwona otwiera się powyżej szczytu zielonej i zamyka poniżej jej środka.<br>
+                                        <strong>Znaczenie:</strong> Gap wzrostowy zostaje odwrócony, sprzedający "przykrywają" ponad 50% wzrostu.<br>
+                                        <strong>Kiedy działać:</strong> Gdy zamknięcie jest głębiej niż 50% zielonej świecy. Silniejsze przy oporze.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff0033; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🌃 THREE BLACK CROWS (Trzech Czarnych Kruków)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Jak rozpoznać:</strong> Trzy kolejne długie czerwone świece z małymi knotami, każda otwiera się w korpusie poprzedniej.<br>
+                                        <strong>Znaczenie:</strong> Bardzo silna, konsekwentna presja sprzedażowa przez 3 sesje. Dominacja podaży.<br>
+                                        <strong>Kiedy działać:</strong> Po drugiej lub trzeciej świecy. Jeden z najsilniejszych niedźwiedzich wzorców.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- TRADING STRATEGIES -->
+                    <div style="margin-bottom: 25px;">
+                        <div style="font-size: 1.1em; color: #00d4ff; font-weight: 700; margin-bottom: 15px; font-family: 'Roboto Mono', monospace;">📊 STRATEGIE TRADINGOWE</div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 15px;">
+                            <div style="background: linear-gradient(135deg, rgba(0,255,65,0.1) 0%, rgba(0,255,65,0.05) 100%); border: 2px solid #00ff41; padding: 15px; border-radius: 6px;">
+                                <div style="color: #00ff41; font-weight: 700; font-size: 1em; margin-bottom: 8px;">🎯 TREND FOLLOWING (Podążanie za Trendem)</div>
+                                <div style="color: #ddd; font-size: 0.85em; line-height: 1.6; margin-bottom: 10px;">
+                                    Strategia wykorzystująca momentum rynku. "Trend jest twoim przyjacielem" - wchodzimy w kierunku dominującego trendu.
+                                </div>
+                                <div style="color: #fff; font-size: 0.8em; line-height: 1.7;">
+                                    <div style="margin-bottom: 6px;"><strong style="color: #00ff41;">✓ Kiedy kupować:</strong> Cena powyżej EMA 50 i 200, Higher Highs + Higher Lows, RSI > 50</div>
+                                    <div style="margin-bottom: 6px;"><strong style="color: #ff0033;">✗ Kiedy sprzedawać:</strong> Cena poniżej EMA 50 i 200, Lower Highs + Lower Lows, RSI < 50</div>
+                                    <div style="color: #ffaa00;"><strong>⚠️ Stop Loss:</strong> Pod ostatnim Low w trendzie wzrostowym, nad ostatnim High w spadkowym</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, rgba(255,170,0,0.1) 0%, rgba(255,170,0,0.05) 100%); border: 2px solid #ffaa00; padding: 15px; border-radius: 6px;">
+                                <div style="color: #ffaa00; font-weight: 700; font-size: 1em; margin-bottom: 8px;">⚡ BREAKOUT TRADING (Wybicia)</div>
+                                <div style="color: #ddd; font-size: 0.85em; line-height: 1.6; margin-bottom: 10px;">
+                                    Handel na wybiciach z konsolidacji. Cena przełamuje kluczowy poziom wsparcia/oporu z dużym wolumenem.
+                                </div>
+                                <div style="color: #fff; font-size: 0.8em; line-height: 1.7;">
+                                    <div style="margin-bottom: 6px;"><strong style="color: #00ff41;">✓ Sygnał kupna:</strong> Wybicie powyżej oporu z wolumenem >150% średniej, zamknięcie świecy powyżej poziomu</div>
+                                    <div style="margin-bottom: 6px;"><strong style="color: #ff0033;">✗ Sygnał sprzedaży:</strong> Wybicie poniżej wsparcia z wolumenem >150% średniej</div>
+                                    <div style="color: #ffaa00;"><strong>⚠️ Uwaga:</strong> Uważaj na false breakouts! Potwierdź retest poziomu przed wejściem</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, rgba(0,212,255,0.1) 0%, rgba(0,212,255,0.05) 100%); border: 2px solid #00d4ff; padding: 15px; border-radius: 6px;">
+                                <div style="color: #00d4ff; font-weight: 700; font-size: 1em; margin-bottom: 8px;">🔄 MEAN REVERSION (Powrót do Średniej)</div>
+                                <div style="color: #ddd; font-size: 0.85em; line-height: 1.6; margin-bottom: 10px;">
+                                    Zakłada, że cena wraca do średniej po ekstremalnych ruchach. Kupujemy "za tanio", sprzedajemy "za drogo".
+                                </div>
+                                <div style="color: #fff; font-size: 0.8em; line-height: 1.7;">
+                                    <div style="margin-bottom: 6px;"><strong style="color: #00ff41;">✓ Sygnał kupna:</strong> RSI < 30, cena przy dolnej wstędze Bollingera, oversold na Stochastic</div>
+                                    <div style="margin-bottom: 6px;"><strong style="color: #ff0033;">✗ Sygnał sprzedaży:</strong> RSI > 70, cena przy górnej wstędze Bollingera, overbought</div>
+                                    <div style="color: #ffaa00;"><strong>⚠️ Ryzyko:</strong> Nie działa w silnych trendach! Używaj tylko w konsolidacji/range</div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: linear-gradient(135deg, rgba(255,0,255,0.1) 0%, rgba(255,0,255,0.05) 100%); border: 2px solid #ff00ff; padding: 15px; border-radius: 6px;">
+                                <div style="color: #ff00ff; font-weight: 700; font-size: 1em; margin-bottom: 8px;">📍 SUPPORT & RESISTANCE TRADING</div>
+                                <div style="color: #ddd; font-size: 0.85em; line-height: 1.6; margin-bottom: 10px;">
+                                    Handel na odbiciu od kluczowych poziomów S/R. Bazuje na psychologii rynku - poziomy "zapamiętane" przez traderów.
+                                </div>
+                                <div style="color: #fff; font-size: 0.8em; line-height: 1.7;">
+                                    <div style="margin-bottom: 6px;"><strong style="color: #00ff41;">✓ Kupno przy wsparciu:</strong> Cena testuje wsparcie 2-3 razy, świece bycze, rosnący wolumen</div>
+                                    <div style="margin-bottom: 6px;"><strong style="color: #ff0033;">✗ Sprzedaż przy oporze:</strong> Cena testuje opór 2-3 razy, świece niedźwiedzie</div>
+                                    <div style="color: #ffaa00;"><strong>⚠️ Zasada:</strong> Im więcej testów poziom przetrwał, tym silniejszy. Po przebiciu zmienia rolę!</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- CHART PATTERNS -->
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 1.1em; color: #ff00ff; font-weight: 700; margin-bottom: 15px; font-family: 'Roboto Mono', monospace;">📈 FORMACJE WYKRESÓW (CHART PATTERNS)</div>
+                        
+                        <!-- Continuation Patterns -->
+                        <div style="background: rgba(0,212,255,0.08); border-left: 4px solid #00d4ff; padding: 15px; border-radius: 6px; margin-bottom: 15px;">
+                            <div style="font-size: 0.95em; color: #00d4ff; font-weight: 700; margin-bottom: 12px; font-family: 'Roboto Mono', monospace; letter-spacing: 1.2px;">➡️ FORMACJE KONTYNUACJI (Trend będzie trwał dalej)</div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">📐 TRÓJKĄT (Triangle)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Symetryczny:</strong> Dwa zbieżne linie trendu. Konsolidacja przed kontynuacją. Wybicie w kierunku wcześniejszego trendu (70% przypadków).<br>
+                                        <strong>Rosnący:</strong> Płaski opór + rosnące wsparcie = bycza kontynuacja.<br>
+                                        <strong>Spadający:</strong> Płaskie wsparcie + opadający opór = niedźwiedzia kontynuacja.<br>
+                                        <strong>Target:</strong> Wysokość podstawy trójkąta odmierzona od punktu wybicia.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🚩 FLAGA i PROPORZEC (Flag & Pennant)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Flaga:</strong> Silny ruch (maszt), potem prostokątna konsolidacja pod kątem przeciwnym do trendu. Krótkotrwała korekta.<br>
+                                        <strong>Proporzec:</strong> Jak flaga, ale konsolidacja w małym trójkącie symetrycznym.<br>
+                                        <strong>Target:</strong> Długość masztu odmierzona od wybicia. Bardzo niezawodne formacje (80%+ trafność).<br>
+                                        <strong>Wolumen:</strong> Spada w konsolidacji, eksploduje przy wybiciu.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">☕ FILIŻANKA Z UCHEM (Cup & Handle)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Filiżanka:</strong> Łagodne zaokrąglone dno (U-shape), trwa 1-6 miesięcy. Cena wraca do poprzedniego szczytu.<br>
+                                        <strong>Ucho:</strong> Mała korekta (10-15%) przy prawym brzegu, tworzy miniaturę flagi/trójkąta.<br>
+                                        <strong>Wybicie:</strong> Powyżej oporu uchwytu z dużym wolumenem.<br>
+                                        <strong>Target:</strong> Głębokość filiżanki + punkt wybicia. Wzorzec wielkich wzrostów!
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Reversal Patterns -->
+                        <div style="background: rgba(255,0,255,0.08); border-left: 4px solid #ff00ff; padding: 15px; border-radius: 6px;">
+                            <div style="font-size: 0.95em; color: #ff00ff; font-weight: 700; margin-bottom: 12px; font-family: 'Roboto Mono', monospace; letter-spacing: 1.2px;">🔄 FORMACJE ODWRÓCENIA (Zmiana trendu)</div>
+                            
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff00ff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">👤 GŁOWA I RAMIONA (Head & Shoulders)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Struktura:</strong> 3 szczyty - lewe ramię, wyższa głowa, prawe ramię (niższe niż głowa). Linia szyi łączy dołki.<br>
+                                        <strong>Psychologia:</strong> Słabnące momentum wzrostowe, kupujący tracą siłę z każdym szczytem.<br>
+                                        <strong>Potwierdzenie:</strong> Przebicie linii szyi z wolumenem. <br>
+                                        <strong>Target:</strong> Odległość głowa-szyja odmierzona w dół od przebicia. <br>
+                                        <strong>Odwrócona:</strong> To samo do góry nogami = bycze odwrócenie.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff00ff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🔀 PODWÓJNY SZCZYT / DÓŁ (Double Top/Bottom)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Double Top:</strong> Dwa szczyty na zbliżonym poziomie, oddzielone korektą. Cena nie może przebić oporu - niedźwiedzie odwrócenie.<br>
+                                        <strong>Double Bottom (W):</strong> Dwa dołki na zbliżonym poziomie. Wsparcie obronione 2x - bycze odwrócenie.<br>
+                                        <strong>Potwierdzenie:</strong> Przebicie poziomu środkowej korekty (linia szyi).<br>
+                                        <strong>Target:</strong> Wysokość formacji odmierzona od przebicia.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff00ff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">🔺 KLINY (Wedges)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Rising Wedge (rosnący klin):</strong> Dwie zbieżne linie trendu skierowane w górę, ale tempo wzrostu słabnie. Niedźwiedzie odwrócenie na szczycie trendu.<br>
+                                        <strong>Falling Wedge (spadający klin):</strong> Zbieżne linie w dół, spadki słabną. Bycze odwrócenie na dnie.<br>
+                                        <strong>Wybicie:</strong> Zawsze przeciwnie do nachylenia klina! <br>
+                                        <strong>Wolumen:</strong> Spada w klinie, rośnie przy wybiciu.
+                                    </div>
+                                </div>
+                                
+                                <div style="background: rgba(0,0,0,0.3); padding: 12px; border-radius: 4px;">
+                                    <div style="color: #ff00ff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px;">📊 POTRÓJNY SZCZYT / DÓŁ (Triple Top/Bottom)</div>
+                                    <div style="color: #ddd; font-size: 0.85em; line-height: 1.6;">
+                                        <strong>Triple Top:</strong> 3 szczyty na podobnym poziomie. Bardzo silny opór, trzykrotnie testowany = silne niedźwiedzie odwrócenie.<br>
+                                        <strong>Triple Bottom:</strong> 3 dołki na podobnym poziomie. Niezwykle silne wsparcie = mocne bycze odwrócenie.<br>
+                                        <strong>Wiarygodność:</strong> Wyższa niż double top/bottom (więcej testów = silniejszy poziom).<br>
+                                        <strong>Target:</strong> Wysokość formacji od punktu wybicia.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    
+        <script>
+        function toggleTradingCandlestick() {
+            const content = document.getElementById('trading-candlestick-content');
+            const icon = document.getElementById('candlestick-toggle-icon');
+            if (content && icon) {
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    icon.style.transform = 'rotate(180deg)';
+                    icon.style.animation = 'none';
+                } else {
+                    content.style.display = 'none';
+                    icon.style.transform = 'rotate(0deg)';
+                    icon.style.animation = 'arrowPulse 2s ease-in-out infinite';
+                }
+            }
+        }
+        </script>
+    
         <!-- TIMEFRAME ZONE • MULTI-TF ANALYSIS (collapsible) -->
         <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
             <div style="background: linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%); border: 2px solid #00d4ff; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(0,212,255,0.15);">
