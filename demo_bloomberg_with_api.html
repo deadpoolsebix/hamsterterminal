@@ -28,6 +28,38 @@
       line-height: 1.4;
       padding-bottom: 40px;
     }
+    
+    /* WALL STREET HEADER IMAGE */
+    .header-image {
+      width: 100%;
+      height: 140px;
+      background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 50%, #1a1a1a 100%);
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23ff8c00;stop-opacity:0.15" /><stop offset="100%" style="stop-color:%23000;stop-opacity:0.3" /></linearGradient></defs><rect width="1200" height="140" fill="%231a1a1a"/><path d="M 50 100 Q 100 50 150 80 T 250 60 T 350 90 T 450 40 T 550 85 T 650 50 T 750 95 T 850 60 T 950 80 T 1050 40 T 1150 85" stroke="%23ff8c00" stroke-width="3" fill="none" opacity="0.4"/><circle cx="100" cy="60" r="8" fill="%2300ff41" opacity="0.6"/><circle cx="400" cy="75" r="6" fill="%2300ff41" opacity="0.5"/><circle cx="750" cy="45" r="7" fill="%2300ff41" opacity="0.6"/><circle cx="1050" cy="80" r="5" fill="%2300ff41" opacity="0.4"/><text x="50%" y="30" font-family="Roboto Mono" font-size="32" font-weight="700" fill="%23ff8c00" text-anchor="middle" opacity="0.8">🐹 HAMSTER WALL STREET TERMINAL</text><text x="50%" y="65" font-family="Roboto Mono" font-size="14" fill="%23aaa" text-anchor="middle" opacity="0.6">REAL-TIME CRYPTO TRADING INTELLIGENCE</text></svg>');
+      background-size: cover;
+      background-position: center;
+      border-bottom: 2px solid var(--orange);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .header-image::before {
+      content: '📈';
+      position: absolute;
+      font-size: 80px;
+      left: 30px;
+      opacity: 0.1;
+    }
+    
+    .header-image::after {
+      content: '🐂';
+      position: absolute;
+      font-size: 80px;
+      right: 30px;
+      opacity: 0.1;
+    }
 
     /* THEME SWITCHER */
     .theme-switcher {
@@ -281,10 +313,10 @@
     /* BTC/ETH CARDS */
     .top-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr;
       gap: 10px;
       padding: 14px 24px;
-      align-items: center;
+      align-items: stretch;
     }
     .card {
       background: var(--panel);
@@ -292,8 +324,57 @@
       padding: 10px 12px;
     }
     .card:first-child {
-      grid-column: span 2;
+      grid-column: span 1;
       padding: 16px 14px;
+    }
+    
+    /* SESSION INFO CONTAINER - RIGHT SIDE */
+    .session-info-panel {
+      grid-column: span 1;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .session-box {
+      background: rgba(0,0,0,0.5);
+      border: 1px solid #ff8c00;
+      padding: 12px 14px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    
+    .session-box.next {
+      border-color: #666;
+    }
+    
+    .session-label {
+      color: #ff8c00;
+      font-size: 0.8em;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+    }
+    
+    .session-box.next .session-label {
+      color: #aaa;
+    }
+    
+    .session-time {
+      color: #ffffff;
+      font-size: 1.4em;
+      font-weight: 700;
+      margin-top: 6px;
+    }
+    
+    .session-subtitle {
+      color: #aaa;
+      font-size: 0.8em;
+      margin-top: 4px;
     }
     .card h3 {
       color: #ffffff;
@@ -761,22 +842,11 @@
   <!-- SIDEBAR TOGGLE BUTTON - WHITE -->
   <button class="sidebar-toggle" onclick="toggleSidebar();">☰</button>
 
-  <!-- TOP SESSION INFO PANELS -->
-  <div style="position: fixed; top: 12px; left: 120px; right: 120px; display: flex; gap: 20px; z-index: 1999; justify-content: center;">
-    <div style="background: rgba(0,0,0,0.7); border: 1px solid #ff8c00; padding: 8px 16px; border-radius: 4px; text-align: center; min-width: 140px;">
-      <div style="color: #ff8c00; font-size: 0.7em; font-weight: 700; letter-spacing: 0.5px;">SESJA AZJA</div>
-      <div style="color: #ffffff; font-size: 1.2em; font-weight: 700; margin-top: 4px;">02:30:15</div>
-      <div style="color: #aaa; font-size: 0.75em; margin-top: 2px;">do końca</div>
-    </div>
-    <div style="background: rgba(0,0,0,0.7); border: 1px solid #666; padding: 8px 16px; border-radius: 4px; text-align: center; min-width: 140px;">
-      <div style="color: #aaa; font-size: 0.7em; font-weight: 700; letter-spacing: 0.5px;">NASTĘPNA SESJA</div>
-      <div style="color: #ffffff; font-size: 1.2em; font-weight: 700; margin-top: 4px;">EUROPA</div>
-      <div style="color: #aaa; font-size: 0.75em; margin-top: 2px;">09:00 CET</div>
-    </div>
-  </div>
-
   <!-- BACK BUTTON -->
   <button class="back-button" onclick="history.back();" title="Go back">← </button>
+
+  <!-- WALL STREET HEADER IMAGE -->
+  <div class="header-image"></div>
 
   <!-- HEADER -->
   <div class="header">
@@ -819,9 +889,19 @@
       <div class="card-label">Fear & Greed</div>
       <div class="card-value" id="fear-greed">--</div>
     </div>
-    <div class="card">
-      <div class="card-label" id="fng-label">--</div>
-      <div class="card-value" style="font-size: 0.9em; margin-top: 4px;">Market Sentiment</div>
+    
+    <!-- SESSION INFO PANEL - RIGHT SIDE -->
+    <div class="session-info-panel">
+      <div class="session-box">
+        <div class="session-label">SESJA AZJA</div>
+        <div class="session-time" id="asia-time">02:30:15</div>
+        <div class="session-subtitle">do końca</div>
+      </div>
+      <div class="session-box next">
+        <div class="session-label">NASTĘPNA</div>
+        <div class="session-time" id="next-session">EUROPA</div>
+        <div class="session-subtitle">09:00 CET</div>
+      </div>
     </div>
   </div>
 
