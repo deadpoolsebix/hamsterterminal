@@ -4953,7 +4953,7 @@
             </div>
             <div id="hamster-container" style="display: grid; grid-template-columns: 100px 1fr 80px; gap: 12px; align-items: center; background: #0f0f1a; padding: 12px; border-radius: 6px; border: 2px solid #bb86fc;">
                 <div style="text-align: center; font-size: 3em; animation: hamsterBounce 1.5s ease-in-out infinite;">🐹</div>
-                <div id="hamster-comment" style="color: #9fff9f; font-size: 0.95em; line-height: 1.7; font-family: 'Courier New', 'Courier', monospace; min-height: 50px; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 5px rgba(159, 255, 159, 0.5); background: rgba(0, 20, 0, 0.6); padding: 8px; border-radius: 3px; border: 1px solid #00ff41; overflow-y: auto;">ANALIZUJE RSI & MACD...</div>
+                <div id="hamster-comment" style="color: #9fff9f; font-size: 0.95em; line-height: 1.7; font-family: 'Courier New', 'Courier', monospace; min-height: 50px; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 5px rgba(159, 255, 159, 0.5); background: rgba(0, 20, 0, 0.6); padding: 8px; border-radius: 3px; border: 1px solid #00ff41; overflow-y: auto;">🧠 TENSORTRADE AI AKTYWNY | Analizuję wykresy, likwidacje, Wyckoff phases, funding extremes... Małe podpowiedzi już jadą! 🚀</div>
                 <div id="hamster-emotion" style="text-align: center; font-size: 2.4em; animation: hamsterMood 2s ease-in-out infinite;">🤔</div>
             </div>
             
@@ -6728,87 +6728,188 @@
                 const fearGreedIndex = marketData.fearGreedIndex || 50;
                 const fundingRate = marketData.fundingRate || 0;
                 const volume24h = marketData.volume24h || 0;
+                const openInterest = marketData.openInterest || 0;
                 
-                // Advanced hamster comment with full dashboard context
+                // 🐹 ADVANCED HAMSTER BRAIN - TensorTrade Enhanced Analysis
                 let comment = "";
                 let emoji = "🤔";
                 let signal = "";
                 
-                // Multi-factor analysis: Price Direction + RSI + MACD + Volume + Fear/Greed + Funding
-                const priceStatus = btcChange24h > 2 ? '📈 WZROST' : btcChange24h < -2 ? '📉 SPADEK' : '↔️ BOCZEK';
-                const fearStatus = fearGreedIndex > 70 ? '😈 GREED ALERT' : fearGreedIndex < 30 ? '😱 FEAR ZONE' : '🤐 NEUTRAL';
-                const fundingMsg = fundingRate > 0.001 ? '🔴 Longi płacą' : fundingRate < -0.001 ? '🟢 Shorty płacą' : '⚪ Neutral';
-                const volMsg = volume24h > 30e9 ? '🔊 MEGA WOLUMEN' : volume24h > 20e9 ? '📢 Wysoki volume' : '😴 Niski volume';
+                // Calculate liquidation proximity (short clusters at $98.2k/$99.5k, long clusters at $93.8k/$92.1k)
+                const shortLiqHigh = 99500;
+                const shortLiqLow = 98200;
+                const longLiqHigh = 93800;
+                const longLiqLow = 92100;
+                
+                const distToShortLiq = Math.min(Math.abs(btcPrice - shortLiqHigh), Math.abs(btcPrice - shortLiqLow));
+                const distToLongLiq = Math.min(Math.abs(btcPrice - longLiqHigh), Math.abs(btcPrice - longLiqLow));
+                const nearLiquidation = distToShortLiq < 1000 || distToLongLiq < 1000;
+                
+                // Market structure analysis
+                const strongUptrend = btcChange24h > 3 && rsi > 55 && macd > 20;
+                const strongDowntrend = btcChange24h < -3 && rsi < 45 && macd < -20;
+                const consolidation = Math.abs(btcChange24h) < 1.5 && Math.abs(macd) < 15;
+                
+                // Wyckoff phase detection
+                let wyckoffPhase = "";
+                if (rsi < 35 && volume24h > 25e9 && btcChange24h < -2) {
+                    wyckoffPhase = "ACCUMULATION - Selling Climax! 🐋 Whales buying panic";
+                } else if (rsi > 50 && rsi < 70 && btcChange24h > 2 && btcChange24h < 8) {
+                    wyckoffPhase = "MARKUP - Trend silny! Higher Highs in play";
+                } else if (rsi > 65 && volume24h > 30e9 && btcChange24h > 5) {
+                    wyckoffPhase = "DISTRIBUTION - Buying Climax! Smart money exits";
+                } else if (rsi < 50 && btcChange24h < -1 && macd < -30) {
+                    wyckoffPhase = "MARKDOWN - Spadki trwają, czekaj na Spring";
+                }
+                
+                // Funding rate bias for smart entries
+                const fundingBias = fundingRate > 0.010 ? "SHORT BIAS - Funding ekstremalne, longi przeplacone" :
+                                   fundingRate < -0.010 ? "LONG BIAS - Funding negative, shorty płacą" :
+                                   fundingRate > 0.005 ? "Ostrożnie z longami - funding rosnące" :
+                                   fundingRate < -0.005 ? "Ostrożnie z shortami - funding ujemne" : "";
+                
+                // OI analysis for momentum confirmation
+                const oiTrend = openInterest > 25e9 ? "OI wysokie - wielki ruch coming!" : 
+                               openInterest < 15e9 ? "OI niskie - brak zainteresowania" : "OI normalne";
+                
+                // Volume delta simulation (institutional flow)
+                const volumeDelta = volume24h > 30e9 ? (btcChange24h > 0 ? "+BUY PRESSURE 🟢" : "-SELL PRESSURE 🔴") :
+                                   volume24h < 20e9 ? "⚪ Niski delta - czekaj" : "Normalny flow";
+                
+                // Imbalance detection (orderbook pressure)
+                const imbalanceRatio = rsi > 60 ? (rsi > 70 ? "ASK HEAVY 🔴 Bid/Ask <0.7" : "Lekki ASK pressure") :
+                                      rsi < 40 ? (rsi < 30 ? "BID HEAVY 🟢 Bid/Ask >1.4" : "Lekki BID support") : "⚖️ Balanced";
+                
+                // Fear/Greed psychology
+                const psychologyMsg = fearGreedIndex > 75 ? "😈 EKSTREMALNA CHCIWOŚĆ - Top bliski!" :
+                                     fearGreedIndex > 60 ? "😊 Greed - retail FOMO" :
+                                     fearGreedIndex < 25 ? "😱 EKSTREMICZNY FEAR - Kupuj panikę!" :
+                                     fearGreedIndex < 40 ? "😟 Fear - okazja do długich" : "😐 Neutral sentiment";
                 
                 // Log real values for debugging
-                console.log('🐹 HAMSTER AI - Real Data:', {
+                console.log('🐹 HAMSTER AI - TensorTrade Enhanced:', {
                     rsi: rsi.toFixed(2),
                     macd: macd.toFixed(2),
-                    volume: (volume / 1000000000).toFixed(2) + 'B',
+                    volume: (volume24h / 1000000000).toFixed(2) + 'B',
                     priceChange: priceChange.toFixed(2) + '%',
                     btcPrice: btcPrice.toFixed(0),
                     fearGreed: fearGreedIndex,
-                    funding: fundingRate.toFixed(4)
+                    funding: fundingRate.toFixed(4),
+                    wyckoffPhase: wyckoffPhase,
+                    nearLiq: nearLiquidation,
+                    distShortLiq: distToShortLiq,
+                    distLongLiq: distToLongLiq
                 });
                 
-                // Core RSI Analysis with context
-                if (rsi > 75) {
-                    comment = `🚨 RSI ${rsi.toFixed(0)} EKSTREM WYKUPIENIE! | BTC $${btcPrice.toFixed(0)} ${priceStatus} | ${fearStatus} | UWAGA: POTENCJALNY REVERSAŁ!`;
-                    emoji = "😱";
+                // 🎯 PRIORITY 1: LIQUIDATION ALERTS
+                if (btcPrice >= shortLiqLow && btcPrice <= shortLiqHigh) {
+                    comment = `💥 STREFA LIKWIDACJI SHORTÓW! $${btcPrice.toFixed(0)} w klastrze $${shortLiqLow}k-$${shortLiqHigh}k | ${volumeDelta} | WYBICIE = SHORT SQUEEZE 🚀`;
+                    emoji = "💥";
+                    signal = "buy";
+                } else if (btcPrice <= longLiqHigh && btcPrice >= longLiqLow) {
+                    comment = `💥 STREFA LIKWIDACJI LONGÓW! $${btcPrice.toFixed(0)} w klastrze $${longLiqLow}k-$${longLiqHigh}k | ${volumeDelta} | BREAKDOWN = LONG SQUEEZE 📉`;
+                    emoji = "💥";
                     signal = "sell";
-                } else if (rsi > 70) {
-                    comment = `⚠️ RSI ${rsi.toFixed(0)} WYKUPIENIE | BTC ${priceStatus} +${btcChange24h.toFixed(1)}% | Smart money zbiora zyski | ${volMsg}`;
+                } else if (distToShortLiq < 1500) {
+                    comment = `⚠️ ZBLIŻAMY SIĘ DO LIQ SHORTÓW! $${btcPrice.toFixed(0)} → $${shortLiqLow}k (${distToShortLiq.toFixed(0)}$ dystans) | ${imbalanceRatio} | ${fundingBias || 'Przygotuj long na breakout'}`;
+                    emoji = "🎯";
+                    signal = "bounce";
+                } else if (distToLongLiq < 1500) {
+                    comment = `⚠️ ZBLIŻAMY SIĘ DO LIQ LONGÓW! $${btcPrice.toFixed(0)} → $${longLiqHigh}k (${distToLongLiq.toFixed(0)}$ dystans) | ${imbalanceRatio} | Testowanie supportu!`;
+                    emoji = "🎯";
+                    signal = "bounce";
+                }
+                // 🎯 PRIORITY 2: WYCKOFF PHASE ANALYSIS
+                else if (wyckoffPhase.includes("ACCUMULATION")) {
+                    comment = `🐋 ${wyckoffPhase} | RSI ${rsi.toFixed(0)} | ${psychologyMsg} | SPRING SETUP? Obserwuj retest $${(btcPrice * 0.985).toFixed(0)}k`;
+                    emoji = "🐋";
+                    signal = "buy";
+                } else if (wyckoffPhase.includes("DISTRIBUTION")) {
+                    comment = `⚠️ ${wyckoffPhase} | RSI ${rsi.toFixed(0)} UTAD WARNING! | ${oiTrend} | Smart money sprzedaje na szczycie`;
                     emoji = "😟";
                     signal = "sell";
-                } else if (rsi > 60) {
-                    comment = `🟢 RSI ${rsi.toFixed(0)} STRONG BULL | BTC $${btcPrice.toFixed(0)} | MACD ${macd.toFixed(0)} | ${fundingMsg} | SCALP OKAZJA!`;
+                } else if (wyckoffPhase.includes("MARKUP")) {
+                    comment = `🚀 ${wyckoffPhase} | $${btcPrice.toFixed(0)} | ${fundingBias || 'Piramiduj pozycje!'} | Trailing SL pod ostatni swing`;
                     emoji = "🚀";
                     signal = "scalp";
+                } else if (wyckoffPhase.includes("MARKDOWN")) {
+                    comment = `📉 ${wyckoffPhase} | RSI ${rsi.toFixed(0)} | ${psychologyMsg} | NIE LONG DO SPRING! Czekaj na dołek`;
+                    emoji = "😱";
+                    signal = "sell";
+                }
+                // 🎯 PRIORITY 3: FUNDING RATE EXTREMES
+                else if (Math.abs(fundingRate) > 0.012) {
+                    const fundPct = (fundingRate * 100).toFixed(3);
+                    if (fundingRate > 0.012) {
+                        comment = `🔴 FUNDING EKSTREMALNE +${fundPct}%! Longi przeplacone | OI: ${(openInterest/1e9).toFixed(1)}B | SHORT BIAS gdy RSI>${rsi.toFixed(0)} turn`;
+                        emoji = "🔴";
+                        signal = "sell";
+                    } else {
+                        comment = `🟢 FUNDING EKSTREMALNE ${fundPct}%! Shorty płacą ciężko | ${psychologyMsg} | LONG BIAS na dips`;
+                        emoji = "🟢";
+                        signal = "buy";
+                    }
+                }
+                // 🎯 PRIORITY 4: RSI DIVERGENCE & MOMENTUM
+                else if (rsi > 75) {
+                    comment = `🚨 RSI ${rsi.toFixed(0)} OVERBOUGHT EXTREME! | $${btcPrice.toFixed(0)} | ${imbalanceRatio} | Dywergencja? Sprawdź MACD ${macd.toFixed(0)}`;
+                    emoji = "😱";
+                    signal = "sell";
+                } else if (rsi < 25) {
+                    comment = `🔥 RSI ${rsi.toFixed(0)} OVERSOLD EXTREME! | ${psychologyMsg} | ${volumeDelta} | Livermore'd: "Wielkie okazje w panice!"`;
+                    emoji = "🤑";
+                    signal = "buy";
+                } else if (rsi > 65 && macd < -20) {
+                    comment = `⚠️ BEARISH DIVERGENCE! RSI ${rsi.toFixed(0)} ↑ ale MACD ${macd.toFixed(0)} ↓ | Price exhaustion | Short setup formuje się`;
+                    emoji = "😟";
+                    signal = "sell";
+                } else if (rsi < 35 && macd > 20) {
+                    comment = `🟢 BULLISH DIVERGENCE! RSI ${rsi.toFixed(0)} ↓ ale MACD ${macd.toFixed(0)} ↑ | Bottom forming | Long setup gotowy`;
+                    emoji = "🐹";
+                    signal = "buy";
+                }
+                // 🎯 PRIORITY 5: MARKET STRUCTURE CHANGES
+                else if (strongUptrend) {
+                    comment = `🚀 STRONG UPTREND! +${btcChange24h.toFixed(1)}% | RSI ${rsi.toFixed(0)} | MACD ${macd.toFixed(0)} | ${fundingBias || 'Piramiduj małymi transzami'}`;
+                    emoji = "🚀";
+                    signal = "scalp";
+                } else if (strongDowntrend) {
+                    comment = `📉 STRONG DOWNTREND! ${btcChange24h.toFixed(1)}% | RSI ${rsi.toFixed(0)} | MACD ${macd.toFixed(0)} | ${oiTrend} | NIE ŁAP SPADAJĄCYCH NOŻY!`;
+                    emoji = "😱";
+                    signal = "sell";
+                } else if (consolidation) {
+                    comment = `↔️ KONSOLIDACJA | RSI ${rsi.toFixed(0)} | Vol ${(volume24h/1e9).toFixed(1)}B | ${imbalanceRatio} | Wyckoff: czekamy na BOS/CHoCH`;
+                    emoji = "🤔";
+                    signal = "bounce";
+                }
+                // 🎯 DEFAULT: STANDARD MULTI-FACTOR ANALYSIS
+                else if (rsi > 60) {
+                    comment = `✅ BULLISH | RSI ${rsi.toFixed(0)} | $${btcPrice.toFixed(0)} | ${fundingBias || volumeDelta} | ${oiTrend}`;
+                    emoji = "🐹";
+                    signal = "scalp";
                 } else if (rsi > 50) {
-                    comment = `✅ RSI ${rsi.toFixed(0)} BULLISH BIAS | ${fearStatus} Index: ${fearGreedIndex} | Vol: ${(volume24h/1e9).toFixed(1)}B | OBSERWUJ WYBICIE`;
+                    comment = `⚖️ LEKKO BULLISH | RSI ${rsi.toFixed(0)} | ${psychologyMsg} | ${imbalanceRatio} | Obserwuj setup`;
                     emoji = "🐹";
                     signal = "bounce";
                 } else if (rsi > 40) {
-                    comment = `⚖️ RSI ${rsi.toFixed(0)} NEUTRAL | BTC ${priceChange.toFixed(2)}% 24h | ${volMsg} | Czekaj na sygnal...`;
+                    comment = `⚖️ NEUTRAL | RSI ${rsi.toFixed(0)} | $${btcPrice.toFixed(0)} +${btcChange24h.toFixed(1)}% | Vol ${(volume24h/1e9).toFixed(1)}B | Czekaj na kierunek`;
                     emoji = "🤔";
                     signal = "bounce";
-                } else if (rsi > 30) {
-                    comment = `🟢 RSI ${rsi.toFixed(0)} WYPRZEDANIE! | BTC $${btcPrice.toFixed(0)} ${priceChange < 0 ? priceStatus : ''} | ${fearStatus} | OKAZJA LONG!`;
+                } else {
+                    comment = `🟢 OVERSOLD | RSI ${rsi.toFixed(0)} | ${psychologyMsg} | ${volumeDelta} | Okazja long na retest`;
                     emoji = "🐹";
                     signal = "buy";
-                } else if (rsi > 20) {
-                    comment = `🔥 RSI ${rsi.toFixed(0)} EKSTREMALNE WYPRZEDANIE! | ${fearStatus} | DELTA ZIELONA | ${fundingMsg} | SYGNAŁ KUP SYGNAŁ!`;
-                    emoji = "🚀";
-                    signal = "buy";
-                } else {
-                    comment = `🔴 RSI ${rsi.toFixed(0)} PANIKA! ULTIMATE WASHOUT! | Wieloryby wchodza | MASSIVE REBOUND INCOMING! | AGGRESSIVE BUY SIGNAL!`;
-                    emoji = "🤑";
-                    signal = "buy";
                 }
                 
-                // Add MACD divergence comment if strong
-                if (macd > 100) {
-                    comment += ` | 💚 MACD EXPLOSIVE! MOMENTUM ULTIMATE!`;
-                } else if (macd > 50) {
-                    comment += ` | 🟢 MACD Positive - Kupujacy maja kontrole!`;
-                } else if (macd < -100) {
-                    comment += ` | 💔 MACD NEGATIVE EXTREME! Sprzedajacy dominuja!`;
-                } else if (macd < -50) {
-                    comment += ` | 🔴 MACD Negative - Ostrozonosć z longami!`;
-                } else if (Math.abs(macd) < 10) {
-                    comment += ` | ⚪ MACD Crossover coming - prepare!`;
-                }
-                
-                // Add Fear/Greed context
-                if (fearGreedIndex > 80) {
-                    comment += ` | 😈 EXTREME GREED - PROFIT TAKING TIME!`;
-                } else if (fearGreedIndex < 20) {
-                    comment += ` | 😱 EXTREME FEAR - GREATEST BUY OPPORTUNITY!`;
-                }
-                
-                // Add funding rate context
-                if (Math.abs(fundingRate) > 0.005) {
-                    comment += ` | ⚡ Funding ${(fundingRate*100).toFixed(3)}% - ${fundingRate > 0 ? 'Longi zarabiaja' : 'Shorty zarabiaja'}`;
+                // 📊 Add context-aware tips based on current market phase
+                if (rsi > 70 && volume24h < 25e9) {
+                    comment += ` | 💡 TIP: Wykupienie bez wolumenu = słabe wybicie, możliwy reversał`;
+                } else if (rsi < 30 && volume24h > 30e9) {
+                    comment += ` | 💡 TIP: Wyprzedanie + high volume = kapitulacja, strong rebound likely`;
+                } else if (Math.abs(btcChange24h) > 5 && Math.abs(macd) < 20) {
+                    comment += ` | 💡 TIP: Duży ruch bez MACD momentum = trap? Ostrożnie`;
+                } else if (consolidation && volume24h > 28e9) {
+                    comment += ` | 💡 TIP: Konsolidacja + mega volume = wybicie blisko! Zarejestruj alerty`;
                 }
                 
                 // Update UI
@@ -6827,7 +6928,9 @@
                 // Add market momentum indicator
                 const momentumDiv = document.getElementById("hamster-emotion");
                 if (momentumDiv) {
-                    if (rsi > 70 || rsi < 30) {
+                    if (nearLiquidation || rsi > 75 || rsi < 25) {
+                        momentumDiv.style.animation = "hamsterBounce 0.5s ease-in-out infinite";
+                    } else if (rsi > 70 || rsi < 30) {
                         momentumDiv.style.animation = "hamsterBounce 0.8s ease-in-out infinite";
                     } else if (rsi > 60 || rsi < 40) {
                         momentumDiv.style.animation = "hamsterBounce 1.2s ease-in-out infinite";
