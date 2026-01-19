@@ -1102,15 +1102,15 @@
 
         .bloomberg-ticker-scroll {
             display: flex;
-            animation: scroll-left 34s linear infinite;
+            animation: scroll-left 75s linear infinite;
             font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 1.6575em;
+            font-size: 0.85em;
             letter-spacing: 0.5px;
         }
 
         @keyframes scroll-left {
-            0% { transform: translateX(50%); }
-            100% { transform: translateX(-150%); }
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
 
         .bloomberg-ticker-group {
@@ -1641,118 +1641,8 @@
     </script>
 
     <!-- ===== BLOOMBERG TICKER ===== -->
-    <div class="bloomberg-ticker-wrapper" id="bloombergTicker" style="margin: 15px 30px;">
-        <div class="bloomberg-ticker-scroll" id="ticker-scroll">
-            <!-- METALE -->
-            <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">💰 METALE</span>
-                <div class="ticker-instrument-item" id="metal-1" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">XAU/USD</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="metal-2" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">XAG/USD</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-            </div>
-            
-            <!-- INDEKSY -->
-            <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">📊 INDEKSY</span>
-                <div class="ticker-instrument-item" id="index-1" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">SPX</span>
-                    <span class="ticker-price" style="color: #fff;">--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="index-2" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">INDU</span>
-                    <span class="ticker-price" style="color: #fff;">--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="index-3" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">IXIC</span>
-                    <span class="ticker-price" style="color: #fff;">--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-            </div>
-            
-            <!-- MEGA CAPS -->
-            <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #cccccc;">🏢 MEGA CAPS</span>
-                <div class="ticker-instrument-item" id="stock-1" style="border-color: #cccccc33;">
-                    <span class="ticker-symbol" style="color: #cccccc;">AAPL</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="stock-2" style="border-color: #cccccc33;">
-                    <span class="ticker-symbol" style="color: #cccccc;">MSFT</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="stock-3" style="border-color: #cccccc33;">
-                    <span class="ticker-symbol" style="color: #cccccc;">TSLA</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-            </div>
-            
-            <!-- POWTÓRZENIE DLA CIĄGŁEJ ANIMACJI -->
-            <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">💰 METALE</span>
-                <div class="ticker-instrument-item" id="metal-1-repeat" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">XAU/USD</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="metal-2-repeat" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">XAG/USD</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-            </div>
-            
-            <!-- POWTÓRZENIE INDEKSY -->
-            <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">📊 INDEKSY</span>
-                <div class="ticker-instrument-item" id="index-1-repeat" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">SPX</span>
-                    <span class="ticker-price" style="color: #fff;">--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="index-2-repeat" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">INDU</span>
-                    <span class="ticker-price" style="color: #fff;">--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="index-3-repeat" style="border-color: #00d4ff33;">
-                    <span class="ticker-symbol" style="color: #00d4ff;">IXIC</span>
-                    <span class="ticker-price" style="color: #fff;">--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-            </div>
-            
-            <!-- POWTÓRZENIE MEGA CAPS -->
-            <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #cccccc;">🏢 MEGA CAPS</span>
-                <div class="ticker-instrument-item" id="stock-1-repeat" style="border-color: #cccccc33;">
-                    <span class="ticker-symbol" style="color: #cccccc;">AAPL</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="stock-2-repeat" style="border-color: #cccccc33;">
-                    <span class="ticker-symbol" style="color: #cccccc;">MSFT</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-                <div class="ticker-instrument-item" id="stock-3-repeat" style="border-color: #cccccc33;">
-                    <span class="ticker-symbol" style="color: #cccccc;">TSLA</span>
-                    <span class="ticker-price" style="color: #fff;">$--</span>
-                    <span class="ticker-change" style="color: #00ff41;">--</span>
-                </div>
-            </div>
-        </div>
+    <div class="bloomberg-ticker-wrapper" id="bloombergTicker">
+        <div class="ticker-loading">Ladowanie Bloomberg Ticker...</div>
     </div>
 
     <!-- ===== BREAKING NEWS ===== -->
@@ -8783,51 +8673,39 @@
         }
         
         async function buildBloombergTicker() {
-            try {
-                const priceData = await fetchTickerData();
-                const priceMap = new Map(priceData.map(item => [item.symbol, item]));
+            const priceData = await fetchTickerData();
+            const priceMap = new Map(priceData.map(item => [item.symbol, item]));
+            let html = '<div class="bloomberg-ticker-scroll">';
+            
+            for (let loop = 0; loop < 2; loop++) {
+                if (loop === 1) html += '<div style="width: 100px;"></div>';
                 
-                // Update METALE (original + repeat)
-                updateTickerElement('metal-1', priceMap.get('XAU/USD'), '#00d4ff');
-                updateTickerElement('metal-2', priceMap.get('XAG/USD'), '#00d4ff');
-                updateTickerElement('metal-1-repeat', priceMap.get('XAU/USD'), '#00d4ff');
-                updateTickerElement('metal-2-repeat', priceMap.get('XAG/USD'), '#00d4ff');
-                
-                // Update INDEKSY (original + repeat)
-                updateTickerElement('index-1', priceMap.get('SPX'), '#00d4ff');
-                updateTickerElement('index-2', priceMap.get('INDU'), '#00d4ff');
-                updateTickerElement('index-3', priceMap.get('IXIC'), '#00d4ff');
-                updateTickerElement('index-1-repeat', priceMap.get('SPX'), '#00d4ff');
-                updateTickerElement('index-2-repeat', priceMap.get('INDU'), '#00d4ff');
-                updateTickerElement('index-3-repeat', priceMap.get('IXIC'), '#00d4ff');
-                
-                // Update MEGA CAPS (original + repeat)
-                updateTickerElement('stock-1', priceMap.get('AAPL'), '#cccccc');
-                updateTickerElement('stock-2', priceMap.get('MSFT'), '#cccccc');
-                updateTickerElement('stock-3', priceMap.get('TSLA'), '#cccccc');
-                updateTickerElement('stock-1-repeat', priceMap.get('AAPL'), '#cccccc');
-                updateTickerElement('stock-2-repeat', priceMap.get('MSFT'), '#cccccc');
-                updateTickerElement('stock-3-repeat', priceMap.get('TSLA'), '#cccccc');
-                
-                console.log('Bloomberg ticker updated successfully');
-            } catch (error) {
-                console.error('Error building ticker:', error);
+                for (const [groupName, cfg] of Object.entries(TICKER_CONFIG)) {
+                    html += '<div class="bloomberg-ticker-group"><span class="ticker-group-label">' + groupName + '</span>';
+                    
+                    for (const symbol of cfg.symbols) {
+                        const data = priceMap.get(symbol);
+                        if (!data) continue;
+                        
+                        const price = parseFloat(data.price).toFixed(2);
+                        const change = parseFloat(data.percent_change);
+                        const col = change >= 0 ? '#00ff41' : '#ff0033';
+                        const sign = change >= 0 ? '+' : '';
+                        
+                        html += `<div class="ticker-instrument-item" style="border-color: ${cfg.color}33;">
+                            <span class="ticker-symbol" style="color: ${cfg.color};">${symbol}</span>
+                            <span class="ticker-price">$${price}</span>
+                            <span class="ticker-change ${change >= 0 ? 'positive' : 'negative'}" style="color: ${col};">${sign}${change.toFixed(2)}%</span>
+                        </div>`;
+                    }
+                    
+                    html += '</div>';
+                }
             }
-        }
-        
-        function updateTickerElement(elementId, data, color) {
-            const element = document.getElementById(elementId);
-            if (!element || !data) return;
             
-            const priceValue = data.price || data.close || 0;
-            const changeValue = data.percent_change || data.change_percent || data.percent || 0;
-            const change = parseFloat(changeValue);
-            const changeColor = change >= 0 ? '#00ff41' : '#ff0033';
-            const sign = change >= 0 ? '+' : '';
-            
-            element.querySelector('.ticker-price').textContent = '$' + parseFloat(priceValue).toFixed(2);
-            element.querySelector('.ticker-change').textContent = sign + change.toFixed(2) + '%';
-            element.querySelector('.ticker-change').style.color = changeColor;
+            html += '</div>';
+            const ticker = document.getElementById('bloombergTicker');
+            if (ticker) ticker.innerHTML = html;
         }
         
         buildBloombergTicker();
