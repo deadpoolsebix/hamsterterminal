@@ -2841,6 +2841,80 @@
     })();
     </script>
     
+    <!-- LIQUIDATION & FUNDING ALERTS (collapsible) -->
+    <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+        <div style="background: linear-gradient(135deg, #041a1f 0%, #0a0a0a 100%); border: 2px solid #00e1ff; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(0,225,255,0.15);">
+            <div onclick="toggleLiqFunding()" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                    <div style="font-size: 1.05em; color: #00e1ff; font-weight: 800;">📡 STREFY LIKWIDACJI + FUNDING ALERTS</div>
+                    <div style="font-size: 0.95em; color: #e0ffff; font-family: 'Roboto Mono', monospace; font-weight: 600;">progi funding, bias, klastery likwidacji</div>
+                </div>
+                <div id="liq-funding-toggle-icon" style="font-size: 1.6em; color: #00e1ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #00e1ff, 0 0 20px #00e1ff; display: inline-block; min-width: 28px; text-align: center; font-weight: bold;">▼</div>
+            </div>
+            <div id="liq-funding-content" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,225,255,0.25);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+                    <div style="background: rgba(0,225,255,0.08); border: 1px solid rgba(0,225,255,0.3); border-radius: 6px; padding: 12px;">
+                        <div style="color: #00e1ff; font-weight: 800; margin-bottom: 8px;">Funding → bias</div>
+                        <div style="color: #d8faff; font-size: 0.9em; line-height: 1.6;">
+                            • &gt; +0.010%: short bias / szukaj short squeeze na szczytach<br>
+                            • &lt; -0.010%: long bias / szukaj long squeeze przy dołkach<br>
+                            • Skok funding + CVD czerwone = podwójne ostrzeżenie na longi<br>
+                            • Funding dodatni + open interest rośnie + cena w bok = ryzyko long squeeze
+                        </div>
+                        <div style="margin-top: 8px; color: #ffaa00; font-size: 0.85em;">Alert: ustaw trigger, gdy funding przekroczy ±0.012% oraz OI ↑ w 30m</div>
+                    </div>
+                    <div style="background: rgba(0,225,255,0.08); border: 1px solid rgba(0,225,255,0.3); border-radius: 6px; padding: 12px;">
+                        <div style="color: #00e1ff; font-weight: 800; margin-bottom: 8px;">Mapa likwidacji</div>
+                        <div style="color: #d8faff; font-size: 0.9em; line-height: 1.6;">
+                            • Klaster short: $98.2k / $99.5k → cel na wybicia<br>
+                            • Klaster long: $93.8k / $92.1k → cel na spadki<br>
+                            • Reguła: jeśli delta zielona + przebicie short klastrów → momentum long<br>
+                            • Jeśli wolumen maleje przy dojściu do klastrów → możliwy fakeout / odrzut
+                        </div>
+                        <div style="margin-top: 8px; color: #ffaa00; font-size: 0.85em;">Tip: po wybiciu klastra obserwuj retest poziomu jako potencjalne wejście</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- IMBALANCE + DYW. (collapsible) -->
+    <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+        <div style="background: linear-gradient(135deg, #1a1200 0%, #0a0a0a 100%); border: 2px solid #ffb347; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(255,179,71,0.15);">
+            <div onclick="toggleImbalanceDiv()" style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                    <div style="font-size: 1.05em; color: #ffb347; font-weight: 800;">⚖️ IMBALANCE & DYW. W SKRÓCIE</div>
+                    <div style="font-size: 0.95em; color: #ffe7c2; font-family: 'Roboto Mono', monospace; font-weight: 600;">dysproporcja bid/ask + momentum vs cena</div>
+                </div>
+                <div id="imbalance-toggle-icon" style="font-size: 1.6em; color: #ffb347; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #ffb347, 0 0 20px #ffb347; display: inline-block; min-width: 28px; text-align: center; font-weight: bold;">▼</div>
+            </div>
+            <div id="imbalance-content" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,179,71,0.25);">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 12px;">
+                    <div style="background: rgba(255,179,71,0.08); border: 1px solid rgba(255,179,71,0.35); border-radius: 6px; padding: 12px;">
+                        <div style="color: #ffb347; font-weight: 800; margin-bottom: 8px;">Imbalance (orderbook / footprint)</div>
+                        <div style="color: #ffe7c2; font-size: 0.9em; line-height: 1.6;">
+                            • Bid/Ask &gt; 60/40 → przewaga kupna; &lt; 40/60 → przewaga sprzedaży<br>
+                            • Duże bloki na ask + brak wybicia ceny = absorpcja → potencjalny spadek<br>
+                            • Delta dodatnia, cena stoi w miejscu → możliwa dystrybucja<br>
+                            • Delta ujemna, cena nie spada → możliwa akumulacja
+                        </div>
+                        <div style="margin-top: 8px; color: #ffaa00; font-size: 0.85em;">Wejście: po wybiciu poziomu, gdy delta potwierdza, a bloki po stronie wybicia znikają</div>
+                    </div>
+                    <div style="background: rgba(255,179,71,0.08); border: 1px solid rgba(255,179,71,0.35); border-radius: 6px; padding: 12px;">
+                        <div style="color: #ffb347; font-weight: 800; margin-bottom: 8px;">Dywergencje (cena vs momentum)</div>
+                        <div style="color: #ffe7c2; font-size: 0.9em; line-height: 1.6;">
+                            • Bullish: cena ↓, RSI/MACD/Delta ↑ → szukaj long po retest<br>
+                            • Bearish: cena ↑, RSI/MACD/Delta ↓ → szukaj short po retest<br>
+                            • Volume divergence: cena rośnie, wolumen maleje → ryzyko wyczerpania ruchu<br>
+                            • Połączenie: dywergencja + imbalance na ask (duże oferty) = mocny sygnał spadkowy
+                        </div>
+                        <div style="margin-top: 8px; color: #ffaa00; font-size: 0.85em;">Plan: poczekaj na świecę potwierdzającą i ustaw SL poza ostatni swing (lub nad absorpcją)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- HOW TO ANALYZE PATTERNS (collapsible) -->
     <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
         <div style="background: linear-gradient(135deg, #0a1a0a 0%, #0a0a0a 100%); border: 2px solid #d946ef; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(217,70,239,0.15);">
@@ -3102,6 +3176,26 @@
                     icon.style.transform = 'rotate(0deg)';
                     icon.style.animation = 'arrowPulse 2s ease-in-out infinite';
                 }
+            }
+        }
+
+        function toggleLiqFunding() {
+            const content = document.getElementById('liq-funding-content');
+            const icon = document.getElementById('liq-funding-toggle-icon');
+            if (content && icon) {
+                const isHidden = content.style.display === 'none';
+                content.style.display = isHidden ? 'block' : 'none';
+                icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
+
+        function toggleImbalanceDiv() {
+            const content = document.getElementById('imbalance-content');
+            const icon = document.getElementById('imbalance-toggle-icon');
+            if (content && icon) {
+                const isHidden = content.style.display === 'none';
+                content.style.display = isHidden ? 'block' : 'none';
+                icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
             }
         }
     </script>
