@@ -388,16 +388,10 @@
 
   <!-- THEME & PAGE SWITCHER -->
   <div class="theme-switcher">
-    <div class="switcher-label">VIEWS</div>
+    <div class="switcher-label">MODES</div>
     <div class="switcher-group">
-      <button class="page-btn active" onclick="switchPage('dashboard')">Dashboard</button>
-      <button class="page-btn" onclick="switchPage('visual-dark')">Visual Dark</button>
-    </div>
-    <div class="switcher-label" style="margin-top: 6px;">THEMES</div>
-    <div class="switcher-group">
-      <button class="theme-btn active" onclick="switchTheme('bloomberg')">Bloomberg</button>
-      <button class="theme-btn" onclick="switchTheme('professional')">Professional</button>
-      <button class="theme-btn" onclick="switchTheme('dark')">Dark</button>
+      <button class="page-btn active" onclick="switchPage('bloomberg')">Bloomberg</button>
+      <button class="page-btn" onclick="switchPage('detailed')">Detailed Mode</button>
     </div>
   </div>
 
@@ -639,86 +633,8 @@
     </div>
   </div>
 
-  <!-- VISUAL DARK VIEW (Hidden by default) -->
-  <div id="visual-dark-page" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; background: #0a0a0a; z-index: 1000; overflow: auto; padding: 20px;">
-    <div style="max-width: 1400px; margin: 0 auto;">
-      <div style="text-align: center; margin-bottom: 40px;">
-        <h1 style="color: #ffffff; font-size: 2.5em; margin: 0; letter-spacing: 2px;">VISUAL DARK</h1>
-        <p style="color: #666; font-size: 1em; margin: 10px 0 0 0;">Minimalist Real-Time Crypto Dashboard</p>
-      </div>
-
-      <!-- PRICE GRID -->
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px;">
-        <div style="background: #1a1a1a; border: 1px solid #333; padding: 20px; text-align: center; border-radius: 4px;">
-          <div style="color: #666; font-size: 0.9em; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Bitcoin</div>
-          <div style="color: #ffffff; font-size: 2.5em; font-weight: 700; margin-bottom: 8px;" id="vd-btc-price">$98,432</div>
-          <div style="color: #00ff41; font-size: 1.2em; font-weight: 600;" id="vd-btc-change">+2.34%</div>
-        </div>
-
-        <div style="background: #1a1a1a; border: 1px solid #333; padding: 20px; text-align: center; border-radius: 4px;">
-          <div style="color: #666; font-size: 0.9em; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Ethereum</div>
-          <div style="color: #ffffff; font-size: 2.5em; font-weight: 700; margin-bottom: 8px;" id="vd-eth-price">$3,350</div>
-          <div style="color: #00ff41; font-size: 1.2em; font-weight: 600;">+1.82%</div>
-        </div>
-
-        <div style="background: #1a1a1a; border: 1px solid #333; padding: 20px; text-align: center; border-radius: 4px;">
-          <div style="color: #666; font-size: 0.9em; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">24h Volume</div>
-          <div style="color: #ffffff; font-size: 2.2em; font-weight: 700;" id="vd-volume">$28.5B</div>
-        </div>
-
-        <div style="background: #1a1a1a; border: 1px solid #333; padding: 20px; text-align: center; border-radius: 4px;">
-          <div style="color: #666; font-size: 0.9em; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 1px;">Fear & Greed</div>
-          <div style="color: #ffffff; font-size: 2.2em; font-weight: 700;" id="vd-fear-greed">49</div>
-          <div style="color: #ffff00; font-size: 0.9em; margin-top: 8px;">NEUTRAL</div>
-        </div>
-      </div>
-
-      <!-- MARKET STATS -->
-      <div style="background: #1a1a1a; border: 1px solid #333; padding: 30px; margin-bottom: 40px; border-radius: 4px;">
-        <h2 style="color: #ffffff; font-size: 1.5em; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase;">Market Statistics</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; font-size: 0.95em;">
-          <div>
-            <div style="color: #666; margin-bottom: 6px;">Market Cap</div>
-            <div style="color: #ffffff; font-size: 1.3em; font-weight: 700;" id="vd-market-cap">$1.89T</div>
-          </div>
-          <div>
-            <div style="color: #666; margin-bottom: 6px;">24h High</div>
-            <div style="color: #00ff41; font-size: 1.3em; font-weight: 700;">$99,200</div>
-          </div>
-          <div>
-            <div style="color: #666; margin-bottom: 6px;">24h Low</div>
-            <div style="color: #ff3366; font-size: 1.3em; font-weight: 700;">$96,800</div>
-          </div>
-          <div>
-            <div style="color: #666; margin-bottom: 6px;">Market Dominance</div>
-            <div style="color: #ffffff; font-size: 1.3em; font-weight: 700;">48.2%</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TECHNICAL ANALYSIS -->
-      <div style="background: #1a1a1a; border: 1px solid #333; padding: 30px; border-radius: 4px;">
-        <h2 style="color: #ffffff; font-size: 1.5em; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase;">Technical Analysis</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
-          <div style="background: #0d0d0d; padding: 15px; border-radius: 3px;">
-            <div style="color: #ffffff; font-weight: 700; margin-bottom: 10px;">RSI (14)</div>
-            <div style="color: #ffff00; font-size: 1.2em; font-weight: 700; margin-bottom: 6px;">55 (Neutral)</div>
-            <div style="color: #666; font-size: 0.9em;">No overbought/oversold signal</div>
-          </div>
-          <div style="background: #0d0d0d; padding: 15px; border-radius: 3px;">
-            <div style="color: #ffffff; font-weight: 700; margin-bottom: 10px;">MACD</div>
-            <div style="color: #00ff41; font-size: 1.2em; font-weight: 700; margin-bottom: 6px;">Positive Crossover</div>
-            <div style="color: #666; font-size: 0.9em;">Bullish momentum confirmed</div>
-          </div>
-          <div style="background: #0d0d0d; padding: 15px; border-radius: 3px;">
-            <div style="color: #ffffff; font-weight: 700; margin-bottom: 10px;">Moving Averages</div>
-            <div style="color: #00ff41; font-size: 1.2em; font-weight: 700; margin-bottom: 6px;">Golden Cross</div>
-            <div style="color: #666; font-size: 0.9em;">1H timeframe bullish alignment</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  <!-- DETAILED MODE (iframe poprzednia wersja) -->
+  <iframe id="detailed-mode-page" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; border: none; z-index: 1000;" src="demo_bloomberg_tabs_clean.html"></iframe>
 
   <script>
     // ========== API CONFIGURATION ==========
@@ -752,7 +668,6 @@
         
         // Update UI with real data
         updateDashboardWithData(data);
-        updateVisualDarkWithData(data);
         setApiStatus('live', '✓ Live Data');
         apiConnected = true;
         lastDataUpdate = Date.now();
@@ -815,44 +730,6 @@
       el.className = `api-status ${status}`;
     }
 
-    // ========== UPDATE VISUAL DARK PAGE ==========
-    function updateVisualDarkWithData(data) {
-      // BTC Price
-      if (data.btcPrice) {
-        document.getElementById('vd-btc-price').textContent = `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
-      }
-      
-      // BTC Change
-      if (data.btcChange24h !== undefined) {
-        const changePercent = data.btcChange24h.toFixed(2);
-        const vdChange = document.getElementById('vd-btc-change');
-        vdChange.textContent = `${changePercent > 0 ? '+' : ''}${changePercent}%`;
-        vdChange.style.color = changePercent > 0 ? '#00ff41' : '#ff3366';
-      }
-      
-      // ETH Price
-      if (data.ethPrice) {
-        document.getElementById('vd-eth-price').textContent = `$${data.ethPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
-      }
-      
-      // Volume
-      if (data.btcVolume) {
-        const volumeB = (data.btcVolume / 1e9).toFixed(1);
-        document.getElementById('vd-volume').textContent = `$${volumeB}B`;
-      }
-      
-      // Market Cap
-      if (data.btcMarketCap) {
-        const marketCapT = (data.btcMarketCap / 1e12).toFixed(2);
-        document.getElementById('vd-market-cap').textContent = `$${marketCapT}T`;
-      }
-      
-      // Fear & Greed
-      if (data.fear_greed !== undefined) {
-        document.getElementById('vd-fear-greed').textContent = data.fear_greed;
-      }
-    }
-
     // ========== PAGE SWITCHER ==========
     function switchPage(page) {
       currentPage = page;
@@ -861,7 +738,7 @@
       document.querySelectorAll('.page-btn').forEach(btn => btn.classList.remove('active'));
       event.target.classList.add('active');
       
-      // Show/hide pages
+      // Get all dashboard elements
       const header = document.querySelector('.header');
       const menuBar = document.querySelector('.menu-bar');
       const sectionHeaderWrapper = document.querySelector('.section-header-wrapper');
@@ -871,10 +748,10 @@
       const mainGrid = document.querySelector('.main-grid');
       const geniusAi = document.querySelector('.genius-ai');
       const tabContents = document.querySelectorAll('.tab-content');
-      const visualDarkPage = document.getElementById('visual-dark-page');
+      const detailedModePage = document.getElementById('detailed-mode-page');
       
-      if (page === 'visual-dark') {
-        // Hide dashboard
+      if (page === 'detailed') {
+        // Hide Bloomberg
         if (header) header.style.display = 'none';
         if (menuBar) menuBar.style.display = 'none';
         if (sectionHeaderWrapper) sectionHeaderWrapper.style.display = 'none';
@@ -884,10 +761,10 @@
         if (mainGrid) mainGrid.style.display = 'none';
         if (geniusAi) geniusAi.style.display = 'none';
         tabContents.forEach(el => el.style.display = 'none');
-        // Show visual dark
-        visualDarkPage.style.display = 'block';
+        // Show Detailed Mode
+        detailedModePage.style.display = 'block';
       } else {
-        // Show dashboard
+        // Show Bloomberg
         if (header) header.style.display = '';
         if (menuBar) menuBar.style.display = '';
         if (sectionHeaderWrapper) sectionHeaderWrapper.style.display = '';
@@ -897,8 +774,8 @@
         if (mainGrid) mainGrid.style.display = '';
         if (geniusAi) geniusAi.style.display = '';
         document.querySelector('.tab-content.active')?.style ? (document.querySelector('.tab-content.active').style.display = 'block') : null;
-        // Hide visual dark
-        visualDarkPage.style.display = 'none';
+        // Hide Detailed Mode
+        detailedModePage.style.display = 'none';
       }
     }
 
