@@ -432,29 +432,116 @@
       .menu-bar { flex-wrap: wrap; }
       .menu-item { flex: 1 1 48%; margin-bottom: 6px; }
     }
+
+    /* SIDEBAR DRAWER */
+    .sidebar {
+      position: fixed;
+      left: -300px;
+      top: 0;
+      width: 280px;
+      height: 100vh;
+      background: var(--panel);
+      border-right: 2px solid var(--orange);
+      box-shadow: 2px 0 8px rgba(255, 140, 0, 0.3);
+      z-index: 1001;
+      transition: left 0.3s ease;
+      overflow-y: auto;
+      padding: 20px 0;
+    }
+    .sidebar.open { left: 0; }
+    .sidebar-header {
+      padding: 16px 20px;
+      background: var(--orange);
+      color: #000;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .sidebar-section {
+      padding: 0 16px 20px 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-section:last-child { border-bottom: none; }
+    .sidebar-label {
+      color: var(--orange);
+      font-size: 0.75em;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-bottom: 10px;
+      display: block;
+      letter-spacing: 0.5px;
+    }
+    .sidebar-btn {
+      display: block;
+      width: 100%;
+      background: #1a1a1a;
+      border: 1px solid #333;
+      color: #fff;
+      padding: 10px 12px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      border-radius: 3px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.9em;
+      transition: all 0.2s;
+    }
+    .sidebar-btn:hover { background: #252525; border-color: var(--orange); color: var(--orange); }
+    .sidebar-btn.active { background: var(--orange); color: #000; border-color: var(--orange); }
+    
+    .sidebar-toggle {
+      position: fixed;
+      left: 10px;
+      top: 10px;
+      z-index: 1000;
+      background: var(--orange);
+      color: #000;
+      border: none;
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-weight: 700;
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .sidebar-toggle:hover { background: #ffb347; }
+
+    @media (max-width: 768px) {
+      .sidebar { width: 100%; left: -100%; }
+      .sidebar-toggle { left: 10px; top: 10px; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- THEME & PAGE SWITCHER -->
-  <div class="theme-switcher">
-    <div class="switcher-label">MODES</div>
-    <div class="switcher-group">
-      <button class="page-btn active" onclick="switchPage('bloomberg', event)">Bloomberg</button>
-      <button class="page-btn" onclick="switchPage('retro', event)">Retro Terminal</button>
-      <button class="page-btn" onclick="switchPage('detailed', event)">Detailed Mode</button>
+  <!-- SIDEBAR DRAWER -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">☰ CONTROL PANEL</div>
+    <div class="sidebar-section">
+      <span class="sidebar-label" data-i18n="sidebar-modes">VIEWS</span>
+      <button class="sidebar-btn active" data-mode="bloomberg" onclick="switchPage('bloomberg', event); toggleSidebar();" data-i18n="mode-bloomberg">Bloomberg</button>
+      <button class="sidebar-btn" data-mode="retro" onclick="switchPage('retro', event); toggleSidebar();" data-i18n="mode-retro">Retro Terminal</button>
+      <button class="sidebar-btn" data-mode="detailed" onclick="switchPage('detailed', event); toggleSidebar();" data-i18n="mode-detailed">Detailed Mode</button>
     </div>
-    <div class="switcher-label" style="margin-top:8px;">THEMES</div>
-    <div class="switcher-group">
-      <button class="theme-btn active" onclick="switchTheme('bloomberg', event)">Bloomberg</button>
-      <button class="theme-btn" onclick="switchTheme('professional', event)">Professional</button>
-      <button class="theme-btn" onclick="switchTheme('dark', event)">Dark</button>
+    <div class="sidebar-section">
+      <span class="sidebar-label" data-i18n="sidebar-themes">THEMES</span>
+      <button class="sidebar-btn active" data-theme="bloomberg" onclick="switchTheme('bloomberg', event);" data-i18n="theme-bloomberg">Bloomberg</button>
+      <button class="sidebar-btn" data-theme="professional" onclick="switchTheme('professional', event);" data-i18n="theme-professional">Professional</button>
+      <button class="sidebar-btn" data-theme="dark" onclick="switchTheme('dark', event);" data-i18n="theme-dark">Dark</button>
     </div>
-    <div class="switcher-label" style="margin-top:8px;">LANGUAGE</div>
-    <div class="switcher-group">
-      <button class="theme-btn" id="lang-toggle" onclick="toggleLanguage()" style="flex: 1;">EN</button>
+    <div class="sidebar-section">
+      <span class="sidebar-label" data-i18n="sidebar-language">LANGUAGE</span>
+      <button class="sidebar-btn active" id="lang-toggle-sidebar" onclick="toggleLanguage(); updateLanguageDisplay();" style="text-align: center; font-size: 1em;">EN / PL</button>
     </div>
   </div>
+
+  <!-- SIDEBAR TOGGLE BUTTON -->
+  <button class="sidebar-toggle" onclick="toggleSidebar();">☰</button>
 
   <!-- HEADER -->
   <div class="header">
@@ -505,10 +592,10 @@
 
   <!-- MENU -->
   <div class="menu-bar">
-    <button class="menu-item active" onclick="switchTab('dashboard')">Dashboard</button>
-    <button class="menu-item" onclick="switchTab('trend-analysis')">Trend Analysis</button>
-    <button class="menu-item" onclick="switchTab('kpi-correlation')">KPI Correlation</button>
-    <button class="menu-item" onclick="switchTab('multi-tf-analysis')">Multi-TF Analysis</button>
+    <button class="menu-item active" onclick="switchTab('dashboard')" data-i18n="dashboard">Dashboard</button>
+    <button class="menu-item" onclick="switchTab('trend-analysis')" data-i18n="trend-analysis">Trend Analysis</button>
+    <button class="menu-item" onclick="switchTab('kpi-correlation')" data-i18n="kpi-correlation">KPI Correlation</button>
+    <button class="menu-item" onclick="switchTab('multi-tf-analysis')" data-i18n="multi-tf-analysis">Multi-TF Analysis</button>
   </div>
 
   <!-- CHART, AI, TRANSFERS -->
@@ -820,7 +907,21 @@
         'genius-liquidity': 'Liquidity Radar',
         'genius-sentiment': 'Sentiment Watch',
         'genius-risk': 'Risk Monitor',
-        'api-status': 'API Status'
+        'api-status': 'API Status',
+        'dashboard': 'Dashboard',
+        'trend-analysis': 'Trend Analysis',
+        'kpi-correlation': 'KPI Correlation',
+        'multi-tf-analysis': 'Multi-TF Analysis',
+        'sidebar-menu': 'MENU',
+        'sidebar-modes': 'VIEWS',
+        'sidebar-themes': 'THEMES',
+        'sidebar-language': 'LANGUAGE',
+        'mode-bloomberg': 'Bloomberg',
+        'mode-retro': 'Retro Terminal',
+        'mode-detailed': 'Detailed Mode',
+        'theme-bloomberg': 'Bloomberg',
+        'theme-professional': 'Professional',
+        'theme-dark': 'Dark'
       },
       pl: {
         'header-title': 'TERMINAL CHOMIKA',
@@ -840,7 +941,21 @@
         'genius-liquidity': 'Radar Płynności',
         'genius-sentiment': 'Obserwator Sentymentu',
         'genius-risk': 'Monitor Ryzyka',
-        'api-status': 'Status API'
+        'api-status': 'Status API',
+        'dashboard': 'Dashboard',
+        'trend-analysis': 'Analiza Trendów',
+        'kpi-correlation': 'Korelacja KPI',
+        'multi-tf-analysis': 'Analiza Multi-TF',
+        'sidebar-menu': 'MENU',
+        'sidebar-modes': 'WIDOKI',
+        'sidebar-themes': 'MOTYWY',
+        'sidebar-language': 'JĘZYK',
+        'mode-bloomberg': 'Bloomberg',
+        'mode-retro': 'Retro Terminal',
+        'mode-detailed': 'Tryb Szczegółowy',
+        'theme-bloomberg': 'Bloomberg',
+        'theme-professional': 'Profesjonalny',
+        'theme-dark': 'Ciemny'
       }
     };
 
@@ -855,17 +970,23 @@
     }
 
     function updateLanguageDisplay() {
-      // Update headers
+      // Update all i18n elements
       document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         el.textContent = t(key);
       });
       
-      // Update language button
-      const langBtn = document.getElementById('lang-toggle');
+      // Update sidebar button states
+      const langBtn = document.getElementById('lang-toggle-sidebar');
       if (langBtn) {
-        langBtn.textContent = currentLanguage === 'en' ? 'PL' : 'EN';
+        langBtn.textContent = currentLanguage === 'en' ? 'EN / PL' : 'PL / EN';
+        langBtn.classList.toggle('active', currentLanguage === 'pl');
       }
+    }
+
+    function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      sidebar.classList.toggle('open');
     }
 
     // ========== CLOCK ===========
@@ -1081,7 +1202,10 @@
       currentPage = page;
       const target = evt?.currentTarget || evt?.target;
       
-      // Update button states
+      // Update sidebar mode buttons
+      document.querySelectorAll('[data-mode]').forEach(btn => btn.classList.remove('active'));
+      if (target && target.dataset.mode) target.classList.add('active');
+      // Also update old page-btn if exists
       document.querySelectorAll('.page-btn').forEach(btn => btn.classList.remove('active'));
       if (target) target.classList.add('active');
       
@@ -1132,6 +1256,10 @@
     // ========== THEME SWITCHER ===========
     function switchTheme(theme, evt) {
       const target = evt?.currentTarget || evt?.target;
+      // Update sidebar theme buttons
+      document.querySelectorAll('[data-theme]').forEach(btn => btn.classList.remove('active'));
+      if (target) target.classList.add('active');
+      // Also update old theme-btn if exists
       document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
       if (target) target.classList.add('active');
       
