@@ -1092,12 +1092,12 @@
 
         .bloomberg-ticker-wrapper {
             background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
-            border: 2px solid #00d4ff;
+            border: 2px solid #333;
             border-radius: 8px;
             overflow: hidden;
             padding: 8px 0;
             margin-bottom: 15px;
-            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 10px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5), inset 0 0 10px rgba(0, 0, 0, 0.8);
         }
 
         .bloomberg-ticker-scroll {
@@ -1109,8 +1109,8 @@
         }
 
         @keyframes scroll-left {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            0% { transform: translateX(50%); }
+            100% { transform: translateX(-150%); }
         }
 
         .bloomberg-ticker-group {
@@ -1122,13 +1122,13 @@
         }
 
         .ticker-group-label {
-            color: #ffaa00;
+            color: #00d4ff;
             font-weight: 700;
             font-size: 0.95em;
             text-transform: uppercase;
             letter-spacing: 1px;
             margin-right: 10px;
-            text-shadow: 0 0 10px rgba(255, 170, 0, 0.5);
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
         }
 
         .ticker-instrument-item {
@@ -1148,10 +1148,10 @@
         }
 
         .ticker-price {
-            color: #ffff00;
+            color: #fff;
             font-weight: 900;
             font-family: 'JetBrains Mono', monospace;
-            text-shadow: 0 0 8px rgba(255, 255, 0, 0.5);
+            text-shadow: none;
         }
 
         .ticker-change {
@@ -1642,14 +1642,14 @@
         <div class="bloomberg-ticker-scroll" id="ticker-scroll">
             <!-- METALE -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #ffff00;">METALE</span>
-                <div class="ticker-instrument-item" id="metal-1" style="border-color: #ffff0033;">
-                    <span class="ticker-symbol" style="color: #ffff00;">XAU/USD</span>
+                <span class="ticker-group-label" style="color: #00d4ff;">METALE</span>
+                <div class="ticker-instrument-item" id="metal-1" style="border-color: #00d4ff33;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">XAU/USD</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
                     <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
-                <div class="ticker-instrument-item" id="metal-2" style="border-color: #ffff0033;">
-                    <span class="ticker-symbol" style="color: #ffff00;">XAG/USD</span>
+                <div class="ticker-instrument-item" id="metal-2" style="border-color: #00d4ff33;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">XAG/USD</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
                     <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
@@ -1697,14 +1697,54 @@
             
             <!-- POWTÓRZENIE DLA CIĄGŁEJ ANIMACJI -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #ffff00;">METALE</span>
-                <div class="ticker-instrument-item" id="metal-1-repeat" style="border-color: #ffff0033;">
-                    <span class="ticker-symbol" style="color: #ffff00;">XAU/USD</span>
+                <span class="ticker-group-label" style="color: #00d4ff;">METALE</span>
+                <div class="ticker-instrument-item" id="metal-1-repeat" style="border-color: #00d4ff33;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">XAU/USD</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
                     <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
-                <div class="ticker-instrument-item" id="metal-2-repeat" style="border-color: #ffff0033;">
-                    <span class="ticker-symbol" style="color: #ffff00;">XAG/USD</span>
+                <div class="ticker-instrument-item" id="metal-2-repeat" style="border-color: #00d4ff33;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">XAG/USD</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+            </div>
+            
+            <!-- POWTÓRZENIE INDEKSY -->
+            <div class="bloomberg-ticker-group">
+                <span class="ticker-group-label" style="color: #00d4ff;">INDEKSY</span>
+                <div class="ticker-instrument-item" id="index-1-repeat" style="border-color: #00d4ff33;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">SPX</span>
+                    <span class="ticker-price" style="color: #fff;">--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="index-2-repeat" style="border-color: #00d4ff33;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">INDU</span>
+                    <span class="ticker-price" style="color: #fff;">--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="index-3-repeat" style="border-color: #00d4ff33;">
+                    <span class="ticker-symbol" style="color: #00d4ff;">IXIC</span>
+                    <span class="ticker-price" style="color: #fff;">--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+            </div>
+            
+            <!-- POWTÓRZENIE MEGA CAPS -->
+            <div class="bloomberg-ticker-group">
+                <span class="ticker-group-label" style="color: #cccccc;">MEGA CAPS</span>
+                <div class="ticker-instrument-item" id="stock-1-repeat" style="border-color: #cccccc33;">
+                    <span class="ticker-symbol" style="color: #cccccc;">AAPL</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="stock-2-repeat" style="border-color: #cccccc33;">
+                    <span class="ticker-symbol" style="color: #cccccc;">MSFT</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="stock-3-repeat" style="border-color: #cccccc33;">
+                    <span class="ticker-symbol" style="color: #cccccc;">TSLA</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
                     <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
@@ -8744,19 +8784,27 @@
                 const priceData = await fetchTickerData();
                 const priceMap = new Map(priceData.map(item => [item.symbol, item]));
                 
-                // Update METALE
-                updateTickerElement('metal-1', priceMap.get('XAU/USD'), '#ffff00');
-                updateTickerElement('metal-2', priceMap.get('XAG/USD'), '#ffff00');
+                // Update METALE (original + repeat)
+                updateTickerElement('metal-1', priceMap.get('XAU/USD'), '#00d4ff');
+                updateTickerElement('metal-2', priceMap.get('XAG/USD'), '#00d4ff');
+                updateTickerElement('metal-1-repeat', priceMap.get('XAU/USD'), '#00d4ff');
+                updateTickerElement('metal-2-repeat', priceMap.get('XAG/USD'), '#00d4ff');
                 
-                // Update INDEKSY
+                // Update INDEKSY (original + repeat)
                 updateTickerElement('index-1', priceMap.get('SPX'), '#00d4ff');
                 updateTickerElement('index-2', priceMap.get('INDU'), '#00d4ff');
                 updateTickerElement('index-3', priceMap.get('IXIC'), '#00d4ff');
+                updateTickerElement('index-1-repeat', priceMap.get('SPX'), '#00d4ff');
+                updateTickerElement('index-2-repeat', priceMap.get('INDU'), '#00d4ff');
+                updateTickerElement('index-3-repeat', priceMap.get('IXIC'), '#00d4ff');
                 
-                // Update MEGA CAPS
+                // Update MEGA CAPS (original + repeat)
                 updateTickerElement('stock-1', priceMap.get('AAPL'), '#cccccc');
                 updateTickerElement('stock-2', priceMap.get('MSFT'), '#cccccc');
                 updateTickerElement('stock-3', priceMap.get('TSLA'), '#cccccc');
+                updateTickerElement('stock-1-repeat', priceMap.get('AAPL'), '#cccccc');
+                updateTickerElement('stock-2-repeat', priceMap.get('MSFT'), '#cccccc');
+                updateTickerElement('stock-3-repeat', priceMap.get('TSLA'), '#cccccc');
                 
                 console.log('Bloomberg ticker updated successfully');
             } catch (error) {
