@@ -335,6 +335,101 @@ def dashboard():
 
 # ========== ERROR HANDLERS ==========
 
+@app.route('/api/status')
+def status():
+    """Get API server status"""
+    return jsonify({
+        'ok': True,
+        'status': 'active',
+        'timestamp': cache['timestamp'],
+        'lastUpdate': cache['last_update'],
+        'dataPoints': {
+            'btc': cache['btc_price'],
+            'eth': cache['eth_price'],
+            'fear_greed': cache['fear_greed']
+        }
+    })
+
+@app.route('/api/analytics')
+def analytics():
+    """Get advanced analytics data for radar, heatmaps, flow analysis"""
+    try:
+        btc = cache['btc_price']
+        change = cache['btc_change_24h']
+        fear_greed = cache['fear_greed']
+        
+        # Calculate derived metrics
+        volatility_24h = abs(change) * random.uniform(0.8, 1.2)  # Mock volatility
+        liquidation_long = random.uniform(40, 50)  # Mock liquidation
+        liquidation_short = random.uniform(15, 25)
+        
+        # Correlation mock data (could integrate with real sources)
+        correlations = {
+            'btc_eth': 0.75 + random.uniform(-0.15, 0.15),
+            'btc_aapl': 0.35 + random.uniform(-0.15, 0.15),
+            'btc_dxy': -0.42 + random.uniform(-0.15, 0.15),
+            'btc_vix': -0.28 + random.uniform(-0.15, 0.15),
+            'btc_nasdaq': 0.58 + random.uniform(-0.15, 0.15)
+        }
+        
+        return jsonify({
+            'ok': True,
+            'timestamp': cache['timestamp'],
+            'radar': {
+                'fvg': {
+                    '1h': {'low': btc * 0.996, 'high': btc * 1.002, 'type': 'BUY'},
+                    '4h': {'low': btc * 1.008, 'high': btc * 1.018, 'type': 'SELL'},
+                    '1d': {'low': btc * 0.971, 'high': btc * 0.980, 'type': 'DEMAND'}
+                },
+                'eql_eqh': {
+                    'eql': btc * 0.985,
+                    'eqh': btc * 1.020,
+                    'range': btc * 0.035
+                },
+                'premium_index': {
+                    'spot_perps': 0.12 + random.uniform(-0.05, 0.05),
+                    'funding': 0.008 + random.uniform(-0.003, 0.003)
+                },
+                'liquidations': {
+                    'long_count': liquidation_long,
+                    'short_count': liquidation_short,
+                    'total_24h': liquidation_long + liquidation_short
+                },
+                'signal_strength': {
+                    'bullish': 55 + random.randint(-10, 10),
+                    'bearish': 45 + random.randint(-10, 10)
+                }
+            },
+            'heatmaps': {
+                'correlations': correlations,
+                'volume_profile': [0.052, 0.087, 0.091, 0.063, 0.041],
+                'microstructure': {
+                    'bid_ask_spread': 0.12,
+                    'order_imbalance': 1.34,
+                    'vwap_deviation': 0.08,
+                    'momentum': 'STRONG',
+                    'order_flow': 'POSITIVE'
+                }
+            },
+            'flow': {
+                'whale_accumulation': 2300 + random.randint(-500, 500),
+                'exchange_inflows': -120 + random.randint(-30, 30),
+                'dark_pool_flow': 680 + random.randint(-100, 100),
+                'order_flow_imbalance': 58 + random.randint(-5, 5),
+                'long_short_ratio': 1.18 + random.uniform(-0.1, 0.1),
+                'open_interest': 14200 + random.randint(-500, 500),
+                'skew_index': -0.12 + random.uniform(-0.05, 0.05),
+                'cascade_risk': 'MEDIUM'
+            },
+            'fear_greed': fear_greed,
+            'btc_price': btc,
+            'btc_change_24h': change,
+            'volatility_24h': volatility_24h
+        })
+    except Exception as e:
+        logger.error(f"❌ Analytics endpoint error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
 @app.errorhandler(404)
 def not_found(error):
     return jsonify({'error': 'Endpoint not found'}), 404
