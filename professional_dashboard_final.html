@@ -1102,15 +1102,15 @@
 
         .bloomberg-ticker-scroll {
             display: flex;
-            animation: scroll-left 75s linear infinite;
+            animation: scroll-left 56s linear infinite;
             font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 0.85em;
+            font-size: 1.3em;
             letter-spacing: 0.5px;
         }
 
         @keyframes scroll-left {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
+            0% { transform: translateX(50%); }
+            100% { transform: translateX(-150%); }
         }
 
         .bloomberg-ticker-group {
@@ -1129,6 +1129,19 @@
             letter-spacing: 1px;
             margin-right: 10px;
             text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+            padding-left: 20px;
+            border-left: 3px solid #00d4ff;
+            position: relative;
+        }
+        
+        .ticker-group-label::before {
+            content: '|';
+            position: absolute;
+            left: 8px;
+            font-size: 1.4em;
+            font-weight: 900;
+            color: #00d4ff;
+            text-shadow: 0 0 15px rgba(0, 212, 255, 0.8);
         }
 
         .ticker-instrument-item {
@@ -8681,7 +8694,10 @@
                 if (loop === 1) html += '<div style="width: 100px;"></div>';
                 
                 for (const [groupName, cfg] of Object.entries(TICKER_CONFIG)) {
-                    html += '<div class="bloomberg-ticker-group"><span class="ticker-group-label">' + groupName + '</span>';
+                    html += `<div class="bloomberg-ticker-group">
+                        <span class="ticker-group-label" style="color: ${cfg.color}; border-left-color: ${cfg.color};">
+                            ${groupName}
+                        </span>`;
                     
                     for (const symbol of cfg.symbols) {
                         const data = priceMap.get(symbol);
