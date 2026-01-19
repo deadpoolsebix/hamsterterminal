@@ -650,12 +650,22 @@
       padding: 14px 16px;
       max-height: 1000px;
       overflow: hidden;
-      transition: max-height 0.3s ease, padding 0.3s ease;
+      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+      display: block;
     }
 
     .detail-section-header.collapsed ~ .detail-section-content {
       max-height: 0;
       padding: 0 16px;
+      overflow: hidden;
+    }
+
+    /* MOBILE: sekcje zwijane domyślnie */
+    @media (max-width: 768px) {
+      .detail-section-header:not(.active) ~ .detail-section-content {
+        max-height: 0;
+        padding: 0 16px;
+      }
     }
 
     .detail-item {
@@ -2447,6 +2457,20 @@
 
     // ========== TOGGLE DETAIL SECTION ==========
     function toggleDetailSection(headerEl) {
+      const isCollapsed = headerEl.classList.contains('collapsed');
+      
+      // Zamknij inne sekcje na telefonie (accordion mode)
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile && !isCollapsed) {
+        const allHeaders = document.querySelectorAll('.detail-section-header');
+        allHeaders.forEach(h => {
+          if (h !== headerEl && !h.classList.contains('collapsed')) {
+            h.classList.add('collapsed');
+          }
+        });
+      }
+      
+      // Toggle current section
       headerEl.classList.toggle('collapsed');
     }
 
