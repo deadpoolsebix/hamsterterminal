@@ -718,9 +718,10 @@
     }
 
     @media (max-width: 480px) {
-      .detailed-mode-panel { width: 100%; right: -100%; }
-      .detailed-mode-panel.active { right: 0; }
+      .detailed-mode-panel { width: 100%; right: -100%; display: none; }
+      .detailed-mode-panel.active { right: 0; display: block; }
       body { margin-right: 0 !important; }
+      body.margin-detailed { margin-right: 0 !important; }
     }
 
     /* SIDEBAR DRAWER */
@@ -1084,14 +1085,17 @@
 
   <!-- MENU -->
   <div class="menu-bar">
-    <button class="menu-item active" onclick="switchTab('dashboard')" data-i18n="dashboard">Dashboard</button>
-    <button class="menu-item" onclick="switchTab('trend-analysis')" data-i18n="trend-analysis">Trend Analysis</button>
-    <button class="menu-item" onclick="switchTab('kpi-correlation')" data-i18n="kpi-correlation">KPI Correlation</button>
-    <button class="menu-item" onclick="switchTab('multi-tf-analysis')" data-i18n="multi-tf-analysis">Multi-TF Analysis</button>
+    <button class="menu-item active" onclick="switchTab('dashboard')" data-i18n="dashboard">📊 Dashboard</button>
+    <button class="menu-item" onclick="switchTab('technical')" data-i18n="technical">🔧 Technical</button>
+    <button class="menu-item" onclick="switchTab('signals')" data-i18n="signals">⚡ Signals</button>
+    <button class="menu-item" onclick="switchTab('risk')" data-i18n="risk">⚠️ Risk</button>
+    <button class="menu-item" onclick="switchTab('depth')" data-i18n="depth">📈 Depth</button>
   </div>
 
-  <!-- CHART, AI, TRANSFERS -->
-  <div class="main-grid">
+  <!-- TAB CONTENT - DASHBOARD (MAIN) -->
+  <div id="dashboard" class="tab-content active">
+    <!-- CHART, AI, TRANSFERS -->
+    <div class="main-grid">
     <div class="chart-panel">
       <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIVE PRICE MAP (Signals & Levels)</div>
       <div class="chart-canvas">
@@ -1292,54 +1296,349 @@
       </div>
     </div>
   </div>
+  </div><!-- END DASHBOARD TAB -->
 
   <!-- GENIUS AI + PRICE MAP (bottom) -->
-  <!-- TAB CONTENT - TREND ANALYSIS -->
-  <div id="trend-analysis" class="tab-content">
-    <div style="padding: 0 24px;">
-      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">TREND ANALYSIS - Bitcoin</h2>
-      <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px;">
-        <h3 style="color: #ffffff; margin-bottom: 10px; font-weight: 700;">TECHNICAL SUMMARY</h3>
-        <ul style="list-style: none; padding-left: 0; color: #ffffff; font-size: 0.9em; line-height: 1.6;">
-          <li>RSI: 55 (Neutral) • Momentum: Increasing</li>
-          <li>MACD: Positive crossover confirmed</li>
-          <li>Moving Averages: Golden cross on 1H</li>
-          <li>Volume: Above average, confirming uptrend</li>
-        </ul>
-        <h3 style="color: #ffffff; margin-bottom: 10px; font-weight: 700; margin-top: 12px;">TRADER ACTION PLAN</h3>
-        <p style="color: var(--gray); margin-bottom: 8px; font-size: 0.9em;"><strong>Current Strategy:</strong> <span style="color: #ffffff;">LONG BIAS</span></p>
-        <ul style="list-style: none; padding-left: 0; color: #ffffff; font-size: 0.9em; line-height: 1.6;">
-          <li>Entry Zone: $98,000 - $98,500 (Support)</li>
-          <li>Stop Loss: $96,500 (Major support break)</li>
-          <li>Take Profit 1: $99,500 (Resistance)</li>
-          <li>Take Profit 2: $100,000 (Psychological level)</li>
-        </ul>
+  <!-- TAB CONTENT - TECHNICAL INDICATORS -->
+  <div id="technical" class="tab-content">
+    <div style="padding: 0 24px; margin-bottom: 20px;">
+      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">🔧 TECHNICAL INDICATORS</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <!-- RSI -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">RSI (14)</div>
+          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-rsi">55</div>
+          <div style="color: #666; font-size: 0.8em;">Status: Neutral • Momentum ↑</div>
+          <div style="width: 100%; height: 4px; background: #333; margin-top: 6px; border-radius: 2px; overflow: hidden;">
+            <div style="width: 55%; height: 100%; background: linear-gradient(90deg, #7cff9c, #ffca3a); border-radius: 2px;"></div>
+          </div>
+        </div>
+        
+        <!-- MACD -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MACD</div>
+          <div style="color: #4ade80; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-macd">BULLISH</div>
+          <div style="color: #666; font-size: 0.8em;">Line: +1.234 • Signal: +0.856</div>
+          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Positive crossover confirmed</div>
+        </div>
+        
+        <!-- STOCHASTIC -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">STOCHASTIC</div>
+          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-stoch">68/75</div>
+          <div style="color: #666; font-size: 0.8em;">%K: 68 • %D: 75</div>
+          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">⚠️ Overbought zone approaching</div>
+        </div>
+        
+        <!-- BOLLINGER BANDS -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">BOLLINGER BANDS</div>
+          <div style="color: #ffffff; font-size: 0.9em; margin-bottom: 4px;">
+            <div>Upper: <span style="color: #ff8c8c; font-weight: 700;" id="tech-bb-upper">$100,450</span></div>
+            <div>Mid: <span style="color: #ffca3a; font-weight: 700;" id="tech-bb-mid">$98,450</span></div>
+            <div>Lower: <span style="color: #7cff9c; font-weight: 700;" id="tech-bb-lower">$96,450</span></div>
+          </div>
+        </div>
+        
+        <!-- VOLUME -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">24H VOLUME</div>
+          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-volume">$28.5B</div>
+          <div style="color: #4ade80; font-size: 0.8em;">↑ Above average (120%)</div>
+          <div style="color: #666; font-size: 0.8em; margin-top: 4px;">Confirming uptrend</div>
+        </div>
+        
+        <!-- OBV -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">ON-BALANCE VOLUME</div>
+          <div style="color: #4ade80; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-obv">+2.8M</div>
+          <div style="color: #666; font-size: 0.8em;">Trend: Bullish accumulation</div>
+          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Buying pressure dominant</div>
+        </div>
+      </div>
+
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; border-left: 3px solid #4ade80;">
+        <h3 style="color: #4ade80; font-weight: 700; margin-bottom: 8px;">📊 INDICATOR SUMMARY</h3>
+        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
+          <div>✓ EMA Golden Cross confirmed (20 > 50 > 200)</div>
+          <div>✓ Volume surge backing price movement</div>
+          <div>⚠️ RSI in neutral zone - room for continuation</div>
+          <div>✓ MACD bullish divergence strengthening</div>
+          <div>Overall Trend: <span style="color: #4ade80; font-weight: 700;">BULLISH ↑</span></div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- TAB CONTENT - KPI CORRELATION -->
-  <div id="kpi-correlation" class="tab-content">
-    <div style="padding: 0 24px;">
-      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">KPI CORRELATION ANALYSIS</h2>
-      <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px; font-size: 0.9em; color: #ffffff;">
-        <p>BTC–ETH: <span style="color: #ffffff; font-weight:700;" id="corr-btc-eth">0.86</span></p>
-        <p>BTC–NASDAQ: <span style="color: #ffffff; font-weight:700;" id="corr-btc-nasdaq">0.62</span></p>
-        <p>BTC–GOLD: <span style="color: #ffffff; font-weight:700;">-0.15</span></p>
-        <p>ETH–NASDAQ: <span style="color: #ffffff; font-weight:700;">0.71</span></p>
+  <!-- TAB CONTENT - SIGNALS -->
+  <div id="signals" class="tab-content">
+    <div style="padding: 0 24px; margin-bottom: 20px;">
+      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">⚡ TRADING SIGNALS</h2>
+      
+      <div style="background: var(--panel); border: 1px solid var(--border); border-left: 3px solid #4ade80; padding: 14px; border-radius: 4px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h3 style="color: #4ade80; font-weight: 700; margin: 0;">🟢 ENTRY SIGNAL</h3>
+          <span style="background: #4ade80; color: #000; padding: 4px 8px; border-radius: 3px; font-weight: 700; font-size: 0.85em;">ACTIVE</span>
+        </div>
+        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
+          <div>Type: <span style="color: #4ade80; font-weight: 700;">LONG</span> (Golden Cross confirmation)</div>
+          <div>Price Zone: $98,000 - $98,500 (Current: $98,432)</div>
+          <div>Confidence: <span style="color: #ffca3a; font-weight: 700;">78%</span></div>
+          <div>Triggered: <span style="color: #999;">19:15 UTC</span></div>
+          <div style="margin-top: 8px; color: #4ade80; font-size: 0.85em;">✓ Conditions: EMA aligned + Volume confirmed + RSI non-extreme</div>
+        </div>
+      </div>
+
+      <div style="background: var(--panel); border: 1px solid var(--border); border-left: 3px solid #ff8c8c; padding: 14px; border-radius: 4px; margin-bottom: 12px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <h3 style="color: #ff8c8c; font-weight: 700; margin: 0;">🔴 EXIT SIGNAL</h3>
+          <span style="background: #666; color: #fff; padding: 4px 8px; border-radius: 3px; font-weight: 700; font-size: 0.85em;">WATCH</span>
+        </div>
+        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
+          <div>Type: <span style="color: #ff8c8c; font-weight: 700;">PARTIAL PROFIT TARGET</span></div>
+          <div>Price Level: $99,500 (Resistance)</div>
+          <div>Risk/Reward: <span style="color: #4ade80; font-weight: 700;">1:2.45</span></div>
+          <div>Profit on Entry: <span style="color: #4ade80; font-weight: 700;">+$1,068 per contract</span></div>
+          <div style="margin-top: 8px; color: #ff8c8c; font-size: 0.85em;">⚠️ Set tight stop at support if pullback</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
+        <!-- CONFIRMATION -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">CONFIRMATION LEVEL</div>
+          <div style="color: #4ade80; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">$99,000</div>
+          <div style="color: #666; font-size: 0.8em;">Break above = Strong continuation</div>
+        </div>
+
+        <!-- INVALIDATION -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">INVALIDATION POINT</div>
+          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">$96,500</div>
+          <div style="color: #666; font-size: 0.8em;">Break below = Pattern fail</div>
+        </div>
+
+        <!-- RISK/REWARD -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">R:R RATIO</div>
+          <div style="color: #ffca3a; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">1:2.45</div>
+          <div style="color: #666; font-size: 0.8em;">Risk $500, Gain $1,225</div>
+        </div>
+
+        <!-- WIN RATE -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">WIN RATE (SIMILAR SETUP)</div>
+          <div style="color: #4ade80; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">71.2%</div>
+          <div style="color: #666; font-size: 0.8em;">Based on 85 historical trades</div>
+        </div>
+      </div>
+
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-top: 12px;">
+        <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">📅 RECENT SIGNALS HISTORY</div>
+        <div style="color: #ffffff; font-size: 0.9em;">
+          <div style="margin: 6px 0;">✓ LONG entered $97,850 - TP hit $99,500 (+1.68%) 22:15 UTC</div>
+          <div style="margin: 6px 0;">✓ SHORT entered $99,200 - TP hit $98,100 (+1.11%) 18:30 UTC</div>
+          <div style="margin: 6px 0;">✓ LONG entered $96,700 - TP hit $99,000 (+2.38%) 14:45 UTC</div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- TAB CONTENT - MULTI-TF ANALYSIS -->
-  <div id="multi-tf-analysis" class="tab-content">
-    <div style="padding: 0 24px;">
-      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em;">MULTI-TIMEFRAME ANALYSIS</h2>
-      <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px; font-size: 0.9em; color: #ffffff;">
-        <div>1H: Bullish bias, RSI 55, MACD +</div>
-        <div>4H: Strong uptrend, EMA bullish alignment</div>
-        <div>1D: Long-term support at $95k, resistance at $100k</div>
-        <div style="margin-top: 12px; color: var(--gray); font-size: 0.85em;">All timeframes aligned for upside move</div>
+  <!-- TAB CONTENT - RISK MANAGEMENT -->
+  <div id="risk" class="tab-content">
+    <div style="padding: 0 24px; margin-bottom: 20px;">
+      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">⚠️ RISK MANAGEMENT</h2>
+      
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <!-- POSITION SIZE -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">RECOMMENDED POSITION</div>
+          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-pos-size">2.5 BTC</div>
+          <div style="color: #666; font-size: 0.8em;">Based on 2% account risk</div>
+          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">⚠️ Adjust for your account size</div>
+        </div>
+
+        <!-- STOP LOSS -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">STOP LOSS LEVEL</div>
+          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-stop-loss">$96,500</div>
+          <div style="color: #666; font-size: 0.8em;">Distance: 1.88% from entry</div>
+          <div style="color: #ff8c8c; font-size: 0.8em; margin-top: 4px;">Critical: Do not move SL up!</div>
+        </div>
+
+        <!-- LIQUIDATION PRICE -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">LIQUIDATION PRICE</div>
+          <div style="color: #ff4444; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-liq-price">$95,200</div>
+          <div style="color: #666; font-size: 0.8em;">At 10x leverage, 2.5 BTC</div>
+          <div style="color: #ff4444; font-size: 0.8em; margin-top: 4px;">🔴 Extreme risk - use 5x max</div>
+        </div>
+
+        <!-- MARGIN USAGE -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MARGIN USAGE</div>
+          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-margin">34%</div>
+          <div style="color: #4ade80; font-size: 0.8em;">Safe zone (below 50%)</div>
+          <div style="width: 100%; height: 4px; background: #333; margin-top: 6px; border-radius: 2px; overflow: hidden;">
+            <div style="width: 34%; height: 100%; background: #4ade80; border-radius: 2px;"></div>
+          </div>
+        </div>
+
+        <!-- MAX DRAWDOWN -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MAX DRAWDOWN RISK</div>
+          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-max-dd">-5.8%</div>
+          <div style="color: #666; font-size: 0.8em;">If SL hit on full position</div>
+          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">Acceptable for this setup</div>
+        </div>
+
+        <!-- DAILY LOSS LIMIT -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">DAILY LOSS LIMIT</div>
+          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-daily-limit">-$2,500</div>
+          <div style="color: #666; font-size: 0.8em;">Close all trades if hit</div>
+          <div style="color: #ff8c8c; font-size: 0.8em; margin-top: 4px;">3 losses max = Take break</div>
+        </div>
+      </div>
+
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; border-left: 3px solid #ffca3a; margin-bottom: 20px;">
+        <h3 style="color: #ffca3a; font-weight: 700; margin-bottom: 8px;">⚡ RISK CHECKLIST</h3>
+        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.8;">
+          <div>☑️ Stop loss set and protected</div>
+          <div>☑️ Position size within plan</div>
+          <div>☑️ R:R ratio favorable (1:2.45)</div>
+          <div>☑️ Margin usage safe (34%)</div>
+          <div>☑️ Liquidation far from SL</div>
+          <div>☑️ Daily loss limit intact</div>
+          <div style="color: #4ade80; margin-top: 8px;">✓ Ready to trade</div>
+        </div>
+      </div>
+
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+        <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">🎯 PORTFOLIO ALLOCATION</div>
+        <div style="color: #ffffff; font-size: 0.9em;">
+          <div style="margin: 6px 0;">BTC Long: 45% | Spot Holding</div>
+          <div style="margin: 6px 0;">ETH Long: 25% | 3x leverage</div>
+          <div style="margin: 6px 0;">Stables: 30% | Ready for dip</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB CONTENT - MARKET DEPTH -->
+  <div id="depth" class="tab-content">
+    <div style="padding: 0 24px; margin-bottom: 20px;">
+      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">📈 MARKET DEPTH ANALYSIS</h2>
+      
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; margin-bottom: 20px;">
+        <div style="color: #999; font-size: 0.85em; margin-bottom: 10px;">ORDER BOOK SNAPSHOT</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+          <!-- BIDS (GREEN) -->
+          <div>
+            <div style="color: #4ade80; font-weight: 700; margin-bottom: 8px; text-align: center;">🟢 BID SIDE (Buy Orders)</div>
+            <div style="font-size: 0.85em; color: #ffffff; line-height: 1.8;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,400</div>
+                <div style="text-align: right; color: #4ade80;">████████ 125 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,350</div>
+                <div style="text-align: right; color: #4ade80;">██████ 89 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,300</div>
+                <div style="text-align: right; color: #4ade80;">████ 52 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,250</div>
+                <div style="text-align: right; color: #4ade80;">██ 28 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>$98,200</div>
+                <div style="text-align: right; color: #4ade80;">█ 15 BTC</div>
+              </div>
+            </div>
+            <div style="background: rgba(74, 222, 128, 0.1); padding: 8px; margin-top: 8px; border-radius: 3px; text-align: center; color: #4ade80; font-weight: 700;">
+              TOTAL BID VOLUME: 309 BTC ($30.5M)
+            </div>
+          </div>
+
+          <!-- ASKS (RED) -->
+          <div>
+            <div style="color: #ff8c8c; font-weight: 700; margin-bottom: 8px; text-align: center;">🔴 ASK SIDE (Sell Orders)</div>
+            <div style="font-size: 0.85em; color: #ffffff; line-height: 1.8;">
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,500</div>
+                <div style="text-align: right; color: #ff8c8c;">████████ 142 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,550</div>
+                <div style="text-align: right; color: #ff8c8c;">██████ 95 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,600</div>
+                <div style="text-align: right; color: #ff8c8c;">████ 58 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
+                <div>$98,650</div>
+                <div style="text-align: right; color: #ff8c8c;">██ 32 BTC</div>
+              </div>
+              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                <div>$98,700</div>
+                <div style="text-align: right; color: #ff8c8c;">█ 18 BTC</div>
+              </div>
+            </div>
+            <div style="background: rgba(255, 140, 140, 0.1); padding: 8px; margin-top: 8px; border-radius: 3px; text-align: center; color: #ff8c8c; font-weight: 700;">
+              TOTAL ASK VOLUME: 345 BTC ($34.1M)
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
+        <!-- SPREAD -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">BID-ASK SPREAD</div>
+          <div style="color: #ffca3a; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">$100 (0.10%)</div>
+          <div style="color: #666; font-size: 0.8em;">Standard for BTC/USD</div>
+          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Tight & liquid</div>
+        </div>
+
+        <!-- IMBALANCE -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">ORDER BOOK IMBALANCE</div>
+          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">45% Bullish</div>
+          <div style="color: #666; font-size: 0.8em;">More BUY orders on book</div>
+          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">Favors upside</div>
+        </div>
+
+        <!-- LIQUIDITY -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MARKET LIQUIDITY</div>
+          <div style="color: #4ade80; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">$64.6M</div>
+          <div style="color: #666; font-size: 0.8em;">Total depth (5 levels)</div>
+          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Excellent liquidity</div>
+        </div>
+
+        <!-- SLIPPAGE ESTIMATE -->
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
+          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">SLIPPAGE (100 BTC)</div>
+          <div style="color: #ffca3a; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">-0.28%</div>
+          <div style="color: #666; font-size: 0.8em;">Market order cost</div>
+          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">⚠️ Use limit orders</div>
+        </div>
+      </div>
+
+      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; border-left: 3px solid #ff8c00;">
+        <h3 style="color: #ff8c00; font-weight: 700; margin-bottom: 8px;">💡 DEPTH INSIGHTS</h3>
+        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
+          <div>📊 Bid/Ask imbalance suggests bullish pressure</div>
+          <div>🟢 Strong buy wall at $98,400 (125 BTC) = support forming</div>
+          <div>🔴 Resistance at $98,500-$98,700 area (295 BTC) = watch carefully</div>
+          <div>✓ Liquidity excellent for scaling position entry</div>
+          <div>⚠️ Watch for wall breakdown/stacking changes</div>
+        </div>
       </div>
     </div>
   </div>
@@ -2111,8 +2410,9 @@
         if (geniusAi) geniusAi.style.display = '';
         if (detailedModePanel) detailedModePanel.classList.add('active');
         if (retroPage) retroPage.style.display = 'none';
-        // Adjust main content to accommodate panel
-        document.body.style.marginRight = '380px';
+        // Adjust main content to accommodate panel (only on desktop)
+        const isMobile = window.innerWidth <= 480;
+        document.body.style.marginRight = isMobile ? '0' : '380px';
       } else if (page === 'retro') {
         // Hide Bloomberg, show retro full screen
         if (header) header.style.display = 'none';
@@ -2234,12 +2534,56 @@
       document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
       
-      if (tab === 'dashboard') {
-        document.querySelector('[onclick="switchTab(\'dashboard\')"]').classList.add('active');
-      } else {
-        document.getElementById(tab).classList.add('active');
-        document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+      // Activate the tab
+      const tabEl = document.getElementById(tab);
+      if (tabEl) {
+        tabEl.classList.add('active');
       }
+      
+      // Activate the menu item
+      document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
+      
+      // Update tab-specific data
+      if (tab === 'technical') {
+        updateTechnicalTab();
+      } else if (tab === 'signals') {
+        updateSignalsTab();
+      } else if (tab === 'risk') {
+        updateRiskTab();
+      } else if (tab === 'depth') {
+        updateDepthTab();
+      }
+    }
+
+    function updateTechnicalTab() {
+      // Simulate technical indicator updates based on price
+      const btcPrice = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g, ''));
+      const rsi = Math.min(100, Math.max(0, 50 + (Math.random() - 0.5) * 40));
+      const volume = (btcPrice * 0.00028).toFixed(1);
+      
+      document.getElementById('tech-rsi').textContent = Math.round(rsi);
+      document.getElementById('tech-volume').textContent = `$${volume}B`;
+      document.getElementById('tech-stoch').textContent = `${Math.round(rsi + 10)}/${Math.round(rsi + 20)}`;
+    }
+
+    function updateSignalsTab() {
+      // Update signal data based on current price
+      const btcPrice = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g, ''));
+      // Signals already display static data, but could be enhanced
+    }
+
+    function updateRiskTab() {
+      // Calculate position sizing based on account risk
+      const btcPrice = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g, ''));
+      const posSize = (25000 / btcPrice).toFixed(2);
+      
+      document.getElementById('risk-pos-size').textContent = `${posSize} BTC`;
+      document.getElementById('risk-stop-loss').textContent = `$${(btcPrice - 1932).toLocaleString()}`;
+      document.getElementById('risk-liq-price').textContent = `$${(btcPrice - 3232).toLocaleString()}`;
+    }
+
+    function updateDepthTab() {
+      // Depth data is static/simulated, could be updated from live API
     }
 
     // ========== INIT ==========
