@@ -20,6 +20,10 @@ import random
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# ============ TWELVE DATA API CONFIG ============
+TWELVE_DATA_API_KEY = os.getenv('TWELVE_DATA_API_KEY', 'demo')
+TWELVE_DATA_BASE_URL = 'https://api.twelvedata.com'
+
 # Flask app
 app = Flask(__name__)
 CORS(app)
@@ -35,7 +39,9 @@ cache = {
     'last_update': None,
     'timestamp': 0,
     'prev_price': 0,
-    'prev_volume': 0
+    'prev_volume': 0,
+    'stocks': {'AAPL': 0, 'MSFT': 0, 'NVDA': 0},
+    'crypto': {'BTCUSDT': 0, 'ETHUSDT': 0}
 }
 
 # Genius state for commentary
@@ -110,6 +116,63 @@ def fetch_fear_greed():
         logger.error(f"❌ Fear & Greed fetch error: {e}")
     return False
 
+def fetch_twelve_data_quote(symbol='BTCUSDT'):
+    """Fetch quote from Twelve Data API"""
+    try:
+        params = {
+            'symbol': symbol,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/quote',
+            params=params,
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            if 'error' not in data and 'last_price' in data:
+                return {
+                    'price': float(data.get('last_price', 0)),
+                    'change': float(data.get('percent_change', 0)),
+                    'volume': float(data.get('volume', 0)),
+                    'bid': float(data.get('bid', 0)),
+                    'ask': float(data.get('ask', 0))
+                }
+    except Exception as e:
+        logger.error(f"❌ Twelve Data error ({symbol}): {e}")
+    return None
+
+def fetch_twelve_data_assets():
+    """Fetch BTC, ETH, stocks from Twelve Data"""
+    try:
+        # BTC
+        btc_data = fetch_twelve_data_quote('BTCUSDT')
+        if btc_data:
+            cache['btc_price'] = btc_data['price']
+            cache['btc_change_24h'] = btc_data['change']
+            cache['btc_volume'] = btc_data['volume']
+            cache['crypto']['BTCUSDT'] = btc_data['price']
+            logger.info(f"✅ BTC: ${btc_data['price']:,.2f} ({btc_data['change']:+.2f}%)")
+        
+        # ETH
+        eth_data = fetch_twelve_data_quote('ETHUSDT')
+        if eth_data:
+            cache['eth_price'] = eth_data['price']
+            cache['crypto']['ETHUSDT'] = eth_data['price']
+            logger.info(f"✅ ETH: ${eth_data['price']:,.2f} ({eth_data['change']:+.2f}%)")
+        
+        # STOCKS
+        for stock in ['AAPL', 'MSFT', 'NVDA']:
+            stock_data = fetch_twelve_data_quote(stock)
+            if stock_data:
+                cache['stocks'][stock] = stock_data['price']
+                logger.info(f"✅ {stock}: ${stock_data['price']:,.2f}")
+        
+        return True
+    except Exception as e:
+        logger.error(f"❌ Twelve Data assets fetch error: {e}")
+        return False
+
 def data_update_loop():
     """Background thread to update data every 30 seconds"""
     logger.info("🔄 Starting background data update thread...")
@@ -117,7 +180,7 @@ def data_update_loop():
         try:
             cache['prev_price'] = cache['btc_price']
             cache['prev_volume'] = cache['btc_volume']
-            fetch_binance_data()
+            fetch_twelve_data_assets()
             fetch_fear_greed()
             cache['last_update'] = datetime.now().isoformat()
             cache['timestamp'] = time.time()
@@ -147,7 +210,7 @@ def index():
 
 @app.route('/api/binance/summary')
 def binance_summary():
-    """Get BTC/ETH market summary"""
+    """Get BTC/ETH market summary from Twelve Data"""
     return jsonify({
         'ok': True,
         'btcPrice': cache['btc_price'],
@@ -155,6 +218,8 @@ def binance_summary():
         'btcVolume': cache['btc_volume'],
         'btcMarketCap': cache['btc_market_cap'],
         'ethPrice': cache['eth_price'],
+        'stocks': cache['stocks'],
+        'crypto': cache['crypto'],
         'timestamp': cache['timestamp'],
         'lastUpdate': cache['last_update']
     })
@@ -250,7 +315,12 @@ def status():
     return jsonify({
         'ok': True,
         'status': 'running',
-        'cache': cache,
+        'data_source': 'Twelve Data API',
+        'assets': {
+            'crypto': cache['crypto'],
+            'stocks': cache['stocks']
+        },
+        'fear_greed': cache['fear_greed'],
         'uptime_seconds': int(time.time() - cache['timestamp']) if cache['timestamp'] else 0
     })
 
@@ -284,8 +354,7 @@ if __name__ == '__main__':
     print(f"API Docs: http://localhost:5000/")
     print("")
     print("📡 Real-time data sources:")
-    print("  • Binance API (BTC/ETH prices, volume)")
-    print("  • CoinGecko API (Market cap)")
+    print("  • Twelve Data API (BTC/ETH, STOCKS, FOREX)")
     print("  • Alternative.me (Fear & Greed Index)")
     print("")
     print("🔄 Data update interval: 30 seconds")
@@ -297,7 +366,7 @@ if __name__ == '__main__':
     update_thread.start()
     
     # Initial data fetch
-    fetch_binance_data()
+    fetch_twelve_data_assets()
     fetch_fear_greed()
     
     # Run Flask app
