@@ -1836,9 +1836,9 @@
         
         <!-- ECONOMIC CALENDAR & KEY EVENTS -->
         <div style="background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border: 1px solid #00d4ff; border-radius: 8px; padding: 20px; grid-column: 1; grid-row: 2;">
-            <div onclick="toggleMacroCalendar()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <div onclick="toggleMacroCalendar()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; -webkit-user-select: none; user-select: none;">
                 <div style="color: #00d4ff; font-size: 1.1em; font-weight: 700; text-transform: uppercase;">📅 ECONOMIC CALENDAR & KEY EVENTS</div>
-                <div id="macro-toggle-icon" style="color: #00d4ff; font-size: 2em; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;">⯆</div>
+                <div id="macro-toggle-icon" style="color: #00d4ff; font-size: 1.8em; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; display: inline-block; min-width: 30px; text-align: center; font-weight: bold;">▼</div>
             </div>
             
             <div style="font-size: 0.8em; line-height: 2; color: #ccc; font-family: 'Roboto Mono', monospace;">
@@ -1930,9 +1930,9 @@
 
         <!-- WIADOMOŚCI & ALERTY (PL) - COLLAPSIBLE -->
         <div class="news-panel" style="grid-column: 2; grid-row: 2; border: 1px solid white;">
-            <div class="news-header" onclick="toggleNews()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+            <div class="news-header" onclick="toggleNews()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center; -webkit-user-select: none; user-select: none;">
                 <h3>📰 WIADOMOŚCI & ALERTY (PL)</h3>
-                <div id="news-toggle-icon" style="font-size: 2em; color: white; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px white, 0 0 20px white;">⯆</div>
+                <div id="news-toggle-icon" style="font-size: 1.8em; color: white; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px white, 0 0 20px white; display: inline-block; min-width: 30px; text-align: center; font-weight: bold;">▼</div>
             </div>
             <div class="news-feed">
         
@@ -2825,7 +2825,7 @@
                             Sygnały z 10 interwałów czasowych: 1m do 1Y
                         </div>
                     </div>
-                    <div id="timeframe-toggle-icon" style="font-size: 2em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; animation: arrowPulse 2s ease-in-out infinite;">⯆</div>
+                    <div id="timeframe-toggle-icon" style="font-size: 1.8em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; animation: arrowPulse 2s ease-in-out infinite; display: inline-block; min-width: 30px; text-align: center; font-weight: bold;">▼</div>
                 </div>
                 <div id="timeframe-zone-content" style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid rgba(0,212,255,0.3);">
                     <div style="display: flex; justify-content: flex-end; margin-bottom: 8px;">
@@ -3048,7 +3048,7 @@
                             <div style="font-size: 1.1em; color: #00d4ff; font-weight: 800; text-transform: uppercase;">🌊 AQUA TRADER • RSI S/R LEVELS</div>
                             <div style="font-size: 0.9em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px; line-height: 1.4;">Kluczowe poziomy oporu i wsparcia oparte na historycznym RSI</div>
                         </div>
-                        <div id="aqua-toggle-icon" style="font-size: 2em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff;">⯆</div>
+                        <div id="aqua-toggle-icon" style="font-size: 1.8em; color: #00d4ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #00d4ff, 0 0 20px #00d4ff; display: inline-block; min-width: 30px; text-align: center; font-weight: bold;">▼</div>
                     </div>
                 </div>
             
@@ -3274,7 +3274,7 @@
                             <div style="font-size: 1.1em; color: #ff00ff; font-weight: 800; text-transform: uppercase;">📡 THE TAPE • LIVE MARKET INTEL</div>
                             <div style="font-size: 0.9em; color: #ffffff; font-weight: 400; font-family: 'Roboto Mono', monospace; letter-spacing: 0.5px; line-height: 1.4;">Order Book, Social Sentiment, Liquidations, Market Structure & Network Data</div>
                         </div>
-                        <div id="tape-toggle-icon" style="font-size: 2em; color: #ff00ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;">⯆</div>
+                        <div id="tape-toggle-icon" style="font-size: 1.8em; color: #ff00ff; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); animation: arrowPulse 2s ease-in-out infinite; text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff; display: inline-block; min-width: 30px; text-align: center; font-weight: bold;">▼</div>
                     </div>
                 </div>
             
