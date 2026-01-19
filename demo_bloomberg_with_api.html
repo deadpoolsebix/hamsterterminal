@@ -605,6 +605,22 @@
       box-shadow: -4px 0 15px rgba(255, 140, 0, 0.2);
     }
 
+    .detail-close {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #222;
+      color: #fff;
+      border: none;
+      padding: 12px 14px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 1001;
+    }
+    .detail-close:hover { background: #333; }
+
     .detailed-mode-panel.active {
       display: block;
     }
@@ -1727,6 +1743,7 @@
 
   <!-- DETAILED MODE SIDE PANEL -->
   <div id="detailed-mode-panel" class="detailed-mode-panel">
+    <button class="detail-close" onclick="closeDetailPanel();">✕ CLOSE PANEL</button>
     <!-- PRICE LEVELS SECTION -->
     <div class="detail-section">
       <div class="detail-section-header" onclick="toggleDetailSection(this);">
@@ -2598,6 +2615,12 @@
       
       // Toggle current section
       headerEl.classList.toggle('collapsed');
+    }
+
+    function closeDetailPanel() {
+      const panel = document.getElementById('detailed-mode-panel');
+      if (panel) panel.classList.remove('active');
+      document.body.style.marginRight = '0';
     }
 
     // ========== UPDATE DETAIL PANEL ==========

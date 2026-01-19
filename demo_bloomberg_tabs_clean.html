@@ -747,11 +747,11 @@
       font-size: 1.1em;
     }
 
-    /* ANALYTICS PANEL STYLING */
+    /* ===== ANALYTICS PANEL (BOTTOM EXPANDABLE) ===== */
     .analytics-panel {
       max-height: 0;
       overflow: hidden;
-      transition: max-height 0.3s ease;
+      transition: max-height 0.4s ease;
       background: #0a0a0a;
       border-bottom: 1px solid var(--border);
     }
@@ -813,6 +813,212 @@
       .radar-grid {
         grid-template-columns: 1fr;
       }
+    }
+
+    /* ===== SIDE DRAWER - ADVANCED ANALYTICS ===== */
+    .analytics-drawer {
+      position: fixed;
+      right: -450px;
+      top: 0;
+      width: 450px;
+      height: 100vh;
+      background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%);
+      border-left: 2px solid var(--orange);
+      overflow-y: auto;
+      z-index: 200;
+      transition: right 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      box-shadow: -10px 0 40px rgba(255, 140, 0, 0.15);
+    }
+
+    .analytics-drawer.open {
+      right: 0;
+    }
+
+    .analytics-drawer::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .analytics-drawer::-webkit-scrollbar-track {
+      background: #0a0a0a;
+    }
+
+    .analytics-drawer::-webkit-scrollbar-thumb {
+      background: var(--orange);
+      border-radius: 4px;
+    }
+
+    .drawer-header {
+      background: linear-gradient(90deg, var(--burgundy), #1a0015);
+      padding: 14px 18px;
+      border-bottom: 2px solid var(--orange);
+      position: sticky;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .drawer-header h2 {
+      color: #ffffff;
+      font-size: 1.1em;
+      font-weight: 700;
+      letter-spacing: 1px;
+      margin: 0;
+    }
+
+    .close-drawer {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 1.4em;
+      cursor: pointer;
+      padding: 0;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.2s;
+    }
+
+    .close-drawer:hover {
+      color: var(--orange);
+    }
+
+    .drawer-tabs {
+      display: flex;
+      gap: 0;
+      padding: 0 18px;
+      margin-top: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .drawer-tab {
+      background: transparent;
+      border: none;
+      color: var(--gray);
+      padding: 10px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85em;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .drawer-tab.active {
+      color: var(--orange);
+      border-bottom-color: var(--orange);
+    }
+
+    .drawer-tab:hover {
+      color: #ffffff;
+    }
+
+    .drawer-content {
+      padding: 18px;
+    }
+
+    /* HEATMAP STYLES */
+    .heatmap-container {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      padding: 12px;
+      margin-bottom: 14px;
+      border-left: 2px solid var(--orange);
+    }
+
+    .heatmap-title {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.9em;
+      margin-bottom: 10px;
+      letter-spacing: 0.5px;
+    }
+
+    .heatmap-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+
+    .heatmap-cell {
+      aspect-ratio: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75em;
+      font-weight: 600;
+      color: #ffffff;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .heatmap-cell:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 12px rgba(255, 140, 0, 0.5);
+    }
+
+    .heat-high-pos { background: rgba(0, 255, 65, 0.8); }
+    .heat-mid-pos { background: rgba(0, 255, 65, 0.4); }
+    .heat-neutral { background: rgba(100, 100, 100, 0.4); }
+    .heat-mid-neg { background: rgba(255, 0, 51, 0.4); }
+    .heat-high-neg { background: rgba(255, 0, 51, 0.8); }
+
+    /* OPTION ROWS */
+    .option-row {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      padding: 10px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 2px solid var(--orange);
+    }
+
+    .option-label {
+      color: #ffffff;
+      font-weight: 600;
+      font-size: 0.9em;
+    }
+
+    .option-value {
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 0.9em;
+    }
+
+    /* UNUSUAL ITEMS */
+    .unusual-item {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      padding: 12px;
+      margin-bottom: 10px;
+      border-left: 3px solid var(--orange);
+    }
+
+    .unusual-header {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.9em;
+      margin-bottom: 6px;
+    }
+
+    .unusual-value {
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 0.95em;
+      margin-bottom: 4px;
+    }
+
+    .unusual-note {
+      color: #999999;
+      font-size: 0.8em;
+      font-style: italic;
     }
 
     /* HAMBURGER EXTRA - Quick Pills */
@@ -930,9 +1136,13 @@
         <div class="bar"></div>
         <div class="bar"></div>
       </button>
-      <button class="analytics-btn" id="analyticsBtn" title="Analytics Radar & Data">
-        <span class="analytics-icon">⚙️📊</span>
+      <button class="analytics-btn" id="analyticsBtn" title="Toggle Radar Panel (Bottom)">
+        <span class="analytics-icon">📊</span>
         <span>RADAR</span>
+      </button>
+      <button class="analytics-btn" id="drawerBtn" style="margin-left: 4px;" title="Advanced Analytics (Side)">
+        <span class="analytics-icon">🔥</span>
+        <span>ADVANCED</span>
       </button>
     </div>
 
@@ -949,8 +1159,11 @@
       <button class="menu-item" data-tab="alerts-journal">Alerts & Journal</button>
     </div>
 
-    <!-- ANALYTICS RADAR PANEL -->
+    <!-- ANALYTICS RADAR PANEL (BOTTOM EXPANDABLE) -->
     <div class="analytics-panel" id="analyticsPanel">
+      <div style="background: rgba(255, 255, 0, 0.15); border: 1px solid var(--yellow); padding: 10px 24px; margin: 10px 24px 0 24px; color: var(--yellow); font-weight: 700; font-size: 0.9em; letter-spacing: 1px;">
+        📍 PO POSTU
+      </div>
       <div class="radar-grid">
         <div class="radar-card">
           <div class="radar-title">🎯 FVG RADAR</div>
@@ -1031,6 +1244,154 @@
             <div>Stalemate: <span class="radar-neutral">SCALP ZONE</span></div>
             <div style="margin-top: 6px; font-size: 0.8em; color: #999;">Best action: Mean-revert or trend-follow</div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SIDE DRAWER - ADVANCED ANALYTICS OPTIONS -->
+    <div class="analytics-drawer" id="analyticsDrawer">
+      <div class="drawer-header">
+        <h2>📊 ADVANCED ANALYTICS</h2>
+        <button class="close-drawer" id="closeDrawer">✕</button>
+      </div>
+
+      <div class="drawer-tabs">
+        <button class="drawer-tab active" data-tab="heatmaps">HEATMAPS</button>
+        <button class="drawer-tab" data-tab="flow">FLOW ANALYSIS</button>
+        <button class="drawer-tab" data-tab="unusual">UNUSUAL</button>
+      </div>
+
+      <div class="drawer-content" id="heatmapsContent">
+        <!-- CORRELATION HEATMAP -->
+        <div class="heatmap-container">
+          <div class="heatmap-title">📈 CORRELATION MATRIX</div>
+          <div class="heatmap-grid">
+            <div class="heatmap-cell heat-high-pos" title="BTC↔ETH: 0.86">0.86</div>
+            <div class="heatmap-cell heat-mid-pos" title="BTC↔AAPL: 0.42">0.42</div>
+            <div class="heatmap-cell heat-neutral" title="BTC↔DXY: -0.48">-0.48</div>
+            <div class="heatmap-cell heat-mid-neg" title="BTC↔VIX: -0.35">-0.35</div>
+            <div class="heatmap-cell heat-high-pos" title="BTC↔NASDAQ: 0.62">0.62</div>
+          </div>
+          <div style="color: var(--gray); font-size: 0.8em;">Pearson correlation (24h)</div>
+        </div>
+
+        <!-- LIQUIDATION HEATMAP -->
+        <div class="heatmap-container">
+          <div class="heatmap-title">🔥 LIQUIDATION ZONES (BY LEVEL)</div>
+          <div class="heatmap-grid">
+            <div class="heatmap-cell heat-high-neg" title="98.2k - EXTREME">DANGER</div>
+            <div class="heatmap-cell heat-mid-neg" title="97.4k - HIGH">HIGH</div>
+            <div class="heatmap-cell heat-neutral" title="96.0k - MID">MID</div>
+            <div class="heatmap-cell heat-mid-pos" title="94.8k - MID">MID</div>
+            <div class="heatmap-cell heat-high-pos" title="93.5k - SUPPORT">SAFE</div>
+          </div>
+          <div style="color: var(--gray); font-size: 0.8em;">Top liq zones (24h)</div>
+        </div>
+
+        <!-- VOLUME PROFILE -->
+        <div class="heatmap-container">
+          <div class="heatmap-title">📊 VOLUME PROFILE (POC)</div>
+          <div class="heatmap-grid">
+            <div class="heatmap-cell heat-mid-pos">5.2%</div>
+            <div class="heatmap-cell heat-high-pos">8.7%</div>
+            <div class="heatmap-cell heat-high-pos">9.1%</div>
+            <div class="heatmap-cell heat-mid-pos">6.3%</div>
+            <div class="heatmap-cell heat-neutral">4.1%</div>
+          </div>
+          <div style="color: var(--gray); font-size: 0.8em;">POC at $96,200</div>
+        </div>
+
+        <!-- MARKET MICROSTRUCTURE -->
+        <div class="heatmap-container">
+          <div class="heatmap-title">⚡ MARKET MICROSTRUCTURE</div>
+          <div class="heatmap-grid">
+            <div class="heatmap-cell heat-high-pos">0.12</div>
+            <div class="heatmap-cell heat-mid-pos">1.34</div>
+            <div class="heatmap-cell heat-neutral">±0.08%</div>
+            <div class="heatmap-cell heat-mid-pos">STRONG</div>
+            <div class="heatmap-cell heat-high-pos">POSITIVE</div>
+          </div>
+          <div style="color: var(--gray); font-size: 0.8em;">Bid/Ask • Imbalance • VWAP • Momentum • OrderFlow</div>
+        </div>
+      </div>
+
+      <div class="drawer-content" id="flowContent" style="display: none;">
+        <div class="option-row">
+          <div class="option-label">🐋 WHALE ACCUMULATION</div>
+          <div class="option-value">+2.3k BTC</div>
+        </div>
+
+        <div class="option-row">
+          <div class="option-label">💱 EXCHANGE INFLOWS</div>
+          <div class="option-value">-$120M OUT</div>
+        </div>
+
+        <div class="option-row">
+          <div class="option-label">📦 DARK POOL FLOW</div>
+          <div class="option-value">$680M ↑</div>
+        </div>
+
+        <div class="option-row">
+          <div class="option-label">🔄 ORDER FLOW IMBALANCE</div>
+          <div class="option-value">+58% BUYERS</div>
+        </div>
+
+        <div class="option-row">
+          <div class="option-label">⚖️ LONG/SHORT RATIO</div>
+          <div class="option-value">1.18 BULL</div>
+        </div>
+
+        <div class="option-row">
+          <div class="option-label">🔓 OPEN INTEREST</div>
+          <div class="option-value">$14.2B (+3.2%)</div>
+        </div>
+
+        <div class="option-row">
+          <div class="option-label">📈 SKEW INDEX</div>
+          <div class="option-value">-0.12 NEUTRAL</div>
+        </div>
+
+        <div class="option-row">
+          <div class="option-label">⚠️ CASCADE RISK</div>
+          <div class="option-value">MEDIUM (2.5%)</div>
+        </div>
+      </div>
+
+      <div class="drawer-content" id="unusualContent" style="display: none;">
+        <div class="unusual-item">
+          <div class="unusual-header">🚨 UNUSUAL OPTION FLOW</div>
+          <div class="unusual-value">$120M BTC CALL SKEW</div>
+          <div class="unusual-note">Expiry: 24-Jan | Sentiment: BULLISH</div>
+        </div>
+
+        <div class="unusual-item">
+          <div class="unusual-header">🎯 PERPETUAL FUNDING SPIKE</div>
+          <div class="unusual-value">+0.025% (4HR HIGH)</div>
+          <div class="unusual-note">Longs getting expensive</div>
+        </div>
+
+        <div class="unusual-item">
+          <div class="unusual-header">⚡ VOLUME SPIKE ZONES</div>
+          <div class="unusual-value">95.8k & 97.2k</div>
+          <div class="unusual-note">Breakout levels locked</div>
+        </div>
+
+        <div class="unusual-item">
+          <div class="unusual-header">🔮 WHALE ALERT ACTIVE</div>
+          <div class="unusual-value">$50M TRANSFER → EXCHANGE</div>
+          <div class="unusual-note">Possible liquidation prep</div>
+        </div>
+
+        <div class="unusual-item">
+          <div class="unusual-header">💫 STALE CANDLE WATCH</div>
+          <div class="unusual-value">LOW VOLATILITY BREWING</div>
+          <div class="unusual-note">Accumulation zone forming</div>
+        </div>
+
+        <div class="unusual-item">
+          <div class="unusual-header">🌊 WAVE COUNT SETUP</div>
+          <div class="unusual-value">POTENTIAL IMPULSE 5 INCOMING</div>
+          <div class="unusual-note">Fibonacci targets: $98.2k</div>
         </div>
       </div>
     </div>
@@ -2313,7 +2674,7 @@
       });
     }
 
-    // ===== NEW: ANALYTICS RADAR TOGGLE =====
+    // ===== ANALYTICS BOTTOM PANEL TOGGLE (RADAR) =====
     const analyticsBtn = document.getElementById('analyticsBtn');
     const analyticsPanel = document.getElementById('analyticsPanel');
 
@@ -2321,8 +2682,62 @@
       analyticsBtn.addEventListener('click', () => {
         analyticsBtn.classList.toggle('open');
         analyticsPanel.classList.toggle('open');
+        // Close drawer if open
+        if (analyticsDrawer.classList.contains('open')) {
+          analyticsDrawer.classList.remove('open');
+          drawerBtn.classList.remove('open');
+        }
       });
     }
+
+    // ===== ANALYTICS SIDE DRAWER TOGGLE (ADVANCED OPTIONS) =====
+    const drawerBtn = document.getElementById('drawerBtn');
+    const analyticsDrawer = document.getElementById('analyticsDrawer');
+    const closeDrawer = document.getElementById('closeDrawer');
+
+    if (drawerBtn && analyticsDrawer) {
+      drawerBtn.addEventListener('click', () => {
+        drawerBtn.classList.toggle('open');
+        analyticsDrawer.classList.toggle('open');
+        // Close bottom panel if open
+        if (analyticsPanel.classList.contains('open')) {
+          analyticsPanel.classList.remove('open');
+          analyticsBtn.classList.remove('open');
+        }
+      });
+    }
+
+    if (closeDrawer && analyticsDrawer) {
+      closeDrawer.addEventListener('click', () => {
+        analyticsDrawer.classList.remove('open');
+        drawerBtn.classList.remove('open');
+      });
+    }
+
+    // ===== DRAWER TABS SWITCHER =====
+    const drawerTabs = document.querySelectorAll('.drawer-tab');
+    const heatmapsContent = document.getElementById('heatmapsContent');
+    const flowContent = document.getElementById('flowContent');
+    const unusualContent = document.getElementById('unusualContent');
+
+    drawerTabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active from all tabs
+        drawerTabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Hide all content
+        heatmapsContent.style.display = 'none';
+        flowContent.style.display = 'none';
+        unusualContent.style.display = 'none';
+
+        // Show selected
+        const tabName = tab.dataset.tab;
+        if (tabName === 'heatmaps') heatmapsContent.style.display = 'block';
+        if (tabName === 'flow') flowContent.style.display = 'block';
+        if (tabName === 'unusual') unusualContent.style.display = 'block';
+      });
+    });
 
     // Hamburger toggle for menu
     const navWrapper = document.getElementById('navWrapper');
