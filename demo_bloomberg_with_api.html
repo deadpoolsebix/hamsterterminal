@@ -2,6 +2,9 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Hamster Terminal - Bloomberg Clean with API</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
@@ -168,24 +171,27 @@
     /* TICKER */
     .ticker-container {
       background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 8px 0;
+      border: 2px solid var(--orange);
+      padding: 16px 0;
       overflow: hidden;
       margin: 0 24px 14px 24px;
+      box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
     }
     .ticker {
       display: flex;
-      animation: ticker 30s linear infinite;
-      gap: 40px;
+      animation: ticker 15s linear infinite;
+      gap: 60px;
       padding: 0 24px;
     }
     .ticker-item {
       white-space: nowrap;
-      font-size: 0.9em;
+      font-size: 1.8em;
+      font-weight: 700;
     }
     .ticker-label {
       color: #ffffff;
       font-weight: 700;
+      margin-right: 8px;
     }
     @keyframes ticker {
       0% { transform: translateX(40%); }
@@ -275,14 +281,19 @@
     /* BTC/ETH CARDS */
     .top-grid {
       display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 14px;
+      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+      gap: 10px;
       padding: 14px 24px;
+      align-items: center;
     }
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
-      padding: 14px;
+      padding: 10px 12px;
+    }
+    .card:first-child {
+      grid-column: span 2;
+      padding: 16px 14px;
     }
     .card h3 {
       color: #ffffff;
@@ -294,6 +305,10 @@
       font-weight: 700;
       color: #ffffff;
     }
+    .card:first-child .price {
+      font-size: 3.6em;
+      color: var(--orange);
+    }
     .change {
       font-weight: 700;
       color: #ffffff;
@@ -304,6 +319,23 @@
       font-size: 0.9em;
       color: var(--gray);
       margin-top: 8px;
+    }
+    .card-label {
+      color: #aaa;
+      font-size: 0.75em;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .card-value {
+      font-size: 1.8em;
+      font-weight: 700;
+      color: #00ff41;
+      margin-top: 4px;
+    }
+    .card:first-child .card-value {
+      font-size: 2.8em;
+      color: var(--orange);
     }
 
     /* MAIN GRID */
@@ -436,17 +468,20 @@
     /* SIDEBAR DRAWER */
     .sidebar {
       position: fixed;
-      left: -300px;
+      left: -100%;
       top: 0;
-      width: 280px;
+      width: 100%;
       height: 100vh;
-      background: var(--panel);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
       border-right: 2px solid var(--orange);
-      box-shadow: 2px 0 8px rgba(255, 140, 0, 0.3);
+      box-shadow: -4px 0 20px rgba(255, 140, 0, 0.4);
       z-index: 1001;
-      transition: left 0.3s ease;
+      transition: left 0.4s ease;
       overflow-y: auto;
-      padding: 20px 0;
+      padding: 80px 40px 40px 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
     }
     .sidebar.open { left: 0; }
     .sidebar-header {
@@ -455,65 +490,194 @@
       color: #000;
       font-weight: 700;
       letter-spacing: 1px;
-      margin-bottom: 20px;
+      margin-bottom: 0;
       text-align: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1002;
+      box-shadow: 0 2px 10px rgba(255, 140, 0, 0.3);
     }
     .sidebar-section {
-      padding: 0 16px 20px 16px;
-      border-bottom: 1px solid var(--border);
+      padding: 20px 24px;
+      border: 1px solid rgba(255, 140, 0, 0.3);
+      border-radius: 6px;
+      background: rgba(10, 10, 10, 0.6);
+      backdrop-filter: blur(10px);
     }
-    .sidebar-section:last-child { border-bottom: none; }
+    .sidebar-section:last-child { border-bottom: 1px solid rgba(255, 140, 0, 0.3); }
     .sidebar-label {
       color: var(--orange);
-      font-size: 0.75em;
+      font-size: 0.8em;
       text-transform: uppercase;
       font-weight: 700;
-      margin-bottom: 10px;
+      margin-bottom: 15px;
       display: block;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
+      border-bottom: 1px solid rgba(255, 140, 0, 0.2);
+      padding-bottom: 10px;
     }
     .sidebar-btn {
       display: block;
       width: 100%;
-      background: #1a1a1a;
-      border: 1px solid #333;
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid rgba(255, 140, 0, 0.2);
       color: #fff;
-      padding: 10px 12px;
-      margin-bottom: 6px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: 4px;
       text-align: left;
       font-weight: 600;
-      font-size: 0.9em;
-      transition: all 0.2s;
+      font-size: 0.95em;
+      transition: all 0.3s;
     }
-    .sidebar-btn:hover { background: #252525; border-color: var(--orange); color: var(--orange); }
+    .sidebar-btn:hover { background: rgba(255, 140, 0, 0.2); border-color: var(--orange); color: var(--orange); transform: translateX(4px); }
     .sidebar-btn.active { background: var(--orange); color: #000; border-color: var(--orange); }
     
     .sidebar-toggle {
-      position: fixed;
-      left: 10px;
-      top: 10px;
-      z-index: 1000;
+      position: fixed !important;
+      left: 50% !important;
+      top: 12px !important;
+      z-index: 2000;
+      transform: translateX(-50%) !important;
       background: var(--orange);
       color: #000;
       border: none;
-      width: 40px;
-      height: 40px;
+      width: 76px;
+      height: 76px;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: 6px;
       font-weight: 700;
-      font-size: 1.2em;
+      font-size: 2em;
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.3s;
+      box-shadow: 0 6px 16px rgba(255, 140, 0, 0.5);
     }
-    .sidebar-toggle:hover { background: #ffb347; }
+    .sidebar-toggle:hover { background: #ffb347; transform: translateX(-50%) scale(1.15) rotate(5deg) !important; }
+    .sidebar-toggle:active { transform: translateX(-50%) scale(0.9) !important; }
+
+    /* BACK BUTTON */
+    .back-button {
+      position: fixed;
+      right: 12px;
+      top: 12px;
+      z-index: 2000;
+      background: #666;
+      color: #fff;
+      border: none;
+      width: 56px;
+      height: 56px;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 1.4em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .back-button:hover { background: #888; transform: scale(1.1); }
+    .back-button:active { transform: scale(0.95); }
+
+    /* SIDEBAR TOGGLE BUTTON */
+    .sidebar-close-btn {
+      background: rgba(255, 68, 68, 0.8);
+      border: 1px solid #ff4444;
+      color: #fff;
+      width: auto;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-weight: 700;
+      position: fixed;
+      top: 20px;
+      right: 40px;
+      border-radius: 4px;
+      font-size: 0.85em;
+      transition: all 0.3s;
+      z-index: 1003;
+    }
+    .sidebar-close-btn:hover { background: #ff6666; transform: scale(1.05); }
+
+    /* SIDEBAR GRID WIDGETS */
+    .sidebar-widgets {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 20px;
+    }
+    .widget {
+      background: rgba(26, 26, 26, 0.7);
+      border: 1px solid rgba(255, 140, 0, 0.3);
+      border-radius: 6px;
+      padding: 16px;
+      text-align: center;
+    }
+    .widget-title {
+      color: var(--orange);
+      font-size: 0.75em;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+    .widget-value {
+      font-size: 1.4em;
+      font-weight: 700;
+      color: #00ff41;
+      margin-bottom: 4px;
+    }
+    .widget-change {
+      font-size: 0.85em;
+      color: #ffff00;
+    }
+    .widget-change.positive { color: #00ff41; }
+    .widget-change.negative { color: #ff0033; }
 
     @media (max-width: 768px) {
-      .sidebar { width: 100%; left: -100%; }
-      .sidebar-toggle { left: 10px; top: 10px; }
+      body { padding-bottom: 60px; }
+      .sidebar { padding: 70px 20px 30px 20px; gap: 15px; }
+      .sidebar-widgets { grid-template-columns: repeat(2, 1fr); }
+      .sidebar-toggle { left: 50% !important; top: 65px; width: 72px; height: 72px; font-size: 2em; transform: translateX(-50%) !important; }
+      .sidebar-close-btn { right: 20px; top: 15px; padding: 10px 14px; font-size: 0.95em; }
+      .header { font-size: 1.35em; flex-direction: column; gap: 8px; padding: 10px 16px; }
+      .header-left { flex-direction: column; gap: 4px; }
+      .menu-bar { flex-wrap: wrap; padding: 8px 12px; gap: 4px; }
+      .menu-item { flex: 1 1 calc(50% - 2px); padding: 8px 6px; font-size: 1.2em; min-height: 36px; }
+      .top-grid { grid-template-columns: 2fr repeat(3, 1fr); gap: 8px; padding: 10px 12px; font-size: 1.125em; }
+      .card { padding: 10px 8px; }
+      .card-label { font-size: 1.05em; }
+      .card-value { font-size: 1.35em; }
+      .chart-canvas { height: 220px; }
+      #candlestick-chart { height: 150px; margin-bottom: 15px; }
+      .genius-ai-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
+      .news-grid { grid-template-columns: 1fr; gap: 8px; padding: 10px 12px; }
+      .transfers-inline { gap: 8px; padding: 8px; }
+      .transfer-card { padding: 10px 8px; font-size: 1.275em; }
+      .main-grid { padding: 10px 12px; }
+      .genius-card { padding: 12px 10px; }
+      .genius-card-title { font-size: 1.35em; }
+      .genius-card-content { font-size: 1.2em; }
+      .ticker-container { padding: 10px 12px; }
+      .ticker { gap: 8px; }
+      .ticker-item { font-size: 1.275em; }
+    }
+
+    @media (max-width: 480px) {
+      .header { font-size: 1.125em; padding: 8px 12px; }
+      .menu-bar { padding: 6px 8px; gap: 3px; }
+      .menu-item { font-size: 1.05em; padding: 6px 4px; }
+      .top-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px 12px; font-size: 1.05em; }
+      .chart-canvas { height: 180px; }
+      #candlestick-chart { height: 120px; }
+      .genius-card { padding: 10px 8px; }
+      .genius-card-title { font-size: 1.2em; }
+      .transfer-card { font-size: 1.2em; padding: 8px 6px; }
+      .ticker-item { font-size: 1.125em; }
     }
   </style>
 </head>
@@ -521,27 +685,84 @@
 
   <!-- SIDEBAR DRAWER -->
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">☰ CONTROL PANEL</div>
+    <div class="sidebar-header">⚡ HAMSTER DASHBOARD</div>
+    <button class="sidebar-close-btn" onclick="toggleSidebar();">✕ CLOSE</button>
+
+    <!-- QUICK STATS WIDGETS -->
     <div class="sidebar-section">
-      <span class="sidebar-label" data-i18n="sidebar-modes">VIEWS</span>
+      <span class="sidebar-label">📊 QUICK STATS</span>
+      <div class="sidebar-widgets">
+        <div class="widget">
+          <div class="widget-title">BTC Price</div>
+          <div class="widget-value" id="sidebar-btc">$--</div>
+          <div class="widget-change" id="sidebar-btc-change">+0.00%</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">ETH Price</div>
+          <div class="widget-value" id="sidebar-eth">$--</div>
+          <div class="widget-change" id="sidebar-eth-change">+0.00%</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Fear & Greed</div>
+          <div class="widget-value" id="sidebar-fear">--</div>
+          <div class="widget-change">Market Mood</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Market Cap</div>
+          <div class="widget-value" id="sidebar-mcap">$--</div>
+          <div class="widget-change">24h Trend</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LIQUIDATION ALERTS -->
+    <div class="sidebar-section">
+      <span class="sidebar-label">⚠️ LIQUIDATION INFO</span>
+      <div class="sidebar-widgets">
+        <div class="widget">
+          <div class="widget-title">SHORT Liq</div>
+          <div class="widget-value" id="sidebar-short-liq">$1.2T</div>
+          <div class="widget-change negative">High Risk</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">LONG Liq</div>
+          <div class="widget-value" id="sidebar-long-liq">$0.9T</div>
+          <div class="widget-change negative">Watch</div>
+        </div>
+        <div class="widget">
+          <div class="widget-title">Total Liq</div>
+          <div class="widget-value" id="sidebar-total-liq">$2.1T</div>
+          <div class="widget-change">Last 24h</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLS -->
+    <div class="sidebar-section">
+      <span class="sidebar-label" data-i18n="sidebar-modes">🎨 VIEWS</span>
       <button class="sidebar-btn active" data-mode="bloomberg" onclick="switchPage('bloomberg', event); toggleSidebar();" data-i18n="mode-bloomberg">Bloomberg</button>
       <button class="sidebar-btn" data-mode="retro" onclick="switchPage('retro', event); toggleSidebar();" data-i18n="mode-retro">Retro Terminal</button>
       <button class="sidebar-btn" data-mode="detailed" onclick="switchPage('detailed', event); toggleSidebar();" data-i18n="mode-detailed">Detailed Mode</button>
     </div>
+
     <div class="sidebar-section">
-      <span class="sidebar-label" data-i18n="sidebar-themes">THEMES</span>
+      <span class="sidebar-label" data-i18n="sidebar-themes">🌙 THEMES</span>
       <button class="sidebar-btn active" data-theme="bloomberg" onclick="switchTheme('bloomberg', event);" data-i18n="theme-bloomberg">Bloomberg</button>
       <button class="sidebar-btn" data-theme="professional" onclick="switchTheme('professional', event);" data-i18n="theme-professional">Professional</button>
       <button class="sidebar-btn" data-theme="dark" onclick="switchTheme('dark', event);" data-i18n="theme-dark">Dark</button>
     </div>
+
     <div class="sidebar-section">
-      <span class="sidebar-label" data-i18n="sidebar-language">LANGUAGE</span>
+      <span class="sidebar-label" data-i18n="sidebar-language">🌐 LANGUAGE</span>
       <button class="sidebar-btn active" id="lang-toggle-sidebar" onclick="toggleLanguage(); updateLanguageDisplay();" style="text-align: center; font-size: 1em;">EN / PL</button>
     </div>
   </div>
 
   <!-- SIDEBAR TOGGLE BUTTON -->
   <button class="sidebar-toggle" onclick="toggleSidebar();">☰</button>
+
+  <!-- BACK BUTTON -->
+  <button class="back-button" onclick="history.back();" title="Go back">← </button>
 
   <!-- HEADER -->
   <div class="header">
@@ -628,36 +849,60 @@
         <div class="price-line" id="chart-price-label">$98,432.50</div>
 
         <div class="legend">
-          <div class="legend-item"><span class="legend-swatch swatch-ema20"></span>EMA 20</div>
-          <div class="legend-item"><span class="legend-swatch swatch-ema50"></span>EMA 50</div>
-          <div class="legend-item"><span class="legend-swatch swatch-ema200"></span>EMA 200</div>
+          <div class="legend-item"><span class="legend-swatch swatch-ema20"></span>SMA 20</div>
+          <div class="legend-item"><span class="legend-swatch swatch-ema50"></span>SMA 50</div>
+          <div class="legend-item"><span class="legend-swatch swatch-ema200"></span>SMA 100</div>
+        </div>
+
+        <!-- TIMEFRAME CONTROLS -->
+        <div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; z-index: 100; flex-wrap: wrap;">
+          <button onclick="switchTimeframe('1d')" class="tf-btn active" data-tf="1d" style="background: var(--orange); border: 1px solid var(--orange); color: #000; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">1D</button>
+          <button onclick="switchTimeframe('1w')" class="tf-btn" data-tf="1w" style="background: transparent; border: 1px solid #666; color: #fff; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">1W</button>
+          <button onclick="switchTimeframe('1m')" class="tf-btn" data-tf="1m" style="background: transparent; border: 1px solid #666; color: #fff; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">1M</button>
+          <button onclick="switchTimeframe('3m')" class="tf-btn" data-tf="3m" style="background: transparent; border: 1px solid #666; color: #fff; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">3M</button>
         </div>
       </div>
 
-      <div class="genius-ai inline-genius">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-          <h3 style="color: #ffffff; margin: 0;">GENIUS AI ANALYSIS</h3>
-          <div style="color: var(--gray); font-size: 0.9em;">Auto-updated with live insights</div>
+      <!-- CANDLESTICK CHART -->
+      <div style="color: #ffffff; font-weight: 700; margin-top: 20px; margin-bottom: 12px; font-size: 1.05em;">CANDLESTICK CHART (4H)</div>
+      <div id="candlestick-chart" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); gap: 2px; height: 200px; background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-bottom: 20px;"></div>
+
+      <!-- LIQUIDITY GRAB INFO -->
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIQUIDITY GRAB ZONES</div>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;">
+        <div style="background: var(--panel); border: 1px solid #ff4444; border-left: 3px solid #ff4444; padding: 12px; border-radius: 4px;">
+          <div style="color: #ff4444; font-weight: 700; font-size: 0.9em;">SELL LIQUIDITY</div>
+          <div style="color: #fff; margin-top: 4px; font-size: 0.85em;">Strong offers above $99,500 — liquidation risk ↑</div>
         </div>
-        <div class="genius-ai-grid">
-          <div class="genius-card">
-            <div class="genius-card-title">Market Pulse</div>
-            <div class="genius-card-content">Momentum tracking live — key support and resistance levels update in real time.</div>
+        <div style="background: var(--panel); border: 1px solid #44ff44; border-left: 3px solid #44ff44; padding: 12px; border-radius: 4px;">
+          <div style="color: #44ff44; font-weight: 700; font-size: 0.9em;">BUY LIQUIDITY</div>
+          <div style="color: #fff; margin-top: 4px; font-size: 0.85em;">Strong bids near $96,000 — support zone</div>
+        </div>
+      </div>
+
+      <!-- LIQUIDATIONS INFO -->
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LARGE LIQUIDATIONS (Last 24H)</div>
+      <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 14px; margin-bottom: 20px;">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
+          <div style="background: rgba(255, 68, 68, 0.1); border-left: 3px solid #ff4444; padding: 10px; border-radius: 3px;">
+            <div style="color: #ff4444; font-weight: 700; font-size: 0.9em;">SHORT LIQUIDATIONS</div>
+            <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-shorts">$1,245M</div>
+            <div style="color: #aaa; font-size: 0.8em; margin-top: 4px;">↓ Liquidations (Bullish)</div>
           </div>
-          <div class="genius-card">
-            <div class="genius-card-title">Liquidity Radar</div>
-            <div class="genius-card-content">Orderbook heatmap highlights: strong bids near $95,000, offers around $99,800.</div>
+          <div style="background: rgba(68, 255, 68, 0.1); border-left: 3px solid #44ff44; padding: 10px; border-radius: 3px;">
+            <div style="color: #44ff44; font-weight: 700; font-size: 0.9em;">LONG LIQUIDATIONS</div>
+            <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-longs">$892M</div>
+            <div style="color: #aaa; font-size: 0.8em; margin-top: 4px;">↑ Liquidations (Bearish)</div>
           </div>
-          <div class="genius-card">
-            <div class="genius-card-title">Sentiment Watch</div>
-            <div class="genius-card-content">Aggregated sentiment tilts bullish; monitoring fear & greed index and funding flips.</div>
-          </div>
-          <div class="genius-card">
-            <div class="genius-card-title">Risk Monitor</div>
-            <div class="genius-card-content">Position sizing adjusted to volatility; alerts on funding spikes and correlation shifts.</div>
+          <div style="background: rgba(255, 255, 100, 0.1); border-left: 3px solid #ffff00; padding: 10px; border-radius: 3px;">
+            <div style="color: #ffff00; font-weight: 700; font-size: 0.9em;">TOTAL 24H</div>
+            <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-total">$2,137M</div>
+            <div style="color: #aaa; font-size: 0.8em; margin-top: 4px;">Combined liquidations</div>
           </div>
         </div>
       </div>
+
+
 
       <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;" data-i18n="large-transfers">LARGE TRANSFERS</div>
       <div class="transfers-inline">
@@ -689,13 +934,19 @@
   <div class="ticker-container">
     <div class="ticker">
       <div class="ticker-item">
-        <span class="ticker-label">BTC/USD:</span> <span id="ticker-btc">$0</span>
+        <span class="ticker-label">BTC:</span> <span id="ticker-btc">$0</span>
       </div>
       <div class="ticker-item">
-        <span class="ticker-label">ETH/USD:</span> <span id="ticker-eth">$0</span>
+        <span class="ticker-label">ETH:</span> <span id="ticker-eth">$0</span>
       </div>
       <div class="ticker-item">
         <span class="ticker-label">SPY:</span> <span id="ticker-spy">$0</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-label">AAPL:</span> <span id="ticker-aapl">$225.50</span>
+      </div>
+      <div class="ticker-item">
+        <span class="ticker-label">MSFT:</span> <span id="ticker-msft">$445.20</span>
       </div>
       <div class="ticker-item">
         <span class="ticker-label">GOLD:</span> <span id="ticker-gold">$0</span>
@@ -703,6 +954,10 @@
       <div class="ticker-item">
         <span class="ticker-label">EUR/USD:</span> <span id="ticker-eur">$0</span>
       </div>
+      <div class="ticker-item">
+        <span class="ticker-label">BTC:</span> <span id="ticker-btc-repeat">$0</span>
+      </div>
+
     </div>
   </div>
 
@@ -751,66 +1006,6 @@
   </div>
 
   <!-- GENIUS AI + PRICE MAP (bottom) -->
-  <div class="genius-ai" style="margin: 0 24px 14px 24px;">
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-      <h3 style="color: #ffffff; margin: 0;">GENIUS AI ANALYSIS</h3>
-      <div style="color: var(--gray); font-size: 0.9em;">Auto-updated with live insights</div>
-    </div>
-    <div class="genius-ai-grid">
-      <div class="genius-card">
-        <div class="genius-card-title" data-i18n="genius-pulse">Market Pulse</div>
-        <div class="genius-card-content" id="genius-pulse">Momentum tracking live — key support and resistance levels update in real time.</div>
-      </div>
-      <div class="genius-card">
-        <div class="genius-card-title" data-i18n="genius-liquidity">Liquidity Radar</div>
-        <div class="genius-card-content" id="genius-liquidity">Orderbook heatmap highlights: strong bids near $95,000, offers around $99,800.</div>
-      </div>
-      <div class="genius-card">
-        <div class="genius-card-title" data-i18n="genius-sentiment">Sentiment Watch</div>
-        <div class="genius-card-content" id="genius-sentiment">Aggregated sentiment tilts bullish; monitoring fear & greed index and funding flips.</div>
-      </div>
-      <div class="genius-card">
-        <div class="genius-card-title" data-i18n="genius-risk">Risk Monitor</div>
-        <div class="genius-card-content" id="genius-risk">Position sizing adjusted to volatility; alerts on funding spikes and correlation shifts.</div>
-      </div>
-    </div>
-
-    <div style="margin-top: 14px;">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 10px; font-size: 1.05em;">PRICE MAP (Signals & Levels)</div>
-      <div class="chart-canvas">
-        <div class="band premium"></div>
-        <div class="band discount"></div>
-        <div class="band-label premium">Premium zone</div>
-        <div class="band-label discount">Discount zone</div>
-        <div class="level resistance"></div>
-        <div class="level support"></div>
-        <div class="level-label" style="top:66px; color:#ff8c8c;">Resistance</div>
-        <div class="level-label" style="bottom:66px; color:#7cff9c;">Support</div>
-
-        <svg class="ema ema20" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,55 C20,50 40,52 60,48 80,44 90,46 100,43" />
-        </svg>
-        <svg class="ema ema50" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,58 C20,60 40,56 60,54 80,52 90,51 100,50" />
-        </svg>
-        <svg class="ema ema200" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,62 C20,63 40,64 60,63 80,62 90,61 100,60" />
-        </svg>
-
-        <div class="signal buy"><span class="dot"></span><span>BUY signal</span></div>
-        <div class="signal sell"><span class="dot"></span><span>SELL signal</span></div>
-
-        <div class="price-line" id="chart-price-label">$98,432.50</div>
-
-        <div class="legend">
-          <div class="legend-item"><span class="legend-swatch swatch-ema20"></span>EMA 20</div>
-          <div class="legend-item"><span class="legend-swatch swatch-ema50"></span>EMA 50</div>
-          <div class="legend-item"><span class="legend-swatch swatch-ema200"></span>EMA 200</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
   <!-- TAB CONTENT - TREND ANALYSIS -->
   <div id="trend-analysis" class="tab-content">
     <div style="padding: 0 24px;">
@@ -987,6 +1182,192 @@
     function toggleSidebar() {
       const sidebar = document.getElementById('sidebar');
       sidebar.classList.toggle('open');
+    }
+
+    // ========== CHART ZOOM ==========
+    let chartZoomLevel = 1;
+    function zoomChart(direction) {
+      const canvas = document.querySelector('.chart-canvas');
+      if (direction === 'in') chartZoomLevel += 0.2;
+      else if (direction === 'out' && chartZoomLevel > 0.5) chartZoomLevel -= 0.2;
+      canvas.style.transform = `scale(${chartZoomLevel})`;
+      canvas.style.transformOrigin = 'center top';
+      canvas.style.transition = 'transform 0.2s ease';
+    }
+    function resetZoom() {
+      chartZoomLevel = 1;
+      document.querySelector('.chart-canvas').style.transform = 'scale(1)';
+    }
+
+    // ========== TIMEFRAME SWITCHER ==========
+    let currentTimeframe = '1d';
+    function switchTimeframe(tf) {
+      currentTimeframe = tf;
+      
+      // Update button styles
+      document.querySelectorAll('.tf-btn').forEach(btn => {
+        if (btn.dataset.tf === tf) {
+          btn.style.background = 'var(--orange)';
+          btn.style.borderColor = 'var(--orange)';
+          btn.style.color = '#000';
+        } else {
+          btn.style.background = 'transparent';
+          btn.style.borderColor = '#666';
+          btn.style.color = '#fff';
+        }
+      });
+
+      // Update chart with different data based on timeframe
+      const timeframeLabel = {
+        '1d': '1D - Last 24 Hours',
+        '1w': '1W - Last 7 Days',
+        '1m': '1M - Last Month',
+        '3m': '3M - Last 3 Months'
+      };
+      
+      console.log(`Switched to ${timeframeLabel[tf]}`);
+      renderCandlestickChart(); // Re-render with new data
+    }
+
+    // ========== CANDLESTICK CHART ==========
+    function renderCandlestickChart() {
+      const container = document.getElementById('candlestick-chart');
+      if (!container) return;
+      
+      const candles = [
+        { open: 98000, close: 98200, high: 98400, low: 97900, volume: 120 },
+        { open: 98200, close: 98100, high: 98350, low: 97950, volume: 105 },
+        { open: 98100, close: 98450, high: 98500, low: 98000, volume: 145 },
+        { open: 98450, close: 98300, high: 98550, low: 98200, volume: 130 },
+        { open: 98300, close: 98150, high: 98400, low: 98000, volume: 115 },
+        { open: 98150, close: 98350, high: 98450, low: 98100, volume: 125 },
+        { open: 98350, close: 98432, high: 98500, low: 98250, volume: 140 }
+      ];
+
+      container.innerHTML = '';
+      const maxPrice = Math.max(...candles.map(c => c.high));
+      const minPrice = Math.min(...candles.map(c => c.low));
+      const range = maxPrice - minPrice;
+
+      candles.forEach(candle => {
+        const candleEl = document.createElement('div');
+        const bodyTop = ((maxPrice - Math.max(candle.open, candle.close)) / range) * 100;
+        const bodyHeight = ((Math.max(candle.open, candle.close) - Math.min(candle.open, candle.close)) / range) * 100;
+        const wickTop = ((maxPrice - candle.high) / range) * 100;
+        const wickHeight = ((candle.high - candle.low) / range) * 100;
+        
+        const isGreen = candle.close >= candle.open;
+        const bodyColor = isGreen ? '#44ff44' : '#ff4444';
+        const wickColor = isGreen ? '#44ff44' : '#ff4444';
+
+        candleEl.style.position = 'relative';
+        candleEl.style.display = 'flex';
+        candleEl.style.flexDirection = 'column';
+        candleEl.style.alignItems = 'center';
+        candleEl.style.height = '100%';
+        candleEl.style.justifyContent = 'flex-end';
+
+        const wick = document.createElement('div');
+        wick.style.width = '1px';
+        wick.style.height = `${wickHeight}%`;
+        wick.style.background = wickColor;
+        wick.style.opacity = '0.7';
+
+        const body = document.createElement('div');
+        body.style.width = '60%';
+        body.style.height = `${Math.max(bodyHeight, 3)}%`;
+        body.style.background = bodyColor;
+        body.style.border = `1px solid ${bodyColor}`;
+        body.style.borderRadius = '1px';
+
+        candleEl.appendChild(wick);
+        candleEl.appendChild(body);
+        container.appendChild(candleEl);
+      });
+    }
+
+    // ========== UPDATE LIQUIDATIONS ==========
+    function updateLiquidations() {
+      const shortLiq = 1245 + Math.random() * 50;
+      const longLiq = 892 + Math.random() * 45;
+      const total = shortLiq + longLiq;
+
+      if (document.getElementById('liq-shorts')) {
+        document.getElementById('liq-shorts').textContent = `$${shortLiq.toFixed(0)}M`;
+        document.getElementById('liq-longs').textContent = `$${longLiq.toFixed(0)}M`;
+        document.getElementById('liq-total').textContent = `$${total.toFixed(0)}M`;
+      }
+    }
+
+    // ========== UPDATE STOCK TICKERS ==========
+    function updateStockTickers() {
+      // Simulate realistic stock price movements
+      const stocks = {
+        'ticker-aapl': { base: 225.50, range: 2 },
+        'ticker-msft': { base: 445.20, range: 3.5 }
+      };
+
+      Object.keys(stocks).forEach(id => {
+        const el = document.getElementById(id);
+        if (el) {
+          const { base, range } = stocks[id];
+          const change = (Math.random() - 0.48) * range;
+          const newPrice = base + change;
+          el.textContent = `$${newPrice.toFixed(2)}`;
+          el.style.color = change > 0 ? '#44ff44' : '#ff4444';
+        }
+      });
+
+      // Repeat BTC ticker for scrolling effect
+      const btcRepeat = document.getElementById('ticker-btc-repeat');
+      if (btcRepeat) {
+        btcRepeat.textContent = document.getElementById('ticker-btc').textContent;
+      }
+    }
+
+    // ========== UPDATE SIDEBAR WIDGETS ==========
+    function updateSidebarWidgets() {
+      // BTC and ETH
+      const btcEl = document.getElementById('sidebar-btc');
+      const btcChangeEl = document.getElementById('sidebar-btc-change');
+      const ethEl = document.getElementById('sidebar-eth');
+      const ethChangeEl = document.getElementById('sidebar-eth-change');
+      const fearEl = document.getElementById('sidebar-fear');
+      const mcapEl = document.getElementById('sidebar-mcap');
+      
+      // Get current values from main dashboard
+      const btcPrice = document.getElementById('btc-price')?.textContent || '$--';
+      const btcChange = document.getElementById('btc-change')?.textContent || '+0.00%';
+      const ethPrice = document.getElementById('eth-price')?.textContent || '$--';
+      const ethChange = document.getElementById('eth-change')?.textContent || '+0.00%';
+      const fear = document.getElementById('market-fear')?.textContent || '--';
+      const mcap = document.getElementById('btc-mcap')?.textContent || '$--';
+
+      if (btcEl) btcEl.textContent = btcPrice;
+      if (btcChangeEl) {
+        btcChangeEl.textContent = btcChange;
+        btcChangeEl.className = 'widget-change ' + (btcChange.includes('-') ? 'negative' : 'positive');
+      }
+      if (ethEl) ethEl.textContent = ethPrice;
+      if (ethChangeEl) {
+        ethChangeEl.textContent = ethChange;
+        ethChangeEl.className = 'widget-change ' + (ethChange.includes('-') ? 'negative' : 'positive');
+      }
+      if (fearEl) fearEl.textContent = fear;
+      if (mcapEl) mcapEl.textContent = mcap;
+
+      // Liquidation data
+      const shortLiq = document.getElementById('liq-shorts')?.textContent || '$1.2T';
+      const longLiq = document.getElementById('liq-longs')?.textContent || '$0.9T';
+      const totalLiq = document.getElementById('liq-total')?.textContent || '$2.1T';
+
+      const sidebarShort = document.getElementById('sidebar-short-liq');
+      const sidebarLong = document.getElementById('sidebar-long-liq');
+      const sidebarTotal = document.getElementById('sidebar-total-liq');
+
+      if (sidebarShort) sidebarShort.textContent = shortLiq;
+      if (sidebarLong) sidebarLong.textContent = longLiq;
+      if (sidebarTotal) sidebarTotal.textContent = totalLiq;
     }
 
     // ========== CLOCK ===========
@@ -1308,10 +1689,18 @@
     // ========== INIT ==========
     function init() {
       updateTime();
-      updateLanguageDisplay();  // Initialize language display
+      updateLanguageDisplay();
       switchTheme('bloomberg');
+      renderCandlestickChart();
+      updateLiquidations();
       fetchApiData();
-      setInterval(fetchApiData, 10000); // Update every 10 seconds
+      updateStockTickers();
+      updateSidebarWidgets();
+      setInterval(updateTime, 1000);
+      setInterval(fetchApiData, 5000);  // 50% faster - every 5 seconds
+      setInterval(updateStockTickers, 5000);
+      setInterval(updateLiquidations, 30000);
+      setInterval(updateSidebarWidgets, 5000);  // Update sidebar widgets every 5 seconds
     }
 
     window.addEventListener('DOMContentLoaded', init);
