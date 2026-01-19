@@ -450,6 +450,10 @@
       <button class="theme-btn" onclick="switchTheme('professional', event)">Professional</button>
       <button class="theme-btn" onclick="switchTheme('dark', event)">Dark</button>
     </div>
+    <div class="switcher-label" style="margin-top:8px;">LANGUAGE</div>
+    <div class="switcher-group">
+      <button class="theme-btn" id="lang-toggle" onclick="toggleLanguage()" style="flex: 1;">EN</button>
+    </div>
   </div>
 
   <!-- HEADER -->
@@ -532,7 +536,7 @@
         </div>
       </div>
 
-      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;">LARGE TRANSFERS</div>
+      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;" data-i18n="large-transfers">LARGE TRANSFERS</div>
       <div class="transfers-inline">
         <div class="transfer-card">
           <div style="font-weight: 700;">1,250 BTC</div>
@@ -582,7 +586,7 @@
   <!-- NEWS SECTIONS -->
   <div class="news-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 24px 14px 24px;">
     <div class="news">
-      <h4>LIVE NEWS</h4>
+      <h4 data-i18n="live-news">LIVE NEWS</h4>
       <div class="news-item">BTC consolidating around $98.5k support level</div>
       <div class="news-item">Ethereum breaking above $3.8k resistance</div>
       <div class="news-item">Fed policy meeting scheduled for next week</div>
@@ -590,7 +594,7 @@
       <div class="news-item">Crypto market volume increasing steadily</div>
     </div>
     <div class="news">
-      <h4>MARKET ALERTS</h4>
+      <h4 data-i18n="market-alerts">MARKET ALERTS</h4>
       <div class="news-item">Major liquidation zone at $97.2k identified</div>
       <div class="news-item">Bitcoin funding rates elevated - caution advised</div>
       <div class="news-item">Large transfer detected: 1,250 BTC moved</div>
@@ -602,7 +606,7 @@
   <!-- TRANSFERS -->
   <div class="main-grid">
     <div class="chart-panel">
-      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;">LARGE TRANSFERS</div>
+      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;" data-i18n="large-transfers">LARGE TRANSFERS</div>
       <div class="transfers-inline">
         <div class="transfer-card">
           <div style="font-weight: 700;">1,250 BTC</div>
@@ -631,19 +635,19 @@
     </div>
     <div class="genius-ai-grid">
       <div class="genius-card">
-        <div class="genius-card-title">Market Pulse</div>
+        <div class="genius-card-title" data-i18n="genius-pulse">Market Pulse</div>
         <div class="genius-card-content" id="genius-pulse">Momentum tracking live — key support and resistance levels update in real time.</div>
       </div>
       <div class="genius-card">
-        <div class="genius-card-title">Liquidity Radar</div>
+        <div class="genius-card-title" data-i18n="genius-liquidity">Liquidity Radar</div>
         <div class="genius-card-content" id="genius-liquidity">Orderbook heatmap highlights: strong bids near $95,000, offers around $99,800.</div>
       </div>
       <div class="genius-card">
-        <div class="genius-card-title">Sentiment Watch</div>
+        <div class="genius-card-title" data-i18n="genius-sentiment">Sentiment Watch</div>
         <div class="genius-card-content" id="genius-sentiment">Aggregated sentiment tilts bullish; monitoring fear & greed index and funding flips.</div>
       </div>
       <div class="genius-card">
-        <div class="genius-card-title">Risk Monitor</div>
+        <div class="genius-card-title" data-i18n="genius-risk">Risk Monitor</div>
         <div class="genius-card-content" id="genius-risk">Position sizing adjusted to volatility; alerts on funding spikes and correlation shifts.</div>
       </div>
     </div>
@@ -758,6 +762,75 @@
     let apiConnected = false;
     let lastDataUpdate = Date.now();
     let currentPage = 'dashboard';
+    let currentLanguage = localStorage.getItem('language') || 'en';
+
+    // ========== POLISH TRANSLATIONS ==========
+    const translations = {
+      en: {
+        'header-title': 'HAMSTER TERMINAL',
+        'live-news': 'LIVE NEWS',
+        'market-alerts': 'MARKET ALERTS',
+        'large-transfers': 'LARGE TRANSFERS',
+        'ticker-btc': 'BTC/USD:',
+        'ticker-eth': 'ETH/USD:',
+        'ticker-spy': 'SPY:',
+        'ticker-gold': 'GOLD:',
+        'ticker-eur': 'EUR/USD:',
+        'market-sentiment': 'Market Sentiment',
+        'fear-greed': 'Fear & Greed:',
+        'bulls': 'Bulls',
+        'bears': 'Bears',
+        'genius-pulse': 'Market Pulse',
+        'genius-liquidity': 'Liquidity Radar',
+        'genius-sentiment': 'Sentiment Watch',
+        'genius-risk': 'Risk Monitor',
+        'api-status': 'API Status'
+      },
+      pl: {
+        'header-title': 'TERMINAL CHOMIKA',
+        'live-news': 'WIADOMOŚCI NA ŻYWO',
+        'market-alerts': 'ALERTY RYNKOWE',
+        'large-transfers': 'DUŻE TRANSFERY',
+        'ticker-btc': 'BTC/USD:',
+        'ticker-eth': 'ETH/USD:',
+        'ticker-spy': 'SPY:',
+        'ticker-gold': 'ZŁOTO:',
+        'ticker-eur': 'EUR/USD:',
+        'market-sentiment': 'Sentyment Rynku',
+        'fear-greed': 'Strach & Chciwość:',
+        'bulls': 'Hossy',
+        'bears': 'Niedźwiedzie',
+        'genius-pulse': 'Puls Rynku',
+        'genius-liquidity': 'Radar Płynności',
+        'genius-sentiment': 'Obserwator Sentymentu',
+        'genius-risk': 'Monitor Ryzyka',
+        'api-status': 'Status API'
+      }
+    };
+
+    function t(key) {
+      return translations[currentLanguage][key] || translations['en'][key] || key;
+    }
+
+    function toggleLanguage() {
+      currentLanguage = currentLanguage === 'en' ? 'pl' : 'en';
+      localStorage.setItem('language', currentLanguage);
+      updateLanguageDisplay();
+    }
+
+    function updateLanguageDisplay() {
+      // Update headers
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        el.textContent = t(key);
+      });
+      
+      // Update language button
+      const langBtn = document.getElementById('lang-toggle');
+      if (langBtn) {
+        langBtn.textContent = currentLanguage === 'en' ? 'PL' : 'EN';
+      }
+    }
 
     // ========== CLOCK ===========
     function updateTime() {
@@ -847,13 +920,23 @@
         const price = data.btcPrice ? `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}` : 'BTC';
         const changeTxt = data.btcChange24h !== undefined ? `${data.btcChange24h > 0 ? '▲' : '▼'} ${Math.abs(data.btcChange24h).toFixed(2)}%` : '';
         const volTxt = data.btcVolume ? `24h vol ${(data.btcVolume / 1e9).toFixed(1)}B` : '24h vol --';
+        const newsTitle = t('live-news');
+        const newsContent = currentLanguage === 'pl' ? [
+          `BTC handluje po ${price} ${changeTxt}`,
+          `ETH wypisuje ${document.getElementById('ticker-eth').textContent || '$--'} w ciągu dnia`,
+          `${volTxt} na głównych parach`,
+          `Strach & Chciwość: ${data.fear_greed ?? '--'}`,
+          `Status API: ${apiConnected ? 'Live' : 'Mock'} dane`
+        ] : [
+          `BTC trades at ${price} ${changeTxt}`,
+          `ETH prints ${document.getElementById('ticker-eth').textContent || '$--'} intraday`,
+          `${volTxt} on majors`,
+          `Fear & Greed: ${data.fear_greed ?? '--'}`,
+          `API status: ${apiConnected ? 'Live' : 'Mock'} data`
+        ];
         newsLeft.innerHTML = `
-          <h4>LIVE NEWS</h4>
-          <div class="news-item">BTC trades at ${price} ${changeTxt}</div>
-          <div class="news-item">ETH prints ${document.getElementById('ticker-eth').textContent || '$--'} intraday</div>
-          <div class="news-item">${volTxt} on majors</div>
-          <div class="news-item">Fear & Greed: ${data.fear_greed ?? '--'}</div>
-          <div class="news-item">API status: ${apiConnected ? 'Live' : 'Mock'} data</div>
+          <h4 data-i18n="live-news">${newsTitle}</h4>
+          ${newsContent.map(item => `<div class="news-item">${item}</div>`).join('')}
         `;
       }
 
@@ -861,16 +944,30 @@
       const newsRight = document.querySelector('.news:nth-of-type(2)');
       if (newsRight) {
         const mc = data.btcMarketCap ? `$${(data.btcMarketCap / 1e12).toFixed(2)}T` : '$--';
-        const fngLabel = data.fear_greed !== undefined
+        const fngLabelEn = data.fear_greed !== undefined
           ? (data.fear_greed < 25 ? 'Extreme Fear' : data.fear_greed < 45 ? 'Fear' : data.fear_greed < 55 ? 'Neutral' : data.fear_greed < 75 ? 'Greed' : 'Extreme Greed')
           : '--';
+        const fngLabelPl = data.fear_greed !== undefined
+          ? (data.fear_greed < 25 ? 'Skrajny Strach' : data.fear_greed < 45 ? 'Strach' : data.fear_greed < 55 ? 'Neutralny' : data.fear_greed < 75 ? 'Chciwość' : 'Skrajna Chciwość')
+          : '--';
+        const fngLabel = currentLanguage === 'pl' ? fngLabelPl : fngLabelEn;
+        const alertsTitle = t('market-alerts');
+        const alertsContent = currentLanguage === 'pl' ? [
+          `Kapitalizacja Rynku: ${mc}`,
+          `Sentyment: ${fngLabel}`,
+          `Obserwacja Płynności: Wsparcie BTC $94k–$96k`,
+          `Kontrola Zmienności: utrzymuj dynamiczne stopy`,
+          `Dane odświeżone: ${new Date().toUTCString().slice(17,25)} UTC`
+        ] : [
+          `Market Cap: ${mc}`,
+          `Sentiment: ${fngLabel}`,
+          `Liquidity watch: BTC support $94k–$96k`,
+          `Volatility check: keep stops dynamic`,
+          `Data refreshed: ${new Date().toUTCString().slice(17,25)} UTC`
+        ];
         newsRight.innerHTML = `
-          <h4>MARKET ALERTS</h4>
-          <div class="news-item">Market Cap: ${mc}</div>
-          <div class="news-item">Sentiment: ${fngLabel}</div>
-          <div class="news-item">Liquidity watch: BTC support $94k–$96k</div>
-          <div class="news-item">Volatility check: keep stops dynamic</div>
-          <div class="news-item">Data refreshed: ${new Date().toUTCString().slice(17,25)} UTC</div>
+          <h4 data-i18n="market-alerts">${alertsTitle}</h4>
+          ${alertsContent.map(item => `<div class="news-item">${item}</div>`).join('')}
         `;
       }
 
@@ -1037,6 +1134,7 @@
     // ========== INIT ==========
     function init() {
       updateTime();
+      updateLanguageDisplay();  // Initialize language display
       switchTheme('bloomberg');
       fetchApiData();
       setInterval(fetchApiData, 10000); // Update every 10 seconds
