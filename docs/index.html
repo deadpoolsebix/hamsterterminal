@@ -309,7 +309,7 @@
     /* MAIN GRID */
     .main-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1fr;
       gap: 14px;
       padding: 14px 24px;
     }
@@ -319,12 +319,22 @@
       border-left: 2px solid #1a1a1a;
       padding: 14px;
     }
-    .transfers-panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-left: 2px solid #1a1a1a;
-      padding: 14px;
+    .transfers-inline {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
     }
+    .transfer-card {
+      flex: 1 1 220px;
+      background: #0d0d0d;
+      border-left: 2px solid #333;
+      padding: 10px;
+      color: #ffffff;
+      min-width: 0;
+    }
+    .transfer-card .meta { color: var(--gray); font-size: 0.85em; }
+    .transfer-card .time { color: var(--gray); font-size: 0.8em; margin-top: 4px; }
 
     /* GENIUS AI */
     .genius-ai {
@@ -334,6 +344,7 @@
       padding: 14px;
       margin: 0 24px 14px 24px;
     }
+    .genius-inline { margin: 14px 0 0 0; }
     .genius-ai-grid {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
@@ -361,6 +372,9 @@
     /* TABS */
     .tab-content { display: none; }
     .tab-content.active { display: block; }
+
+    /* TradingView container */
+    #tv-chart { width: 100%; height: 320px; }
 
     /* VISUAL DARK PAGE */
     #visual-dark-page { scrollbar-width: thin; scrollbar-color: #333 #0a0a0a; }
@@ -390,8 +404,15 @@
   <div class="theme-switcher">
     <div class="switcher-label">MODES</div>
     <div class="switcher-group">
-      <button class="page-btn active" onclick="switchPage('bloomberg')">Bloomberg</button>
-      <button class="page-btn" onclick="switchPage('detailed')">Detailed Mode</button>
+      <button class="page-btn active" onclick="switchPage('bloomberg', event)">Bloomberg</button>
+      <button class="page-btn" onclick="switchPage('retro', event)">Retro Terminal</button>
+      <button class="page-btn" onclick="switchPage('detailed', event)">Detailed Mode</button>
+    </div>
+    <div class="switcher-label" style="margin-top:8px;">THEMES</div>
+    <div class="switcher-group">
+      <button class="theme-btn active" onclick="switchTheme('bloomberg', event)">Bloomberg</button>
+      <button class="theme-btn" onclick="switchTheme('professional', event)">Professional</button>
+      <button class="theme-btn" onclick="switchTheme('dark', event)">Dark</button>
     </div>
   </div>
 
@@ -414,57 +435,57 @@
     <button class="menu-item" onclick="switchTab('multi-tf-analysis')">Multi-TF Analysis</button>
   </div>
 
-  <!-- PSYCHOLOGY SECTION -->
-  <div class="section-header-wrapper">
-    <div class="section-header">
-      <div class="section-title">MARKET STATUS</div>
-      <div class="section-subtitle">Real-time market sentiment analysis</div>
-    </div>
-    <div class="section-sentiment">
-      <h3>BULLS vs BEARS</h3>
-      <div class="sentiment-stat">
-        <div class="stat-item">
-          <span class="stat-label">BULLS:</span>
-          <span class="stat-value" id="bulls-percent">58%</span>
+  <!-- CHART, AI, TRANSFERS -->
+  <div class="main-grid">
+    <div class="chart-panel">
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIVE PRICE CHART (TradingView)</div>
+      <div id="tv-chart"></div>
+
+      <div class="genius-ai inline-genius">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <h3 style="color: #ffffff; margin: 0;">GENIUS AI ANALYSIS</h3>
+          <div style="color: var(--gray); font-size: 0.9em;">Auto-updated with live insights</div>
         </div>
-        <div class="stat-item">
-          <span class="stat-label">BEARS:</span>
-          <span class="stat-value" id="bears-percent">42%</span>
+        <div class="genius-ai-grid">
+          <div class="genius-card">
+            <div class="genius-card-title">Market Pulse</div>
+            <div class="genius-card-content">Momentum tracking live — key support and resistance levels update in real time.</div>
+          </div>
+          <div class="genius-card">
+            <div class="genius-card-title">Liquidity Radar</div>
+            <div class="genius-card-content">Orderbook heatmap highlights: strong bids near $95,000, offers around $99,800.</div>
+          </div>
+          <div class="genius-card">
+            <div class="genius-card-title">Sentiment Watch</div>
+            <div class="genius-card-content">Aggregated sentiment tilts bullish; monitoring fear & greed index and funding flips.</div>
+          </div>
+          <div class="genius-card">
+            <div class="genius-card-title">Risk Monitor</div>
+            <div class="genius-card-content">Position sizing adjusted to volatility; alerts on funding spikes and correlation shifts.</div>
+          </div>
+        </div>
+      </div>
+
+      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;">LARGE TRANSFERS</div>
+      <div class="transfers-inline">
+        <div class="transfer-card">
+          <div style="font-weight: 700;">1,250 BTC</div>
+          <div class="meta">SELL • Whale Activity</div>
+          <div class="time">19:32 UTC</div>
+        </div>
+        <div class="transfer-card">
+          <div style="font-weight: 700;">890 BTC</div>
+          <div class="meta">BUY • Accumulation Signal</div>
+          <div class="time">19:28 UTC</div>
+        </div>
+        <div class="transfer-card">
+          <div style="font-weight: 700;">2,100 BTC</div>
+          <div class="meta">SELL • Major Outflow</div>
+          <div class="time">19:15 UTC</div>
         </div>
       </div>
     </div>
   </div>
-
-  <!-- METRICS -->
-  <div class="top-grid">
-    <div class="card">
-      <h3>CURRENT PRICE</h3>
-      <div class="price" id="btc-price">$0.00</div>
-      <div class="stat-row">
-        <span>24H Change</span>
-        <span class="change" id="btc-change">+0.00%</span>
-      </div>
-    </div>
-    <div class="card">
-      <h3>24H VOLUME</h3>
-      <div class="price" id="btc-volume">$0.0B</div>
-      <div class="stat-row">
-        <span>Circulating</span>
-        <span>21M BTC</span>
-      </div>
-    </div>
-    <div class="card">
-      <h3>MARKET CAP</h3>
-      <div class="price" id="market-cap">$0.0T</div>
-      <div class="stat-row">
-        <span>BTC Dominance</span>
-        <span id="btc-dom">42%</span>
-      </div>
-    </div>
-    <div class="card">
-      <h3>FEAR & GREED</h3>
-      <div class="price" id="fear-greed">--</div>
-      <div class="stat-row">
         <span>Market Sentiment</span>
         <span id="fng-label">--</span>
       </div>
@@ -512,73 +533,54 @@
     </div>
   </div>
 
-  <!-- CHART & TRANSFERS -->
+  <!-- CHART, AI, TRANSFERS -->
   <div class="main-grid">
     <div class="chart-panel">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">PRICE CHART - 1H TIMEFRAME</div>
-      <svg width="100%" height="300" viewBox="0 0 800 300" style="background: #050505; border-radius: 4px;">
-        <defs>
-          <linearGradient id="chartGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#ff8c00;stop-opacity:0.2" />
-            <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:0.01" />
-          </linearGradient>
-        </defs>
-        <!-- Grid -->
-        <line x1="50" y1="20" x2="50" y2="280" stroke="#1a1a1a" stroke-width="1"/>
-        <line x1="50" y1="280" x2="750" y2="280" stroke="#1a1a1a" stroke-width="1"/>
-        <!-- Candles -->
-        <rect x="70" y="80" width="8" height="100" fill="#ff8c00" opacity="0.8"/>
-        <line x1="74" y1="70" x2="74" y2="190" stroke="#ff8c00" stroke-width="1"/>
-        <rect x="90" y="85" width="8" height="95" fill="#ff8c00" opacity="0.7"/>
-        <line x1="94" y1="75" x2="94" y2="185" stroke="#ff8c00" stroke-width="1"/>
-        <rect x="110" y="90" width="8" height="85" fill="#ff8c00" opacity="0.6"/>
-        <rect x="130" y="100" width="8" height="75" fill="#00ff41" opacity="0.6"/>
-        <line x1="134" y1="85" x2="134" y2="180" stroke="#00ff41" stroke-width="1"/>
-        <!-- EMA lines -->
-        <polyline points="70,150 90,145 110,140 130,135 150,132 170,128 190,125 210,123 230,122 250,125 270,130" stroke="#00d4ff" stroke-width="2" fill="none" opacity="0.8"/>
-        <!-- Price label -->
-        <text x="600" y="30" fill="#ffffff" font-size="14">$98,432.50</text>
-      </svg>
-    </div>
-    <div class="transfers-panel">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LARGE TRANSFERS</div>
-      <div style="color: #ffffff; margin-bottom: 8px; padding: 8px; background: #0d0d0d; border-left: 2px solid #333;">
-        <div style="font-weight: 700;">1,250 BTC</div>
-        <div style="color: var(--gray); font-size: 0.85em;">SELL • Whale Activity</div>
-        <div style="color: var(--gray); font-size: 0.8em; margin-top: 4px;">19:32 UTC</div>
-      </div>
-      <div style="color: #ffffff; margin-bottom: 8px; padding: 8px; background: #0d0d0d; border-left: 2px solid #333;">
-        <div style="font-weight: 700;">890 BTC</div>
-        <div style="color: var(--gray); font-size: 0.85em;">BUY • Accumulation Signal</div>
-        <div style="color: var(--gray); font-size: 0.8em; margin-top: 4px;">19:28 UTC</div>
-      </div>
-      <div style="color: #ffffff; padding: 8px; background: #0d0d0d; border-left: 2px solid #333;">
-        <div style="font-weight: 700;">2,100 BTC</div>
-        <div style="color: var(--gray); font-size: 0.85em;">SELL • Major Outflow</div>
-        <div style="color: var(--gray); font-size: 0.8em; margin-top: 4px;">19:15 UTC</div>
-      </div>
-    </div>
-  </div>
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIVE PRICE CHART (TradingView)</div>
+      <div id="tv-chart"></div>
 
-  <!-- GENIUS AI -->
-  <div class="genius-ai">
-    <div style="color: #ffffff; font-weight: 700; margin-bottom: 14px; font-size: 1.05em; text-transform: uppercase;">GENIUS AI ANALYSIS</div>
-    <div class="genius-ai-grid">
-      <div class="genius-card">
-        <div class="genius-card-title">BUY SIGNAL</div>
-        <div class="genius-card-content">Strong momentum + RSI bounce from 48. Target: $97.4k</div>
+      <div class="genius-ai" style="margin: 14px 0 0 0;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <h3 style="color: #ffffff; margin: 0;">GENIUS AI ANALYSIS</h3>
+          <div style="color: var(--gray); font-size: 0.9em;">Auto-updated with live insights</div>
+        </div>
+        <div class="genius-ai-grid">
+          <div class="genius-card">
+            <div class="genius-card-title">Market Pulse</div>
+            <div class="genius-card-content">Momentum tracking live — key support and resistance levels update in real time.</div>
+          </div>
+          <div class="genius-card">
+            <div class="genius-card-title">Liquidity Radar</div>
+            <div class="genius-card-content">Orderbook heatmap highlights: strong bids near $95,000, offers around $99,800.</div>
+          </div>
+          <div class="genius-card">
+            <div class="genius-card-title">Sentiment Watch</div>
+            <div class="genius-card-content">Aggregated sentiment tilts bullish; monitoring fear & greed index and funding flips.</div>
+          </div>
+          <div class="genius-card">
+            <div class="genius-card-title">Risk Monitor</div>
+            <div class="genius-card-content">Position sizing adjusted to volatility; alerts on funding spikes and correlation shifts.</div>
+          </div>
+        </div>
       </div>
-      <div class="genius-card">
-        <div class="genius-card-title">LIQUIDITY ALERT</div>
-        <div class="genius-card-content">Major buy wall detected at $94.8k. Support confirmed.</div>
-      </div>
-      <div class="genius-card">
-        <div class="genius-card-title">FVG ANALYSIS</div>
-        <div class="genius-card-content">Fair Value Gap at $96.5k. Potential pullback zone.</div>
-      </div>
-      <div class="genius-card">
-        <div class="genius-card-title">RISK WARNING</div>
-        <div class="genius-card-content">Liquidation cascade possible above $99.2k. Set stops.</div>
+
+      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;">LARGE TRANSFERS</div>
+      <div class="transfers-inline">
+        <div class="transfer-card">
+          <div style="font-weight: 700;">1,250 BTC</div>
+          <div class="meta">SELL • Whale Activity</div>
+          <div class="time">19:32 UTC</div>
+        </div>
+        <div class="transfer-card">
+          <div style="font-weight: 700;">890 BTC</div>
+          <div class="meta">BUY • Accumulation Signal</div>
+          <div class="time">19:28 UTC</div>
+        </div>
+        <div class="transfer-card">
+          <div style="font-weight: 700;">2,100 BTC</div>
+          <div class="meta">SELL • Major Outflow</div>
+          <div class="time">19:15 UTC</div>
+        </div>
       </div>
     </div>
   </div>
@@ -633,20 +635,65 @@
     </div>
   </div>
 
+  <!-- RETRO TERMINAL (gameboy/professional) -->
+  <iframe id="retro-page" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; border: none; z-index: 1000;" src="professional_dashboard_final.html"></iframe>
+
   <!-- DETAILED MODE (iframe poprzednia wersja) -->
   <iframe id="detailed-mode-page" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; border: none; z-index: 1000;" src="demo_bloomberg_tabs_clean.html"></iframe>
 
   <script>
-    // ========== API CONFIGURATION ==========
+    // ========== API CONFIGURATION ===========
     const API_BASE = window.location.hostname === 'localhost' 
       ? 'http://localhost:5000'
       : 'https://api.hamsterterminal.com';
+
+    const MOCK_DATA = {
+      btcPrice: 98432.5,
+      btcChange24h: 1.84,
+      btcVolume: 18_200_000_000,
+      btcMarketCap: 1_940_000_000_000,
+      ethPrice: 3650,
+      fear_greed: 68
+    };
 
     let apiConnected = false;
     let lastDataUpdate = Date.now();
     let currentPage = 'dashboard';
 
-    // ========== CLOCK ==========
+    // ========== TRADINGVIEW CHART LOADER ==========
+    let tvWidget = null;
+
+    function loadTradingViewScript() {
+      return new Promise(resolve => {
+        if (window.TradingView) return resolve();
+        const script = document.createElement('script');
+        script.src = 'https://s3.tradingview.com/tv.js';
+        script.onload = () => resolve();
+        script.onerror = () => resolve(); // fail silently
+        document.head.appendChild(script);
+      });
+    }
+
+    async function initChart() {
+      if (tvWidget) return; // already created
+      await loadTradingViewScript();
+      if (!window.TradingView) return;
+      tvWidget = new TradingView.widget({
+        symbol: 'BINANCE:BTCUSDT',
+        interval: '60',
+        timezone: 'Etc/UTC',
+        theme: 'dark',
+        style: '1',
+        locale: 'en',
+        backgroundColor: '#050505',
+        container_id: 'tv-chart',
+        hide_top_toolbar: false,
+        hide_legend: false,
+        autosize: true
+      });
+    }
+
+    // ========== CLOCK ===========
     function updateTime() {
       const now = new Date();
       const utc = now.toISOString().split('T')[1].slice(0,8);
@@ -674,6 +721,7 @@
         
       } catch (error) {
         console.log('API error:', error);
+        updateDashboardWithData(MOCK_DATA);
         setApiStatus('error', '✗ Mock Data');
         apiConnected = false;
       }
@@ -781,13 +829,14 @@
       el.className = `api-status ${status}`;
     }
 
-    // ========== PAGE SWITCHER ==========
-    function switchPage(page) {
+    // ========== PAGE SWITCHER ===========
+    function switchPage(page, evt) {
       currentPage = page;
+      const target = evt?.currentTarget || evt?.target;
       
       // Update button states
       document.querySelectorAll('.page-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      if (target) target.classList.add('active');
       
       // Get all dashboard elements
       const header = document.querySelector('.header');
@@ -800,8 +849,9 @@
       const geniusAi = document.querySelector('.genius-ai');
       const tabContents = document.querySelectorAll('.tab-content');
       const detailedModePage = document.getElementById('detailed-mode-page');
+      const retroPage = document.getElementById('retro-page');
       
-      if (page === 'detailed') {
+      if (page === 'detailed' || page === 'retro') {
         // Hide Bloomberg
         if (header) header.style.display = 'none';
         if (menuBar) menuBar.style.display = 'none';
@@ -812,9 +862,11 @@
         if (mainGrid) mainGrid.style.display = 'none';
         if (geniusAi) geniusAi.style.display = 'none';
         tabContents.forEach(el => el.style.display = 'none');
-        // Show Detailed Mode
-        detailedModePage.style.display = 'block';
+        // Show requested iframe, hide the other
+        if (detailedModePage) detailedModePage.style.display = (page === 'detailed') ? 'block' : 'none';
+        if (retroPage) retroPage.style.display = (page === 'retro') ? 'block' : 'none';
       } else {
+        initChart();
         // Show Bloomberg
         if (header) header.style.display = '';
         if (menuBar) menuBar.style.display = '';
@@ -825,15 +877,17 @@
         if (mainGrid) mainGrid.style.display = '';
         if (geniusAi) geniusAi.style.display = '';
         document.querySelector('.tab-content.active')?.style ? (document.querySelector('.tab-content.active').style.display = 'block') : null;
-        // Hide Detailed Mode
-        detailedModePage.style.display = 'none';
+        // Hide iframes
+        if (detailedModePage) detailedModePage.style.display = 'none';
+        if (retroPage) retroPage.style.display = 'none';
       }
     }
 
-    // ========== THEME SWITCHER ==========
-    function switchTheme(theme) {
+    // ========== THEME SWITCHER ===========
+    function switchTheme(theme, evt) {
+      const target = evt?.currentTarget || evt?.target;
       document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-      event.target.classList.add('active');
+      if (target) target.classList.add('active');
       
       let style = `
         body { background: var(--black); color: #ffffff; }
@@ -880,8 +934,10 @@
     // ========== INIT ==========
     function init() {
       updateTime();
+      switchTheme('bloomberg');
       fetchApiData();
       setInterval(fetchApiData, 10000); // Update every 10 seconds
+      initChart();
     }
 
     window.addEventListener('DOMContentLoaded', init);
