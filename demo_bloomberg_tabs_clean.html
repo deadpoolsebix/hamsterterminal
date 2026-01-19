@@ -68,6 +68,48 @@
     .hamburger-btn.open .line1 { transform: translateY(6px) rotate(45deg); }
     .hamburger-btn.open .line2 { opacity: 0; }
     .hamburger-btn.open .line3 { transform: translateY(-6px) rotate(-45deg); }
+
+    /* ANALYTICS HAMBURGER */
+    .analytics-btn {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      width: 100%;
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-left: 2px solid #1a1a1a;
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      margin-top: 8px;
+      position: relative;
+    }
+    .analytics-icon { display: grid; gap: 4px; }
+    .analytics-icon span { width: 20px; height: 2px; background: #ffffff; transition: transform 0.2s ease, opacity 0.2s ease; }
+    .analytics-btn.open .line1 { transform: translateY(6px) rotate(45deg); }
+    .analytics-btn.open .line2 { opacity: 0; }
+    .analytics-btn.open .line3 { transform: translateY(-6px) rotate(-45deg); }
+
+    /* ANALYTICS PANEL */
+    .analytics-panel {
+      display: none;
+      background: #0a0a0a;
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 12px;
+      max-height: 500px;
+      overflow-y: auto;
+    }
+    .analytics-panel.open { display: block; }
+    .radar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .radar-card { background: #0d0d0d; border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 10px; }
+    .radar-title { color: #ffffff; font-weight: 700; font-size: 0.9em; margin-bottom: 6px; }
+    .radar-data { color: var(--gray); font-size: 0.85em; line-height: 1.5; }
+    .radar-hot { color: var(--red); font-weight: 700; }
+    .radar-cool { color: var(--green); font-weight: 700; }
+    .radar-neutral { color: var(--cyan); font-weight: 700; }
     .hamburger-extra {
       background: #0d0d0d;
       border: 1px solid var(--border);
@@ -627,6 +669,209 @@
     .sidebar-ticker { color: #ffffff; font-size: 0.9em; line-height: 1.4; }
     .ticker-up { color: var(--green); }
     .ticker-down { color: var(--red); }
+
+    /* HAMBURGER & ANALYTICS BUTTONS CONTAINER */
+    .hamburger-container {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      padding: 10px 24px;
+      background: #0d0d0d;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* HAMBURGER MENU BUTTON */
+    .hamburger-menu {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      width: 40px;
+      height: 40px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hamburger-menu .bar {
+      width: 24px;
+      height: 2.5px;
+      background: #ffffff;
+      transition: all 0.3s ease;
+      display: block;
+    }
+
+    .hamburger-menu.open .bar:nth-child(1) {
+      transform: translateY(7.5px) rotate(45deg);
+    }
+
+    .hamburger-menu.open .bar:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger-menu.open .bar:nth-child(3) {
+      transform: translateY(-7.5px) rotate(-45deg);
+    }
+
+    /* ANALYTICS BUTTON */
+    .analytics-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: #ffffff;
+      cursor: pointer;
+      padding: 8px 14px;
+      font-size: 0.95em;
+      font-weight: 600;
+      border-radius: 0;
+      transition: all 0.2s;
+      font-family: 'Roboto Mono', monospace;
+    }
+
+    .analytics-btn:hover {
+      border-color: var(--orange);
+      background: #0a0a0a;
+    }
+
+    .analytics-btn.open {
+      background: #1a1a1a;
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+
+    .analytics-icon {
+      font-size: 1.1em;
+    }
+
+    /* ANALYTICS PANEL STYLING */
+    .analytics-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      background: #0a0a0a;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .analytics-panel.open {
+      max-height: 2000px;
+    }
+
+    .radar-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+      padding: 14px 24px;
+    }
+
+    .radar-card {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-left: 2px solid #1a1a1a;
+      padding: 12px;
+    }
+
+    .radar-title {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95em;
+      margin-bottom: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .radar-data {
+      color: #dddddd;
+      font-size: 0.9em;
+      line-height: 1.6;
+    }
+
+    .radar-data div {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 4px;
+    }
+
+    .radar-cool {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .radar-hot {
+      color: var(--red);
+      font-weight: 600;
+    }
+
+    .radar-neutral {
+      color: var(--yellow);
+      font-weight: 600;
+    }
+
+    @media (max-width: 1000px) {
+      .radar-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* HAMBURGER EXTRA - Quick Pills */
+    .hamburger-extra {
+      background: #0d0d0d;
+      border-top: 1px solid var(--border);
+      padding: 12px 24px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .pill-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+
+    .pill {
+      display: inline-block;
+      padding: 6px 10px;
+      font-size: 0.8em;
+      font-weight: 600;
+      border-radius: 2px;
+      letter-spacing: 0.3px;
+    }
+
+    .pill-hot {
+      background: rgba(255, 0, 51, 0.15);
+      color: var(--red);
+    }
+
+    .pill-cool {
+      background: rgba(0, 255, 65, 0.15);
+      color: var(--green);
+    }
+
+    .pill-neutral {
+      background: rgba(255, 255, 0, 0.15);
+      color: var(--yellow);
+    }
+
+    .live-comment {
+      color: #ffffff;
+      font-size: 0.9em;
+      line-height: 1.5;
+      margin-bottom: 8px;
+      padding: 8px;
+      background: #0a0a0a;
+      border-left: 2px solid var(--orange);
+    }
+
+    .tactic-note {
+      color: var(--cyan);
+      font-size: 0.85em;
+      line-height: 1.5;
+      padding: 8px;
+      background: rgba(0, 212, 255, 0.05);
+      border-left: 2px solid var(--cyan);
+    }
   </style>
 </head>
 <body>
@@ -677,16 +922,20 @@
     </div>
   </div>
 
-  <button class="hamburger-btn" id="hamburgerToggle">
-    <div class="hamburger-icon">
-      <span class="line1"></span>
-      <span class="line2"></span>
-      <span class="line3"></span>
-    </div>
-    <div class="hamburger-label">Menu / Alerts / Flows</div>
-  </button>
-
   <div class="nav-wrapper" id="navWrapper">
+    <!-- HAMBURGER + ANALYTICS BUTTONS CONTAINER -->
+    <div class="hamburger-container">
+      <button class="hamburger-menu" id="hamburgerMenu" title="Toggle Menu">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </button>
+      <button class="analytics-btn" id="analyticsBtn" title="Analytics Radar & Data">
+        <span class="analytics-icon">⚙️📊</span>
+        <span>RADAR</span>
+      </button>
+    </div>
+
     <!-- BURGUNDY MENU BAR -->
     <div class="menu-bar">
       <button class="menu-item" data-tab="dashboard">Dashboard</button>
@@ -698,6 +947,92 @@
       <button class="menu-item" data-tab="risk-positioning">Risk & Positioning</button>
       <button class="menu-item" data-tab="execution-playbook">Execution Playbook</button>
       <button class="menu-item" data-tab="alerts-journal">Alerts & Journal</button>
+    </div>
+
+    <!-- ANALYTICS RADAR PANEL -->
+    <div class="analytics-panel" id="analyticsPanel">
+      <div class="radar-grid">
+        <div class="radar-card">
+          <div class="radar-title">🎯 FVG RADAR</div>
+          <div class="radar-data">
+            <div>1H: <span class="radar-cool">95.0k–95.4k</span> (BUY)</div>
+            <div>4H: <span class="radar-hot">97.3k–97.6k</span> (SELL)</div>
+            <div>D1: <span class="radar-cool">92.8k–93.6k</span> (DEMAND)</div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">Last sweep: 5m ago</div>
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div class="radar-title">📊 EQL / EQH LEVELS</div>
+          <div class="radar-data">
+            <div>EQL: <span class="radar-cool">94,200</span> (Support)</div>
+            <div>EQH: <span class="radar-hot">97,800</span> (Resistance)</div>
+            <div>Range: $3,600</div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">Breakout watch: 98k</div>
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div class="radar-title">💰 PREMIUM / DISCOUNT</div>
+          <div class="radar-data">
+            <div>Spot vs Perps: <span class="radar-cool">+0.15%</span></div>
+            <div>Spot vs Futures: <span class="radar-cool">+0.08%</span></div>
+            <div>Funding: <span class="radar-neutral">+0.0082%</span></div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">Healthy spread</div>
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div class="radar-title">🔄 INTERNAL / EXTERNAL</div>
+          <div class="radar-data">
+            <div>Internal Flow: <span class="radar-cool">+$180M</span></div>
+            <div>External Flow: <span class="radar-cool">-$3.2k BTC</span></div>
+            <div>Net Inflow: <span class="radar-cool">+$220M</span></div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">24h snapshot</div>
+          </div>
+        </div>
+
+        <div class="radar-card" style="grid-column: span 2;">
+          <div class="radar-title">⛓️ BLOCKCHAIN METRICS</div>
+          <div class="radar-data">
+            <div>Mempool: <span class="radar-hot">82% full</span> (Fees: 32 sat/vB)</div>
+            <div>L2 Bridges: <span class="radar-cool">+$65M → Arbitrum</span></div>
+            <div>Whale Outflow: <span class="radar-cool">-1.1k BTC</span> → cold storage (BULLISH)</div>
+            <div>UTXO Age: <span class="radar-cool">Majority > 6mo</span> (Long-term holders)</div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">On-chain sentiment: BULLISH 🟢</div>
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div class="radar-title">🔥 LIQUIDATION CLUSTERS</div>
+          <div class="radar-data">
+            <div>Short Liq: <span class="radar-hot">$18M @ 97.4k</span></div>
+            <div>Long Liq: <span class="radar-hot">$42M @ 94.8k</span></div>
+            <div>Total 24h: <span class="radar-hot">$110M</span></div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">Play: liquidation zones = volatility</div>
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div class="radar-title">⚡ VOLATILITY INDEX</div>
+          <div class="radar-data">
+            <div>1H: <span class="radar-neutral">2.3%</span> (Normal)</div>
+            <div>4H: <span class="radar-neutral">1.8%</span> (Calm)</div>
+            <div>24H: <span class="radar-hot">3.2%</span> (Elevated)</div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">Expected move: ±$2,100</div>
+          </div>
+        </div>
+
+        <div class="radar-card">
+          <div class="radar-title">📡 SIGNAL STRENGTH</div>
+          <div class="radar-data">
+            <div>Bullish: <span class="radar-cool">58% (DOMINANT)</span></div>
+            <div>Bearish: <span class="radar-hot">42% (RESISTANCE)</span></div>
+            <div>Stalemate: <span class="radar-neutral">SCALP ZONE</span></div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">Best action: Mean-revert or trend-follow</div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- QUICK PILLS UNDER HAMBURGER -->
@@ -1964,6 +2299,30 @@
     // Update sidebar every 15 seconds
     setInterval(updateSidebar, 15000);
     updateSidebar(); // Initial call
+
+    // ===== NEW: HAMBURGER MENU TOGGLE =====
+    const hamburgerMenu = document.getElementById('hamburgerMenu');
+    const menuBar = document.querySelector('.menu-bar');
+    const hamburgerExtra = document.querySelector('.hamburger-extra');
+
+    if (hamburgerMenu) {
+      hamburgerMenu.addEventListener('click', () => {
+        hamburgerMenu.classList.toggle('open');
+        if (menuBar) menuBar.style.display = menuBar.style.display === 'none' ? 'flex' : 'none';
+        if (hamburgerExtra) hamburgerExtra.style.display = hamburgerExtra.style.display === 'none' ? 'block' : 'none';
+      });
+    }
+
+    // ===== NEW: ANALYTICS RADAR TOGGLE =====
+    const analyticsBtn = document.getElementById('analyticsBtn');
+    const analyticsPanel = document.getElementById('analyticsPanel');
+
+    if (analyticsBtn && analyticsPanel) {
+      analyticsBtn.addEventListener('click', () => {
+        analyticsBtn.classList.toggle('open');
+        analyticsPanel.classList.toggle('open');
+      });
+    }
 
     // Hamburger toggle for menu
     const navWrapper = document.getElementById('navWrapper');
