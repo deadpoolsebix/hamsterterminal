@@ -1320,9 +1320,12 @@
 <body>
     <div class="terminal-header" style="padding-top: 25px;">
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-            <div class="terminal-title" style="font-family: 'Press Start 2P', 'Courier New', monospace; font-weight: 900; letter-spacing: 4px; text-shadow: 3px 3px 0 #ff0033, 6px 6px 0 #00ff41, 0 0 30px rgba(255,0,51,0.8); color: #ffff00; font-size: 1.8em; transform: scaleY(1.1); display: flex; align-items: center; gap: 20px;">
-                <span style="animation: spinHamster 2s linear infinite; display: inline-block; font-size: 1.4em;">🐹</span>
-                <span style="animation: hamsterPush 3s ease-in-out infinite; display: inline-block; text-shadow: 0 2px 8px rgba(255,255,0,0.4), 0 4px 16px rgba(255,0,51,0.3);">HAMSTER</span> TERMINAL
+            <div class="terminal-title" style="font-family: 'Press Start 2P', 'Courier New', monospace; font-weight: 900; letter-spacing: 4px; text-shadow: 3px 3px 0 #ff0033, 6px 6px 0 #00ff41, 0 0 30px rgba(255,0,51,0.8); color: #ffff00; font-size: 1.8em; transform: scaleY(1.1); display: flex; flex-direction: column; align-items: flex-start; gap: 5px;">
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <span style="animation: spinHamster 2s linear infinite; display: inline-block; font-size: 1.4em;">🐹</span>
+                    <span style="animation: hamsterPush 3s ease-in-out infinite; display: inline-block; text-shadow: 0 2px 8px rgba(255,255,0,0.4), 0 4px 16px rgba(255,0,51,0.3);">HAMSTER</span>
+                </div>
+                <div style="font-size: 0.85em; color: #00d4ff; margin-left: 60px; letter-spacing: 3px;">TERMINAL</div>
             </div>
         </div>
         
@@ -1642,7 +1645,7 @@
         <div class="bloomberg-ticker-scroll" id="ticker-scroll">
             <!-- METALE -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">METALE</span>
+                <span class="ticker-group-label" style="color: #00d4ff;">💰 METALE</span>
                 <div class="ticker-instrument-item" id="metal-1" style="border-color: #00d4ff33;">
                     <span class="ticker-symbol" style="color: #00d4ff;">XAU/USD</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
@@ -1657,7 +1660,7 @@
             
             <!-- INDEKSY -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">INDEKSY</span>
+                <span class="ticker-group-label" style="color: #00d4ff;">📊 INDEKSY</span>
                 <div class="ticker-instrument-item" id="index-1" style="border-color: #00d4ff33;">
                     <span class="ticker-symbol" style="color: #00d4ff;">SPX</span>
                     <span class="ticker-price" style="color: #fff;">--</span>
@@ -1677,7 +1680,7 @@
             
             <!-- MEGA CAPS -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #cccccc;">MEGA CAPS</span>
+                <span class="ticker-group-label" style="color: #cccccc;">🏢 MEGA CAPS</span>
                 <div class="ticker-instrument-item" id="stock-1" style="border-color: #cccccc33;">
                     <span class="ticker-symbol" style="color: #cccccc;">AAPL</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
@@ -1697,7 +1700,7 @@
             
             <!-- POWTÓRZENIE DLA CIĄGŁEJ ANIMACJI -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">METALE</span>
+                <span class="ticker-group-label" style="color: #00d4ff;">💰 METALE</span>
                 <div class="ticker-instrument-item" id="metal-1-repeat" style="border-color: #00d4ff33;">
                     <span class="ticker-symbol" style="color: #00d4ff;">XAU/USD</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
@@ -1712,7 +1715,7 @@
             
             <!-- POWTÓRZENIE INDEKSY -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #00d4ff;">INDEKSY</span>
+                <span class="ticker-group-label" style="color: #00d4ff;">📊 INDEKSY</span>
                 <div class="ticker-instrument-item" id="index-1-repeat" style="border-color: #00d4ff33;">
                     <span class="ticker-symbol" style="color: #00d4ff;">SPX</span>
                     <span class="ticker-price" style="color: #fff;">--</span>
@@ -1732,7 +1735,7 @@
             
             <!-- POWTÓRZENIE MEGA CAPS -->
             <div class="bloomberg-ticker-group">
-                <span class="ticker-group-label" style="color: #cccccc;">MEGA CAPS</span>
+                <span class="ticker-group-label" style="color: #cccccc;">🏢 MEGA CAPS</span>
                 <div class="ticker-instrument-item" id="stock-1-repeat" style="border-color: #cccccc33;">
                     <span class="ticker-symbol" style="color: #cccccc;">AAPL</span>
                     <span class="ticker-price" style="color: #fff;">$--</span>
