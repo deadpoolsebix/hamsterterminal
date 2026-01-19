@@ -1694,8 +1694,8 @@
             <div style="font-size: 1em; color: #00ff41; margin-bottom: 12px; font-weight: 700;">📊 VOLUME ANALYSIS</div>
             <div style="margin-bottom: 12px;">
                 <div style="display: flex; justify-content: space-between; font-size: 0.8em; margin-bottom: 5px;">
-                    <span style="color: #00ff41;">🐂 BULLS</span>
-                    <span style="color: #ff0033;">🐻 BEARS</span>
+                    <span style="color: #00ff41; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🐂 BULLS</span>
+                    <span style="color: #ff0033; font-family: 'Segoe UI Emoji', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;">🐻 BEARS</span>
                 </div>
                 <div style="height: 30px; background: #0f0f0f; border-radius: 5px; overflow: hidden; display: flex;">
                     <div style="width: 62%; background: linear-gradient(90deg, #00ff41, #00aa2a); display: flex; align-items: center; justify-content: center; color: #000; font-weight: 900;">62%</div>
@@ -2099,6 +2099,7 @@
                 <button class="timeframe-btn" onclick="switchTimeframe(event, '4h')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">4H</button>
                 <button class="timeframe-btn" onclick="switchTimeframe(event, '1d')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1D</button>
                 <button class="timeframe-btn" onclick="switchTimeframe(event, '1w')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1W</button>
+                <button class="timeframe-btn" onclick="switchTimeframe(event, '1M')" style="padding: 8px 12px; background: #1a1a1a; border: 2px solid #333; color: #fff; cursor: pointer; border-radius: 4px; font-size: 0.85em;">1MONTH</button>
                 <span style="margin-left: 20px; color: #00ff41; font-weight: 700; font-size: 0.9em;">📊 SMART MONEY LEVELS</span>
                 <!-- CUSTOM LEGEND -->
                 <div style="display: inline-flex; gap: 15px; margin-left: 30px; align-items: center; flex-wrap: wrap;">
@@ -2126,11 +2127,42 @@
                         <span style="display: inline-block; width: 20px; height: 3px; background: #00ff41;"></span>
                         <span style="color: #00ff41; font-size: 0.75em; font-weight: 600;">EMA 50</span>
                     </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span id="rsi-indicator" style="display: inline-block; padding: 3px 8px; background: rgba(255, 170, 0, 0.2); border: 1px solid #ffaa00; border-radius: 3px; font-size: 0.7em; font-weight: 700; color: #ffaa00;">RSI: --</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span style="display: inline-block; width: 15px; height: 15px; background: rgba(0, 255, 65, 0.3); border: 1px solid #00ff41;"></span>
+                        <span style="color: #00ff41; font-size: 0.75em; font-weight: 600;">FVG BULL</span>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 5px;">
+                        <span style="display: inline-block; width: 15px; height: 15px; background: rgba(255, 0, 51, 0.3); border: 1px solid #ff0033;"></span>
+                        <span style="color: #ff0033; font-size: 0.75em; font-weight: 600;">FVG BEAR</span>
+                    </div>
                 </div>
             </div>
             
             <!-- CHART ACTIVE: FVG, Support/Resistance, Liquidity Grab, Large Liquidation Levels + SMT -->
             <div id="main-chart" style="height:650px; width:100%; display:block; overflow:visible;"></div>
+            
+            <!-- 🐹 AI GENIUS HAMSTER • MARKET COMMENTARY & SIGNALS (Below Chart) -->
+            <div style="padding: 15px; background: #0a0a0a; border: 2px solid #bb86fc; border-radius: 8px; margin-top: 15px; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+                    <h3 style="color: #bb86fc; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-size: 0.9em;">🐹 AI GENIUS HAMSTER • LIVE ANALYSIS</h3>
+                </div>
+                <div id="hamster-container" style="display: grid; grid-template-columns: 100px 1fr 80px; gap: 12px; align-items: center; background: #0f0f1a; padding: 12px; border-radius: 6px; border: 2px solid #bb86fc;">
+                    <div style="text-align: center; font-size: 3em; animation: hamsterBounce 1.5s ease-in-out infinite;">🐹</div>
+                    <div id="hamster-comment" style="color: #9fff9f; font-size: 0.95em; line-height: 1.7; font-family: 'Courier New', 'Courier', monospace; min-height: 50px; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 5px rgba(159, 255, 159, 0.5); background: rgba(0, 20, 0, 0.6); padding: 8px; border-radius: 3px; border: 1px solid #00ff41; overflow-y: auto;">🧠 TENSORTRADE AI AKTYWNY | Analizuję wykresy, likwidacje, Wyckoff phases, funding extremes... Małe podpowiedzi już jadą! 🚀</div>
+                    <div id="hamster-emotion" style="text-align: center; font-size: 2.4em; animation: hamsterMood 2s ease-in-out infinite;">🤔</div>
+                </div>
+                
+                <!-- Signal Badges -->
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin-top: 10px;">
+                    <div id="signal-buy" style="padding: 6px; background: rgba(0,255,65,0.15); border: 1px solid #00ff41; border-radius: 3px; text-align: center; font-size: 0.7em; color: #00ff41; font-weight: 700; cursor: pointer; transition: all 0.3s;">🟢 KUP</div>
+                    <div id="signal-sell" style="padding: 6px; background: rgba(255,0,51,0.15); border: 1px solid #ff0033; border-radius: 3px; text-align: center; font-size: 0.7em; color: #ff0033; font-weight: 700; cursor: pointer; transition: all 0.3s;">🔴 SPRZEDAJ</div>
+                    <div id="signal-scalp" style="padding: 6px; background: rgba(255,170,0,0.15); border: 1px solid #ffaa00; border-radius: 3px; text-align: center; font-size: 0.7em; color: #ffaa00; font-weight: 700; cursor: pointer; transition: all 0.3s;">⚡ SCALP</div>
+                    <div id="signal-bounce" style="padding: 6px; background: rgba(0,212,255,0.15); border: 1px solid #00d4ff; border-radius: 3px; text-align: center; font-size: 0.7em; color: #00d4ff; font-weight: 700; cursor: pointer; transition: all 0.3s;">📈 ODBICIE</div>
+                </div>
+            </div>
             <script type="text/javascript">
                 let currentTimeframe = '1h';
                 let chartData = null;
@@ -2144,12 +2176,13 @@
                     '1h': { smt_level: 95600, supply_zone_start: 96000, supply_zone_end: 96300, demand_zone_start: 94800, demand_zone_end: 95100, swing_high: 97100, swing_low: 94800 },
                     '4h': { smt_level: 95800, supply_zone_start: 96800, supply_zone_end: 97200, demand_zone_start: 94200, demand_zone_end: 94600, swing_high: 97500, swing_low: 94000 },
                     '1d': { smt_level: 96000, supply_zone_start: 97500, supply_zone_end: 98000, demand_zone_start: 93500, demand_zone_end: 94000, swing_high: 99000, swing_low: 93000 },
-                    '1w': { smt_level: 96500, supply_zone_start: 99000, supply_zone_end: 100000, demand_zone_start: 91500, demand_zone_end: 92500, swing_high: 102000, swing_low: 90000 }
+                    '1w': { smt_level: 96500, supply_zone_start: 99000, supply_zone_end: 100000, demand_zone_start: 91500, demand_zone_end: 92500, swing_high: 102000, swing_low: 90000 },
+                    '1M': { smt_level: 97000, supply_zone_start: 101000, supply_zone_end: 105000, demand_zone_start: 88000, demand_zone_end: 90000, swing_high: 108000, swing_low: 85000 }
                 };
                 
                 const tfMap = {
                     '1m': '1m', '5m': '5m', '15m': '15m', '30m': '30m',
-                    '1h': '1h', '4h': '4h', '1d': '1d', '1w': '1w'
+                    '1h': '1h', '4h': '4h', '1d': '1d', '1w': '1w', '1M': '1M'
                 };
                 
                 function switchTimeframe(event, tf) {
@@ -2300,6 +2333,48 @@
                             marker: {color: '#ff0033', size: 18, symbol: 'triangle-down', line: {color: '#ffffff', width: 3}}, name: 'SELL SIGNAL', yaxis: 'y'
                         };
                         
+                        // FVG (Fair Value Gap) Detection - detect unfilled price gaps
+                        const fvgShapes = [];
+                        if (close.length > 5) {
+                            for(let i = 2; i < Math.min(close.length, close.length - 1); i++) {
+                                // Bullish FVG: candle[i-2].high < candle[i].low (gap up with no overlap)
+                                if (high[i-2] < low[i]) {
+                                    const gapSize = low[i] - high[i-2];
+                                    const avgPrice = (low[i] + high[i-2]) / 2;
+                                    // Only show significant gaps (>0.15% of price)
+                                    if (gapSize / avgPrice > 0.0015) {
+                                        fvgShapes.push({
+                                            fillcolor: "rgba(0,255,65,0.25)",
+                                            layer: "below",
+                                            line: { color: "#00ff41", width: 1, dash: "dot" },
+                                            type: "rect",
+                                            x0: x[i-1], x1: x[Math.min(i+3, x.length-1)],
+                                            xref: "x",
+                                            y0: high[i-2], y1: low[i],
+                                            yref: "y"
+                                        });
+                                    }
+                                }
+                                // Bearish FVG: candle[i-2].low > candle[i].high (gap down with no overlap)
+                                if (low[i-2] > high[i]) {
+                                    const gapSize = low[i-2] - high[i];
+                                    const avgPrice = (low[i-2] + high[i]) / 2;
+                                    if (gapSize / avgPrice > 0.0015) {
+                                        fvgShapes.push({
+                                            fillcolor: "rgba(255,0,51,0.25)",
+                                            layer: "below",
+                                            line: { color: "#ff0033", width: 1, dash: "dot" },
+                                            type: "rect",
+                                            x0: x[i-1], x1: x[Math.min(i+3, x.length-1)],
+                                            xref: "x",
+                                            y0: high[i], y1: low[i-2],
+                                            yref: "y"
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                        
                         const smtShapes = [
                             { line: { color: "#00ff41", dash: "solid", width: 3 }, type: "line", x0: 0, x1: 1, xref: "x domain", y0: smt.smt_level, y1: smt.smt_level, yref: "y" },
                             { fillcolor: "rgba(255,0,50,0.12)", layer: "below", line: { width: 0 }, type: "rect", x0: 0, x1: 1, xref: "x domain", y0: smt.supply_zone_start, y1: smt.supply_zone_end, yref: "y" },
@@ -2313,6 +2388,8 @@
                             // PREMIUM ZONE (above SMT level) - żółta
                             { fillcolor: "rgba(255,215,0,0.08)", layer: "below", line: { color: "rgba(255,215,0,0.5)", width: 2, dash: "dash" }, type: "rect", x0: 0, x1: 1, xref: "x domain", y0: smt.smt_level, y1: smt.swing_high + (smt.swing_high - smt.smt_level) * 0.1, yref: "y" },
                             // DISCOUNT ZONE (below SMT level) - niebieska
+                            { fillcolor: "rgba(0,150,255,0.08)", layer: "below", line: { color: "rgba(0,150,255,0.5)", width: 2, dash: "dash" }, type: "rect", x0: 0, x1: 1, xref: "x domain", y0: smt.swing_low - (smt.smt_level - smt.swing_low) * 0.1, y1: smt.smt_level, yref: "y" },
+                            ...fvgShapes // Add FVG rectangles to shapes
                             { fillcolor: "rgba(0,150,255,0.08)", layer: "below", line: { color: "rgba(0,150,255,0.5)", width: 2, dash: "dash" }, type: "rect", x0: 0, x1: 1, xref: "x domain", y0: smt.swing_low - (smt.smt_level - smt.swing_low) * 0.1, y1: smt.smt_level, yref: "y" }
                         ];
                         
@@ -2420,6 +2497,22 @@
                             chartInitialized = true;
                         } else {
                             Plotly.react('main-chart', plotData, layout, config);
+                        }
+                        
+                        // Update RSI indicator display
+                        if (window.lastRSI !== undefined) {
+                            const rsiIndicator = document.getElementById('rsi-indicator');
+                            if (rsiIndicator) {
+                                const rsi = window.lastRSI;
+                                let rsiColor = '#ffaa00'; // Default yellow
+                                if (rsi > 70) rsiColor = '#ff0033'; // Overbought red
+                                else if (rsi < 30) rsiColor = '#00ff41'; // Oversold green
+                                
+                                rsiIndicator.textContent = `RSI: ${rsi.toFixed(1)}`;
+                                rsiIndicator.style.color = rsiColor;
+                                rsiIndicator.style.borderColor = rsiColor;
+                                rsiIndicator.style.background = `rgba(${rsi > 70 ? '255,0,51' : rsi < 30 ? '0,255,65' : '255,170,0'}, 0.2)`;
+                            }
                         }
                         
                     } catch(e) {
@@ -4944,28 +5037,6 @@
                 <span style="color: #00ff41; font-weight: 700; font-size: 0.8em;">✅ 4/4 CONFIRMED = BUY SIGNAL ACTIVE</span>
             </div>
         </div>
-        
-        
-                <!-- 🐹 AI GENIUS HAMSTER • MARKET COMMENTARY & SIGNALS -->
-        <div style="padding: 15px; background: linear-gradient(135deg, #1a0a1a 0%, #0f0a0f 100%); border: 2px solid #bb86fc; border-radius: 8px; margin-bottom: 15px; margin-top: 15px;">
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-                <h3 style="color: #bb86fc; font-family: 'Courier New', monospace; text-transform: uppercase; letter-spacing: 1px; margin: 0; font-size: 0.9em;">🐹 AI GENIUS HAMSTER • LIVE ANALYSIS</h3>
-            </div>
-            <div id="hamster-container" style="display: grid; grid-template-columns: 100px 1fr 80px; gap: 12px; align-items: center; background: #0f0f1a; padding: 12px; border-radius: 6px; border: 2px solid #bb86fc;">
-                <div style="text-align: center; font-size: 3em; animation: hamsterBounce 1.5s ease-in-out infinite;">🐹</div>
-                <div id="hamster-comment" style="color: #9fff9f; font-size: 0.95em; line-height: 1.7; font-family: 'Courier New', 'Courier', monospace; min-height: 50px; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 0 5px rgba(159, 255, 159, 0.5); background: rgba(0, 20, 0, 0.6); padding: 8px; border-radius: 3px; border: 1px solid #00ff41; overflow-y: auto;">🧠 TENSORTRADE AI AKTYWNY | Analizuję wykresy, likwidacje, Wyckoff phases, funding extremes... Małe podpowiedzi już jadą! 🚀</div>
-                <div id="hamster-emotion" style="text-align: center; font-size: 2.4em; animation: hamsterMood 2s ease-in-out infinite;">🤔</div>
-            </div>
-            
-            <!-- Signal Badges -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 6px; margin-top: 10px;">
-                <div id="signal-buy" style="padding: 6px; background: rgba(0,255,65,0.15); border: 1px solid #00ff41; border-radius: 3px; text-align: center; font-size: 0.7em; color: #00ff41; font-weight: 700; cursor: pointer; transition: all 0.3s;">🟢 KUP</div>
-                <div id="signal-sell" style="padding: 6px; background: rgba(255,0,51,0.15); border: 1px solid #ff0033; border-radius: 3px; text-align: center; font-size: 0.7em; color: #ff0033; font-weight: 700; cursor: pointer; transition: all 0.3s;">🔴 SPRZEDAJ</div>
-                <div id="signal-scalp" style="padding: 6px; background: rgba(255,170,0,0.15); border: 1px solid #ffaa00; border-radius: 3px; text-align: center; font-size: 0.7em; color: #ffaa00; font-weight: 700; cursor: pointer; transition: all 0.3s;">⚡ SCALP</div>
-                <div id="signal-bounce" style="padding: 6px; background: rgba(0,212,255,0.15); border: 1px solid #00d4ff; border-radius: 3px; text-align: center; font-size: 0.7em; color: #00d4ff; font-weight: 700; cursor: pointer; transition: all 0.3s;">📈 ODBICIE</div>
-            </div>
-        </div>
-        
         
         <div class="news-panel" style="border-color:#ff00ff; background: linear-gradient(135deg, #1a001a 0%, #0a0a0a 100%); display: none;">
             <div class="news-header">
