@@ -967,7 +967,7 @@
             display: flex;
             animation: scroll-left 75s linear infinite;
             font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 0.85em;
+            font-size: 1.275em;
             letter-spacing: 0.5px;
         }
 
@@ -1070,7 +1070,7 @@
             display: flex;
             animation: scroll-left 95s linear infinite;
             font-family: 'JetBrains Mono', 'Courier New', monospace;
-            font-size: 0.8em;
+            font-size: 1.2em;
             padding: 0 10px;
         }
 
@@ -1553,149 +1553,6 @@
         </div>
     </div>
 
-
-    <!-- LIVE EVENTS & INSTRUMENTS TICKER - PIXEL STYLE ANIMATED -->
-    <style>
-        @keyframes scrollLeft {
-            0% { transform: translateX(100%); }
-            100% { transform: translateX(-100%); }
-        }
-        @keyframes bullBounce {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-6px); }
-        }
-        @keyframes shadowPulse {
-            0%, 100% { box-shadow: 0 0 20px rgba(0, 212, 255, 0.3), inset 0 0 15px rgba(0, 0, 0, 0.8); }
-            50% { box-shadow: 0 0 35px rgba(0, 212, 255, 0.5), inset 0 0 15px rgba(0, 0, 0, 0.8); }
-        }
-        .pixel-ticker-container {
-            margin-top: 10px;
-            margin-left: 30px;
-            margin-right: 30px;
-            padding: 8px 15px;
-            background: linear-gradient(90deg, #000000 0%, #0a0a0a 50%, #000000 100%);
-            border: none;
-            border-radius: 2px;
-            overflow: hidden;
-            position: relative;
-            font-family: 'Roboto Mono', 'Courier New', monospace;
-        }
-        .pixel-ticker-content {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            animation: scrollLeft 35s linear infinite;
-            white-space: nowrap;
-            font-size: 1.334025em;
-            letter-spacing: 2px;
-            font-weight: 700;
-        }
-        .pixel-bull {
-            font-size: 2.2em;
-            animation: bullBounce 0.6s ease-in-out infinite;
-            display: inline-block;
-            flex-shrink: 0;
-        }
-        .pixel-instrument {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            flex-shrink: 0;
-            padding: 3px 8px;
-            border: 1px solid currentColor;
-            background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 10px currentColor, inset 0 0 8px rgba(0, 0, 0, 0.8);
-        }
-        .pixel-ticker-container:hover .pixel-ticker-content {
-            animation-play-state: paused;
-        }
-    </style>
-    <div class="pixel-ticker-container">
-        <div class="pixel-ticker-content">
-            <span class="pixel-bull">�</span>
-            
-            <div class="pixel-instrument" id="ticker-gold-price" style="color: #ffff00;">
-                🪙 GOLD $2,650 <span id="ticker-gold-change" style="color: #00ff41;">+0.5%</span>
-            </div>
-            
-            <div class="pixel-instrument" id="ticker-silver-price" style="color: #c0c0c0;">
-                🪙 SILVER $31.50 <span id="ticker-silver-change" style="color: #ff0033;">+0.3%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ff8800;">
-                OIL $78.35 <span style="color: #00ff41;">+2.2%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00d4ff;">
-                S&P500 5,847 <span style="color: #00ff41;">+1.4%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00ff41;">
-                NASDAQ 18,542 <span style="color: #00ff41;">+1.9%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ffaa00;">
-                DAX 18,234 <span style="color: #ff0033;">-0.6%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ff5555;">
-                TESLA $347.85 <span style="color: #00ff41;">+4.3%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #cccccc;">
-                APPLE $234.56 <span style="color: #00ff41;">+2.2%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ffaa33;">
-                AMAZON $456.78 <span style="color: #ff0033;">-1.5%</span>
-            </div>
-
-            <!-- Repeat for continuous loop effect -->
-            <span class="pixel-bull">$</span>
-            
-            <div class="pixel-instrument" style="color: #ffff00;">
-                GOLD $2,650 <span style="color: #00ff41;">+0.5%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #c0c0c0;">
-                🔱 SILVER $31.50 <span style="color: #ff0033;">+0.3%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ff8800;">
-                🛢️ OIL $78.35 <span style="color: #00ff41;">+2.2%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00d4ff;">
-                � WALL STREET S&P500 5,847 <span style="color: #00ff41;">+1.4%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #00ff41;">
-                💻 NASDAQ 18,542 <span style="color: #00ff41;">+1.9%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ffaa00;">
-                🇩🇪 DAX 18,234 <span style="color: #ff0033;">-0.6%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ff5555;">
-                ⚡ TESLA $347.85 <span style="color: #00ff41;">+4.3%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #cccccc;">
-                🍎 APPLE $234.56 <span style="color: #00ff41;">+2.2%</span>
-            </div>
-            
-            <div class="pixel-instrument" style="color: #ffaa33;">
-                📦 AMAZON $456.78 <span style="color: #ff0033;">-1.5%</span>
-            </div>
-        </div>
-    </div>
-
-    <!-- SESSION MARKETS • CHRONOLOGICAL FROM EUROPE TIME -->
-    <div class="metrics-panel">
-        <div class="metric-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%); border: 3px solid #00d4ff; box-shadow: 0 0 32px rgba(0, 212, 255, 0.32), 0 0 48px rgba(0, 212, 255, 0.2), 0 0 64px rgba(0, 212, 255, 0.12), inset 0 0 15px rgba(0, 0, 0, 0.8); padding: 15px; transition: border-color 8s ease-in-out infinite, box-shadow 8s ease-in-out infinite !important; animation: btcPanelColorCycle 8s ease-in-out infinite !important; * { animation: none !important; transition: none !important; }">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; animation: none !important; transition: none !important;">
-                <div class="metric-label" style="color: #00d4ff; letter-spacing: 1px; animation: none !important; transition: none !important;"><span style="display: inline-block; animation: none !important; transition: none !important; color: #ffff00; font-weight: 900;">SESJE RYNKOWE</span> • CZAS EUROPEJSKI</div>
                 <div style="font-size: 0.75em; color: #fff; animation: none !important; transition: none !important;">London (08:00) → NY (14:30) → Tokyo (00:00 CET+1)</div>
             </div>
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; animation: none !important; transition: none !important;">
