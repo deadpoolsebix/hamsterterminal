@@ -2,24 +2,20 @@
 <html lang="pl">
 <head>
   <meta charset="UTF-8" />
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-  <meta http-equiv="Pragma" content="no-cache" />
-  <meta http-equiv="Expires" content="0" />
-  <title>Hamster Terminal - Bloomberg Clean with API</title>
+  <title>Hamster Terminal - Bloomberg Clean</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
     :root {
       --orange: #ff8c00;
       --burgundy: #800020;
       --black: #000000;
-      --panel: #0d0d0d;
-      --border: #222222;
-      --green: #4ade80;
-      --red: #ff4444;
-      --yellow: #fbbf24;
+      --panel: #0a0a0a;
+      --border: #1a1a1a;
+      --green: #00ff41;
+      --red: #ff0033;
+      --yellow: #ffff00;
       --cyan: #00d4ff;
-      --gray: #999999;
-      --light-gray: #e5e5e5;
+      --gray: #bdbdbd;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -28,82 +24,6 @@
       color: #ffffff;
       line-height: 1.4;
       padding-bottom: 40px;
-    }
-    
-    /* PROFESSIONAL BLOOMBERG HEADER */
-    .header-image {
-      width: 100%;
-      height: 100px;
-      background: linear-gradient(to right, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
-      border-bottom: 1px solid #ff8c00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .header-image::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, #ff8c00, transparent);
-      top: 0;
-      opacity: 0.5;
-    }
-    
-    .header-image::after {
-      content: 'HAMSTER TRADING TERMINAL • REAL-TIME MARKET INTELLIGENCE';
-      font-family: 'Roboto Mono', monospace;
-      font-size: 1.8em;
-      font-weight: 700;
-      color: #ff8c00;
-      letter-spacing: 2px;
-      opacity: 0.85;
-      text-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
-    }
-
-    /* THEME SWITCHER */
-    .theme-switcher {
-      position: fixed;
-      top: 10px;
-      right: 10px;
-      z-index: 999;
-      background: rgba(10, 10, 10, 0.95);
-      border: 1px solid #1a1a1a;
-      border-radius: 4px;
-      padding: 8px;
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .switcher-group {
-      display: flex;
-      flex-direction: row;
-      gap: 3px;
-    }
-    .theme-btn, .page-btn {
-      background: #0d0d0d;
-      border: 1px solid #333;
-      color: #ffffff;
-      padding: 6px 10px;
-      margin: 0;
-      cursor: pointer;
-      font-size: 0.75em;
-      font-weight: 600;
-      border-radius: 3px;
-      transition: all 0.2s;
-    }
-    .theme-btn:hover, .page-btn:hover { background: #1a1a1a; border-color: #666; }
-    .theme-btn.active, .page-btn.active { background: var(--orange); color: #000000; border-color: var(--orange); }
-    .switcher-label {
-      color: #666;
-      font-size: 0.7em;
-      text-transform: uppercase;
-      padding: 2px 5px;
-      font-weight: 700;
-      letter-spacing: 0.5px;
     }
 
     /* BLOOMBERG HEADER */
@@ -118,17 +38,7 @@
       letter-spacing: 1px;
       font-size: 1.1em;
     }
-    .header-left { display: flex; gap: 20px; align-items: center; }
     .header-time { font-size: 1em; font-weight: 600; }
-    .api-status {
-      font-size: 0.85em;
-      padding: 4px 8px;
-      background: rgba(0,0,0,0.1);
-      border-radius: 3px;
-    }
-    .api-status.live { color: #00ff41; }
-    .api-status.loading { color: #ffff00; }
-    .api-status.error { color: #ff0033; }
 
     /* BURGUNDY MENU BAR */
     .menu-bar {
@@ -137,6 +47,7 @@
       padding: 10px 24px;
       background: var(--burgundy);
       border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
     }
     .menu-item {
       background: transparent;
@@ -150,6 +61,40 @@
     }
     .menu-item.active { background: #b0303c; border-color: #d44a5c; }
     .menu-item:hover { opacity: 0.9; }
+
+    /* DROP-DOWN PANELS UNDER MENU */
+    .menu-panels { padding: 0 24px 10px 24px; }
+    .menu-panel {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 2px solid #1a1a1a;
+      padding: 14px;
+      color: #ffffff;
+    }
+    .menu-panel.active { display: block; }
+    .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .panel-card { background: #0d0d0d; border: 1px solid var(--border); padding: 12px; }
+    .panel-title { font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; font-size: 0.95em; }
+    .panel-text { color: var(--gray); font-size: 0.9em; line-height: 1.5; }
+    .signal-tag { display: inline-block; padding: 4px 8px; border: 1px solid var(--border); background: #111; color: #fff; font-weight: 700; font-size: 0.8em; letter-spacing: 0.5px; margin-right: 6px; }
+    .sparkline { width: 100%; height: 80px; background: #0a0a0a; border: 1px solid var(--border); padding: 6px; }
+    .sparkline svg { width: 100%; height: 100%; }
+    .mini-label { color: var(--gray); font-size: 0.8em; margin-top: 6px; }
+    .mini-sparkline { width: 100%; height: 52px; background: #0a0a0a; border: 1px solid var(--border); margin: 6px 0; padding: 4px; }
+    .mini-sparkline svg { width: 100%; height: 100%; }
+    .cta-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      margin-top: 8px;
+      background: var(--orange);
+      color: #000000;
+      border: 1px solid var(--orange);
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85em;
+      letter-spacing: 0.3px;
+    }
 
     /* SECTION HEADER WITH SENTIMENT */
     .section-header-wrapper {
@@ -188,45 +133,83 @@
       text-transform: uppercase;
     }
     .sentiment-stat {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      font-size: 1em;
-      font-weight: 600;
-    }
-    .stat-item {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      padding: 4px 0;
+      font-size: 0.9em;
+      color: var(--gray);
+      margin-bottom: 4px;
+      line-height: 1.5;
     }
-    .stat-label { color: #ffffff; }
-    .stat-value { color: #ffffff; font-size: 1.1em; }
+    .sentiment-stat span:last-child {
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    /* PSYCHOLOGY HEADER (monochrome) */
+    .psych-title { color: #ffffff; font-weight: 700; font-size: 1.05em; letter-spacing: 0.8px; margin-bottom: 10px; text-transform: uppercase; }
+    .psych-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .psych-card { border: 1px solid var(--border); padding: 10px; background: var(--panel); border-left: 2px solid #1a1a1a; }
+    .psych-head { color: #ffffff; font-weight: 700; margin-bottom: 6px; font-size: 0.95em; }
+    .psych-percent { color: #ffffff; font-weight: 700; }
+    .psych-list { list-style: none; padding-left: 0; }
+    .psych-list li { color: var(--gray); font-size: 0.9em; margin: 3px 0; line-height: 1.5; }
+    .psych-note { color: var(--gray); font-size: 0.9em; margin-top: 12px; line-height: 1.5; }
+
+    /* METRICS GRID (4 boxes like Bloomberg) */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      padding: 14px 24px;
+      margin-bottom: 0;
+    }
+    .metric-box {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 2px solid #1a1a1a;
+      padding: 15px;
+    }
+    .metric-label {
+      font-size: 0.9em;
+      color: var(--gray);
+      margin-bottom: 8px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .metric-value {
+      font-size: 2em;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 5px;
+      letter-spacing: -0.5px;
+    }
+    .metric-change {
+      font-size: 1em;
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .metric-change.down { color: #ffffff; }
 
     /* TICKER */
-    .ticker-container {
-      background: var(--panel);
-      border: 2px solid var(--orange);
-      padding: 16px 0;
-      overflow: hidden;
-      margin: 0 24px 14px 24px;
-      box-shadow: 0 0 15px rgba(255, 140, 0, 0.3);
+    .ticker-wrapper {
+      padding: 0 24px 12px 24px;
     }
     .ticker {
-      display: flex;
-      animation: ticker 15s linear infinite;
-      gap: 60px;
-      padding: 0 24px;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
     }
-    .ticker-item {
+    .ticker-track {
+      display: inline-flex;
+      gap: 22px;
       white-space: nowrap;
-      font-size: 1.8em;
-      font-weight: 700;
+      animation: ticker 28s linear infinite;
     }
     .ticker-label {
       color: #ffffff;
       font-weight: 700;
-      margin-right: 8px;
     }
     @keyframes ticker {
       0% { transform: translateX(40%); }
@@ -254,7 +237,9 @@
       border-bottom: 1px solid #1a1a1a;
       line-height: 1.6;
     }
-    .news-item:last-child { border-bottom: none; }
+    .news-item:last-child {
+      border-bottom: none;
+    }
 
     /* BREAKING NEWS */
     .breaking-news {
@@ -286,7 +271,9 @@
       align-items: center;
       line-height: 1.5;
     }
-    .breaking-item:last-child { border-bottom: none; }
+    .breaking-item:last-child {
+      border-bottom: none;
+    }
     .breaking-status {
       font-weight: 700;
       text-transform: uppercase;
@@ -312,73 +299,20 @@
       text-align: right;
       font-size: 0.8em;
     }
+    .breaking-red { color: var(--red); }
+    .breaking-green { color: var(--green); }
 
     /* BTC/ETH CARDS */
     .top-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr 1fr 1fr 1fr 1fr 1fr 2fr;
-      gap: 10px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
       padding: 14px 24px;
-      align-items: stretch;
     }
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
-      padding: 12px 14px;
-      border-radius: 4px;
-    }
-    .card:first-child {
-      grid-column: span 1;
-      padding: 16px 14px;
-    }
-    
-    /* SESSION INFO CONTAINER - RIGHT SIDE */
-    .session-info-panel {
-      grid-column: span 1;
-      background: var(--panel);
-      border: 1px solid var(--border);
-      padding: 12px;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      align-items: center;
-    }
-    
-    .session-box {
-      background: rgba(0,0,0,0.5);
-      border: 1px solid #ff8c00;
-      padding: 12px 14px;
-      border-radius: 4px;
-      text-align: center;
-    }
-    
-    .session-box.next {
-      border-color: #666;
-    }
-    
-    .session-label {
-      color: #ff8c00;
-      font-size: 0.8em;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-    }
-    
-    .session-box.next .session-label {
-      color: #aaa;
-    }
-    
-    .session-time {
-      color: #ffffff;
-      font-size: 1.4em;
-      font-weight: 700;
-      margin-top: 6px;
-    }
-    
-    .session-subtitle {
-      color: #aaa;
-      font-size: 0.8em;
-      margin-top: 4px;
+      padding: 14px;
     }
     .card h3 {
       color: #ffffff;
@@ -388,2373 +322,1444 @@
     .price {
       font-size: 2.4em;
       font-weight: 700;
-      color: #ffffff;
-    }
-    .card:first-child .price {
-      font-size: 3.6em;
-      color: var(--orange);
+      color: var(--yellow);
     }
     .change {
       font-weight: 700;
-      color: #ffffff;
+      color: var(--green);
     }
     .stat-row {
       display: flex;
       justify-content: space-between;
       font-size: 0.9em;
       color: var(--gray);
-      margin-top: 8px;
-    }
-    .card-label {
-      color: #aaa;
-      font-size: 0.75em;
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-    }
-    .card-value {
-      font-size: 1.8em;
-      font-weight: 700;
-      color: #4ade80;
       margin-top: 4px;
     }
-    .card:first-child .card-value {
-      font-size: 2.8em;
-      color: var(--orange);
+    .stat-row span:last-child {
+      color: #ffffff;
+      font-weight: 700;
     }
 
-    /* MAIN GRID */
-    .main-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 14px;
-      padding: 14px 24px;
-    }
-    .chart-panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-left: 2px solid #1a1a1a;
-      padding: 14px;
-    }
-    .transfers-inline {
-      margin-top: 12px;
+    /* CHART STYLES */
+    /* TIMEFRAME SELECTOR */
+    .timeframe-selector {
       display: flex;
-      gap: 10px;
+      gap: 6px;
+      margin-bottom: 14px;
       flex-wrap: wrap;
     }
-    .transfer-card {
-      flex: 1 1 220px;
-      background: #0d0d0d;
-      border-left: 2px solid #333;
-      padding: 10px;
-      color: #ffffff;
-      min-width: 0;
+    .timeframe-btn {
+      background: #1a1a1a;
+      border: 1px solid var(--border);
+      color: var(--gray);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-size: 0.85em;
+      font-weight: 600;
+      font-family: 'Roboto Mono', monospace;
+      transition: all 0.2s;
+      letter-spacing: 0.5px;
     }
-    .transfer-card .meta { color: var(--gray); font-size: 0.85em; }
-    .transfer-card .time { color: var(--gray); font-size: 0.8em; margin-top: 4px; }
+    .timeframe-btn:hover {
+      background: #2a2a2a;
+      border-color: var(--orange);
+      color: #ffffff;
+    }
+    .timeframe-btn.active {
+      background: var(--orange);
+      border-color: var(--orange);
+      color: #000000;
+      font-weight: 700;
+    }
 
-    /* GENIUS AI */
-    .genius-ai {
+    .chart-box {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-left: 2px solid #ff8c00;
-      padding: 16px;
-      margin: 14px 0;
-      border-radius: 4px;
-    }
-    
-    .genius-ai-header {
+      height: 400px;
+      margin-bottom: 20px;
       display: flex;
       align-items: center;
-      gap: 10px;
-      margin-bottom: 12px;
+      justify-content: center;
+      border-radius: 0;
+      overflow: hidden;
     }
-    
-    .genius-ai-header h3 {
-      color: #ff8c00;
-      font-size: 1em;
-      font-weight: 700;
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin: 0;
+    .chart-svg {
+      width: 100%;
+      height: 100%;
     }
-    
-    .genius-ai-status {
-      display: inline-block;
-      width: 10px;
-      height: 10px;
-      background: #4ade80;
-      border-radius: 50%;
-      animation: pulse 2s infinite;
+    .chart-grid {
+      stroke: #1a1a1a;
+      stroke-width: 0.5;
     }
-    
-    @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.6; }
+    .chart-axis {
+      stroke: #333333;
+      stroke-width: 1;
     }
-    
-    .genius-ai-content {
-      color: #e5e5e5;
-      font-size: 0.95em;
-      line-height: 1.6;
-      margin-bottom: 12px;
+    .chart-price-line {
+      stroke: var(--yellow);
+      stroke-width: 2;
+      fill: none;
     }
-    
-    .genius-ai-warning {
-      background: rgba(255, 68, 68, 0.1);
-      border-left: 3px solid #ff4444;
-      padding: 10px 12px;
-      border-radius: 3px;
-      color: #ff6666;
-      font-weight: 600;
-      margin: 8px 0;
-      font-size: 0.9em;
+    .chart-ema {
+      stroke: var(--cyan);
+      stroke-width: 1.5;
+      fill: none;
+      stroke-dasharray: 3,3;
     }
-    
-    .genius-ai-insight {
-      background: rgba(74, 222, 128, 0.1);
-      border-left: 3px solid #4ade80;
-      padding: 10px 12px;
-      border-radius: 3px;
-      color: #66ff99;
-      font-weight: 600;
-      margin: 8px 0;
-      font-size: 0.9em;
+    .chart-ema50 {
+      stroke: var(--gray);
+      stroke-width: 1.2;
+      fill: none;
+      stroke-dasharray: 4,4;
     }
-    
-    .genius-inline { margin: 14px 0 0 0; }
-    .genius-ai-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 12px;
+    .chart-support {
+      stroke: var(--green);
+      stroke-width: 1;
+      stroke-dasharray: 5,5;
     }
-    .genius-card {
-      background: #1a1a1a;
-      padding: 14px;
-      border: 1px solid #333;
-      border-radius: 4px;
-      border-left: 2px solid #ff8c00;
+    .chart-resistance {
+      stroke: var(--red);
+      stroke-width: 1;
+      stroke-dasharray: 5,5;
     }
-    .genius-card-title {
-      color: #ff8c00;
-      font-weight: 700;
-      font-size: 0.8em;
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
+    .chart-liquidity {
+      fill: rgba(0, 255, 0, 0.1);
     }
-    .genius-card-content {
-      color: #e5e5e5;
-      font-size: 0.9em;
-      line-height: 1.5;
+    .chart-buy-signal {
+      fill: var(--green);
     }
-
-    /* TABS */
-    .tab-content { display: none; }
-    .tab-content.active { display: block; }
-
-    /* Custom chart */
-    .chart-canvas { background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%); border-radius: 4px; border: 1px solid #222; width: 100%; height: 320px; position: relative; overflow: hidden; }
-    .band { position: absolute; left: 0; width: 100%; height: 60px; opacity: 0.08; }
-    .band.premium { top: 0; background: linear-gradient(180deg, #ff4444 0%, transparent 100%); }
-    .band.discount { bottom: 0; background: linear-gradient(0deg, #4ade80 0%, transparent 100%); }
-    .band-label { position: absolute; left: 12px; font-size: 0.8em; color: #666; }
-    .band-label.premium { top: 8px; }
-    .band-label.discount { bottom: 8px; }
-    .level { position: absolute; left: 0; width: 100%; border-top: 1px dashed #333; }
-    .level.resistance { top: 70px; border-color: #ff6666; }
-    .level.support { bottom: 70px; border-color: #66ff66; }
-    .level-label { position: absolute; right: 8px; font-size: 0.8em; color: #aaa; }
-    .ema { position: absolute; width: 100%; height: 100%; pointer-events: none; }
-    .ema path { fill: none; stroke-width: 2.5; opacity: 0.95; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
-    .ema20 path { stroke: #00d4ff; }
-    .ema50 path { stroke: #ff9500; }
-    .ema200 path { stroke: #9d6ce1; }
-    .price-line { position: absolute; right: 12px; top: 12px; color: #ff8c00; font-weight: 700; font-size: 1em; background: rgba(255, 140, 0, 0.15); border: 1px solid #ff8c00; padding: 6px 12px; border-radius: 3px; }
-    .signal { position: absolute; display: flex; align-items: center; gap: 6px; font-size: 0.9em; color: #fff; padding: 6px 10px; border-radius: 4px; font-weight: 600; }
-    .signal.buy { background: rgba(74, 222, 128, 0.15); border: 1px solid #4ade80; color: #4ade80; bottom: 60px; left: 20px; }
-    .signal.sell { background: rgba(255, 68, 68, 0.15); border: 1px solid #ff4444; color: #ff4444; bottom: 60px; left: 150px; }
-    .signal .dot { width: 8px; height: 8px; border-radius: 50%; }
-    .signal.buy .dot { background: #4ade80; }
-    .signal.sell .dot { background: #ff4444; }
-    .legend { position: absolute; bottom: 10px; left: 12px; display: flex; gap: 16px; font-size: 0.75em; color: #999; }
-    .legend-item { display: flex; align-items: center; gap: 4px; font-weight: 600; }
-    .legend-swatch { width: 14px; height: 2px; border-radius: 1px; }
-    .swatch-ema20 { background: #00d4ff; }
-    .swatch-ema50 { background: #ff9500; }
-    .swatch-ema200 { background: #9d6ce1; }
-
-    /* VISUAL DARK PAGE */
-    #visual-dark-page { scrollbar-width: thin; scrollbar-color: #333 #0a0a0a; }
-    #visual-dark-page::-webkit-scrollbar { width: 6px; }
-    #visual-dark-page::-webkit-scrollbar-track { background: #0a0a0a; }
-    #visual-dark-page::-webkit-scrollbar-thumb { background: #333; border-radius: 3px; }
-
-    /* DETAILED MODE PANEL */
-    .detailed-mode-panel {
-      display: none;
-      position: fixed;
-      right: 0;
-      top: 0;
-      width: 380px;
-      height: 100vh;
+    .chart-sell-signal {
+      fill: var(--red);
+    }
+    .chart-label {
+      font-size: 10px;
+      fill: #888888;
+      font-weight: bold;
+    }
+    .chart-value {
+      font-size: 11px;
+      fill: #ffffff;
+      font-weight: bold;
+    }
+    .transfers {
       background: var(--panel);
-      border-left: 2px solid var(--orange);
-      overflow-y: auto;
-      z-index: 999;
-      box-shadow: -4px 0 15px rgba(255, 140, 0, 0.2);
+      border: 1px solid var(--border);
+      padding: 12px;
     }
-
-    .detailed-mode-panel.active {
-      display: block;
-    }
-
-    .detail-section {
-      border-bottom: 1px solid var(--border);
-      background: rgba(26, 26, 26, 0.3);
-    }
-
-    .detail-section-header {
-      padding: 14px 16px;
-      background: rgba(26, 26, 26, 0.6);
-      border-left: 3px solid var(--orange);
-      cursor: pointer;
-      user-select: none;
+    .transfer-row {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      transition: all 0.3s;
-      font-weight: 700;
-      color: var(--orange);
-      font-size: 0.95em;
-      letter-spacing: 0.5px;
+      padding: 8px 0;
+      border-bottom: 1px solid #161616;
+      font-size: 0.92em;
     }
-
-    .detail-section-header:hover {
-      background: rgba(30, 30, 30, 0.8);
-      transform: translateX(-4px);
+    .transfer-row:last-child {
+      border-bottom: none;
     }
+    .pos { color: #ffffff; font-weight: 700; }
+    .neg { color: #ffffff; font-weight: 700; }
 
-    .detail-section-icon {
-      display: inline-block;
-      margin-left: 8px;
-      transition: transform 0.3s;
-      font-size: 1.1em;
+    /* TAB CONTENT STYLES */
+    .tab-content {
+      display: none;
+      padding: 14px 24px;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      color: #ffffff;
     }
-
-    .detail-section-header.collapsed .detail-section-icon {
-      transform: rotate(-90deg);
-    }
-
-    .detail-section-content {
-      padding: 14px 16px;
-      max-height: 1000px;
-      overflow: hidden;
-      transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1), padding 0.35s ease;
+    .tab-content.active {
       display: block;
     }
-
-    .detail-section-header.collapsed ~ .detail-section-content {
-      max-height: 0;
-      padding: 0 16px;
-      overflow: hidden;
-    }
-
-    /* MOBILE: sekcje zwijane domyślnie */
-    @media (max-width: 768px) {
-      .detail-section-header:not(.active) ~ .detail-section-content {
-        max-height: 0;
-        padding: 0 16px;
-      }
-    }
-
-    .detail-item {
+    .tab-content h2 { color: #ffffff; }
+    .trend-grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px;
-      margin-bottom: 12px;
-      padding: 10px;
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 3px;
-      border-left: 2px solid #333;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 20px;
     }
+    .trend-card { background: #ffffff; border: 1px solid #e5e5e5; padding: 12px; }
+    .trend-card h4 { color: #000000; font-size: 0.9em; margin-bottom: 8px; font-weight: 700; }
+    .trend-card p { font-size: 0.85em; color: #333333; margin: 4px 0; }
+    .trend-value { color: #111111; font-weight: 700; font-size: 1em; }
+    .trend-up { color: #111111; }
+    .trend-down { color: #111111; }
+    .trend-neutral { color: #111111; }
 
-    .detail-item-label {
-      color: #999;
-      font-size: 0.8em;
-      text-transform: uppercase;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-    }
-
-    .detail-item-value {
-      color: #ffffff;
-      font-size: 0.95em;
-      font-weight: 700;
-      text-align: right;
-    }
-
-    .detail-item-value.positive {
-      color: var(--green);
-    }
-
-    .detail-item-value.negative {
-      color: var(--red);
-    }
-
-    /* RESPONSIVE */
-    @media (max-width: 1200px) {
-      .top-grid { grid-template-columns: repeat(2, 1fr); }
-      .main-grid { grid-template-columns: 1fr; }
-      .genius-ai-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-    @media (max-width: 768px) {
-      body { padding-top: 4px; }
-      .top-grid { grid-template-columns: 1fr; padding: 10px 12px; }
-      .ticker-container { padding: 0 12px; }
-      .ticker-item { font-size: 0.95em; }
-      .news-grid { grid-template-columns: 1fr !important; gap: 10px; padding: 0 12px 12px 12px !important; }
-      .main-grid { padding: 10px 12px; }
-      .chart-canvas { height: 240px; }
-      .genius-ai { margin: 10px 0 0 0; }
-      .genius-ai-grid { grid-template-columns: 1fr; }
-      .header { flex-direction: column; gap: 10px; align-items: flex-start; }
-      .theme-switcher { position: static; margin: 10px; }
-      .switcher-group { flex-direction: column; }
-      .menu-bar { flex-wrap: wrap; }
-      .menu-item { flex: 1 1 48%; margin-bottom: 6px; }
-      .detailed-mode-panel { width: 320px; }
-      body.margin-detailed { margin-right: 320px; }
-    }
-
-    @media (max-width: 480px) {
-      .detailed-mode-panel { width: 100%; right: -100%; display: none; }
-      .detailed-mode-panel.active { right: 0; display: block; }
-      body { margin-right: 0 !important; }
-      body.margin-detailed { margin-right: 0 !important; }
-    }
-
-    /* SIDEBAR DRAWER */
-    .sidebar {
-      position: fixed;
-      left: -100%;
-      top: 0;
-      width: 100%;
-      height: 100vh;
-      background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
-      border-right: 2px solid var(--orange);
-      box-shadow: -4px 0 20px rgba(255, 140, 0, 0.4);
-      z-index: 1001;
-      transition: left 0.4s ease;
-      overflow-y: auto;
-      padding: 80px 40px 40px 40px;
-      display: flex;
-      flex-direction: column;
-      gap: 30px;
-    }
-    .sidebar.open { left: 0; }
-    .sidebar-header {
-      padding: 16px 20px;
-      background: var(--orange);
-      color: #000;
-      font-weight: 700;
-      letter-spacing: 1px;
-      margin-bottom: 0;
-      text-align: center;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1002;
-      box-shadow: 0 2px 10px rgba(255, 140, 0, 0.3);
-    }
-    .sidebar-section {
-      padding: 20px 24px;
-      border: 1px solid rgba(255, 140, 0, 0.3);
-      border-radius: 6px;
-      background: rgba(10, 10, 10, 0.6);
-      backdrop-filter: blur(10px);
-    }
-    .sidebar-section:last-child { border-bottom: 1px solid rgba(255, 140, 0, 0.3); }
-    .sidebar-label {
-      color: var(--orange);
-      font-size: 0.8em;
-      text-transform: uppercase;
-      font-weight: 700;
-      margin-bottom: 15px;
-      display: block;
-      letter-spacing: 1px;
-      border-bottom: 1px solid rgba(255, 140, 0, 0.2);
-      padding-bottom: 10px;
-    }
-    .sidebar-btn {
-      display: block;
-      width: 100%;
-      background: rgba(26, 26, 26, 0.8);
-      border: 1px solid #ffffff;
-      color: #ffffff;
-      padding: 12px 14px;
-      margin-bottom: 8px;
-      cursor: pointer;
-      border-radius: 4px;
-      text-align: left;
-      font-weight: 600;
-      font-size: 0.95em;
-      transition: all 0.3s;
-    }
-    .sidebar-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: #ffffff; color: #ffffff; transform: translateX(4px); }
-    .sidebar-btn.active { background: #ffffff; color: #000; border-color: #ffffff; }
+    /* Trend Analysis dark variant with white text */
+    #trend-analysis h2 { color: #ffffff !important; }
+    #trend-analysis .trend-card { background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; }
+    #trend-analysis .trend-card h4 { color: #ffffff; }
+    #trend-analysis .trend-card p { color: #dddddd; }
+    #trend-analysis .trend-value { color: #ffffff; }
+    #trend-analysis .trend-up, 
+    #trend-analysis .trend-down, 
+    #trend-analysis .trend-neutral { color: #ffffff; }
     
-    .sidebar-toggle {
-      position: fixed !important;
-      left: 50% !important;
-      top: 12px !important;
-      z-index: 2000;
-      transform: translateX(-50%) !important;
-      background: #ffffff !important;
-      color: #000 !important;
-      border: 2px solid #ffffff !important;
-      width: 76px;
-      height: 76px;
-      cursor: pointer;
-      border-radius: 6px;
-      font-weight: 700;
-      font-size: 2em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s;
-      box-shadow: 0 6px 16px rgba(255, 255, 255, 0.3);
-    }
-    .sidebar-toggle:hover { background: #e0e0e0 !important; transform: translateX(-50%) scale(1.15) rotate(5deg) !important; }
-    .sidebar-toggle:active { transform: translateX(-50%) scale(0.9) !important; }
+    /* CORRELATION TABLE (dark) */
+    .corr-wrapper { background: var(--panel); border: 1px solid var(--border); padding: 14px; }
+    .corr-controls { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+    .corr-select, .corr-btn { background: #0e0e0e; border: 1px solid var(--border); color: #ffffff; padding: 6px 10px; font-family: 'Roboto Mono', monospace; font-size: 0.85em; }
+    .corr-btn.active { background: var(--orange); color: #000000; border-color: var(--orange); font-weight: 700; }
+    .corr-grid { width: 100%; border-collapse: collapse; }
+    .corr-grid th, .corr-grid td { border: 1px solid #161616; padding: 6px 8px; text-align: center; font-size: 0.85em; }
+    .corr-grid th { background: #0f0f0f; color: #ffffff; font-weight: 700; }
+    .corr-asset { text-align: left; color: #ffffff; font-weight: 700; }
+    .corr-cell { color: #ffffff; }
+    .heat-pos-high { background: rgba(0,255,65,0.12); }
+    .heat-pos-mid { background: rgba(0,255,65,0.08); }
+    .heat-pos-low { background: rgba(0,255,65,0.04); }
+    .heat-neg-high { background: rgba(255,0,51,0.12); }
+    .heat-neg-mid { background: rgba(255,0,51,0.08); }
+    .heat-neg-low { background: rgba(255,0,51,0.04); }
+    .corr-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
+    .corr-card { background: #0d0d0d; border: 1px solid var(--border); padding: 10px; }
+    .corr-card h4 { color: #ffffff; font-size: 0.9em; margin-bottom: 6px; }
+    .corr-card p { color: #dddddd; font-size: 0.85em; }
 
-    /* BACK BUTTON */
-    .back-button {
-      position: fixed;
-      right: 12px;
-      top: 12px;
-      z-index: 2000;
-      background: #666;
-      color: #fff;
-      border: none;
-      width: 56px;
-      height: 56px;
-      cursor: pointer;
-      border-radius: 4px;
-      font-weight: 700;
-      font-size: 1.4em;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    .back-button:hover { background: #888; transform: scale(1.1); }
-    .back-button:active { transform: scale(0.95); }
+    /* MULTI-TF ANALYSIS (dark) */
+    .tf-wrapper { background: var(--panel); border: 1px solid var(--border); padding: 14px; }
+    .tf-guide { background: #0e0e0e; border: 1px solid var(--border); padding: 12px; margin-bottom: 14px; color: #ffffff; }
+    .tf-guide h3 { color: #ffffff; font-size: 1em; margin-bottom: 8px; }
+    .tf-guide ul { list-style: none; padding-left: 0; }
+    .tf-guide li { color: #dddddd; font-size: 0.85em; margin: 4px 0; }
+    .tf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .tf-card { background: #0d0d0d; border: 1px solid var(--border); padding: 10px; color: #ffffff; }
+    .tf-title { color: #ffffff; font-weight: 700; font-size: 0.95em; margin-bottom: 6px; display: flex; justify-content: space-between; }
+    .tf-status { font-weight: 700; color: #ffffff; }
+    .tf-bull { color: var(--green); }
+    .tf-bear { color: var(--red); }
+    .tf-neutral { color: var(--yellow); }
+    .tf-sideways { color: var(--cyan); }
+    .tf-konsol { color: var(--yellow); }
+    .tf-row { display: flex; justify-content: space-between; color: #dddddd; font-size: 0.85em; }
+    .tf-row span:last-child { color: #ffffff; font-weight: 700; }
+    @media (max-width: 1200px) { .tf-grid { grid-template-columns: 1fr; } }
 
-    /* SIDEBAR TOGGLE BUTTON */
-    .sidebar-close-btn {
-      background: rgba(255, 68, 68, 0.8);
-      border: 1px solid #ff4444;
-      color: #fff;
-      width: auto;
-      padding: 10px 16px;
-      cursor: pointer;
-      font-weight: 700;
-      position: fixed;
-      top: 20px;
-      right: 40px;
-      border-radius: 4px;
-      font-size: 0.85em;
-      transition: all 0.3s;
-      z-index: 1003;
-    }
-    .sidebar-close-btn:hover { background: #ff6666; transform: scale(1.05); }
-
-    /* SIDEBAR GRID WIDGETS */
-    .sidebar-widgets {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin-top: 20px;
-    }
-    .widget {
-      background: #f7f9fb;
-      border: 1px solid #d0d7de;
-      border-radius: 6px;
-      padding: 16px;
-      text-align: center;
-      color: #161616;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-      font-family: "IBM Plex Mono", "IBM Plex Sans", monospace;
-    }
-    .widget-title {
-      color: #0f62fe;
-      font-size: 0.78em;
-      text-transform: uppercase;
-      font-weight: 700;
-      letter-spacing: 0.6px;
-      margin-bottom: 8px;
-    }
-    .widget-value {
-      font-size: 1.35em;
-      font-weight: 700;
-      color: #161616;
-      margin-bottom: 6px;
-    }
-    .widget-change {
-      font-size: 0.9em;
-      color: #525252;
-    }
-    .widget-change.positive { color: #198038; }
-    .widget-change.negative { color: #da1e28; }
-
-    @media (max-width: 768px) {
-      body { padding-bottom: 60px; }
-      .sidebar { padding: 70px 20px 30px 20px; gap: 15px; }
-      .sidebar-widgets { grid-template-columns: repeat(2, 1fr); }
-      .sidebar-toggle { left: 50% !important; top: 65px; width: 72px; height: 72px; font-size: 2em; transform: translateX(-50%) !important; }
-      .sidebar-close-btn { right: 20px; top: 15px; padding: 10px 14px; font-size: 0.95em; }
-      .header { font-size: 1.35em; flex-direction: column; gap: 8px; padding: 10px 16px; }
-      .header-left { flex-direction: column; gap: 4px; }
-      .menu-bar { flex-wrap: wrap; padding: 8px 12px; gap: 4px; }
-      .menu-item { flex: 1 1 calc(50% - 2px); padding: 8px 6px; font-size: 1.2em; min-height: 36px; }
-      .top-grid { grid-template-columns: 2fr repeat(3, 1fr); gap: 8px; padding: 10px 12px; font-size: 1.125em; }
-      .card { padding: 10px 8px; }
-      .card-label { font-size: 1.05em; }
-      .card-value { font-size: 1.35em; }
-      .chart-canvas { height: 220px; }
-      #candlestick-chart { height: 150px; margin-bottom: 15px; }
-      .genius-ai-grid { grid-template-columns: 1fr; gap: 10px; margin-top: 10px; }
-      .news-grid { grid-template-columns: 1fr; gap: 8px; padding: 10px 12px; }
-      .transfers-inline { gap: 8px; padding: 8px; }
-      .transfer-card { padding: 10px 8px; font-size: 1.275em; }
-      .main-grid { padding: 10px 12px; }
-      .genius-card { padding: 12px 10px; }
-      .genius-card-title { font-size: 1.35em; }
-      .genius-card-content { font-size: 1.2em; }
-      .ticker-container { padding: 10px 12px; }
-      .ticker { gap: 8px; }
-      .ticker-item { font-size: 1.275em; }
-    }
-
-    @media (max-width: 480px) {
-      .header { font-size: 1.125em; padding: 8px 12px; }
-      .menu-bar { padding: 6px 8px; gap: 3px; }
-      .menu-item { font-size: 1.05em; padding: 6px 4px; }
-      .top-grid { grid-template-columns: 1fr 1fr; gap: 6px; padding: 8px 12px; font-size: 1.05em; }
-      .chart-canvas { height: 180px; }
-      #candlestick-chart { height: 120px; }
-      .genius-card { padding: 10px 8px; }
-      .genius-card-title { font-size: 1.2em; }
-      .transfer-card { font-size: 1.2em; padding: 8px 6px; }
-      .ticker-item { font-size: 1.125em; }
+    @media (max-width: 1200px) {
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-grid { grid-template-columns: repeat(2, 1fr); }
+      .middle-section { grid-template-columns: 1fr; }
+      .trend-grid { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
-
-  <!-- SIDEBAR DRAWER -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-header">⚡ HAMSTER DASHBOARD</div>
-    <button class="sidebar-close-btn" onclick="toggleSidebar();">✕ CLOSE</button>
-
-    <!-- QUICK STATS WIDGETS -->
-    <div class="sidebar-section">
-      <span class="sidebar-label">📊 QUICK STATS</span>
-      <div class="sidebar-widgets">
-        <div class="widget">
-          <div class="widget-title">BTC Price</div>
-          <div class="widget-value" id="sidebar-btc">$--</div>
-          <div class="widget-change" id="sidebar-btc-change">+0.00%</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">ETH Price</div>
-          <div class="widget-value" id="sidebar-eth">$--</div>
-          <div class="widget-change" id="sidebar-eth-change">+0.00%</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Fear & Greed</div>
-          <div class="widget-value" id="sidebar-fear">--</div>
-          <div class="widget-change">Market Mood</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Market Cap</div>
-          <div class="widget-value" id="sidebar-mcap">$--</div>
-          <div class="widget-change">24h Trend</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- LIQUIDATION ALERTS -->
-    <div class="sidebar-section">
-      <span class="sidebar-label">⚠️ LIQUIDATION INFO</span>
-      <div class="sidebar-widgets">
-        <div class="widget">
-          <div class="widget-title">SHORT Liq</div>
-          <div class="widget-value" id="sidebar-short-liq">$1.2T</div>
-          <div class="widget-change negative">High Risk</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">LONG Liq</div>
-          <div class="widget-value" id="sidebar-long-liq">$0.9T</div>
-          <div class="widget-change negative">Watch</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Total Liq</div>
-          <div class="widget-value" id="sidebar-total-liq">$2.1T</div>
-          <div class="widget-change">Last 24h</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ON-CHAIN PULSE -->
-    <div class="sidebar-section">
-      <span class="sidebar-label">⛓️ ON-CHAIN PULSE</span>
-      <div class="sidebar-widgets">
-        <div class="widget">
-          <div class="widget-title">Active Addresses</div>
-          <div class="widget-value" id="sidebar-active-addr">--</div>
-          <div class="widget-change" id="sidebar-active-addr-chg">trend</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">NUPL</div>
-          <div class="widget-value" id="sidebar-nupl">--</div>
-          <div class="widget-change" id="sidebar-nupl-note">Neutral</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Hashrate</div>
-          <div class="widget-value" id="sidebar-hashrate">--</div>
-          <div class="widget-change" id="sidebar-hashrate-note">Secure</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- GENIUS AI HINTS -->
-    <div class="sidebar-section">
-      <span class="sidebar-label">🤖 GENIUS AI HINTS</span>
-      <div class="sidebar-widgets">
-        <div class="widget">
-          <div class="widget-title">Signal Strength</div>
-          <div class="widget-value" id="sidebar-ai-strength">--</div>
-          <div class="widget-change" id="sidebar-ai-bias">Bias</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Next Liquidity</div>
-          <div class="widget-value" id="sidebar-ai-liq">--</div>
-          <div class="widget-change" id="sidebar-ai-liq-note">Grab zone</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Risk Flag</div>
-          <div class="widget-value" id="sidebar-ai-risk">--</div>
-          <div class="widget-change" id="sidebar-ai-risk-note">Monitor</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- HAMSTER PLAYGROUND -->
-    <div class="sidebar-section">
-      <span class="sidebar-label">🐹 HAMSTER PLAYGROUND</span>
-      <div class="sidebar-widgets">
-        <div class="widget">
-          <div class="widget-title">Last Signal</div>
-          <div class="widget-value" id="sidebar-hamster-signal">--</div>
-          <div class="widget-change" id="sidebar-hamster-time">--</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Win Rate</div>
-          <div class="widget-value" id="sidebar-hamster-win">--</div>
-          <div class="widget-change" id="sidebar-hamster-note">Sim</div>
-        </div>
-        <div class="widget">
-          <div class="widget-title">Mini Liquidity</div>
-          <div class="widget-value" id="sidebar-hamster-liq">--</div>
-          <div class="widget-change" id="sidebar-hamster-liq-note">Buy/Sell</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONTROLS -->
-    <div class="sidebar-section">
-      <span class="sidebar-label" data-i18n="sidebar-modes">🎨 VIEWS</span>
-      <button class="sidebar-btn active" data-mode="bloomberg" onclick="switchPage('bloomberg', event); toggleSidebar();" data-i18n="mode-bloomberg">Bloomberg</button>
-      <button class="sidebar-btn" data-mode="retro" onclick="switchPage('retro', event); toggleSidebar();" data-i18n="mode-retro">Retro Terminal</button>
-      <button class="sidebar-btn" data-mode="detailed" onclick="switchPage('detailed', event); toggleSidebar();" data-i18n="mode-detailed">Detailed Mode</button>
-    </div>
-
-    <div class="sidebar-section">
-      <span class="sidebar-label" data-i18n="sidebar-themes">🌙 THEMES</span>
-      <button class="sidebar-btn active" data-theme="bloomberg" onclick="switchTheme('bloomberg', event);" data-i18n="theme-bloomberg">Bloomberg</button>
-      <button class="sidebar-btn" data-theme="professional" onclick="switchTheme('professional', event);" data-i18n="theme-professional">Professional</button>
-      <button class="sidebar-btn" data-theme="dark" onclick="switchTheme('dark', event);" data-i18n="theme-dark">Dark</button>
-    </div>
-
-    <div class="sidebar-section">
-      <span class="sidebar-label" data-i18n="sidebar-language">🌐 LANGUAGE</span>
-      <button class="sidebar-btn active" id="lang-toggle-sidebar" onclick="toggleLanguage(); updateLanguageDisplay();" style="text-align: center; font-size: 1em;">EN / PL</button>
-    </div>
-  </div>
-
-  <!-- SIDEBAR TOGGLE BUTTON - WHITE -->
-  <button class="sidebar-toggle" onclick="toggleSidebar();">☰</button>
-
-  <!-- BACK BUTTON -->
-  <button class="back-button" onclick="history.back();" title="Go back">← </button>
-
-  <!-- WALL STREET HEADER IMAGE -->
-  <div class="header-image"></div>
-
-  <!-- HEADER -->
+  <!-- BLOOMBERG HEADER -->
   <div class="header">
-    <div class="header-left">
-      <div>HAMSTER TERMINAL | BTC USD Crypto</div>
-      <div class="api-status loading" id="api-status">Loading API...</div>
+    <div>🐹 BTC USD Crypto | HAMSTER TERMINAL</div>
+    <div class="header-time" id="clock">--:--:-- UTC</div>
+  </div>
+
+  <!-- BURGUNDY MENU BAR -->
+  <div class="menu-bar">
+    <button class="menu-item" data-tab="dashboard">Dashboard</button>
+    <button class="menu-item" data-tab="trend-analysis">Trend Analysis</button>
+    <button class="menu-item" data-tab="kpi-correlation">KPI Correlation</button>
+    <button class="menu-item" data-tab="multi-tf-analysis">IMEFRAME ZONE • MULTI-TF ANALYSIS</button>
+    <button class="menu-item active" data-tab="hamster-genius">Hamster Genius</button>
+    <button class="menu-item" data-tab="onchain-flows">On-chain & Flows</button>
+    <button class="menu-item" data-tab="risk-positioning">Risk & Positioning</button>
+    <button class="menu-item" data-tab="execution-playbook">Execution Playbook</button>
+    <button class="menu-item" data-tab="alerts-journal">Alerts & Journal</button>
+  </div>
+
+  <!-- DROPDOWN PANELS UNDER MENU (extra data on click) -->
+  <div class="menu-panels">
+    <div class="menu-panel" id="panel-dashboard">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">RADAR SNAJPERSKI • BTC</div>
+          <div class="panel-text">Poziomy natychmiast: <strong style="color: var(--green);">95.0k–95.4k BUY</strong> | <strong style="color: var(--red);">97.3k–97.6k SELL</strong>. Invalidation: wybicie 97.8k.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SZYBKIE SYGNAŁY</div>
+          <div style="margin-bottom: 6px;">
+            <span class="signal-tag">LONG bias</span>
+            <span class="signal-tag">Scalp ON</span>
+            <span class="signal-tag">R:R 1:2.5</span>
+          </div>
+          <div class="panel-text">Wejście przy FVG $95.2k, TP $97.4k, SL $94.2k. Aktualizuj co 15m.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">MINI WYKRES • BTC</div>
+          <div class="sparkline">
+            <svg viewBox="0 0 200 80" preserveAspectRatio="xMidYMid meet">
+              <polyline points="5,60 35,50 65,40 95,45 125,35 155,42 185,38" fill="none" stroke="var(--yellow)" stroke-width="2" />
+              <circle cx="65" cy="40" r="4" fill="var(--green)" />
+              <text x="55" y="28" font-size="8" fill="var(--green)">BUY</text>
+              <circle cx="155" cy="42" r="4" fill="var(--red)" />
+              <text x="145" y="30" font-size="8" fill="var(--red)">SELL</text>
+            </svg>
+          </div>
+          <div class="mini-label">Overlay dla głównego wykresu + sygnały live.</div>
+        </div>
+      </div>
     </div>
-    <div class="header-time">
-      <span id="clock">00:00:00 UTC</span>
+
+    <div class="menu-panel" id="panel-trend-analysis">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">SZYBKI TREND</div>
+          <div class="panel-text">1H: konsolidacja; 4H: lekkie wybicie góra; 1D: byczy kanał. Wybij 97.4k = przyspieszenie.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">CO SPRAWDZIĆ</div>
+          <div class="panel-text">Powtórz test EMA50, reakcję na FVG $95.2k, obronę buy walli. Przyspieszenie wolumenu > +20% = wejście.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">NASTĘPNE KROKI</div>
+          <div class="panel-text">Ustaw alert na 97.4k i 94.8k. Jeśli RSI 1H < 42 przy 95k → odpuść longi, szukaj reentry przy 94.2k.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-kpi-correlation">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">MAKRO CHECK</div>
+          <div class="panel-text">DXY -0.48 korelacji: spadki dolara pomagają longom BTC. VIX nisko → rynek ryzyka sprzyja.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">ETF/INFLOWS</div>
+          <div class="panel-text">Napływy ETF +$220M → wspiera trend wzrostowy. Watch: jeśli dzienny dopływ < +$50M, zdejmij dźwignię.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">POMYSŁ</div>
+          <div class="panel-text">Dodaj heatmapę cross-asset (BTC vs SPX vs Gold) + auto-highlight gdy korelacja zmienia znak.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-multi-tf-analysis">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">SCALP PLAN</div>
+          <div class="panel-text">1m/5m bull, 15m/30m neutral: graj mean-revert do EMA, target +0.35% per trade.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SWING PLAN</div>
+          <div class="panel-text">4h neutral, 1d bear → trzymaj połowę pozycji hedge (short perps) przy 97.4k, zdejmij gdy 98k wybite.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">RADAR SNAJPERSKI BTC</div>
+          <div class="panel-text">Alerty: 95.2k (buy), 94.2k (re-entry), 97.8k (short invalidation). Dodaj auto-linię na wykresie.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel active" id="panel-hamster-genius">
+      <div class="panel-grid">
+        <div class="panel-card" style="grid-column: span 2;">
+          <div class="panel-title">HAMSTER GENIUS • WYKRES + KOMENTARZ</div>
+          <div class="sparkline">
+            <svg viewBox="0 0 320 90" preserveAspectRatio="xMidYMid meet">
+              <polyline points="10,70 60,52 110,40 160,45 210,33 260,42 310,36" fill="none" stroke="var(--yellow)" stroke-width="2" />
+              <circle cx="110" cy="40" r="5" fill="var(--green)" />
+              <text x="94" y="26" font-size="9" fill="var(--green)">LONG 95.2k</text>
+              <circle cx="260" cy="42" r="5" fill="var(--red)" />
+              <text x="244" y="24" font-size="9" fill="var(--red)">TAKE PROFIT 97.4k</text>
+            </svg>
+          </div>
+          <div class="mini-label">Komentarz: momentum rośnie po obronie buy walli. Ryzyko: wybicie 94.8k = stop.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SYGNAŁY LIVE</div>
+          <div class="panel-text">• BUY: 95.2k (potwierdzony FVG + wolumen)
+            <br>• SELL: 97.4k (liquidity sweep)
+            <br>• ALERT: funding > 0.012% → zmniejsz long.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">CO DODAĆ</div>
+          <div class="panel-text">Auto-rysowanie killzone NY/London, push notyfikacji z tekstem AI na wykres, sygnał Sniper BTC z poziomami i timerem świecy.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-onchain-flows">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">STABLECOIN FLOWS</div>
+          <div class="panel-text">Net inflow +$180M (24h). Zastrzyk płynności wspiera popyt spot.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">ETF SPOT BTC</div>
+          <div class="panel-text">Napływ dzienny +$220M, 5d średnia +$140M. Jeśli < +$50M → ostrożniej z long.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">EXCHANGE FLOWS</div>
+          <div class="panel-text">Net outflow -3.2k BTC (24h) → presja spadku podaży na spot.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-risk-positioning">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">FUNDING / SKEW</div>
+          <div class="panel-text">Funding +0.008%: zdrowe. Skew lekko dodatni → lekka przewaga longów.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">OI / DŹWIGNIA</div>
+          <div class="panel-text">Open Interest $12.4B, wzrost +3% d/d. Brak przegrzania, ale śledź przy wybiciu 97.4k.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">LIQUIDATION MAP</div>
+          <div class="panel-text">Clustery: 97.4k (short liq), 94.8k (long liq). Graj w kierunku czyszczenia shortów.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-execution-playbook">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">SCALP PLAN</div>
+          <div class="panel-text">Wejście: 95.2k FVG. TP: 97.4k. SL: 94.2k. Wielkość: 0.35x equity.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">INTRADAY PLAN</div>
+          <div class="panel-text">Kup retrace do 95.8–96.2k jeśli RSI 1H>45. TP1 97.4k, TP2 99k. Trailing pod EMA20 1H.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SWING PLAN</div>
+          <div class="panel-text">Po wybiciu 98k hold do 105k, hedge 25% na perps przy spadku poniżej 96k.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-alerts-journal">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">ALERTY</div>
+          <div class="panel-text">• Alert: 97.4k SELL sweep
+            <br>• Alert: Funding > 0.012%
+            <br>• Alert: Net inflow ETF < +$50M</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">CHECKLIST</div>
+          <div class="panel-text">[ ] Trend 1H zgodny z 4H
+            <br>[ ] Funding OK
+            <br>[ ] Poziomy: 95.2k/97.4k ustawione
+            <br>[ ] Wielkość pozycji ≤ plan</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">NOTATKI</div>
+          <div class="panel-text">Dodaj krótkie wnioski po trade: co zagrało, co poprawić.</div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- BTC INFO PANEL -->
-  <div class="top-grid">
-    <div class="card">
-      <div class="card-label">Price</div>
-      <div class="card-value" id="btc-price">$--</div>
+  <!-- SECTION HEADER WITH SENTIMENT & STATS -->
+  <div class="section-header-wrapper">
+    <div class="section-header">
+      <div class="psych-title">STAN PSYCHOLOGICZNY • BULLS vs BEARS</div>
+      <div class="psych-grid">
+        <div class="psych-card">
+          <div class="psych-head">BULLS <span class="psych-percent">(58%)</span></div>
+          <ul class="psych-list">
+            <li>Nastrój: Optymistyczny</li>
+            <li>Target: $98,500–$99,200</li>
+            <li>Akcja: Akumulacja + hold</li>
+            <li>Fear: Manipulation at $96,850</li>
+            <li>Oczekiwanie: Break & Rally</li>
+          </ul>
+        </div>
+        <div class="psych-card">
+          <div class="psych-head">BEARS <span class="psych-percent">(42%)</span></div>
+          <ul class="psych-list">
+            <li>Nastrój: Ostrożny</li>
+            <li>Target: $93,500–$94,800</li>
+            <li>Akcja: Shorty + wait</li>
+            <li>Fear: Squeeze shorts</li>
+            <li>Oczekiwanie: Pullback soon</li>
+          </ul>
+        </div>
+      </div>
+      <div class="psych-note">MARKET REALITY: Dominacja BULLS, BEARS kontrolują support. Stalemate = SCALP OPPORTUNITY! • Data: <span id="current-date">2026-01-19</span></div>
     </div>
-    <div class="card">
-      <div class="card-label">24h Change</div>
-      <div class="card-value" id="btc-change" style="color: #00ff41;">+0.00%</div>
+
+    <div class="section-sentiment">
+      <h3>SENTYMENT & STATS</h3>
+      <div class="sentiment-stat">
+        <span>Fear & Greed</span>
+        <span>62 (Greed)</span>
+      </div>
+      <div class="sentiment-stat">
+        <span>Funding Rate</span>
+        <span>+0.0082%</span>
+      </div>
+      <div class="sentiment-stat">
+        <span>Open Interest</span>
+        <span>$12.4B</span>
+      </div>
+      <div class="sentiment-stat">
+        <span>Dominacja BTC</span>
+        <span>51.3%</span>
+      </div>
+      <div class="sentiment-stat">
+        <span>Liquidations 24h</span>
+        <span>$84M</span>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-label">Support Level</div>
-      <div class="card-value" id="btc-support" style="color: #7cff9c;">$96,500</div>
+  </div>
+
+  <!-- METRICS GRID (4 boxes) -->
+  <div class="metrics-grid">
+    <div class="metric-box">
+      <div class="metric-label">CURRENT PRICE</div>
+      <div class="metric-value">$98,432.50</div>
+      <div class="metric-change">▲ +2,345.80 (+2.44%)</div>
     </div>
-    <div class="card">
-      <div class="card-label">Resistance Level</div>
-      <div class="card-value" id="btc-resistance" style="color: #ff8c8c;">$100,000</div>
+
+    <div class="metric-box">
+      <div class="metric-label">24H VOLUME</div>
+      <div class="metric-value">$2.4B</div>
+      <div class="metric-change">▲ +12.5%</div>
     </div>
-    <div class="card">
-      <div class="card-label">24h Volume</div>
-      <div class="card-value" id="btc-volume">$--B</div>
+
+    <div class="metric-box">
+      <div class="metric-label">MARKET CAP</div>
+      <div class="metric-value">$1.94T</div>
+      <div class="metric-change">▲ +1.87%</div>
     </div>
-    <div class="card">
-      <div class="card-label">Market Cap</div>
-      <div class="card-value" id="market-cap">$--T</div>
+
+    <div class="metric-box">
+      <div class="metric-label">P&L TODAY</div>
+      <div class="metric-value">+$842.50</div>
+      <div class="metric-change">▲ +16.85% ROI</div>
     </div>
-    <div class="card">
-      <div class="card-label">Fear & Greed</div>
-      <div class="card-value" id="fear-greed">--</div>
+  </div>
+
+  <!-- TICKER + NEWS + BREAKING NEWS -->
+  <div class="ticker-wrapper">
+    <div class="ticker">
+      <div class="ticker-track">
+        <span class="ticker-label">CRYPTO</span> BTC +2.1% • ETH +1.8% • SOL +4.2% • MATIC -1.3% • ADA +0.8%
+        <span class="ticker-label">METALE</span> XAU/USD 2031.2 ▲0.45% • XAG/USD 25.3 ▼0.12%
+        <span class="ticker-label">INDEKSY</span> SPX 5123 ▲0.32% • INDU 39210 ▲0.18% • IXIC 17988 ▲0.55%
+        <span class="ticker-label">MEGA CAPS</span> AAPL 245.9 ▲1.2% • NVDA 1265.9 ▲1.8% • MSFT 412.3 ▲0.9%
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE NEWS + BREAKING NEWS SIDE BY SIDE -->
+  <div class="news-breaking-wrapper">
+    <div class="news">
+      <h4>LIVE NEWS</h4>
+      <div class="news-item">BTC testuje 96k, byki bronią FVG na 95.2k</div>
+      <div class="news-item">ETF spot BTC: napływy netto +$220M dzisiaj</div>
+      <div class="news-item">Fed: rynek wycenia 2 cięcia stóp w tym roku</div>
+      <div class="news-item">USDT: depegging risk ~0.9985, watch closely</div>
+      <div class="news-item">Whale accumulation zones: $94k-$95k active</div>
+    </div>
+
+    <!-- BREAKING NEWS -->
+    <div class="breaking-news">
+      <h4>BREAKING NEWS</h4>
+      <div class="breaking-item">
+        <div class="breaking-status breaking-red">RED HIGH</div>
+        <div class="breaking-category">CRYPTO</div>
+        <div>
+          <div class="breaking-headline">Bitcoin Surges Past $95,000</div>
+          <div class="breaking-source">Bloomberg</div>
+        </div>
+        <div class="breaking-time">5m temu</div>
+      </div>
+      <div class="breaking-item">
+        <div class="breaking-status breaking-green">GREEN LOW</div>
+        <div class="breaking-category">STOCKS</div>
+        <div>
+          <div class="breaking-headline">Apple Beats Q4 Earnings - Stock Soars</div>
+          <div class="breaking-source">Reuters</div>
+        </div>
+        <div class="breaking-time">10m temu</div>
+      </div>
+      <div class="breaking-item">
+        <div class="breaking-status breaking-green">GREEN LOW</div>
+        <div class="breaking-category">ECONOMY</div>
+        <div>
+          <div class="breaking-headline">Fed Signals Patience on Rate Cuts</div>
+          <div class="breaking-source">Financial Times</div>
+        </div>
+        <div class="breaking-time">15m temu</div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- CHART + TRANSFERS -->
+  <div style="display: grid; grid-template-columns: 1.7fr 1fr; gap: 14px; padding: 14px 24px;">
+    <div>
+      <!-- TIMEFRAME SELECTOR -->
+      <div class="timeframe-selector">
+        <button class="timeframe-btn" data-timeframe="1m">1M</button>
+        <button class="timeframe-btn" data-timeframe="5m">5M</button>
+        <button class="timeframe-btn" data-timeframe="15m">15M</button>
+        <button class="timeframe-btn" data-timeframe="1h">1H</button>
+        <button class="timeframe-btn" data-timeframe="4h">4H</button>
+        <button class="timeframe-btn" data-timeframe="1d" class="active">1D</button>
+        <button class="timeframe-btn" data-timeframe="1w">1W</button>
+        <button class="timeframe-btn" data-timeframe="1M">1M</button>
+        <button class="timeframe-btn" data-timeframe="3M">3M</button>
+      </div>
+      <div class="chart-box">
+      <svg class="chart-svg" viewBox="0 0 800 350" preserveAspectRatio="xMidYMid meet">
+        <!-- GRID -->
+        <g class="chart-grid">
+          <line x1="60" y1="50" x2="60" y2="300" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="60" y1="300" x2="780" y2="300" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="60" y1="50" x2="780" y2="50" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="780" y1="50" x2="780" y2="300" stroke="#1a1a1a" stroke-width="1"/>
+          
+          <!-- HORIZONTAL GRID LINES -->
+          <line x1="60" y1="100" x2="780" y2="100" stroke="#0a0a0a" stroke-width="0.5" opacity="0.5"/>
+          <line x1="60" y1="150" x2="780" y2="150" stroke="#0a0a0a" stroke-width="0.5" opacity="0.5"/>
+          <line x1="60" y1="200" x2="780" y2="200" stroke="#0a0a0a" stroke-width="0.5" opacity="0.5"/>
+          <line x1="60" y1="250" x2="780" y2="250" stroke="#0a0a0a" stroke-width="0.5" opacity="0.5"/>
+        </g>
+
+        <!-- FAIR VALUE GAPS (FVG) -->
+        <rect x="150" y="170" width="40" height="20" fill="rgba(0, 212, 255, 0.08)" stroke="var(--cyan)" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.6"/>
+        <text x="152" y="180" class="chart-label" fill="var(--cyan)" font-size="8">FVG↑</text>
+        
+        <rect x="430" y="135" width="40" height="15" fill="rgba(255, 0, 51, 0.08)" stroke="var(--red)" stroke-width="0.5" stroke-dasharray="2,2" opacity="0.6"/>
+        <text x="432" y="142" class="chart-label" fill="var(--red)" font-size="8">FVG↓</text>
+
+        <!-- LIQUIDITY GRAB ZONES -->
+        <rect x="60" y="80" width="720" height="30" class="chart-liquidity" stroke="var(--green)" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="65" y="92" class="chart-label" fill="var(--green)">BUY ZONE: $94.8k-$95.1k</text>
+        
+        <rect x="60" y="240" width="720" height="30" class="chart-liquidity" stroke="var(--red)" stroke-width="1" stroke-dasharray="3,3" fill="rgba(255, 0, 51, 0.1)"/>
+        <text x="65" y="252" class="chart-label" fill="var(--red)">SELL ZONE: $96.0k-$96.3k</text>
+
+        <!-- SUPPORT RESISTANCE LINES -->
+        <line x1="60" y1="240" x2="780" y2="240" class="chart-support" stroke-width="2"/>
+        <text x="680" y="235" class="chart-value" fill="var(--green)">SUPPORT $94.8k</text>
+        
+        <line x1="60" y1="80" x2="780" y2="80" class="chart-resistance" stroke-width="2"/>
+        <text x="680" y="75" class="chart-value" fill="var(--red)">RESISTANCE $97.4k</text>
+
+        <!-- PRICE LINE (MAIN) -->
+        <polyline points="80,200 150,180 220,160 290,170 360,150 430,140 500,145 570,135 640,145 710,155 780,150" 
+                  class="chart-price-line"/>
+
+        <!-- EMA LINE 20 -->
+        <polyline points="80,210 150,195 220,180 290,190 360,170 430,160 500,165 570,155 640,165 710,175 780,170" 
+                  class="chart-ema" stroke="var(--cyan)"/>
+        <text x="750" y="145" class="chart-label" fill="var(--cyan)">EMA 20</text>
+
+        <!-- EMA LINE 50 -->
+        <polyline points="80,220 150,205 220,195 290,200 360,185 430,175 500,180 570,170 640,180 710,190 780,185" 
+                  class="chart-ema50" stroke="var(--gray)" stroke-width="1.2"/>
+        <text x="750" y="160" class="chart-label" fill="var(--gray)">EMA 50</text>
+
+        <!-- BUY SIGNALS (Large Liquidations) -->
+        <circle cx="290" cy="170" r="6" class="chart-buy-signal" stroke="var(--green)" stroke-width="2"/>
+        <text x="290" y="155" class="chart-label" fill="var(--green)" text-anchor="middle">BUY</text>
+        <line x1="290" y1="175" x2="290" y2="300" stroke="var(--green)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+        <text x="285" y="310" class="chart-label" fill="var(--green)" font-size="8">$84M Liq</text>
+
+        <!-- SELL SIGNALS (Large Liquidations) -->
+        <circle cx="640" cy="145" r="6" class="chart-sell-signal" stroke="var(--red)" stroke-width="2"/>
+        <text x="640" y="130" class="chart-label" fill="var(--red)" text-anchor="middle">SELL</text>
+        <line x1="640" y1="150" x2="640" y2="300" stroke="var(--red)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+        <text x="635" y="310" class="chart-label" fill="var(--red)" font-size="8">$96M Liq</text>
+
+        <!-- AXIS LABELS -->
+        <text x="30" y="55" class="chart-label" fill="#888888" font-size="10">$97.4k</text>
+        <text x="30" y="165" class="chart-label" fill="#888888" font-size="10">$96.0k</text>
+        <text x="30" y="275" class="chart-label" fill="#888888" font-size="10">$94.8k</text>
+
+        <!-- TIME LABELS -->
+        <text x="80" y="320" class="chart-label" fill="#888888" font-size="10">1h</text>
+        <text x="290" y="320" class="chart-label" fill="#888888" font-size="10">4h</text>
+        <text x="500" y="320" class="chart-label" fill="#888888" font-size="10">1d</text>
+        <text x="710" y="320" class="chart-label" fill="#888888" font-size="10">NOW</text>
+
+        <!-- LEGEND -->
+        <line x1="70" y1="15" x2="90" y2="15" stroke="var(--yellow)" stroke-width="2"/>
+        <text x="100" y="20" class="chart-label" fill="var(--yellow)" font-size="9">PRICE</text>
+
+        <line x1="200" y1="15" x2="220" y2="15" stroke="var(--cyan)" stroke-width="1.5" stroke-dasharray="3,3"/>
+        <text x="230" y="20" class="chart-label" fill="var(--cyan)" font-size="9">EMA 20</text>
+
+        <line x1="330" y1="15" x2="350" y2="15" stroke="var(--gray)" stroke-width="1.2" stroke-dasharray="3,3"/>
+        <text x="360" y="20" class="chart-label" fill="var(--gray)" font-size="9">EMA 50</text>
+
+        <rect x="450" y="10" width="8" height="8" fill="rgba(0, 212, 255, 0.2)" stroke="var(--cyan)" stroke-width="0.5"/>
+        <text x="465" y="20" class="chart-label" fill="var(--cyan)" font-size="9">FVG</text>
+
+        <circle cx="560" cy="15" r="3" fill="var(--green)"/>
+        <text x="570" y="20" class="chart-label" fill="var(--green)" font-size="9">BUY (Liq)</text>
+
+        <circle cx="690" cy="15" r="3" fill="var(--red)"/>
+        <text x="700" y="20" class="chart-label" fill="var(--red)" font-size="9">SELL (Liq)</text>
+      </svg>
+    </div>
+
+    <!-- RSI INDICATOR -->
+    <div style="background: var(--panel); border: 1px solid var(--border); border-top: none; padding: 12px; height: 120px; margin-bottom: 20px;">
+      <svg class="chart-svg" viewBox="0 0 800 100" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
+        <!-- RSI BACKGROUND ZONES -->
+        <rect x="60" y="10" width="720" height="20" fill="rgba(255, 0, 51, 0.08)"/>
+        <text x="65" y="25" class="chart-label" fill="var(--red)" font-size="10">OVERBOUGHT (70)</text>
+
+        <rect x="60" y="70" width="720" height="20" fill="rgba(0, 255, 65, 0.08)"/>
+        <text x="65" y="85" class="chart-label" fill="var(--green)" font-size="10">OVERSOLD (30)</text>
+
+        <!-- RSI MIDLINE (50) -->
+        <line x1="60" y1="45" x2="780" y2="45" stroke="#333333" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+        <text x="790" y="50" class="chart-label" fill="#666666" font-size="9">50</text>
+
+        <!-- RSI LINE (wavy curve) -->
+        <polyline points="80,35 150,38 220,42 290,40 360,48 430,52 500,50 570,58 640,62 710,58 780,55" 
+                  stroke="var(--orange)" stroke-width="2" fill="none"/>
+
+        <!-- RSI GRID LINES -->
+        <line x1="60" y1="10" x2="780" y2="10" stroke="#1a1a1a" stroke-width="0.5"/>
+        <line x1="60" y1="30" x2="780" y2="30" stroke="#0a0a0a" stroke-width="0.5" opacity="0.3"/>
+        <line x1="60" y1="60" x2="780" y2="60" stroke="#0a0a0a" stroke-width="0.5" opacity="0.3"/>
+        <line x1="60" y1="90" x2="780" y2="90" stroke="#1a1a1a" stroke-width="0.5"/>
+
+        <!-- AXIS LABELS -->
+        <text x="30" y="15" class="chart-label" fill="#888888" font-size="10">100</text>
+        <text x="35" y="50" class="chart-label" fill="#888888" font-size="10">50</text>
+        <text x="30" y="95" class="chart-label" fill="#888888" font-size="10">0</text>
+
+        <!-- RSI VALUES -->
+        <circle cx="290" cy="40" r="3" fill="var(--orange)"/>
+        <text x="295" y="35" class="chart-label" fill="var(--orange)" font-size="9">RSI: 48</text>
+
+        <circle cx="640" cy="62" r="3" fill="var(--orange)"/>
+        <text x="645" y="57" class="chart-label" fill="var(--orange)" font-size="9">RSI: 62</text>
+      </svg>
+    </div>
     </div>
     
-    <!-- SESSION INFO PANEL - RIGHT SIDE -->
-    <div class="session-info-panel">
-      <div class="session-box">
-        <div class="session-label">SESJA AZJA</div>
-        <div class="session-time" id="asia-time">02:30:15</div>
-        <div class="session-subtitle">do końca</div>
-      </div>
-      <div class="session-box next">
-        <div class="session-label">NASTĘPNA</div>
-        <div class="session-time" id="next-session">EUROPA</div>
-        <div class="session-subtitle">09:00 CET</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- MENU -->
-  <div class="menu-bar">
-    <button class="menu-item active" onclick="switchTab('dashboard')" data-i18n="dashboard">📊 Dashboard</button>
-    <button class="menu-item" onclick="switchTab('technical')" data-i18n="technical">🔧 Technical</button>
-    <button class="menu-item" onclick="switchTab('signals')" data-i18n="signals">⚡ Signals</button>
-    <button class="menu-item" onclick="switchTab('risk')" data-i18n="risk">⚠️ Risk</button>
-    <button class="menu-item" onclick="switchTab('depth')" data-i18n="depth">📈 Depth</button>
-  </div>
-
-  <!-- TAB CONTENT - DASHBOARD (MAIN) -->
-  <div id="dashboard" class="tab-content active">
-    <!-- CHART, AI, TRANSFERS -->
-    <div class="main-grid">
-    <div class="chart-panel">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIVE PRICE MAP (Signals & Levels)</div>
-      <div class="chart-canvas">
-        <div class="band premium"></div>
-        <div class="band discount"></div>
-        <div class="band-label premium">Premium zone</div>
-        <div class="band-label discount">Discount zone</div>
-        <div class="level resistance"></div>
-        <div class="level support"></div>
-        <div class="level-label" style="top:66px; color:#ff8c8c;">Resistance</div>
-        <div class="level-label" style="bottom:66px; color:#7cff9c;">Support</div>
-
-        <svg class="ema ema20" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,55 C20,50 40,52 60,48 80,44 90,46 100,43" />
-        </svg>
-        <svg class="ema ema50" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,58 C20,60 40,56 60,54 80,52 90,51 100,50" />
-        </svg>
-        <svg class="ema ema200" viewBox="0 0 100 100" preserveAspectRatio="none">
-          <path d="M0,62 C20,63 40,64 60,63 80,62 90,61 100,60" />
-        </svg>
-
-        <div class="signal buy"><span class="dot"></span><span>BUY signal</span></div>
-        <div class="signal sell"><span class="dot"></span><span>SELL signal</span></div>
-
-        <div class="price-line" id="chart-price-label">$98,432.50</div>
-
-        <div class="legend">
-          <div class="legend-item"><span class="legend-swatch swatch-ema20"></span>SMA 20</div>
-          <div class="legend-item"><span class="legend-swatch swatch-ema50"></span>SMA 50</div>
-          <div class="legend-item"><span class="legend-swatch swatch-ema200"></span>SMA 100</div>
-        </div>
-
-        <!-- TIMEFRAME CONTROLS -->
-        <div style="position: absolute; top: 10px; left: 10px; display: flex; gap: 4px; z-index: 100; flex-wrap: wrap;">
-          <button onclick="switchTimeframe('1d')" class="tf-btn active" data-tf="1d" style="background: var(--orange); border: 1px solid var(--orange); color: #000; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">1D</button>
-          <button onclick="switchTimeframe('1w')" class="tf-btn" data-tf="1w" style="background: transparent; border: 1px solid #666; color: #fff; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">1W</button>
-          <button onclick="switchTimeframe('1m')" class="tf-btn" data-tf="1m" style="background: transparent; border: 1px solid #666; color: #fff; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">1M</button>
-          <button onclick="switchTimeframe('3m')" class="tf-btn" data-tf="3m" style="background: transparent; border: 1px solid #666; color: #fff; width: 40px; height: 32px; border-radius: 3px; cursor: pointer; font-weight: 700; font-size: 0.9em; transition: all 0.2s;">3M</button>
-        </div>
-      </div>
-
-      <!-- CANDLESTICK CHART -->
-      <div style="color: #ffffff; font-weight: 700; margin-top: 20px; margin-bottom: 12px; font-size: 1.05em;">CANDLESTICK CHART (4H)</div>
-      <div id="candlestick-chart" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); gap: 2px; height: 200px; background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-bottom: 20px;"></div>
-
-      <!-- GENIUS AI MARKET ANALYSIS -->
-      <div class="genius-ai" style="margin: 20px 0;">
-        <div class="genius-ai-header">
-          <span class="genius-ai-status"></span>
-          <h3>⚡ GENIUS MARKET ANALYSIS</h3>
-        </div>
-        <div class="genius-ai-content" id="genius-analysis">
-          📊 BTC at $98,432 showing strong consolidation. Market sentiment is BULLISH with short liquidations exceeding long liquidations by 353M. Support holding at $96,500 - crucial level to watch.
-        </div>
-        <div id="genius-warning" class="genius-ai-warning" style="display: none;">
-          ⚠️ PEAK WARNING: Price near resistance ($100,000). High risk of pullback. Consider taking profits or reducing leverage.
-        </div>
-        <div id="genius-insight" class="genius-ai-insight" style="display: none;">
-          ✓ BULLISH SIGNAL: Volume surge + Short liquidations indicate strong buying pressure. Potential breakout above $99,500 in next 4H candle.
-        </div>
-      </div>
-
-      <!-- LIQUIDITY GRAB INFO -->
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIQUIDITY GRAB ZONES</div>
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;">
-        <div style="background: var(--panel); border: 1px solid #ff4444; border-left: 3px solid #ff4444; padding: 12px; border-radius: 4px;">
-          <div style="color: #ff4444; font-weight: 700; font-size: 0.9em;">SELL LIQUIDITY</div>
-          <div style="color: #fff; margin-top: 4px; font-size: 0.85em;">Strong offers above $99,500 — liquidation risk ↑</div>
-        </div>
-        <div style="background: var(--panel); border: 1px solid #44ff44; border-left: 3px solid #44ff44; padding: 12px; border-radius: 4px;">
-          <div style="color: #44ff44; font-weight: 700; font-size: 0.9em;">BUY LIQUIDITY</div>
-          <div style="color: #fff; margin-top: 4px; font-size: 0.85em;">Strong bids near $96,000 — support zone</div>
-        </div>
-      </div>
-
-      <!-- LIQUIDATIONS INFO -->
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LARGE LIQUIDATIONS (Last 24H)</div>
-      <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 4px; padding: 14px; margin-bottom: 20px;">
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px;">
-          <div style="background: rgba(255, 68, 68, 0.1); border-left: 3px solid #ff4444; padding: 10px; border-radius: 3px;">
-            <div style="color: #ff4444; font-weight: 700; font-size: 0.9em;">SHORT LIQUIDATIONS</div>
-            <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-shorts">$1,245M</div>
-            <div style="color: #999; font-size: 0.8em; margin-top: 4px;">↓ Liquidations (Bullish)</div>
-          </div>
-          <div style="background: rgba(74, 222, 128, 0.1); border-left: 3px solid #4ade80; padding: 10px; border-radius: 3px;">
-            <div style="color: #4ade80; font-weight: 700; font-size: 0.9em;">LONG LIQUIDATIONS</div>
-            <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-longs">$892M</div>
-            <div style="color: #999; font-size: 0.8em; margin-top: 4px;">↑ Liquidations (Bearish)</div>
-          </div>
-          <div style="background: rgba(255, 165, 0, 0.1); border-left: 3px solid #ff8c00; padding: 10px; border-radius: 3px;">
-            <div style="color: #ff8c00; font-weight: 700; font-size: 0.9em;">TOTAL 24H</div>
-            <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-total">$2,137M</div>
-            <div style="color: #999; font-size: 0.8em; margin-top: 4px;">Combined liquidations</div>
-          </div>
-        </div>
-      </div>
-
-
-
-      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;" data-i18n="large-transfers">LARGE TRANSFERS</div>
-      <div class="transfers-inline">
-        <div class="transfer-card">
-          <div style="font-weight: 700;">1,250 BTC</div>
-          <div class="meta">SELL • Whale Activity</div>
-          <div class="time">19:32 UTC</div>
-        </div>
-        <div class="transfer-card">
-          <div style="font-weight: 700;">890 BTC</div>
-          <div class="meta">BUY • Accumulation Signal</div>
-          <div class="time">19:28 UTC</div>
-        </div>
-        <div class="transfer-card">
-          <div style="font-weight: 700;">2,100 BTC</div>
-          <div class="meta">SELL • Major Outflow</div>
-          <div class="time">19:15 UTC</div>
-        </div>
-      </div>
-    </div>
-  </div>
-        <span>Market Sentiment</span>
-        <span id="fng-label">--</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- TICKER -->
-  <div class="ticker-container">
-    <div class="ticker">
-      <div class="ticker-item">
-        <span class="ticker-label">BTC:</span> <span id="ticker-btc">$0</span>
-      </div>
-      <div class="ticker-item">
-        <span class="ticker-label">ETH:</span> <span id="ticker-eth">$0</span>
-      </div>
-      <div class="ticker-item">
-        <span class="ticker-label">SPY:</span> <span id="ticker-spy">$0</span>
-      </div>
-      <div class="ticker-item">
-        <span class="ticker-label">AAPL:</span> <span id="ticker-aapl">$225.50</span>
-      </div>
-      <div class="ticker-item">
-        <span class="ticker-label">MSFT:</span> <span id="ticker-msft">$445.20</span>
-      </div>
-      <div class="ticker-item">
-        <span class="ticker-label">GOLD:</span> <span id="ticker-gold">$0</span>
-      </div>
-      <div class="ticker-item">
-        <span class="ticker-label">EUR/USD:</span> <span id="ticker-eur">$0</span>
-      </div>
-      <div class="ticker-item">
-        <span class="ticker-label">BTC:</span> <span id="ticker-btc-repeat">$0</span>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- NEWS SECTIONS -->
-  <div class="news-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 24px 14px 24px;">
-    <div class="news">
-      <h4 data-i18n="live-news">LIVE NEWS</h4>
-      <div class="news-item">BTC consolidating around $98.5k support level</div>
-      <div class="news-item">Ethereum breaking above $3.8k resistance</div>
-      <div class="news-item">Fed policy meeting scheduled for next week</div>
-      <div class="news-item">AI stocks rallying on earnings beat</div>
-      <div class="news-item">Crypto market volume increasing steadily</div>
-    </div>
-    <div class="news">
-      <h4 data-i18n="market-alerts">MARKET ALERTS</h4>
-      <div class="news-item">Major liquidation zone at $97.2k identified</div>
-      <div class="news-item">Bitcoin funding rates elevated - caution advised</div>
-      <div class="news-item">Large transfer detected: 1,250 BTC moved</div>
-      <div class="news-item">DXY approaching key resistance level</div>
-      <div class="news-item">Gold futures gaining on market uncertainty</div>
-    </div>
-  </div>
-
-  <!-- TRANSFERS -->
-  <div class="main-grid">
-    <div class="chart-panel">
-      <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;" data-i18n="large-transfers">LARGE TRANSFERS</div>
-      <div class="transfers-inline">
-        <div class="transfer-card">
-          <div style="font-weight: 700;">1,250 BTC</div>
-          <div class="meta">SELL • Whale Activity</div>
-          <div class="time">19:32 UTC</div>
-        </div>
-        <div class="transfer-card">
-          <div style="font-weight: 700;">890 BTC</div>
-          <div class="meta">BUY • Accumulation Signal</div>
-          <div class="time">19:28 UTC</div>
-        </div>
-        <div class="transfer-card">
-          <div style="font-weight: 700;">2,100 BTC</div>
-          <div class="meta">SELL • Major Outflow</div>
-          <div class="time">19:15 UTC</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  </div><!-- END DASHBOARD TAB -->
-
-  <!-- GENIUS AI + PRICE MAP (bottom) -->
-  <!-- TAB CONTENT - TECHNICAL INDICATORS -->
-  <div id="technical" class="tab-content">
-    <div style="padding: 0 24px; margin-bottom: 20px;">
-      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">🔧 TECHNICAL INDICATORS</h2>
+    <!-- LARGE TRANSFERS (BLOOMBERG STYLE) -->
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 12px;">
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em; letter-spacing: 0.5px;">LARGE TRANSFERS</div>
       
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
-        <!-- RSI -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">RSI (14)</div>
-          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-rsi">55</div>
-          <div style="color: #666; font-size: 0.8em;">Status: Neutral • Momentum ↑</div>
-          <div style="width: 100%; height: 4px; background: #333; margin-top: 6px; border-radius: 2px; overflow: hidden;">
-            <div style="width: 55%; height: 100%; background: linear-gradient(90deg, #7cff9c, #ffca3a); border-radius: 2px;"></div>
-          </div>
+      <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
+        <div>
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">BUY 1,250 BTC</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Institutional Flow</div>
         </div>
-        
-        <!-- MACD -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MACD</div>
-          <div style="color: #4ade80; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-macd">BULLISH</div>
-          <div style="color: #666; font-size: 0.8em;">Line: +1.234 • Signal: +0.856</div>
-          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Positive crossover confirmed</div>
-        </div>
-        
-        <!-- STOCHASTIC -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">STOCHASTIC</div>
-          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-stoch">68/75</div>
-          <div style="color: #666; font-size: 0.8em;">%K: 68 • %D: 75</div>
-          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">⚠️ Overbought zone approaching</div>
-        </div>
-        
-        <!-- BOLLINGER BANDS -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">BOLLINGER BANDS</div>
-          <div style="color: #ffffff; font-size: 0.9em; margin-bottom: 4px;">
-            <div>Upper: <span style="color: #ff8c8c; font-weight: 700;" id="tech-bb-upper">$100,450</span></div>
-            <div>Mid: <span style="color: #ffca3a; font-weight: 700;" id="tech-bb-mid">$98,450</span></div>
-            <div>Lower: <span style="color: #7cff9c; font-weight: 700;" id="tech-bb-lower">$96,450</span></div>
-          </div>
-        </div>
-        
-        <!-- VOLUME -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">24H VOLUME</div>
-          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-volume">$28.5B</div>
-          <div style="color: #4ade80; font-size: 0.8em;">↑ Above average (120%)</div>
-          <div style="color: #666; font-size: 0.8em; margin-top: 4px;">Confirming uptrend</div>
-        </div>
-        
-        <!-- OBV -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">ON-BALANCE VOLUME</div>
-          <div style="color: #4ade80; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="tech-obv">+2.8M</div>
-          <div style="color: #666; font-size: 0.8em;">Trend: Bullish accumulation</div>
-          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Buying pressure dominant</div>
+        <div style="text-align: right;">
+          <div class="pos" style="font-size: 0.95em;">$98,450</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">2m ago</div>
         </div>
       </div>
-
-      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; border-left: 3px solid #4ade80;">
-        <h3 style="color: #4ade80; font-weight: 700; margin-bottom: 8px;">📊 INDICATOR SUMMARY</h3>
-        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
-          <div>✓ EMA Golden Cross confirmed (20 > 50 > 200)</div>
-          <div>✓ Volume surge backing price movement</div>
-          <div>⚠️ RSI in neutral zone - room for continuation</div>
-          <div>✓ MACD bullish divergence strengthening</div>
-          <div>Overall Trend: <span style="color: #4ade80; font-weight: 700;">BULLISH ↑</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB CONTENT - SIGNALS -->
-  <div id="signals" class="tab-content">
-    <div style="padding: 0 24px; margin-bottom: 20px;">
-      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">⚡ TRADING SIGNALS</h2>
       
-      <div style="background: var(--panel); border: 1px solid var(--border); border-left: 3px solid #4ade80; padding: 14px; border-radius: 4px; margin-bottom: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <h3 style="color: #4ade80; font-weight: 700; margin: 0;">🟢 ENTRY SIGNAL</h3>
-          <span style="background: #4ade80; color: #000; padding: 4px 8px; border-radius: 3px; font-weight: 700; font-size: 0.85em;">ACTIVE</span>
+      <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
+        <div>
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">SELL 890 BTC</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Whale Exit</div>
         </div>
-        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
-          <div>Type: <span style="color: #4ade80; font-weight: 700;">LONG</span> (Golden Cross confirmation)</div>
-          <div>Price Zone: $98,000 - $98,500 (Current: $98,432)</div>
-          <div>Confidence: <span style="color: #ffca3a; font-weight: 700;">78%</span></div>
-          <div>Triggered: <span style="color: #999;">19:15 UTC</span></div>
-          <div style="margin-top: 8px; color: #4ade80; font-size: 0.85em;">✓ Conditions: EMA aligned + Volume confirmed + RSI non-extreme</div>
+        <div style="text-align: right;">
+          <div class="neg" style="font-size: 0.95em;">$98,420</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">5m ago</div>
         </div>
       </div>
-
-      <div style="background: var(--panel); border: 1px solid var(--border); border-left: 3px solid #ff8c8c; padding: 14px; border-radius: 4px; margin-bottom: 12px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-          <h3 style="color: #ff8c8c; font-weight: 700; margin: 0;">🔴 EXIT SIGNAL</h3>
-          <span style="background: #666; color: #fff; padding: 4px 8px; border-radius: 3px; font-weight: 700; font-size: 0.85em;">WATCH</span>
-        </div>
-        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
-          <div>Type: <span style="color: #ff8c8c; font-weight: 700;">PARTIAL PROFIT TARGET</span></div>
-          <div>Price Level: $99,500 (Resistance)</div>
-          <div>Risk/Reward: <span style="color: #4ade80; font-weight: 700;">1:2.45</span></div>
-          <div>Profit on Entry: <span style="color: #4ade80; font-weight: 700;">+$1,068 per contract</span></div>
-          <div style="margin-top: 8px; color: #ff8c8c; font-size: 0.85em;">⚠️ Set tight stop at support if pullback</div>
-        </div>
-      </div>
-
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px;">
-        <!-- CONFIRMATION -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">CONFIRMATION LEVEL</div>
-          <div style="color: #4ade80; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">$99,000</div>
-          <div style="color: #666; font-size: 0.8em;">Break above = Strong continuation</div>
-        </div>
-
-        <!-- INVALIDATION -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">INVALIDATION POINT</div>
-          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">$96,500</div>
-          <div style="color: #666; font-size: 0.8em;">Break below = Pattern fail</div>
-        </div>
-
-        <!-- RISK/REWARD -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">R:R RATIO</div>
-          <div style="color: #ffca3a; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">1:2.45</div>
-          <div style="color: #666; font-size: 0.8em;">Risk $500, Gain $1,225</div>
-        </div>
-
-        <!-- WIN RATE -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">WIN RATE (SIMILAR SETUP)</div>
-          <div style="color: #4ade80; font-weight: 700; font-size: 1.1em; margin-bottom: 4px;">71.2%</div>
-          <div style="color: #666; font-size: 0.8em;">Based on 85 historical trades</div>
-        </div>
-      </div>
-
-      <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-top: 12px;">
-        <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">📅 RECENT SIGNALS HISTORY</div>
-        <div style="color: #ffffff; font-size: 0.9em;">
-          <div style="margin: 6px 0;">✓ LONG entered $97,850 - TP hit $99,500 (+1.68%) 22:15 UTC</div>
-          <div style="margin: 6px 0;">✓ SHORT entered $99,200 - TP hit $98,100 (+1.11%) 18:30 UTC</div>
-          <div style="margin: 6px 0;">✓ LONG entered $96,700 - TP hit $99,000 (+2.38%) 14:45 UTC</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB CONTENT - RISK MANAGEMENT -->
-  <div id="risk" class="tab-content">
-    <div style="padding: 0 24px; margin-bottom: 20px;">
-      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">⚠️ RISK MANAGEMENT</h2>
       
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
-        <!-- POSITION SIZE -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">RECOMMENDED POSITION</div>
-          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-pos-size">2.5 BTC</div>
-          <div style="color: #666; font-size: 0.8em;">Based on 2% account risk</div>
-          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">⚠️ Adjust for your account size</div>
+      <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
+        <div>
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">BUY 2,100 BTC</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Exchange Accumulation</div>
         </div>
-
-        <!-- STOP LOSS -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">STOP LOSS LEVEL</div>
-          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-stop-loss">$96,500</div>
-          <div style="color: #666; font-size: 0.8em;">Distance: 1.88% from entry</div>
-          <div style="color: #ff8c8c; font-size: 0.8em; margin-top: 4px;">Critical: Do not move SL up!</div>
-        </div>
-
-        <!-- LIQUIDATION PRICE -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">LIQUIDATION PRICE</div>
-          <div style="color: #ff4444; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-liq-price">$95,200</div>
-          <div style="color: #666; font-size: 0.8em;">At 10x leverage, 2.5 BTC</div>
-          <div style="color: #ff4444; font-size: 0.8em; margin-top: 4px;">🔴 Extreme risk - use 5x max</div>
-        </div>
-
-        <!-- MARGIN USAGE -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MARGIN USAGE</div>
-          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-margin">34%</div>
-          <div style="color: #4ade80; font-size: 0.8em;">Safe zone (below 50%)</div>
-          <div style="width: 100%; height: 4px; background: #333; margin-top: 6px; border-radius: 2px; overflow: hidden;">
-            <div style="width: 34%; height: 100%; background: #4ade80; border-radius: 2px;"></div>
-          </div>
-        </div>
-
-        <!-- MAX DRAWDOWN -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MAX DRAWDOWN RISK</div>
-          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-max-dd">-5.8%</div>
-          <div style="color: #666; font-size: 0.8em;">If SL hit on full position</div>
-          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">Acceptable for this setup</div>
-        </div>
-
-        <!-- DAILY LOSS LIMIT -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">DAILY LOSS LIMIT</div>
-          <div style="color: #ff8c8c; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;" id="risk-daily-limit">-$2,500</div>
-          <div style="color: #666; font-size: 0.8em;">Close all trades if hit</div>
-          <div style="color: #ff8c8c; font-size: 0.8em; margin-top: 4px;">3 losses max = Take break</div>
+        <div style="text-align: right;">
+          <div class="pos" style="font-size: 0.95em;">$98,435</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">8m ago</div>
         </div>
       </div>
-
-      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; border-left: 3px solid #ffca3a; margin-bottom: 20px;">
-        <h3 style="color: #ffca3a; font-weight: 700; margin-bottom: 8px;">⚡ RISK CHECKLIST</h3>
-        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.8;">
-          <div>☑️ Stop loss set and protected</div>
-          <div>☑️ Position size within plan</div>
-          <div>☑️ R:R ratio favorable (1:2.45)</div>
-          <div>☑️ Margin usage safe (34%)</div>
-          <div>☑️ Liquidation far from SL</div>
-          <div>☑️ Daily loss limit intact</div>
-          <div style="color: #4ade80; margin-top: 8px;">✓ Ready to trade</div>
-        </div>
-      </div>
-
-      <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-        <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">🎯 PORTFOLIO ALLOCATION</div>
-        <div style="color: #ffffff; font-size: 0.9em;">
-          <div style="margin: 6px 0;">BTC Long: 45% | Spot Holding</div>
-          <div style="margin: 6px 0;">ETH Long: 25% | 3x leverage</div>
-          <div style="margin: 6px 0;">Stables: 30% | Ready for dip</div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- TAB CONTENT - MARKET DEPTH -->
-  <div id="depth" class="tab-content">
-    <div style="padding: 0 24px; margin-bottom: 20px;">
-      <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700;">📈 MARKET DEPTH ANALYSIS</h2>
       
-      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; margin-bottom: 20px;">
-        <div style="color: #999; font-size: 0.85em; margin-bottom: 10px;">ORDER BOOK SNAPSHOT</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-          <!-- BIDS (GREEN) -->
-          <div>
-            <div style="color: #4ade80; font-weight: 700; margin-bottom: 8px; text-align: center;">🟢 BID SIDE (Buy Orders)</div>
-            <div style="font-size: 0.85em; color: #ffffff; line-height: 1.8;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,400</div>
-                <div style="text-align: right; color: #4ade80;">████████ 125 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,350</div>
-                <div style="text-align: right; color: #4ade80;">██████ 89 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,300</div>
-                <div style="text-align: right; color: #4ade80;">████ 52 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,250</div>
-                <div style="text-align: right; color: #4ade80;">██ 28 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div>$98,200</div>
-                <div style="text-align: right; color: #4ade80;">█ 15 BTC</div>
-              </div>
-            </div>
-            <div style="background: rgba(74, 222, 128, 0.1); padding: 8px; margin-top: 8px; border-radius: 3px; text-align: center; color: #4ade80; font-weight: 700;">
-              TOTAL BID VOLUME: 309 BTC ($30.5M)
-            </div>
-          </div>
-
-          <!-- ASKS (RED) -->
-          <div>
-            <div style="color: #ff8c8c; font-weight: 700; margin-bottom: 8px; text-align: center;">🔴 ASK SIDE (Sell Orders)</div>
-            <div style="font-size: 0.85em; color: #ffffff; line-height: 1.8;">
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,500</div>
-                <div style="text-align: right; color: #ff8c8c;">████████ 142 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,550</div>
-                <div style="text-align: right; color: #ff8c8c;">██████ 95 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,600</div>
-                <div style="text-align: right; color: #ff8c8c;">████ 58 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 6px;">
-                <div>$98,650</div>
-                <div style="text-align: right; color: #ff8c8c;">██ 32 BTC</div>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                <div>$98,700</div>
-                <div style="text-align: right; color: #ff8c8c;">█ 18 BTC</div>
-              </div>
-            </div>
-            <div style="background: rgba(255, 140, 140, 0.1); padding: 8px; margin-top: 8px; border-radius: 3px; text-align: center; color: #ff8c8c; font-weight: 700;">
-              TOTAL ASK VOLUME: 345 BTC ($34.1M)
-            </div>
-          </div>
+      <div class="transfer-row" style="padding: 10px 0;">
+        <div>
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">ICEBERG 3,200 BTC</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Hidden Order Detected</div>
+        </div>
+        <div style="text-align: right;">
+          <div style="color: var(--cyan); font-weight: 700; font-size: 0.95em;">$98,300</div>
+          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">12m ago</div>
         </div>
       </div>
+      
+      <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1a1a1a;">
+        <div style="color: var(--gray); font-size: 0.75em;">Total Volume: <span style="color: #ffffff; font-weight: 700;">7,440 BTC</span></div>
+      </div>
+    </div>
+  </div>
 
-      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px;">
-        <!-- SPREAD -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">BID-ASK SPREAD</div>
-          <div style="color: #ffca3a; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">$100 (0.10%)</div>
-          <div style="color: #666; font-size: 0.8em;">Standard for BTC/USD</div>
-          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Tight & liquid</div>
+  <!-- GENIUS AI (BLOOMBERG STYLE - POD WYKRESEM) -->
+  <div style="padding: 0 24px 14px 24px;">
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px;">
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 14px; font-size: 1.05em; letter-spacing: 0.5px; text-transform: uppercase;">GENIUS AI ANALYSIS</div>
+      
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">BUY SIGNAL</div>
+          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Strong momentum + RSI bounce from 48. Target: $97.4k</div>
         </div>
-
-        <!-- IMBALANCE -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">ORDER BOOK IMBALANCE</div>
-          <div style="color: #ffffff; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">45% Bullish</div>
-          <div style="color: #666; font-size: 0.8em;">More BUY orders on book</div>
-          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">Favors upside</div>
+        
+        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">LIQUIDITY ALERT</div>
+          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Major buy wall detected at $94.8k. Support confirmed.</div>
         </div>
-
-        <!-- LIQUIDITY -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">MARKET LIQUIDITY</div>
-          <div style="color: #4ade80; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">$64.6M</div>
-          <div style="color: #666; font-size: 0.8em;">Total depth (5 levels)</div>
-          <div style="color: #4ade80; font-size: 0.8em; margin-top: 4px;">✓ Excellent liquidity</div>
+        
+        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">FVG ANALYSIS</div>
+          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Fair Value Gap detected. Expect retest at $95.2k zone.</div>
         </div>
-
-        <!-- SLIPPAGE ESTIMATE -->
-        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px;">
-          <div style="color: #999; font-size: 0.85em; margin-bottom: 6px;">SLIPPAGE (100 BTC)</div>
-          <div style="color: #ffca3a; font-weight: 700; font-size: 1.3em; margin-bottom: 4px;">-0.28%</div>
-          <div style="color: #666; font-size: 0.8em;">Market order cost</div>
-          <div style="color: #ffca3a; font-size: 0.8em; margin-top: 4px;">⚠️ Use limit orders</div>
+        
+        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">RISK WARNING</div>
+          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Resistance at $97.4k strong. Watch for rejection signals.</div>
         </div>
       </div>
+      
+      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #1a1a1a; text-align: right;">
+        <span style="color: var(--gray); font-size: 0.8em;">AI Confidence: </span>
+        <span style="color: #ffffff; font-weight: 700; font-size: 0.85em;">87%</span>
+      </div>
+    </div>
+  </div>
 
-      <div style="background: var(--panel); border: 1px solid var(--border); padding: 14px; border-radius: 4px; border-left: 3px solid #ff8c00;">
-        <h3 style="color: #ff8c00; font-weight: 700; margin-bottom: 8px;">💡 DEPTH INSIGHTS</h3>
-        <div style="color: #ffffff; font-size: 0.9em; line-height: 1.6;">
-          <div>📊 Bid/Ask imbalance suggests bullish pressure</div>
-          <div>🟢 Strong buy wall at $98,400 (125 BTC) = support forming</div>
-          <div>🔴 Resistance at $98,500-$98,700 area (295 BTC) = watch carefully</div>
-          <div>✓ Liquidity excellent for scaling position entry</div>
-          <div>⚠️ Watch for wall breakdown/stacking changes</div>
+  <!-- DASHBOARD TAB CONTENT (dodatkowe info) -->
+  <div id="dashboard" class="tab-content">
+    <h2>Dashboard • szybki podgląd</h2>
+    <p style="color: var(--gray);">Widok główny jest nad menu, a tu masz notatki akcji: Radar Snajperski BTC, szybkie sygnały i mini-wykres z panelu menu.</p>
+  </div>
+
+  <!-- ON-CHAIN & FLOWS TAB -->
+  <div id="onchain-flows" class="tab-content">
+    <h2>On-chain & Flows</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Stablecoin Netflow</h4>
+        <p>24h: <span class="trend-up">+$180M</span></p>
+        <p>Bias: popyt spot ↑</p>
+        <p>Watch: odwrót &lt; +$50M</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,30 25,24 45,18 65,22 85,15 105,20" fill="none" stroke="var(--green)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+      <div class="trend-card">
+        <h4>ETF Spot BTC</h4>
+        <p>Dzienny napływ: <span class="trend-up">+$220M</span></p>
+        <p>5d avg: +$140M</p>
+        <p>Ryzyko: <span class="trend-down">spadek &lt; +$50M</span></p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,25 25,26 45,24 65,22 85,20 105,18" fill="none" stroke="var(--yellow)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+      <div class="trend-card">
+        <h4>Exchange Flows</h4>
+        <p>Net outflow: <span class="trend-up">-3.2k BTC</span></p>
+        <p>Presja podaży maleje</p>
+        <p>Alert: duży inflow = risk-off</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,18 25,20 45,24 65,28 85,26 105,30" fill="none" stroke="var(--cyan)" stroke-width="2" />
+          </svg>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- RETRO TERMINAL (gameboy/professional) -->
-  <iframe id="retro-page" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100vh; border: none; z-index: 1000;" src="professional_dashboard_final.html"></iframe>
-
-  <!-- DETAILED MODE SIDE PANEL -->
-  <div id="detailed-mode-panel" class="detailed-mode-panel">
-    <!-- PRICE LEVELS SECTION -->
-    <div class="detail-section">
-      <div class="detail-section-header" onclick="toggleDetailSection(this);">
-        💰 PRICE LEVELS
-        <span class="detail-section-icon">▼</span>
-      </div>
-      <div class="detail-section-content">
-        <div class="detail-item">
-          <div class="detail-item-label">Resistance 1</div>
-          <div class="detail-item-value" id="detail-res1">$100,000</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Resistance 2</div>
-          <div class="detail-item-value" id="detail-res2">$102,500</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Support 1</div>
-          <div class="detail-item-value" id="detail-sup1">$96,500</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Support 2</div>
-          <div class="detail-item-value" id="detail-sup2">$94,000</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Pivot Point</div>
-          <div class="detail-item-value" id="detail-pivot">$98,250</div>
+  <!-- RISK & POSITIONING TAB -->
+  <div id="risk-positioning" class="tab-content">
+    <h2>Risk & Positioning</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Funding / Skew</h4>
+        <p>Funding: <span class="trend-up">+0.008%</span></p>
+        <p>Skew: lekko long</p>
+        <p>Alert: &gt;0.012% redukuj</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,24 25,22 45,20 65,21 85,19 105,18" fill="none" stroke="var(--orange)" stroke-width="2" />
+          </svg>
         </div>
       </div>
-    </div>
-
-    <!-- VOLATILITY SECTION -->
-    <div class="detail-section">
-      <div class="detail-section-header collapsed" onclick="toggleDetailSection(this);">
-        📊 VOLATILITY METRICS
-        <span class="detail-section-icon">▼</span>
-      </div>
-      <div class="detail-section-content">
-        <div class="detail-item">
-          <div class="detail-item-label">ATR (14)</div>
-          <div class="detail-item-value" id="detail-atr">2,145</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">RSI (14)</div>
-          <div class="detail-item-value" id="detail-rsi">65</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">MACD</div>
-          <div class="detail-item-value positive" id="detail-macd">BULLISH</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Bollinger Bands</div>
-          <div class="detail-item-value" id="detail-bb">Upper: 102k</div>
+      <div class="trend-card">
+        <h4>Open Interest</h4>
+        <p>OI: $12.4B</p>
+        <p>d/d: <span class="trend-up">+3%</span></p>
+        <p>Brak przegrzania</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,28 25,26 45,24 65,22 85,20 105,19" fill="none" stroke="var(--green)" stroke-width="2" />
+          </svg>
         </div>
       </div>
-    </div>
-
-    <!-- FUNDING RATES SECTION -->
-    <div class="detail-section">
-      <div class="detail-section-header collapsed" onclick="toggleDetailSection(this);">
-        ⚡ FUNDING RATES
-        <span class="detail-section-icon">▼</span>
-      </div>
-      <div class="detail-section-content">
-        <div class="detail-item">
-          <div class="detail-item-label">Perpetual Rate</div>
-          <div class="detail-item-value positive" id="detail-fund-rate">+0.015%</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">8h Funding</div>
-          <div class="detail-item-value positive" id="detail-fund-8h">+0.045%</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Long Ratio</div>
-          <div class="detail-item-value" id="detail-long-ratio">58.5%</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Short Ratio</div>
-          <div class="detail-item-value" id="detail-short-ratio">41.5%</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ORDER BOOK SECTION -->
-    <div class="detail-section">
-      <div class="detail-section-header collapsed" onclick="toggleDetailSection(this);">
-        📈 ORDER BOOK DEPTH
-        <span class="detail-section-icon">▼</span>
-      </div>
-      <div class="detail-section-content">
-        <div class="detail-item">
-          <div class="detail-item-label">Bid Wall (5x)</div>
-          <div class="detail-item-value positive" id="detail-bid-wall">$875M</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Ask Wall (5x)</div>
-          <div class="detail-item-value negative" id="detail-ask-wall">$1.2B</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Spread</div>
-          <div class="detail-item-value" id="detail-spread">$12.50</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- WHALE ACTIVITY SECTION -->
-    <div class="detail-section">
-      <div class="detail-section-header collapsed" onclick="toggleDetailSection(this);">
-        🐳 WHALE ACTIVITY
-        <span class="detail-section-icon">▼</span>
-      </div>
-      <div class="detail-section-content">
-        <div class="detail-item">
-          <div class="detail-item-label">Buy Volume</div>
-          <div class="detail-item-value positive" id="detail-whale-buy">$2.4B</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Sell Volume</div>
-          <div class="detail-item-value negative" id="detail-whale-sell">$1.8B</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Whale Sentiment</div>
-          <div class="detail-item-value positive" id="detail-whale-sent">ACCUMULATING</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- MACRO INDICATORS SECTION -->
-    <div class="detail-section">
-      <div class="detail-section-header collapsed" onclick="toggleDetailSection(this);">
-        🌍 MACRO INDICATORS
-        <span class="detail-section-icon">▼</span>
-      </div>
-      <div class="detail-section-content">
-        <div class="detail-item">
-          <div class="detail-item-label">BTC Dominance</div>
-          <div class="detail-item-value" id="detail-btc-dom">48.5%</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Alt Season</div>
-          <div class="detail-item-value positive" id="detail-alt-season">ACTIVE</div>
-        </div>
-        <div class="detail-item">
-          <div class="detail-item-label">Stablecoin Reserves</div>
-          <div class="detail-item-value" id="detail-stable-res">$145B</div>
+      <div class="trend-card">
+        <h4>Liquidation Map</h4>
+        <p>Short liq: 97.4k</p>
+        <p>Long liq: 94.8k</p>
+        <p>Scenariusz: graj pod sweep shortów</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,30 25,18 45,20 65,16 85,22 105,14" fill="none" stroke="var(--red)" stroke-width="2" />
+          </svg>
         </div>
       </div>
     </div>
   </div>
+
+  <!-- EXECUTION PLAYBOOK TAB -->
+  <div id="execution-playbook" class="tab-content">
+    <h2>Execution Playbook</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Scalp</h4>
+        <p>Entry: 95.2k (FVG)</p>
+        <p>TP: 97.4k</p>
+        <p>SL: 94.2k • size 0.35x</p>
+        <button class="cta-btn">Ustaw alert</button>
+      </div>
+      <div class="trend-card">
+        <h4>Intraday</h4>
+        <p>Buy: 95.8–96.2k jeśli RSI1H&gt;45</p>
+        <p>TP1 97.4k, TP2 99k</p>
+        <p>Trailing: EMA20 1H</p>
+        <button class="cta-btn">Dodaj do playbooka</button>
+      </div>
+      <div class="trend-card">
+        <h4>Swing</h4>
+        <p>Po wybiciu 98k → hold do 105k</p>
+        <p>Hedge 25% jeśli &lt;96k</p>
+        <p>Rewizja codziennie 21:00 UTC</p>
+        <button class="cta-btn">Wyślij alert</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTS & JOURNAL TAB -->
+  <div id="alerts-journal" class="tab-content">
+    <h2>Alerts & Journal</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Alerty aktywne</h4>
+        <p>• 97.4k SELL sweep</p>
+        <p>• Funding &gt; 0.012%</p>
+        <p>• ETF inflow &lt; +$50M</p>
+        <button class="cta-btn">Zarządzaj alertami</button>
+      <div class="trend-card">
+        <h4>Checklist</h4>
+        <p>[ ] Trend 1H zgodny z 4H</p>
+        <p>[ ] Funding OK</p>
+        <p>[ ] Poziomy 95.2k/97.4k ustawione</p>
+      </div>
+        <button class="cta-btn">Odhacz</button>
+        <h4>Notatki</h4>
+        <p>Zapisz po trade: co zadziałało, co poprawić, decyzje emocjonalne vs plan.</p>
+      </div>
+    </div>
+        <button class="cta-btn">Dodaj notatkę</button>
+
+  <!-- TREND ANALYSIS TAB -->
+  <div id="trend-analysis" class="tab-content">
+    <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700; letter-spacing: 0.5px;">TREND ANALYSIS - Bitcoin</h2>
+    
+    <!-- MAIN TREND INDICATORS -->
+    <div class="trend-grid">
+      <div class="trend-card">
+        <h4>MAIN TREND</h4>
+        <p>Direction: <span class="trend-up">UPTREND</span></p>
+        <p>Strength: <span class="trend-value">STRONG</span></p>
+        <p>Status: Price above EMA 50</p>
+      </div>
+
+      <div class="trend-card">
+        <h4>KEY LEVELS</h4>
+        <p>Resistance: <span class="trend-value">$97,400</span></p>
+        <p>Support: <span class="trend-value">$94,800</span></p>
+        <p>Range: $2,600</p>
+      </div>
+
+      <div class="trend-card">
+        <h4>MOMENTUM</h4>
+        <p>RSI 14: <span class="trend-up">62.3</span> (Bullish)</p>
+        <p>MACD: <span class="trend-up">Positive Divergence</span></p>
+        <p>Volume: Above Average</p>
+      </div>
+
+      <div class="trend-card">
+        <h4>SIGNAL QUALITY</h4>
+        <p>Last BUY Signal: <span class="trend-up">Valid (84M Liq)</span></p>
+        <p>Last SELL Signal: <span class="trend-down">Valid (96M Liq)</span></p>
+        <p>Signal Accuracy: 78%</p>
+      </div>
+
+      <div class="trend-card">
+        <h4>LIQUIDITY ZONES</h4>
+        <p>Buy Zone: $94.8k - $95.1k</p>
+        <p>Sell Zone: $96.0k - $96.3k</p>
+        <p>Strength: <span class="trend-up">DEEP</span></p>
+      </div>
+
+      <div class="trend-card">
+        <h4>RISK/REWARD</h4>
+        <p>Risk/Reward: <span class="trend-value">1:2.5</span></p>
+        <p>Stop Loss: $94,200</p>
+        <p>Take Profit: $99,500</p>
+      </div>
+
+      <div class="trend-card">
+        <h4>MARKET STRUCTURE</h4>
+        <p>Higher Highs: <span class="trend-up">YES</span></p>
+        <p>Higher Lows: <span class="trend-up">YES</span></p>
+        <p>Trend Quality: <span class="trend-up">STRUCTURAL</span></p>
+      </div>
+
+      <div class="trend-card">
+        <h4>TIME FRAME STATUS</h4>
+        <p>1D: <span class="trend-up">UPTREND</span></p>
+        <p>4H: <span class="trend-up">UPTREND</span></p>
+        <p>1H: <span class="trend-neutral">CONSOLIDATING</span></p>
+      </div>
+
+      <div class="trend-card">
+        <h4>NEXT TARGET</h4>
+        <p>Short Term: $97,400</p>
+        <p>Medium Term: $100,000</p>
+        <p>Long Term: $105,000+</p>
+      </div>
+    </div>
+
+    <!-- DETAILED TECHNICAL SUMMARY -->
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px; margin-bottom: 14px;">
+      <h3 style="color: #ffffff; margin-bottom: 10px; font-weight: 700;">TECHNICAL SUMMARY</h3>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px;">
+        <div>
+          <p style="color: var(--gray); margin-bottom: 8px;"><strong>BULLISH FACTORS:</strong></p>
+          <ul style="list-style: none; padding-left: 0; color: var(--green); font-size: 0.9em; line-height: 1.6;">
+            <li>✓ Price above all major moving averages</li>
+            <li>✓ Higher highs and higher lows pattern</li>
+            <li>✓ RSI approaching 65 (strong momentum)</li>
+            <li>✓ Volume increasing on up moves</li>
+            <li>✓ Support holding at $94.8k level</li>
+          </ul>
+        </div>
+        <div>
+          <p style="color: var(--gray); margin-bottom: 8px;"><strong>BEARISH FACTORS:</strong></p>
+          <ul style="list-style: none; padding-left: 0; color: var(--red); font-size: 0.9em; line-height: 1.6;">
+            <li>! RSI above 70 (potential overbought)</li>
+            <li>! Resistance at $97.4k creating cap</li>
+            <li>! Large liquidations detected</li>
+            <li>! Fear & Greed at 62 (moderate)</li>
+            <li>! Watch for pullback to $95.5k</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTION PLAN -->
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px;">
+      <h3 style="color: #ffffff; margin-bottom: 10px; font-weight: 700;">TRADER ACTION PLAN</h3>
+      <p style="color: var(--gray); margin-bottom: 8px; font-size: 0.9em;"><strong>Current Strategy:</strong> <span style="color: var(--green);">LONG BIAS</span></p>
+      <ul style="list-style: none; padding-left: 0; font-size: 0.9em; line-height: 1.6;">
+        <li style="color: #ffffff; margin: 6px 0;"><strong>Entry:</strong> Pullback to $95.8k - $96.2k with BUY signal</li>
+        <li style="color: #ffffff; margin: 6px 0;"><strong>Stop Loss:</strong> $94,200 (break of support)</li>
+        <li style="color: #ffffff; margin: 6px 0;"><strong>Take Profit 1:</strong> $97,400 (resistance break)</li>
+        <li style="color: #ffffff; margin: 6px 0;"><strong>Take Profit 2:</strong> $100,000 (psychological level)</li>
+        <li style="color: #ffffff; margin: 6px 0;"><strong>Watch:</strong> Large liquidation zones - reduce size if RSI > 75</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- KPI CORRELATION TAB (PLACEHOLDER) -->
+  <div id="kpi-correlation" class="tab-content">
+    <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em; font-weight: 700; letter-spacing: 0.5px;">KPI CORRELATION ANALYSIS</h2>
+    
+    <div class="corr-wrapper">
+      <div class="corr-controls">
+        <span style="color: var(--gray);">Timeframe:</span>
+        <button class="corr-btn active" data-corrtf="1D">1D</button>
+        <button class="corr-btn" data-corrtf="1W">1W</button>
+        <button class="corr-btn" data-corrtf="1M">1M</button>
+        <button class="corr-btn" data-corrtf="3M">3M</button>
+        <span style="margin-left: auto; color: var(--gray);">Method: Pearson</span>
+      </div>
+
+      <table class="corr-grid">
+        <thead>
+          <tr>
+            <th>ASSET</th>
+            <th>BTC</th>
+            <th>ETH</th>
+            <th>SOL</th>
+            <th>NASDAQ</th>
+            <th>GOLD</th>
+            <th>DXY</th>
+            <th>VIX</th>
+            <th>OI</th>
+            <th>FUNDING</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="corr-asset">BTC</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-pos-high">0.86</td>
+            <td class="corr-cell heat-pos-mid">0.64</td>
+            <td class="corr-cell heat-pos-low">0.38</td>
+            <td class="corr-cell heat-pos-low">0.22</td>
+            <td class="corr-cell heat-neg-mid">-0.48</td>
+            <td class="corr-cell heat-neg-low">-0.35</td>
+            <td class="corr-cell heat-pos-mid">0.57</td>
+            <td class="corr-cell heat-pos-low">0.19</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">ETH</td>
+            <td class="corr-cell heat-pos-high">0.86</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-pos-mid">0.68</td>
+            <td class="corr-cell heat-pos-low">0.35</td>
+            <td class="corr-cell heat-pos-low">0.18</td>
+            <td class="corr-cell heat-neg-mid">-0.42</td>
+            <td class="corr-cell heat-neg-low">-0.31</td>
+            <td class="corr-cell heat-pos-mid">0.51</td>
+            <td class="corr-cell heat-pos-low">0.16</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">SOL</td>
+            <td class="corr-cell heat-pos-mid">0.64</td>
+            <td class="corr-cell heat-pos-mid">0.68</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-pos-low">0.29</td>
+            <td class="corr-cell heat-pos-low">0.12</td>
+            <td class="corr-cell heat-neg-low">-0.22</td>
+            <td class="corr-cell heat-neg-low">-0.18</td>
+            <td class="corr-cell heat-pos-low">0.28</td>
+            <td class="corr-cell heat-pos-low">0.10</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">NASDAQ</td>
+            <td class="corr-cell heat-pos-low">0.62</td>
+            <td class="corr-cell heat-pos-low">0.59</td>
+            <td class="corr-cell heat-pos-low">0.33</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-pos-low">0.21</td>
+            <td class="corr-cell heat-neg-mid">-0.40</td>
+            <td class="corr-cell heat-neg-low">-0.28</td>
+            <td class="corr-cell heat-pos-low">0.30</td>
+            <td class="corr-cell heat-pos-low">0.08</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">GOLD</td>
+            <td class="corr-cell heat-pos-low">0.22</td>
+            <td class="corr-cell heat-pos-low">0.18</td>
+            <td class="corr-cell heat-pos-low">0.12</td>
+            <td class="corr-cell heat-pos-low">0.21</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-neg-low">-0.26</td>
+            <td class="corr-cell heat-neg-low">-0.19</td>
+            <td class="corr-cell heat-pos-low">0.12</td>
+            <td class="corr-cell heat-pos-low">0.05</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">DXY</td>
+            <td class="corr-cell heat-neg-mid">-0.48</td>
+            <td class="corr-cell heat-neg-mid">-0.42</td>
+            <td class="corr-cell heat-neg-low">-0.22</td>
+            <td class="corr-cell heat-neg-mid">-0.40</td>
+            <td class="corr-cell heat-neg-low">-0.26</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-pos-low">0.28</td>
+            <td class="corr-cell heat-neg-low">-0.18</td>
+            <td class="corr-cell heat-neg-low">-0.12</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">VIX</td>
+            <td class="corr-cell heat-neg-low">-0.35</td>
+            <td class="corr-cell heat-neg-low">-0.31</td>
+            <td class="corr-cell heat-neg-low">-0.18</td>
+            <td class="corr-cell heat-neg-low">-0.28</td>
+            <td class="corr-cell heat-neg-low">-0.19</td>
+            <td class="corr-cell heat-pos-low">0.28</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-neg-low">-0.15</td>
+            <td class="corr-cell heat-neg-low">-0.11</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">OI</td>
+            <td class="corr-cell heat-pos-mid">0.57</td>
+            <td class="corr-cell heat-pos-mid">0.51</td>
+            <td class="corr-cell heat-pos-low">0.28</td>
+            <td class="corr-cell heat-pos-low">0.30</td>
+            <td class="corr-cell heat-pos-low">0.12</td>
+            <td class="corr-cell heat-neg-low">-0.18</td>
+            <td class="corr-cell heat-neg-low">-0.15</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+            <td class="corr-cell heat-pos-low">0.22</td>
+          </tr>
+          <tr>
+            <td class="corr-asset">FUNDING</td>
+            <td class="corr-cell heat-pos-low">0.19</td>
+            <td class="corr-cell heat-pos-low">0.16</td>
+            <td class="corr-cell heat-pos-low">0.10</td>
+            <td class="corr-cell heat-pos-low">0.08</td>
+            <td class="corr-cell heat-pos-low">0.05</td>
+            <td class="corr-cell heat-neg-low">-0.12</td>
+            <td class="corr-cell heat-neg-low">-0.11</td>
+            <td class="corr-cell heat-pos-low">0.22</td>
+            <td class="corr-cell heat-pos-high">1.00</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="corr-summary">
+        <div class="corr-card">
+          <h4>Top Positive</h4>
+          <p>BTC–ETH: <span style="color: var(--green); font-weight:700;">0.86</span></p>
+          <p>BTC–NASDAQ: <span style="color: var(--green); font-weight:700;">0.62</span></p>
+        </div>
+        <div class="corr-card">
+          <h4>Top Negative</h4>
+          <p>BTC–DXY: <span style="color: var(--red); font-weight:700;">-0.48</span></p>
+          <p>BTC–VIX: <span style="color: var(--red); font-weight:700;">-0.35</span></p>
+        </div>
+        <div class="corr-card">
+          <h4>Methodology</h4>
+          <p>Pearson correlation over selected timeframe. Values are demo.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MULTI-TF ANALYSIS TAB -->
+  <div id="multi-tf-analysis" class="tab-content">
+    <h2 style="color: #ffffff; margin-bottom: 14px; font-size: 1.2em;">IMEFRAME ZONE • MULTI-TF ANALYSIS</h2>
+    <div class="tf-wrapper">
+      <div class="tf-guide">
+        <h3>JAK CZYTAĆ WARTOŚCI:</h3>
+        <ul>
+          <li>RSI: Relative Strength Index (0-100, przekupienie >70, wyprzedanie <30)</li>
+          <li>MACD: Momentum • ↑+ (wzrost), ↓- (spadek), →0 (neutralny)</li>
+          <li>K%D: Stochastic Oscillator • K/D (szybka/wolna linia)</li>
+          <li>EMA: Kierunek średniej • ↑ (w górę), ↓ (w dół), → (płasko)</li>
+          <li>BB: Bollinger Bands • Upper/Mid/Lower (pozycja ceny)</li>
+          <li>Vol: Volume • ↑HIGH, →MED, ↓LOW (poziom wolumenu)</li>
+          <li>1m • 5m • 15m • 30m • 1h • 4h • 1d • 1M • 3M • 1Y</li>
+        </ul>
+      </div>
+      <div class="tf-grid">
+        <!-- 1m -->
+        <div class="tf-card">
+          <div class="tf-title">1m <span class="tf-status tf-bull">BULL</span></div>
+          <div class="tf-row"><span>RSI</span><span>58</span></div>
+          <div class="tf-row"><span>MACD</span><span>↑+</span></div>
+          <div class="tf-row"><span>K%D</span><span>72/68</span></div>
+          <div class="tf-row"><span>EMA</span><span>↑</span></div>
+          <div class="tf-row"><span>BB</span><span>Upper</span></div>
+          <div class="tf-row"><span>Vol</span><span>↑HIGH</span></div>
+        </div>
+        <!-- 5m -->
+        <div class="tf-card">
+          <div class="tf-title">5m <span class="tf-status tf-bull">BULL</span></div>
+          <div class="tf-row"><span>RSI</span><span>54</span></div>
+          <div class="tf-row"><span>MACD</span><span>↑+</span></div>
+          <div class="tf-row"><span>K%D</span><span>65/60</span></div>
+          <div class="tf-row"><span>EMA</span><span>↑</span></div>
+          <div class="tf-row"><span>BB</span><span>Mid</span></div>
+          <div class="tf-row"><span>Vol</span><span>→MED</span></div>
+        </div>
+        <!-- 15m -->
+        <div class="tf-card">
+          <div class="tf-title">15m <span class="tf-status tf-bull">BULL</span></div>
+          <div class="tf-row"><span>RSI</span><span>56</span></div>
+          <div class="tf-row"><span>MACD</span><span>↑+</span></div>
+          <div class="tf-row"><span>K%D</span><span>58/52</span></div>
+          <div class="tf-row"><span>EMA</span><span>↑</span></div>
+          <div class="tf-row"><span>BB</span><span>Mid</span></div>
+          <div class="tf-row"><span>Vol</span><span>→MED</span></div>
+        </div>
+        <!-- 30m -->
+        <div class="tf-card">
+          <div class="tf-title">30m <span class="tf-status tf-neutral">→ NEUTRAL</span></div>
+          <div class="tf-row"><span>RSI</span><span>51</span></div>
+          <div class="tf-row"><span>MACD</span><span>→0</span></div>
+          <div class="tf-row"><span>K%D</span><span>48/50</span></div>
+          <div class="tf-row"><span>EMA</span><span>→</span></div>
+          <div class="tf-row"><span>BB</span><span>Mid</span></div>
+          <div class="tf-row"><span>Vol</span><span>→MED</span></div>
+        </div>
+        <!-- 1h -->
+        <div class="tf-card">
+          <div class="tf-title">1h <span class="tf-status tf-sideways">↔ SIDEWAYS</span></div>
+          <div class="tf-row"><span>RSI</span><span>47</span></div>
+          <div class="tf-row"><span>MACD</span><span>→0</span></div>
+          <div class="tf-row"><span>K%D</span><span>44/45</span></div>
+          <div class="tf-row"><span>EMA</span><span>→</span></div>
+          <div class="tf-row"><span>BB</span><span>Lower</span></div>
+          <div class="tf-row"><span>Vol</span><span>↓LOW</span></div>
+        </div>
+        <!-- 4h -->
+        <div class="tf-card">
+          <div class="tf-title">4h <span class="tf-status tf-neutral">→ NEUTRAL</span></div>
+          <div class="tf-row"><span>RSI</span><span>48</span></div>
+          <div class="tf-row"><span>MACD</span><span>↓-</span></div>
+          <div class="tf-row"><span>K%D</span><span>40/42</span></div>
+          <div class="tf-row"><span>EMA</span><span>↓</span></div>
+          <div class="tf-row"><span>BB</span><span>Lower</span></div>
+          <div class="tf-row"><span>Vol</span><span>↓LOW</span></div>
+        </div>
+        <!-- 1d -->
+        <div class="tf-card">
+          <div class="tf-title">1d <span class="tf-status tf-bear">✗ BEAR</span></div>
+          <div class="tf-row"><span>RSI</span><span>42</span></div>
+          <div class="tf-row"><span>MACD</span><span>↓-</span></div>
+          <div class="tf-row"><span>K%D</span><span>35/38</span></div>
+          <div class="tf-row"><span>EMA</span><span>↓</span></div>
+          <div class="tf-row"><span>BB</span><span>Lower</span></div>
+          <div class="tf-row"><span>Vol</span><span>→MED</span></div>
+        </div>
+        <!-- 1M -->
+        <div class="tf-card">
+          <div class="tf-title">1M <span class="tf-status tf-bull">BULL</span></div>
+          <div class="tf-row"><span>RSI</span><span>62</span></div>
+          <div class="tf-row"><span>MACD</span><span>↑+</span></div>
+          <div class="tf-row"><span>K%D</span><span>78/75</span></div>
+          <div class="tf-row"><span>EMA</span><span>↑</span></div>
+          <div class="tf-row"><span>BB</span><span>Upper</span></div>
+          <div class="tf-row"><span>Vol</span><span>↑HIGH</span></div>
+        </div>
+        <!-- 3M -->
+        <div class="tf-card">
+          <div class="tf-title">3M <span class="tf-status tf-bull">BULL</span></div>
+          <div class="tf-row"><span>RSI</span><span>68</span></div>
+          <div class="tf-row"><span>MACD</span><span>↑++</span></div>
+          <div class="tf-row"><span>K%D</span><span>85/82</span></div>
+          <div class="tf-row"><span>EMA</span><span>↑↑</span></div>
+          <div class="tf-row"><span>BB</span><span>Upper</span></div>
+          <div class="tf-row"><span>Vol</span><span>↑HIGH</span></div>
+        </div>
+        <!-- 1Y -->
+        <div class="tf-card">
+          <div class="tf-title">1Y <span class="tf-status tf-konsol">◈ KONSOL.</span></div>
+          <div class="tf-row"><span>RSI</span><span>55</span></div>
+          <div class="tf-row"><span>MACD</span><span>→0</span></div>
+          <div class="tf-row"><span>K%D</span><span>52/55</span></div>
+          <div class="tf-row"><span>EMA</span><span>→</span></div>
+          <div class="tf-row"><span>BB</span><span>Mid</span></div>
+          <div class="tf-row"><span>Vol</span><span>↓LOW</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px; margin-top: 14px;">
+      <h3 style="color: #ffffff; margin-bottom: 8px;">📍 ENTRY ZONE CALCULATOR • DOPRECYZUJ WEJŚCIE</h3>
+      <p style="color: var(--gray);">Live sna</p>
+    </div>
+  </div>
+
+    <!-- HAMSTER GENIUS TAB (podgląd sygnałów) -->
+    <div id="hamster-genius" class="tab-content active">
+      <h2 style="margin-bottom: 12px;">Hamster Genius • sygnały + overlay</h2>
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px;">
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px;">
+          <div class="sparkline" style="margin-bottom: 10px;">
+            <svg viewBox="0 0 360 120" preserveAspectRatio="xMidYMid meet">
+              <polyline points="10,95 60,70 110,55 160,60 210,45 260,54 310,48 350,50" fill="none" stroke="var(--yellow)" stroke-width="2" />
+              <circle cx="110" cy="55" r="5" fill="var(--green)" />
+              <text x="92" y="38" font-size="10" fill="var(--green)">LONG 95.2k</text>
+              <circle cx="260" cy="54" r="5" fill="var(--red)" />
+              <text x="240" y="36" font-size="10" fill="var(--red)">TAKE PROFIT 97.4k</text>
+            </svg>
+          </div>
+          <p style="color: var(--gray);">Komentarz AI: impuls po obronie FVG, brak podaży na ask; utrzymaj long do 97.4k, trailing jeśli wolumen przyspieszy.</p>
+        </div>
+        <div style="background: #0d0d0d; border: 1px solid var(--border); padding: 12px;">
+          <div style="font-weight: 700; color: #ffffff; margin-bottom: 8px;">Aktywne sygnały</div>
+          <ul style="list-style: none; padding-left: 0; color: #ffffff; line-height: 1.6;">
+            <li>• BUY 95.2k (potwierdzony)</li>
+            <li>• SELL 97.4k (waiting liquidity sweep)</li>
+            <li>• ALERT funding > 0.012% (zmniejsz dźwignię)</li>
+          </ul>
+          <p style="color: var(--gray); font-size: 0.9em; margin-top: 8px;">Do dodania: push notyfikacje, auto-linie poziomów na głównym wykresie.</p>
+        </div>
+      </div>
+    </div>
 
   <script>
-    // ========== API CONFIGURATION ===========
-    const API_BASE = window.location.hostname === 'localhost' 
-      ? 'http://localhost:5000'
-      : 'https://api.hamsterterminal.com';
-
-    const MOCK_DATA = {
-      btcPrice: 98432.5,
-      btcChange24h: 1.84,
-      btcVolume: 18_200_000_000,
-      btcMarketCap: 1_940_000_000_000,
-      ethPrice: 3650,
-      fear_greed: 68
-    };
-
-    let apiConnected = false;
-    let lastDataUpdate = Date.now();
-    let currentPage = 'dashboard';
-    let currentLanguage = localStorage.getItem('language') || 'en';
-
-    // ========== POLISH TRANSLATIONS ==========
-    const translations = {
-      en: {
-        'header-title': 'HAMSTER TERMINAL',
-        'live-news': 'LIVE NEWS',
-        'market-alerts': 'MARKET ALERTS',
-        'large-transfers': 'LARGE TRANSFERS',
-        'ticker-btc': 'BTC/USD:',
-        'ticker-eth': 'ETH/USD:',
-        'ticker-spy': 'SPY:',
-        'ticker-gold': 'GOLD:',
-        'ticker-eur': 'EUR/USD:',
-        'market-sentiment': 'Market Sentiment',
-        'fear-greed': 'Fear & Greed:',
-        'bulls': 'Bulls',
-        'bears': 'Bears',
-        'genius-pulse': 'Market Pulse',
-        'genius-liquidity': 'Liquidity Radar',
-        'genius-sentiment': 'Sentiment Watch',
-        'genius-risk': 'Risk Monitor',
-        'api-status': 'API Status',
-        'dashboard': 'Dashboard',
-        'trend-analysis': 'Trend Analysis',
-        'kpi-correlation': 'KPI Correlation',
-        'multi-tf-analysis': 'Multi-TF Analysis',
-        'sidebar-menu': 'MENU',
-        'sidebar-modes': 'VIEWS',
-        'sidebar-themes': 'THEMES',
-        'sidebar-language': 'LANGUAGE',
-        'mode-bloomberg': 'Bloomberg',
-        'mode-retro': 'Retro Terminal',
-        'mode-detailed': 'Detailed Mode',
-        'theme-bloomberg': 'Bloomberg',
-        'theme-professional': 'Professional',
-        'theme-dark': 'Dark'
-      },
-      pl: {
-        'header-title': 'TERMINAL CHOMIKA',
-        'live-news': 'WIADOMOŚCI NA ŻYWO',
-        'market-alerts': 'ALERTY RYNKOWE',
-        'large-transfers': 'DUŻE TRANSFERY',
-        'ticker-btc': 'BTC/USD:',
-        'ticker-eth': 'ETH/USD:',
-        'ticker-spy': 'SPY:',
-        'ticker-gold': 'ZŁOTO:',
-        'ticker-eur': 'EUR/USD:',
-        'market-sentiment': 'Sentyment Rynku',
-        'fear-greed': 'Strach & Chciwość:',
-        'bulls': 'Hossy',
-        'bears': 'Niedźwiedzie',
-        'genius-pulse': 'Puls Rynku',
-        'genius-liquidity': 'Radar Płynności',
-        'genius-sentiment': 'Obserwator Sentymentu',
-        'genius-risk': 'Monitor Ryzyka',
-        'api-status': 'Status API',
-        'dashboard': 'Dashboard',
-        'trend-analysis': 'Analiza Trendów',
-        'kpi-correlation': 'Korelacja KPI',
-        'multi-tf-analysis': 'Analiza Multi-TF',
-        'sidebar-menu': 'MENU',
-        'sidebar-modes': 'WIDOKI',
-        'sidebar-themes': 'MOTYWY',
-        'sidebar-language': 'JĘZYK',
-        'mode-bloomberg': 'Bloomberg',
-        'mode-retro': 'Retro Terminal',
-        'mode-detailed': 'Tryb Szczegółowy',
-        'theme-bloomberg': 'Bloomberg',
-        'theme-professional': 'Profesjonalny',
-        'theme-dark': 'Ciemny'
-      }
-    };
-
-    function t(key) {
-      return translations[currentLanguage][key] || translations['en'][key] || key;
-    }
-
-    function toggleLanguage() {
-      currentLanguage = currentLanguage === 'en' ? 'pl' : 'en';
-      localStorage.setItem('language', currentLanguage);
-      updateLanguageDisplay();
-    }
-
-    function updateLanguageDisplay() {
-      // Update all i18n elements
-      document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        el.textContent = t(key);
-      });
-      
-      // Update sidebar button states
-      const langBtn = document.getElementById('lang-toggle-sidebar');
-      if (langBtn) {
-        langBtn.textContent = currentLanguage === 'en' ? 'EN / PL' : 'PL / EN';
-        langBtn.classList.toggle('active', currentLanguage === 'pl');
-      }
-    }
-
-    function toggleSidebar() {
-      const sidebar = document.getElementById('sidebar');
-      sidebar.classList.toggle('open');
-    }
-
-    // ========== CHART ZOOM ==========
-    let chartZoomLevel = 1;
-    function zoomChart(direction) {
-      const canvas = document.querySelector('.chart-canvas');
-      if (direction === 'in') chartZoomLevel += 0.2;
-      else if (direction === 'out' && chartZoomLevel > 0.5) chartZoomLevel -= 0.2;
-      canvas.style.transform = `scale(${chartZoomLevel})`;
-      canvas.style.transformOrigin = 'center top';
-      canvas.style.transition = 'transform 0.2s ease';
-    }
-    function resetZoom() {
-      chartZoomLevel = 1;
-      document.querySelector('.chart-canvas').style.transform = 'scale(1)';
-    }
-
-    // ========== TIMEFRAME SWITCHER ==========
-    let currentTimeframe = '1d';
-    function switchTimeframe(tf) {
-      currentTimeframe = tf;
-      
-      // Update button styles
-      document.querySelectorAll('.tf-btn').forEach(btn => {
-        if (btn.dataset.tf === tf) {
-          btn.style.background = 'var(--orange)';
-          btn.style.borderColor = 'var(--orange)';
-          btn.style.color = '#000';
-        } else {
-          btn.style.background = 'transparent';
-          btn.style.borderColor = '#666';
-          btn.style.color = '#fff';
-        }
-      });
-
-      // Update chart with different data based on timeframe
-      const timeframeLabel = {
-        '1d': '1D - Last 24 Hours',
-        '1w': '1W - Last 7 Days',
-        '1m': '1M - Last Month',
-        '3m': '3M - Last 3 Months'
-      };
-      
-      console.log(`Switched to ${timeframeLabel[tf]}`);
-      renderCandlestickChart(); // Re-render with new data
-    }
-
-    // ========== CANDLESTICK CHART ==========
-    function renderCandlestickChart() {
-      const container = document.getElementById('candlestick-chart');
-      if (!container) return;
-      
-      const candles = [
-        { open: 98000, close: 98200, high: 98400, low: 97900, volume: 120 },
-        { open: 98200, close: 98100, high: 98350, low: 97950, volume: 105 },
-        { open: 98100, close: 98450, high: 98500, low: 98000, volume: 145 },
-        { open: 98450, close: 98300, high: 98550, low: 98200, volume: 130 },
-        { open: 98300, close: 98150, high: 98400, low: 98000, volume: 115 },
-        { open: 98150, close: 98350, high: 98450, low: 98100, volume: 125 },
-        { open: 98350, close: 98432, high: 98500, low: 98250, volume: 140 }
-      ];
-
-      container.innerHTML = '';
-      const maxPrice = Math.max(...candles.map(c => c.high));
-      const minPrice = Math.min(...candles.map(c => c.low));
-      const range = maxPrice - minPrice;
-
-      candles.forEach(candle => {
-        const candleEl = document.createElement('div');
-        const bodyTop = ((maxPrice - Math.max(candle.open, candle.close)) / range) * 100;
-        const bodyHeight = ((Math.max(candle.open, candle.close) - Math.min(candle.open, candle.close)) / range) * 100;
-        const wickTop = ((maxPrice - candle.high) / range) * 100;
-        const wickHeight = ((candle.high - candle.low) / range) * 100;
-        
-        const isGreen = candle.close >= candle.open;
-        const bodyColor = isGreen ? '#44ff44' : '#ff4444';
-        const wickColor = isGreen ? '#44ff44' : '#ff4444';
-
-        candleEl.style.position = 'relative';
-        candleEl.style.display = 'flex';
-        candleEl.style.flexDirection = 'column';
-        candleEl.style.alignItems = 'center';
-        candleEl.style.height = '100%';
-        candleEl.style.justifyContent = 'flex-end';
-
-        const wick = document.createElement('div');
-        wick.style.width = '1px';
-        wick.style.height = `${wickHeight}%`;
-        wick.style.background = wickColor;
-        wick.style.opacity = '0.7';
-
-        const body = document.createElement('div');
-        body.style.width = '60%';
-        body.style.height = `${Math.max(bodyHeight, 3)}%`;
-        body.style.background = bodyColor;
-        body.style.border = `1px solid ${bodyColor}`;
-        body.style.borderRadius = '1px';
-
-        candleEl.appendChild(wick);
-        candleEl.appendChild(body);
-        container.appendChild(candleEl);
-      });
-    }
-
-    // ========== UPDATE GENIUS MARKET ANALYSIS ==========
-    function updateGeniusAnalysis(btcPrice, shortLiq, longLiq, change24h) {
-      const analysisEl = document.getElementById('genius-analysis');
-      const warningEl = document.getElementById('genius-warning');
-      const insightEl = document.getElementById('genius-insight');
-
-      if (!analysisEl) return;
-
-      let analysis = '';
-      let showWarning = false;
-      let showInsight = false;
-      let warning = '';
-      let insight = '';
-
-      // Base analysis
-      const liqDiff = shortLiq - longLiq;
-      const sentiment = liqDiff > 0 ? 'BULLISH' : 'BEARISH';
-      const sentimentEmoji = liqDiff > 0 ? '📈' : '📉';
-      const supportLevel = (btcPrice * 0.982).toFixed(0);
-      const resistanceLevel = (btcPrice * 1.015).toFixed(0);
-
-      analysis = `${sentimentEmoji} BTC at $${btcPrice.toFixed(0)} showing strong consolidation. Market sentiment is ${sentiment} with ${sentiment === 'BULLISH' ? 'short' : 'long'} liquidations exceeding counterpart by $${Math.abs(liqDiff).toFixed(0)}M. Support holding at $${supportLevel} - crucial level to watch.`;
-
-      // Peak warning - if price near resistance or very high change
-      if (btcPrice > resistanceLevel * 0.99 || change24h > 3) {
-        showWarning = true;
-        warning = `⚠️ PEAK WARNING: Price near resistance ($${resistanceLevel}). High risk of pullback. Consider taking profits or reducing leverage.`;
-      }
-
-      // Bullish insight
-      if (liqDiff > 300 && change24h > 0.5) {
-        showInsight = true;
-        insight = `✓ BULLISH SIGNAL: Volume surge + Short liquidations indicate strong buying pressure. Potential breakout above $${(btcPrice * 1.01).toFixed(0)} in next 4H candle.`;
-      }
-
-      // Update DOM
-      analysisEl.textContent = analysis;
-      if (showWarning) {
-        warningEl.textContent = warning;
-        warningEl.style.display = 'block';
-      } else {
-        warningEl.style.display = 'none';
-      }
-
-      if (showInsight) {
-        insightEl.textContent = insight;
-        insightEl.style.display = 'block';
-      } else {
-        insightEl.style.display = 'none';
-      }
-    }
-
-    // ========== UPDATE LIQUIDATIONS ==========
-    function updateLiquidations() {
-      const shortLiq = 1245 + Math.random() * 50;
-      const longLiq = 892 + Math.random() * 45;
-      const total = shortLiq + longLiq;
-
-      if (document.getElementById('liq-shorts')) {
-        document.getElementById('liq-shorts').textContent = `$${shortLiq.toFixed(0)}M`;
-        document.getElementById('liq-longs').textContent = `$${longLiq.toFixed(0)}M`;
-        document.getElementById('liq-total').textContent = `$${total.toFixed(0)}M`;
-      }
-    }
-
-    // ========== UPDATE STOCK TICKERS ==========
-    function updateStockTickers() {
-      // Simulate realistic stock price movements
-      const stocks = {
-        'ticker-aapl': { base: 225.50, range: 2 },
-        'ticker-msft': { base: 445.20, range: 3.5 }
-      };
-
-      Object.keys(stocks).forEach(id => {
-        const el = document.getElementById(id);
-        if (el) {
-          const { base, range } = stocks[id];
-          const change = (Math.random() - 0.48) * range;
-          const newPrice = base + change;
-          el.textContent = `$${newPrice.toFixed(2)}`;
-          el.style.color = change > 0 ? '#44ff44' : '#ff4444';
-        }
-      });
-
-      // Repeat BTC ticker for scrolling effect
-      const btcRepeat = document.getElementById('ticker-btc-repeat');
-      if (btcRepeat) {
-        btcRepeat.textContent = document.getElementById('ticker-btc').textContent;
-      }
-    }
-
-    // ========== UPDATE SIDEBAR WIDGETS ==========
-    function updateSidebarWidgets() {
-      // BTC and ETH
-      const btcEl = document.getElementById('sidebar-btc');
-      const btcChangeEl = document.getElementById('sidebar-btc-change');
-      const ethEl = document.getElementById('sidebar-eth');
-      const ethChangeEl = document.getElementById('sidebar-eth-change');
-      const fearEl = document.getElementById('sidebar-fear');
-      const mcapEl = document.getElementById('sidebar-mcap');
-      
-      // Get current values from main dashboard
-      const btcPrice = document.getElementById('btc-price')?.textContent || '$--';
-      const btcChange = document.getElementById('btc-change')?.textContent || '+0.00%';
-      const ethPrice = document.getElementById('eth-price')?.textContent || '$--';
-      const ethChange = document.getElementById('eth-change')?.textContent || '+0.00%';
-      const fear = document.getElementById('market-fear')?.textContent || '--';
-      const mcap = document.getElementById('btc-mcap')?.textContent || '$--';
-
-      if (btcEl) btcEl.textContent = btcPrice;
-      if (btcChangeEl) {
-        btcChangeEl.textContent = btcChange;
-        btcChangeEl.className = 'widget-change ' + (btcChange.includes('-') ? 'negative' : 'positive');
-      }
-      if (ethEl) ethEl.textContent = ethPrice;
-      if (ethChangeEl) {
-        ethChangeEl.textContent = ethChange;
-        ethChangeEl.className = 'widget-change ' + (ethChange.includes('-') ? 'negative' : 'positive');
-      }
-      if (fearEl) fearEl.textContent = fear;
-      if (mcapEl) mcapEl.textContent = mcap;
-
-      // Liquidation data
-      const shortLiq = document.getElementById('liq-shorts')?.textContent || '$1.2T';
-      const longLiq = document.getElementById('liq-longs')?.textContent || '$0.9T';
-      const totalLiq = document.getElementById('liq-total')?.textContent || '$2.1T';
-
-      const sidebarShort = document.getElementById('sidebar-short-liq');
-      const sidebarLong = document.getElementById('sidebar-long-liq');
-      const sidebarTotal = document.getElementById('sidebar-total-liq');
-
-      if (sidebarShort) sidebarShort.textContent = shortLiq;
-      if (sidebarLong) sidebarLong.textContent = longLiq;
-      if (sidebarTotal) sidebarTotal.textContent = totalLiq;
-
-      // On-chain pulse (lightweight mock based on price/change)
-      const btcNum = parseFloat((btcPrice || '$0').replace(/[$,]/g, '')) || 0;
-      const chgNum = parseFloat((btcChange || '+0').replace(/[%+]/g, '')) || 0;
-
-      const activeAddr = 425000 + Math.round(btcNum * 0.8); // synthetic scale
-      const activeAddrEl = document.getElementById('sidebar-active-addr');
-      const activeAddrChgEl = document.getElementById('sidebar-active-addr-chg');
-      if (activeAddrEl) activeAddrEl.textContent = activeAddr.toLocaleString('en-US');
-      if (activeAddrChgEl) activeAddrChgEl.textContent = chgNum > 0 ? '↑ demand' : '↓ cooling';
-
-      const nuplEl = document.getElementById('sidebar-nupl');
-      const nuplNoteEl = document.getElementById('sidebar-nupl-note');
-      const nupl = (0.38 + chgNum * 0.01).toFixed(2);
-      if (nuplEl) nuplEl.textContent = nupl;
-      if (nuplNoteEl) nuplNoteEl.textContent = nupl > 0.5 ? 'Greed rising' : 'Neutral zone';
-
-      const hashEl = document.getElementById('sidebar-hashrate');
-      const hashNoteEl = document.getElementById('sidebar-hashrate-note');
-      const hash = (360 + chgNum * 8).toFixed(0) + ' EH/s';
-      if (hashEl) hashEl.textContent = hash;
-      if (hashNoteEl) hashNoteEl.textContent = chgNum >= 0 ? 'Secure' : 'Watch miners';
-
-      // Genius AI hints
-      const aiStrengthEl = document.getElementById('sidebar-ai-strength');
-      const aiBiasEl = document.getElementById('sidebar-ai-bias');
-      const aiLiqEl = document.getElementById('sidebar-ai-liq');
-      const aiLiqNoteEl = document.getElementById('sidebar-ai-liq-note');
-      const aiRiskEl = document.getElementById('sidebar-ai-risk');
-      const aiRiskNoteEl = document.getElementById('sidebar-ai-risk-note');
-
-      const bias = chgNum > 0.8 ? 'Bullish' : chgNum < -0.8 ? 'Bearish' : 'Neutral';
-      const strength = Math.min(100, Math.max(5, Math.abs(chgNum) * 18)).toFixed(0) + '%';
-      const liqZone = chgNum > 0 ? '$' + (btcNum * 1.012).toFixed(0) : '$' + (btcNum * 0.988).toFixed(0);
-
-      if (aiStrengthEl) aiStrengthEl.textContent = strength;
-      if (aiBiasEl) aiBiasEl.textContent = bias;
-      if (aiLiqEl) aiLiqEl.textContent = liqZone;
-      if (aiLiqNoteEl) aiLiqNoteEl.textContent = chgNum > 0 ? 'Take profit zone' : 'Liquidity grab';
-      if (aiRiskEl) aiRiskEl.textContent = chgNum < -1 ? 'High' : chgNum > 1 ? 'Medium' : 'Low';
-      if (aiRiskNoteEl) aiRiskNoteEl.textContent = chgNum < -1 ? 'Tight stops' : 'Normal';
-
-      // Hamster playground (fun stats)
-      const hamsterSignalEl = document.getElementById('sidebar-hamster-signal');
-      const hamsterTimeEl = document.getElementById('sidebar-hamster-time');
-      const hamsterWinEl = document.getElementById('sidebar-hamster-win');
-      const hamsterNoteEl = document.getElementById('sidebar-hamster-note');
-      const hamsterLiqEl = document.getElementById('sidebar-hamster-liq');
-      const hamsterLiqNoteEl = document.getElementById('sidebar-hamster-liq-note');
-
-      const lastDir = chgNum >= 0 ? 'BUY ▲' : 'SELL ▼';
-      if (hamsterSignalEl) hamsterSignalEl.textContent = lastDir;
-      if (hamsterTimeEl) hamsterTimeEl.textContent = 'Last: 5m ago';
-      if (hamsterWinEl) hamsterWinEl.textContent = '63%';
-      if (hamsterNoteEl) hamsterNoteEl.textContent = 'Sim backtest';
-      if (hamsterLiqEl) hamsterLiqEl.textContent = chgNum > 0 ? 'Stack bids' : 'Stack asks';
-      if (hamsterLiqNoteEl) hamsterLiqNoteEl.textContent = chgNum > 0 ? 'Target lower wick' : 'Target upper wick';
-    }
-
-    // ========== CLOCK ===========
+    // Clock updater
+    const clockEl = document.getElementById('clock');
+    const dateEl = document.getElementById('current-date');
+    
     function updateTime() {
       const now = new Date();
       const utc = now.toISOString().split('T')[1].slice(0,8);
-      document.getElementById('clock').textContent = `${utc} UTC`;
+      clockEl.textContent = `${utc} UTC`;
+      
+      const dateStr = now.toISOString().split('T')[0];
+      dateEl.textContent = dateStr;
     }
+    
     setInterval(updateTime, 1000);
+    updateTime();
 
-    // ========== API DATA FETCHER ==========
-    async function fetchApiData() {
-      try {
-        const response = await fetch(`${API_BASE}/api/binance/summary`, {
-          cache: 'no-store',
-          headers: { 'Accept': 'application/json' }
-        });
+    // Timeframe selector
+    document.querySelectorAll('.timeframe-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        // Remove active class from all buttons
+        document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+        // Add active class to clicked button
+        this.classList.add('active');
         
-        if (!response.ok) throw new Error(`HTTP ${response.status}`);
-        
-        const data = await response.json();
-        
-        // Update UI with real data
-        updateDashboardWithData(data);
-        setApiStatus('live', '✓ Live Data');
-        apiConnected = true;
-        lastDataUpdate = Date.now();
-        
-      } catch (error) {
-        console.log('API error:', error);
-        updateDashboardWithData(MOCK_DATA);
-        setApiStatus('error', '✗ Mock Data');
-        apiConnected = false;
-      }
-    }
-
-    function updateDashboardWithData(data) {
-      // BTC Price
-      if (data.btcPrice) {
-        document.getElementById('btc-price').textContent = `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-        document.getElementById('ticker-btc').textContent = `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
-        const chartLabel = document.getElementById('chart-price-label');
-        if (chartLabel) chartLabel.textContent = `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-      }
-      
-      // BTC Change
-      if (data.btcChange24h !== undefined) {
-        const changePercent = data.btcChange24h.toFixed(2);
-        const changeEl = document.getElementById('btc-change');
-        changeEl.textContent = `${changePercent > 0 ? '+' : ''}${changePercent}%`;
-        changeEl.style.color = changePercent > 0 ? '#00ff41' : '#ff0033';
-      }
-      
-      // Support & Resistance (dynamic based on price)
-      if (data.btcPrice) {
-        const support = (data.btcPrice * 0.98).toFixed(0);
-        const resistance = (data.btcPrice * 1.02).toFixed(0);
-        document.getElementById('btc-support').textContent = `$${parseInt(support).toLocaleString('en-US')}`;
-        document.getElementById('btc-resistance').textContent = `$${parseInt(resistance).toLocaleString('en-US')}`;
-      }
-      
-      // Volume
-      if (data.btcVolume) {
-        const volumeB = (data.btcVolume / 1e9).toFixed(1);
-        document.getElementById('btc-volume').textContent = `$${volumeB}B`;
-      }
-      
-      // Market Cap
-      if (data.btcMarketCap) {
-        const marketCapT = (data.btcMarketCap / 1e12).toFixed(2);
-        document.getElementById('market-cap').textContent = `$${marketCapT}T`;
-      }
-      
-      // Fear & Greed
-      if (data.fear_greed !== undefined) {
-        const fng = data.fear_greed;
-        document.getElementById('fear-greed').textContent = fng;
-        const label = fng < 25 ? 'EXTREME FEAR' : fng < 45 ? 'FEAR' : fng < 55 ? 'NEUTRAL' : fng < 75 ? 'GREED' : 'EXTREME GREED';
-        document.getElementById('fng-label').textContent = label;
-      }
-      
-      // ETH Price
-      if (data.ethPrice) {
-        document.getElementById('ticker-eth').textContent = `$${data.ethPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
-      }
-
-      // Derived simple tickers (placeholder spreads for non-crypto assets)
-      const spy = data.btcPrice ? (data.btcPrice / 50).toFixed(2) : '500.00';
-      const gold = data.btcPrice ? (data.btcPrice / 50).toFixed(1) : '2000.0';
-      const eurusd = data.btcPrice ? (1.05 + (data.btcChange24h || 0) * 0.0001).toFixed(4) : '1.0850';
-      document.getElementById('ticker-spy').textContent = `$${spy}`;
-      document.getElementById('ticker-gold').textContent = `$${gold}`;
-      document.getElementById('ticker-eur').textContent = eurusd;
-
-      // LIVE NEWS (auto-generated from data)
-      const newsLeft = document.querySelector('.news:nth-of-type(1)');
-      if (newsLeft) {
-        const price = data.btcPrice ? `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}` : 'BTC';
-        const changeTxt = data.btcChange24h !== undefined ? `${data.btcChange24h > 0 ? '▲' : '▼'} ${Math.abs(data.btcChange24h).toFixed(2)}%` : '';
-        const volTxt = data.btcVolume ? `24h vol ${(data.btcVolume / 1e9).toFixed(1)}B` : '24h vol --';
-        const newsTitle = t('live-news');
-        const newsContent = currentLanguage === 'pl' ? [
-          `BTC handluje po ${price} ${changeTxt}`,
-          `ETH wypisuje ${document.getElementById('ticker-eth').textContent || '$--'} w ciągu dnia`,
-          `${volTxt} na głównych parach`,
-          `Strach & Chciwość: ${data.fear_greed ?? '--'}`,
-          `Status API: ${apiConnected ? 'Live' : 'Mock'} dane`
-        ] : [
-          `BTC trades at ${price} ${changeTxt}`,
-          `ETH prints ${document.getElementById('ticker-eth').textContent || '$--'} intraday`,
-          `${volTxt} on majors`,
-          `Fear & Greed: ${data.fear_greed ?? '--'}`,
-          `API status: ${apiConnected ? 'Live' : 'Mock'} data`
-        ];
-        newsLeft.innerHTML = `
-          <h4 data-i18n="live-news">${newsTitle}</h4>
-          ${newsContent.map(item => `<div class="news-item">${item}</div>`).join('')}
-        `;
-      }
-
-      // MARKET ALERTS (simple auto content)
-      const newsRight = document.querySelector('.news:nth-of-type(2)');
-      if (newsRight) {
-        const mc = data.btcMarketCap ? `$${(data.btcMarketCap / 1e12).toFixed(2)}T` : '$--';
-        const fngLabelEn = data.fear_greed !== undefined
-          ? (data.fear_greed < 25 ? 'Extreme Fear' : data.fear_greed < 45 ? 'Fear' : data.fear_greed < 55 ? 'Neutral' : data.fear_greed < 75 ? 'Greed' : 'Extreme Greed')
-          : '--';
-        const fngLabelPl = data.fear_greed !== undefined
-          ? (data.fear_greed < 25 ? 'Skrajny Strach' : data.fear_greed < 45 ? 'Strach' : data.fear_greed < 55 ? 'Neutralny' : data.fear_greed < 75 ? 'Chciwość' : 'Skrajna Chciwość')
-          : '--';
-        const fngLabel = currentLanguage === 'pl' ? fngLabelPl : fngLabelEn;
-        const alertsTitle = t('market-alerts');
-        const alertsContent = currentLanguage === 'pl' ? [
-          `Kapitalizacja Rynku: ${mc}`,
-          `Sentyment: ${fngLabel}`,
-          `Obserwacja Płynności: Wsparcie BTC $94k–$96k`,
-          `Kontrola Zmienności: utrzymuj dynamiczne stopy`,
-          `Dane odświeżone: ${new Date().toUTCString().slice(17,25)} UTC`
-        ] : [
-          `Market Cap: ${mc}`,
-          `Sentiment: ${fngLabel}`,
-          `Liquidity watch: BTC support $94k–$96k`,
-          `Volatility check: keep stops dynamic`,
-          `Data refreshed: ${new Date().toUTCString().slice(17,25)} UTC`
-        ];
-        newsRight.innerHTML = `
-          <h4 data-i18n="market-alerts">${alertsTitle}</h4>
-          ${alertsContent.map(item => `<div class="news-item">${item}</div>`).join('')}
-        `;
-      }
-
-      // GENIUS AI CARDS (lite dynamic text)
-      const geniusCards = document.querySelectorAll('.genius-card-content');
-      if (geniusCards.length >= 4) {
-        const priceStr = data.btcPrice ? `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}` : 'BTC';
-        geniusCards[0].textContent = `Momentum tracking: ${priceStr} with change ${(data.btcChange24h ?? 0).toFixed(2)}%.`;
-        geniusCards[1].textContent = data.btcVolume ? `Liquidity: ${(data.btcVolume / 1e9).toFixed(1)}B 24h volume, watch walls at $95k/$97k.` : 'Liquidity steady, monitoring orderbook levels.';
-        geniusCards[2].textContent = data.fear_greed !== undefined ? `Sentiment gauge: ${data.fear_greed} F&G — ${document.getElementById('fng-label').textContent}.` : 'Sentiment neutral baseline.';
-        geniusCards[3].textContent = data.btcMarketCap ? `Risk: Market cap ${ (data.btcMarketCap / 1e12).toFixed(2)}T, adjust size to volatility.` : 'Risk: size positions based on volatility bands.';
-      }
-
-      // LARGE TRANSFERS (dynamic whale activity based on price volatility)
-      const transfersContainers = document.querySelectorAll('.transfers-inline');
-      transfersContainers.forEach(container => {
-        const volatility = Math.abs(data.btcChange24h ?? 0);
-        const baseAmount = 500 + volatility * 10;
-        
-        const transfers = [
-          {
-            amount: (baseAmount * (1 + Math.random() * 2)).toFixed(0),
-            type: volatility > 2 ? 'SELL • Whale Activity' : 'BUY • Accumulation',
-            time: `${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} UTC`
-          },
-          {
-            amount: (baseAmount * (0.5 + Math.random())).toFixed(0),
-            type: volatility > 1.5 ? 'BUY • Buying Pressure' : 'SELL • Distribution',
-            time: `${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} UTC`
-          },
-          {
-            amount: (baseAmount * (1.5 + Math.random() * 1.5)).toFixed(0),
-            type: data.fear_greed < 50 ? 'SELL • Major Outflow' : 'BUY • Large Inflow',
-            time: `${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} UTC`
-          }
-        ];
-        
-        const cards = container.querySelectorAll('.transfer-card');
-        transfers.forEach((transfer, i) => {
-          if (cards[i]) {
-            cards[i].innerHTML = `
-              <div style="font-weight: 700;">${transfer.amount} BTC</div>
-              <div class="meta">${transfer.type}</div>
-              <div class="time">${transfer.time}</div>
-            `;
-          }
-        });
+        const timeframe = this.getAttribute('data-timeframe');
+        console.log(`Switched to timeframe: ${timeframe}`);
+        // Here you would reload chart data based on selected timeframe
+        // Example: loadChartData(timeframe);
       });
-      
-      // Sentiment (random for demo)
-      const bulls = Math.floor(40 + Math.random() * 30);
-      const bears = 100 - bulls;
-      document.getElementById('bulls-percent').textContent = `${bulls}%`;
-      document.getElementById('bears-percent').textContent = `${bears}%`;
-      
-      // UPDATE GENIUS ANALYSIS
-      const shortLiq = 1245 + Math.random() * 50;
-      const longLiq = 892 + Math.random() * 45;
-      updateGeniusAnalysis(data.btcPrice || MOCK_DATA.btcPrice, shortLiq, longLiq, data.btcChange24h || MOCK_DATA.btcChange24h);
-      
-      // UPDATE DETAIL PANEL
-      updateDetailPanel(data.btcPrice || MOCK_DATA.btcPrice, data);
+    });
+    
+    // Set initial active button (1D is already marked as active in HTML)
+    const initialActive = document.querySelector('.timeframe-btn.active');
+    if (initialActive) {
+      initialActive.classList.add('active');
     }
 
-    function setApiStatus(status, text) {
-      const el = document.getElementById('api-status');
-      el.textContent = text;
-      el.className = `api-status ${status}`;
+    // TAB FUNCTIONALITY (fixed to avoid reliance on global event)
+    function showTab(tabName, clickedBtn) {
+      document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      const selectedTab = document.getElementById(tabName);
+      if (selectedTab) selectedTab.classList.add('active');
+      if (clickedBtn) clickedBtn.classList.add('active');
+      document.querySelectorAll('.menu-panel').forEach(panel => panel.classList.remove('active'));
+      const menuPanel = document.getElementById(`panel-${tabName}`);
+      if (menuPanel) menuPanel.classList.add('active');
     }
 
-    // ========== PAGE SWITCHER ===========
-    function switchPage(page, evt) {
-      currentPage = page;
-      const target = evt?.currentTarget || evt?.target;
-      
-      // Update sidebar mode buttons
-      document.querySelectorAll('[data-mode]').forEach(btn => btn.classList.remove('active'));
-      if (target && target.dataset.mode) target.classList.add('active');
-      // Also update old page-btn if exists
-      document.querySelectorAll('.page-btn').forEach(btn => btn.classList.remove('active'));
-      if (target) target.classList.add('active');
-      
-      // Get all dashboard elements
-      const header = document.querySelector('.header');
-      const menuBar = document.querySelector('.menu-bar');
-      const sectionHeaderWrapper = document.querySelector('.section-header-wrapper');
-      const tickerContainer = document.querySelector('.ticker-container');
-      const newsBreakingWrapper = document.querySelector('.news-breaking-wrapper');
-      const topGrid = document.querySelector('.top-grid');
-      const mainGrid = document.querySelector('.main-grid');
-      const geniusAi = document.querySelector('.genius-ai');
-      const tabContents = document.querySelectorAll('.tab-content');
-      const detailedModePanel = document.getElementById('detailed-mode-panel');
-      const retroPage = document.getElementById('retro-page');
-      
-      if (page === 'detailed') {
-        // Show Bloomberg dashboard + detailed panel on right
-        if (header) header.style.display = '';
-        if (menuBar) menuBar.style.display = '';
-        if (sectionHeaderWrapper) sectionHeaderWrapper.style.display = '';
-        if (tickerContainer) tickerContainer.style.display = '';
-        if (newsBreakingWrapper) newsBreakingWrapper.style.display = '';
-        if (topGrid) topGrid.style.display = '';
-        if (mainGrid) mainGrid.style.display = '';
-        if (geniusAi) geniusAi.style.display = '';
-        if (detailedModePanel) detailedModePanel.classList.add('active');
-        if (retroPage) retroPage.style.display = 'none';
-        // Adjust main content to accommodate panel (only on desktop)
-        const isMobile = window.innerWidth <= 480;
-        document.body.style.marginRight = isMobile ? '0' : '380px';
-      } else if (page === 'retro') {
-        // Hide Bloomberg, show retro full screen
-        if (header) header.style.display = 'none';
-        if (menuBar) menuBar.style.display = 'none';
-        if (sectionHeaderWrapper) sectionHeaderWrapper.style.display = 'none';
-        if (tickerContainer) tickerContainer.style.display = 'none';
-        if (newsBreakingWrapper) newsBreakingWrapper.style.display = 'none';
-        if (topGrid) topGrid.style.display = 'none';
-        if (mainGrid) mainGrid.style.display = 'none';
-        if (geniusAi) geniusAi.style.display = 'none';
-        tabContents.forEach(el => el.style.display = 'none');
-        if (detailedModePanel) detailedModePanel.classList.remove('active');
-        if (retroPage) retroPage.style.display = 'block';
-        document.body.style.marginRight = '0';
-      } else {
-        // Show Bloomberg normally
-        if (header) header.style.display = '';
-        if (menuBar) menuBar.style.display = '';
-        if (sectionHeaderWrapper) sectionHeaderWrapper.style.display = '';
-        if (tickerContainer) tickerContainer.style.display = '';
-        if (newsBreakingWrapper) newsBreakingWrapper.style.display = '';
-        if (topGrid) topGrid.style.display = '';
-        if (mainGrid) mainGrid.style.display = '';
-        if (geniusAi) geniusAi.style.display = '';
-        document.querySelector('.tab-content.active')?.style ? (document.querySelector('.tab-content.active').style.display = 'block') : null;
-        // Hide panels
-        if (detailedModePanel) detailedModePanel.classList.remove('active');
-        if (retroPage) retroPage.style.display = 'none';
-        document.body.style.marginRight = '0';
-      }
+    // Attach click handlers to menu items with data-tab attribute
+    document.querySelectorAll('[data-tab]').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        const tabName = this.getAttribute('data-tab');
+        showTab(tabName, this);
+      });
+    });
+
+    // Init default panel
+    const defaultBtn = document.querySelector('.menu-item.active');
+    if (defaultBtn) {
+      showTab(defaultBtn.getAttribute('data-tab'), defaultBtn);
     }
 
-    // ========== TOGGLE DETAIL SECTION ==========
-    function toggleDetailSection(headerEl) {
-      const isCollapsed = headerEl.classList.contains('collapsed');
-      
-      // Zamknij inne sekcje na telefonie (accordion mode)
-      const isMobile = window.innerWidth <= 768;
-      if (isMobile && !isCollapsed) {
-        const allHeaders = document.querySelectorAll('.detail-section-header');
-        allHeaders.forEach(h => {
-          if (h !== headerEl && !h.classList.contains('collapsed')) {
-            h.classList.add('collapsed');
-          }
-        });
-      }
-      
-      // Toggle current section
-      headerEl.classList.toggle('collapsed');
-    }
-
-    // ========== UPDATE DETAIL PANEL ==========
-    function updateDetailPanel(btcPrice, data) {
-      if (!btcPrice) return;
-      
-      // Price Levels
-      document.getElementById('detail-res1').textContent = `$${(btcPrice * 1.016).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-      document.getElementById('detail-res2').textContent = `$${(btcPrice * 1.035).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-      document.getElementById('detail-sup1').textContent = `$${(btcPrice * 0.982).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-      document.getElementById('detail-sup2').textContent = `$${(btcPrice * 0.955).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-      document.getElementById('detail-pivot').textContent = `$${(btcPrice * 1.0).toLocaleString('en-US', { maximumFractionDigits: 0 })}`;
-      
-      // Volatility (dynamic based on price changes)
-      const atr = (btcPrice * 0.022).toFixed(0);
-      const rsi = Math.min(95, Math.max(15, Math.floor(50 + Math.random() * 30)));
-      document.getElementById('detail-atr').textContent = atr;
-      document.getElementById('detail-rsi').textContent = rsi;
-      
-      const macdEl = document.getElementById('detail-macd');
-      macdEl.textContent = rsi > 60 ? 'BULLISH' : rsi < 40 ? 'BEARISH' : 'NEUTRAL';
-      macdEl.className = `detail-item-value ${rsi > 60 ? 'positive' : rsi < 40 ? 'negative' : ''}`;
-      
-      // Funding Rates (simulated)
-      const fundRate = (0.01 + Math.random() * 0.02).toFixed(3);
-      const fund8h = (fundRate * 3).toFixed(3);
-      document.getElementById('detail-fund-rate').textContent = `+${fundRate}%`;
-      document.getElementById('detail-fund-8h').textContent = `+${fund8h}%`;
-      
-      // Order Book
-      document.getElementById('detail-bid-wall').textContent = `$${(Math.random() * 500 + 750).toFixed(0)}M`;
-      document.getElementById('detail-ask-wall').textContent = `$${(Math.random() * 400 + 1000).toFixed(0)}M`;
-      document.getElementById('detail-spread').textContent = `$${(10 + Math.random() * 15).toFixed(2)}`;
-      
-      // Whale Activity
-      const whaleRatio = 2.4 / 1.8;
-      const whaleSent = whaleRatio > 1.3 ? 'ACCUMULATING' : whaleRatio < 0.8 ? 'DISTRIBUTING' : 'NEUTRAL';
-      const whaleSentClass = whaleRatio > 1.3 ? 'positive' : whaleRatio < 0.8 ? 'negative' : '';
-      document.getElementById('detail-whale-sent').textContent = whaleSent;
-      document.getElementById('detail-whale-sent').className = `detail-item-value ${whaleSentClass}`;
-    }
-
-    // ========== THEME SWITCHER ===========
-    function switchTheme(theme, evt) {
-      const target = evt?.currentTarget || evt?.target;
-      // Update sidebar theme buttons
-      document.querySelectorAll('[data-theme]').forEach(btn => btn.classList.remove('active'));
-      if (target) target.classList.add('active');
-      // Also update old theme-btn if exists
-      document.querySelectorAll('.theme-btn').forEach(btn => btn.classList.remove('active'));
-      if (target) target.classList.add('active');
-      
-      let style = `
-        body { background: var(--black); color: #ffffff; }
-        .header { background: var(--orange); }
-        .menu-bar { background: var(--burgundy); }
-      `;
-      
-      if (theme === 'professional') {
-        style += `
-          body { background: #1a1a2e; }
-          .header { background: #0f3460; }
-          .menu-bar { background: #16213e; }
-        `;
-      } else if (theme === 'dark') {
-        style += `
-          body { background: #1a1a1a; }
-          .header { background: #2d2d2d; }
-          .menu-bar { background: #1a1a1a; }
-        `;
-      }
-      
-      let styleEl = document.getElementById('dynamic-style');
-      if (!styleEl) {
-        styleEl = document.createElement('style');
-        styleEl.id = 'dynamic-style';
-        document.head.appendChild(styleEl);
-      }
-      styleEl.textContent = style;
-    }
-
-    // ========== TAB SWITCHER ==========
-    function switchTab(tab) {
-      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
-      
-      // Activate the tab
-      const tabEl = document.getElementById(tab);
-      if (tabEl) {
-        tabEl.classList.add('active');
-      }
-      
-      // Activate the menu item
-      document.querySelector(`[onclick="switchTab('${tab}')"]`).classList.add('active');
-      
-      // Update tab-specific data
-      if (tab === 'technical') {
-        updateTechnicalTab();
-      } else if (tab === 'signals') {
-        updateSignalsTab();
-      } else if (tab === 'risk') {
-        updateRiskTab();
-      } else if (tab === 'depth') {
-        updateDepthTab();
-      }
-    }
-
-    function updateTechnicalTab() {
-      // Simulate technical indicator updates based on price
-      const btcPrice = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g, ''));
-      const rsi = Math.min(100, Math.max(0, 50 + (Math.random() - 0.5) * 40));
-      const volume = (btcPrice * 0.00028).toFixed(1);
-      
-      document.getElementById('tech-rsi').textContent = Math.round(rsi);
-      document.getElementById('tech-volume').textContent = `$${volume}B`;
-      document.getElementById('tech-stoch').textContent = `${Math.round(rsi + 10)}/${Math.round(rsi + 20)}`;
-    }
-
-    function updateSignalsTab() {
-      // Update signal data based on current price
-      const btcPrice = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g, ''));
-      // Signals already display static data, but could be enhanced
-    }
-
-    function updateRiskTab() {
-      // Calculate position sizing based on account risk
-      const btcPrice = parseFloat(document.getElementById('btc-price').textContent.replace(/[$,]/g, ''));
-      const posSize = (25000 / btcPrice).toFixed(2);
-      
-      document.getElementById('risk-pos-size').textContent = `${posSize} BTC`;
-      document.getElementById('risk-stop-loss').textContent = `$${(btcPrice - 1932).toLocaleString()}`;
-      document.getElementById('risk-liq-price').textContent = `$${(btcPrice - 3232).toLocaleString()}`;
-    }
-
-    function updateDepthTab() {
-      // Depth data is static/simulated, could be updated from live API
-    }
-
-    // ========== INIT ==========
-    function init() {
-      updateTime();
-      updateLanguageDisplay();
-      switchTheme('bloomberg');
-      renderCandlestickChart();
-      updateLiquidations();
-      fetchApiData();
-      updateStockTickers();
-      updateSidebarWidgets();
-      setInterval(updateTime, 1000);
-      setInterval(fetchApiData, 5000);  // 50% faster - every 5 seconds
-      setInterval(updateStockTickers, 5000);
-      setInterval(updateLiquidations, 30000);
-      setInterval(updateSidebarWidgets, 5000);  // Update sidebar widgets every 5 seconds
-    }
-
-    window.addEventListener('DOMContentLoaded', init);
+    // Correlation timeframe buttons
+    document.querySelectorAll('.corr-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        document.querySelectorAll('.corr-btn').forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+        console.log('Correlation timeframe:', this.getAttribute('data-corrtf'));
+      });
+    });
   </script>
-
 </body>
 </html>

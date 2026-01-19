@@ -47,6 +47,7 @@
       padding: 10px 24px;
       background: var(--burgundy);
       border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
     }
     .menu-item {
       background: transparent;
@@ -60,6 +61,40 @@
     }
     .menu-item.active { background: #b0303c; border-color: #d44a5c; }
     .menu-item:hover { opacity: 0.9; }
+
+    /* DROP-DOWN PANELS UNDER MENU */
+    .menu-panels { padding: 0 24px 10px 24px; }
+    .menu-panel {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 2px solid #1a1a1a;
+      padding: 14px;
+      color: #ffffff;
+    }
+    .menu-panel.active { display: block; }
+    .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .panel-card { background: #0d0d0d; border: 1px solid var(--border); padding: 12px; }
+    .panel-title { font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; font-size: 0.95em; }
+    .panel-text { color: var(--gray); font-size: 0.9em; line-height: 1.5; }
+    .signal-tag { display: inline-block; padding: 4px 8px; border: 1px solid var(--border); background: #111; color: #fff; font-weight: 700; font-size: 0.8em; letter-spacing: 0.5px; margin-right: 6px; }
+    .sparkline { width: 100%; height: 80px; background: #0a0a0a; border: 1px solid var(--border); padding: 6px; }
+    .sparkline svg { width: 100%; height: 100%; }
+    .mini-label { color: var(--gray); font-size: 0.8em; margin-top: 6px; }
+    .mini-sparkline { width: 100%; height: 52px; background: #0a0a0a; border: 1px solid var(--border); margin: 6px 0; padding: 4px; }
+    .mini-sparkline svg { width: 100%; height: 100%; }
+    .cta-btn {
+      display: inline-block;
+      padding: 6px 12px;
+      margin-top: 8px;
+      background: var(--orange);
+      color: #000000;
+      border: 1px solid var(--orange);
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 0.85em;
+      letter-spacing: 0.3px;
+    }
 
     /* SECTION HEADER WITH SENTIMENT */
     .section-header-wrapper {
@@ -428,12 +463,14 @@
     .tab-content {
       display: none;
       padding: 14px 24px;
-      background: #ffffff;
-      border-top: 1px solid #e5e5e5;
+      background: var(--panel);
+      border-top: 1px solid var(--border);
+      color: #ffffff;
     }
     .tab-content.active {
       display: block;
     }
+    .tab-content h2 { color: #ffffff; }
     .trend-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -458,39 +495,44 @@
     #trend-analysis .trend-down, 
     #trend-analysis .trend-neutral { color: #ffffff; }
     
-    /* CORRELATION TABLE */
-    .corr-wrapper { background: #ffffff; border: 1px solid #e5e5e5; padding: 14px; }
+    /* CORRELATION TABLE (dark) */
+    .corr-wrapper { background: var(--panel); border: 1px solid var(--border); padding: 14px; }
     .corr-controls { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
-    .corr-select, .corr-btn { background: #ffffff; border: 1px solid #e5e5e5; color: #333333; padding: 6px 10px; font-family: 'Roboto Mono', monospace; font-size: 0.85em; }
-    .corr-btn.active { background: #000000; color: #ffffff; border-color: #000000; font-weight: 700; }
+    .corr-select, .corr-btn { background: #0e0e0e; border: 1px solid var(--border); color: #ffffff; padding: 6px 10px; font-family: 'Roboto Mono', monospace; font-size: 0.85em; }
+    .corr-btn.active { background: var(--orange); color: #000000; border-color: var(--orange); font-weight: 700; }
     .corr-grid { width: 100%; border-collapse: collapse; }
-    .corr-grid th, .corr-grid td { border: 1px solid #eeeeee; padding: 6px 8px; text-align: center; font-size: 0.85em; }
-    .corr-grid th { background: #f7f7f7; color: #111111; font-weight: 700; }
-    .corr-asset { text-align: left; color: #111111; font-weight: 700; }
-    .corr-cell { color: #111111; }
-    .heat-pos-low, .heat-pos-mid, .heat-pos-high, .heat-neg-low, .heat-neg-mid, .heat-neg-high { background: #ffffff; }
+    .corr-grid th, .corr-grid td { border: 1px solid #161616; padding: 6px 8px; text-align: center; font-size: 0.85em; }
+    .corr-grid th { background: #0f0f0f; color: #ffffff; font-weight: 700; }
+    .corr-asset { text-align: left; color: #ffffff; font-weight: 700; }
+    .corr-cell { color: #ffffff; }
+    .heat-pos-high { background: rgba(0,255,65,0.12); }
+    .heat-pos-mid { background: rgba(0,255,65,0.08); }
+    .heat-pos-low { background: rgba(0,255,65,0.04); }
+    .heat-neg-high { background: rgba(255,0,51,0.12); }
+    .heat-neg-mid { background: rgba(255,0,51,0.08); }
+    .heat-neg-low { background: rgba(255,0,51,0.04); }
     .corr-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 12px; }
-    .corr-card { background: #ffffff; border: 1px solid #e5e5e5; padding: 10px; }
-    .corr-card h4 { color: #000000; font-size: 0.9em; margin-bottom: 6px; }
-    .corr-card p { color: #333333; font-size: 0.85em; }
+    .corr-card { background: #0d0d0d; border: 1px solid var(--border); padding: 10px; }
+    .corr-card h4 { color: #ffffff; font-size: 0.9em; margin-bottom: 6px; }
+    .corr-card p { color: #dddddd; font-size: 0.85em; }
 
-    /* MULTI-TF ANALYSIS */
-    .tf-wrapper { background: #ffffff; border: 1px solid #e5e5e5; padding: 14px; }
-    .tf-guide { background: #f7f7f7; border: 1px solid #e5e5e5; padding: 12px; margin-bottom: 14px; }
-    .tf-guide h3 { color: #000000; font-size: 1em; margin-bottom: 8px; }
+    /* MULTI-TF ANALYSIS (dark) */
+    .tf-wrapper { background: var(--panel); border: 1px solid var(--border); padding: 14px; }
+    .tf-guide { background: #0e0e0e; border: 1px solid var(--border); padding: 12px; margin-bottom: 14px; color: #ffffff; }
+    .tf-guide h3 { color: #ffffff; font-size: 1em; margin-bottom: 8px; }
     .tf-guide ul { list-style: none; padding-left: 0; }
-    .tf-guide li { color: #333333; font-size: 0.85em; margin: 4px 0; }
+    .tf-guide li { color: #dddddd; font-size: 0.85em; margin: 4px 0; }
     .tf-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .tf-card { background: #ffffff; border: 1px solid #e5e5e5; padding: 10px; }
-    .tf-title { color: #000000; font-weight: 700; font-size: 0.95em; margin-bottom: 6px; display: flex; justify-content: space-between; }
-    .tf-status { font-weight: 700; color: #111111; }
-    .tf-bull { color: #111111; }
-    .tf-bear { color: #111111; }
-    .tf-neutral { color: #111111; }
-    .tf-sideways { color: #111111; }
-    .tf-konsol { color: #111111; }
-    .tf-row { display: flex; justify-content: space-between; color: #555555; font-size: 0.85em; }
-    .tf-row span:last-child { color: #111111; font-weight: 700; }
+    .tf-card { background: #0d0d0d; border: 1px solid var(--border); padding: 10px; color: #ffffff; }
+    .tf-title { color: #ffffff; font-weight: 700; font-size: 0.95em; margin-bottom: 6px; display: flex; justify-content: space-between; }
+    .tf-status { font-weight: 700; color: #ffffff; }
+    .tf-bull { color: var(--green); }
+    .tf-bear { color: var(--red); }
+    .tf-neutral { color: var(--yellow); }
+    .tf-sideways { color: var(--cyan); }
+    .tf-konsol { color: var(--yellow); }
+    .tf-row { display: flex; justify-content: space-between; color: #dddddd; font-size: 0.85em; }
+    .tf-row span:last-child { color: #ffffff; font-weight: 700; }
     @media (max-width: 1200px) { .tf-grid { grid-template-columns: 1fr; } }
 
     @media (max-width: 1200px) {
@@ -510,10 +552,201 @@
 
   <!-- BURGUNDY MENU BAR -->
   <div class="menu-bar">
-    <button class="menu-item active" data-tab="dashboard">Dashboard</button>
+    <button class="menu-item" data-tab="dashboard">Dashboard</button>
     <button class="menu-item" data-tab="trend-analysis">Trend Analysis</button>
     <button class="menu-item" data-tab="kpi-correlation">KPI Correlation</button>
     <button class="menu-item" data-tab="multi-tf-analysis">IMEFRAME ZONE • MULTI-TF ANALYSIS</button>
+    <button class="menu-item active" data-tab="hamster-genius">Hamster Genius</button>
+    <button class="menu-item" data-tab="onchain-flows">On-chain & Flows</button>
+    <button class="menu-item" data-tab="risk-positioning">Risk & Positioning</button>
+    <button class="menu-item" data-tab="execution-playbook">Execution Playbook</button>
+    <button class="menu-item" data-tab="alerts-journal">Alerts & Journal</button>
+  </div>
+
+  <!-- DROPDOWN PANELS UNDER MENU (extra data on click) -->
+  <div class="menu-panels">
+    <div class="menu-panel" id="panel-dashboard">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">RADAR SNAJPERSKI • BTC</div>
+          <div class="panel-text">Poziomy natychmiast: <strong style="color: var(--green);">95.0k–95.4k BUY</strong> | <strong style="color: var(--red);">97.3k–97.6k SELL</strong>. Invalidation: wybicie 97.8k.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SZYBKIE SYGNAŁY</div>
+          <div style="margin-bottom: 6px;">
+            <span class="signal-tag">LONG bias</span>
+            <span class="signal-tag">Scalp ON</span>
+            <span class="signal-tag">R:R 1:2.5</span>
+          </div>
+          <div class="panel-text">Wejście przy FVG $95.2k, TP $97.4k, SL $94.2k. Aktualizuj co 15m.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">MINI WYKRES • BTC</div>
+          <div class="sparkline">
+            <svg viewBox="0 0 200 80" preserveAspectRatio="xMidYMid meet">
+              <polyline points="5,60 35,50 65,40 95,45 125,35 155,42 185,38" fill="none" stroke="var(--yellow)" stroke-width="2" />
+              <circle cx="65" cy="40" r="4" fill="var(--green)" />
+              <text x="55" y="28" font-size="8" fill="var(--green)">BUY</text>
+              <circle cx="155" cy="42" r="4" fill="var(--red)" />
+              <text x="145" y="30" font-size="8" fill="var(--red)">SELL</text>
+            </svg>
+          </div>
+          <div class="mini-label">Overlay dla głównego wykresu + sygnały live.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-trend-analysis">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">SZYBKI TREND</div>
+          <div class="panel-text">1H: konsolidacja; 4H: lekkie wybicie góra; 1D: byczy kanał. Wybij 97.4k = przyspieszenie.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">CO SPRAWDZIĆ</div>
+          <div class="panel-text">Powtórz test EMA50, reakcję na FVG $95.2k, obronę buy walli. Przyspieszenie wolumenu > +20% = wejście.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">NASTĘPNE KROKI</div>
+          <div class="panel-text">Ustaw alert na 97.4k i 94.8k. Jeśli RSI 1H < 42 przy 95k → odpuść longi, szukaj reentry przy 94.2k.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-kpi-correlation">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">MAKRO CHECK</div>
+          <div class="panel-text">DXY -0.48 korelacji: spadki dolara pomagają longom BTC. VIX nisko → rynek ryzyka sprzyja.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">ETF/INFLOWS</div>
+          <div class="panel-text">Napływy ETF +$220M → wspiera trend wzrostowy. Watch: jeśli dzienny dopływ < +$50M, zdejmij dźwignię.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">POMYSŁ</div>
+          <div class="panel-text">Dodaj heatmapę cross-asset (BTC vs SPX vs Gold) + auto-highlight gdy korelacja zmienia znak.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-multi-tf-analysis">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">SCALP PLAN</div>
+          <div class="panel-text">1m/5m bull, 15m/30m neutral: graj mean-revert do EMA, target +0.35% per trade.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SWING PLAN</div>
+          <div class="panel-text">4h neutral, 1d bear → trzymaj połowę pozycji hedge (short perps) przy 97.4k, zdejmij gdy 98k wybite.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">RADAR SNAJPERSKI BTC</div>
+          <div class="panel-text">Alerty: 95.2k (buy), 94.2k (re-entry), 97.8k (short invalidation). Dodaj auto-linię na wykresie.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel active" id="panel-hamster-genius">
+      <div class="panel-grid">
+        <div class="panel-card" style="grid-column: span 2;">
+          <div class="panel-title">HAMSTER GENIUS • WYKRES + KOMENTARZ</div>
+          <div class="sparkline">
+            <svg viewBox="0 0 320 90" preserveAspectRatio="xMidYMid meet">
+              <polyline points="10,70 60,52 110,40 160,45 210,33 260,42 310,36" fill="none" stroke="var(--yellow)" stroke-width="2" />
+              <circle cx="110" cy="40" r="5" fill="var(--green)" />
+              <text x="94" y="26" font-size="9" fill="var(--green)">LONG 95.2k</text>
+              <circle cx="260" cy="42" r="5" fill="var(--red)" />
+              <text x="244" y="24" font-size="9" fill="var(--red)">TAKE PROFIT 97.4k</text>
+            </svg>
+          </div>
+          <div class="mini-label">Komentarz: momentum rośnie po obronie buy walli. Ryzyko: wybicie 94.8k = stop.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SYGNAŁY LIVE</div>
+          <div class="panel-text">• BUY: 95.2k (potwierdzony FVG + wolumen)
+            <br>• SELL: 97.4k (liquidity sweep)
+            <br>• ALERT: funding > 0.012% → zmniejsz long.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">CO DODAĆ</div>
+          <div class="panel-text">Auto-rysowanie killzone NY/London, push notyfikacji z tekstem AI na wykres, sygnał Sniper BTC z poziomami i timerem świecy.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-onchain-flows">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">STABLECOIN FLOWS</div>
+          <div class="panel-text">Net inflow +$180M (24h). Zastrzyk płynności wspiera popyt spot.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">ETF SPOT BTC</div>
+          <div class="panel-text">Napływ dzienny +$220M, 5d średnia +$140M. Jeśli < +$50M → ostrożniej z long.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">EXCHANGE FLOWS</div>
+          <div class="panel-text">Net outflow -3.2k BTC (24h) → presja spadku podaży na spot.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-risk-positioning">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">FUNDING / SKEW</div>
+          <div class="panel-text">Funding +0.008%: zdrowe. Skew lekko dodatni → lekka przewaga longów.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">OI / DŹWIGNIA</div>
+          <div class="panel-text">Open Interest $12.4B, wzrost +3% d/d. Brak przegrzania, ale śledź przy wybiciu 97.4k.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">LIQUIDATION MAP</div>
+          <div class="panel-text">Clustery: 97.4k (short liq), 94.8k (long liq). Graj w kierunku czyszczenia shortów.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-execution-playbook">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">SCALP PLAN</div>
+          <div class="panel-text">Wejście: 95.2k FVG. TP: 97.4k. SL: 94.2k. Wielkość: 0.35x equity.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">INTRADAY PLAN</div>
+          <div class="panel-text">Kup retrace do 95.8–96.2k jeśli RSI 1H>45. TP1 97.4k, TP2 99k. Trailing pod EMA20 1H.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">SWING PLAN</div>
+          <div class="panel-text">Po wybiciu 98k hold do 105k, hedge 25% na perps przy spadku poniżej 96k.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="menu-panel" id="panel-alerts-journal">
+      <div class="panel-grid">
+        <div class="panel-card">
+          <div class="panel-title">ALERTY</div>
+          <div class="panel-text">• Alert: 97.4k SELL sweep
+            <br>• Alert: Funding > 0.012%
+            <br>• Alert: Net inflow ETF < +$50M</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">CHECKLIST</div>
+          <div class="panel-text">[ ] Trend 1H zgodny z 4H
+            <br>[ ] Funding OK
+            <br>[ ] Poziomy: 95.2k/97.4k ustawione
+            <br>[ ] Wielkość pozycji ≤ plan</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">NOTATKI</div>
+          <div class="panel-text">Dodaj krótkie wnioski po trade: co zagrało, co poprawić.</div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- SECTION HEADER WITH SENTIMENT & STATS -->
@@ -891,6 +1124,143 @@
       </div>
     </div>
   </div>
+
+  <!-- DASHBOARD TAB CONTENT (dodatkowe info) -->
+  <div id="dashboard" class="tab-content">
+    <h2>Dashboard • szybki podgląd</h2>
+    <p style="color: var(--gray);">Widok główny jest nad menu, a tu masz notatki akcji: Radar Snajperski BTC, szybkie sygnały i mini-wykres z panelu menu.</p>
+  </div>
+
+  <!-- ON-CHAIN & FLOWS TAB -->
+  <div id="onchain-flows" class="tab-content">
+    <h2>On-chain & Flows</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Stablecoin Netflow</h4>
+        <p>24h: <span class="trend-up">+$180M</span></p>
+        <p>Bias: popyt spot ↑</p>
+        <p>Watch: odwrót &lt; +$50M</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,30 25,24 45,18 65,22 85,15 105,20" fill="none" stroke="var(--green)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+      <div class="trend-card">
+        <h4>ETF Spot BTC</h4>
+        <p>Dzienny napływ: <span class="trend-up">+$220M</span></p>
+        <p>5d avg: +$140M</p>
+        <p>Ryzyko: <span class="trend-down">spadek &lt; +$50M</span></p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,25 25,26 45,24 65,22 85,20 105,18" fill="none" stroke="var(--yellow)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+      <div class="trend-card">
+        <h4>Exchange Flows</h4>
+        <p>Net outflow: <span class="trend-up">-3.2k BTC</span></p>
+        <p>Presja podaży maleje</p>
+        <p>Alert: duży inflow = risk-off</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,18 25,20 45,24 65,28 85,26 105,30" fill="none" stroke="var(--cyan)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RISK & POSITIONING TAB -->
+  <div id="risk-positioning" class="tab-content">
+    <h2>Risk & Positioning</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Funding / Skew</h4>
+        <p>Funding: <span class="trend-up">+0.008%</span></p>
+        <p>Skew: lekko long</p>
+        <p>Alert: &gt;0.012% redukuj</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,24 25,22 45,20 65,21 85,19 105,18" fill="none" stroke="var(--orange)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+      <div class="trend-card">
+        <h4>Open Interest</h4>
+        <p>OI: $12.4B</p>
+        <p>d/d: <span class="trend-up">+3%</span></p>
+        <p>Brak przegrzania</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,28 25,26 45,24 65,22 85,20 105,19" fill="none" stroke="var(--green)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+      <div class="trend-card">
+        <h4>Liquidation Map</h4>
+        <p>Short liq: 97.4k</p>
+        <p>Long liq: 94.8k</p>
+        <p>Scenariusz: graj pod sweep shortów</p>
+        <div class="mini-sparkline">
+          <svg viewBox="0 0 120 40" preserveAspectRatio="xMidYMid meet">
+            <polyline points="5,30 25,18 45,20 65,16 85,22 105,14" fill="none" stroke="var(--red)" stroke-width="2" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EXECUTION PLAYBOOK TAB -->
+  <div id="execution-playbook" class="tab-content">
+    <h2>Execution Playbook</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Scalp</h4>
+        <p>Entry: 95.2k (FVG)</p>
+        <p>TP: 97.4k</p>
+        <p>SL: 94.2k • size 0.35x</p>
+        <button class="cta-btn">Ustaw alert</button>
+      </div>
+      <div class="trend-card">
+        <h4>Intraday</h4>
+        <p>Buy: 95.8–96.2k jeśli RSI1H&gt;45</p>
+        <p>TP1 97.4k, TP2 99k</p>
+        <p>Trailing: EMA20 1H</p>
+        <button class="cta-btn">Dodaj do playbooka</button>
+      </div>
+      <div class="trend-card">
+        <h4>Swing</h4>
+        <p>Po wybiciu 98k → hold do 105k</p>
+        <p>Hedge 25% jeśli &lt;96k</p>
+        <p>Rewizja codziennie 21:00 UTC</p>
+        <button class="cta-btn">Wyślij alert</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ALERTS & JOURNAL TAB -->
+  <div id="alerts-journal" class="tab-content">
+    <h2>Alerts & Journal</h2>
+    <div class="trend-grid" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="trend-card">
+        <h4>Alerty aktywne</h4>
+        <p>• 97.4k SELL sweep</p>
+        <p>• Funding &gt; 0.012%</p>
+        <p>• ETF inflow &lt; +$50M</p>
+        <button class="cta-btn">Zarządzaj alertami</button>
+      <div class="trend-card">
+        <h4>Checklist</h4>
+        <p>[ ] Trend 1H zgodny z 4H</p>
+        <p>[ ] Funding OK</p>
+        <p>[ ] Poziomy 95.2k/97.4k ustawione</p>
+      </div>
+        <button class="cta-btn">Odhacz</button>
+        <h4>Notatki</h4>
+        <p>Zapisz po trade: co zadziałało, co poprawić, decyzje emocjonalne vs plan.</p>
+      </div>
+    </div>
+        <button class="cta-btn">Dodaj notatkę</button>
 
   <!-- TREND ANALYSIS TAB -->
   <div id="trend-analysis" class="tab-content">
@@ -1289,6 +1659,34 @@
     </div>
   </div>
 
+    <!-- HAMSTER GENIUS TAB (podgląd sygnałów) -->
+    <div id="hamster-genius" class="tab-content active">
+      <h2 style="margin-bottom: 12px;">Hamster Genius • sygnały + overlay</h2>
+      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px;">
+        <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px;">
+          <div class="sparkline" style="margin-bottom: 10px;">
+            <svg viewBox="0 0 360 120" preserveAspectRatio="xMidYMid meet">
+              <polyline points="10,95 60,70 110,55 160,60 210,45 260,54 310,48 350,50" fill="none" stroke="var(--yellow)" stroke-width="2" />
+              <circle cx="110" cy="55" r="5" fill="var(--green)" />
+              <text x="92" y="38" font-size="10" fill="var(--green)">LONG 95.2k</text>
+              <circle cx="260" cy="54" r="5" fill="var(--red)" />
+              <text x="240" y="36" font-size="10" fill="var(--red)">TAKE PROFIT 97.4k</text>
+            </svg>
+          </div>
+          <p style="color: var(--gray);">Komentarz AI: impuls po obronie FVG, brak podaży na ask; utrzymaj long do 97.4k, trailing jeśli wolumen przyspieszy.</p>
+        </div>
+        <div style="background: #0d0d0d; border: 1px solid var(--border); padding: 12px;">
+          <div style="font-weight: 700; color: #ffffff; margin-bottom: 8px;">Aktywne sygnały</div>
+          <ul style="list-style: none; padding-left: 0; color: #ffffff; line-height: 1.6;">
+            <li>• BUY 95.2k (potwierdzony)</li>
+            <li>• SELL 97.4k (waiting liquidity sweep)</li>
+            <li>• ALERT funding > 0.012% (zmniejsz dźwignię)</li>
+          </ul>
+          <p style="color: var(--gray); font-size: 0.9em; margin-top: 8px;">Do dodania: push notyfikacje, auto-linie poziomów na głównym wykresie.</p>
+        </div>
+      </div>
+    </div>
+
   <script>
     // Clock updater
     const clockEl = document.getElementById('clock');
@@ -1334,6 +1732,9 @@
       const selectedTab = document.getElementById(tabName);
       if (selectedTab) selectedTab.classList.add('active');
       if (clickedBtn) clickedBtn.classList.add('active');
+      document.querySelectorAll('.menu-panel').forEach(panel => panel.classList.remove('active'));
+      const menuPanel = document.getElementById(`panel-${tabName}`);
+      if (menuPanel) menuPanel.classList.add('active');
     }
 
     // Attach click handlers to menu items with data-tab attribute
@@ -1344,6 +1745,12 @@
         showTab(tabName, this);
       });
     });
+
+    // Init default panel
+    const defaultBtn = document.querySelector('.menu-item.active');
+    if (defaultBtn) {
+      showTab(defaultBtn.getAttribute('data-tab'), defaultBtn);
+    }
 
     // Correlation timeframe buttons
     document.querySelectorAll('.corr-btn').forEach(btn => {
