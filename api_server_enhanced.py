@@ -14,6 +14,7 @@ import time
 from datetime import datetime
 import logging
 import os
+import random
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -32,7 +33,16 @@ cache = {
     'btc_market_cap': 0,
     'fear_greed': 0,
     'last_update': None,
-    'timestamp': 0
+    'timestamp': 0,
+    'prev_price': 0,
+    'prev_volume': 0
+}
+
+# Genius state for commentary
+genius_state = {
+    'last_commentary': '',
+    'signal': 'NEUTRAL',
+    'strength': 'medium'
 }
 
 # ========== DATA FETCHERS ==========
@@ -105,10 +115,13 @@ def data_update_loop():
     logger.info("🔄 Starting background data update thread...")
     while True:
         try:
+            cache['prev_price'] = cache['btc_price']
+            cache['prev_volume'] = cache['btc_volume']
             fetch_binance_data()
             fetch_fear_greed()
             cache['last_update'] = datetime.now().isoformat()
             cache['timestamp'] = time.time()
+            logger.info(f"🧠 Genius: {genius_state['signal']} | {genius_state['strength'].upper()}")
             time.sleep(30)  # Update every 30 seconds
         except Exception as e:
             logger.error(f"❌ Update loop error: {e}")
@@ -126,6 +139,7 @@ def index():
         'endpoints': {
             '/api/binance/summary': 'Get BTC/ETH prices and market data',
             '/api/fear-greed': 'Get Fear & Greed Index',
+            '/api/genius/commentary': 'Get live Hamster Genius commentary + signal',
             '/api/status': 'Get API server status',
             '/dashboard': 'Load Bloomberg dashboard with API'
         }
@@ -153,6 +167,82 @@ def fear_greed():
         'fear_greed': cache['fear_greed'],
         'timestamp': cache['timestamp']
     })
+
+@app.route('/api/genius/commentary')
+def genius_commentary():
+    """Generate live Genius commentary based on real-time data analysis"""
+    try:
+        btc = cache['btc_price']
+        change = cache['btc_change_24h']
+        fear_greed = cache['fear_greed']
+        volume = cache['btc_volume']
+        
+        # Analyze conditions
+        signal = 'NEUTRAL'
+        strength = 'medium'
+        commentary = ''
+        
+        # Price momentum analysis
+        if change > 1.5:
+            signal = 'BULL'
+            strength = 'strong'
+            commentary = f"🟢 BTC momentum strong (+{change:.2f}%). Byki dominują. Utrzymaj longa, podnieś SL pod 95.1k."
+        elif change > 0.5:
+            signal = 'BULL'
+            strength = 'medium'
+            commentary = f"🟢 Lekki wzrost (+{change:.2f}%). Trend pozytywny. Czekaj na retest 95.2k FVG."
+        elif change < -1.5:
+            signal = 'BEAR'
+            strength = 'strong'
+            commentary = f"🔴 Spadek ostry ({change:.2f}%). Bieżnie protect longs. Czekaj na support 94.8k."
+        elif change < -0.5:
+            signal = 'BEAR'
+            strength = 'medium'
+            commentary = f"🔴 Pullback ({change:.2f}%). Zmiana nastroju. Uważaj na poziom 95k."
+        else:
+            signal = 'NEUTRAL'
+            commentary = "⭕ Konsolidacja. RSI likely 45-55. Scalp opportunity w FVG."
+        
+        # Fear & Greed factor
+        if fear_greed > 70:
+            commentary += f" | Fear&Greed {fear_greed} (GREED) → rezerwuj 30% TP na 97.4k."
+        elif fear_greed < 30:
+            commentary += f" | Fear&Greed {fear_greed} (FEAR) → trzymaj hedgi, czekaj na reversal."
+        
+        # Volume analysis
+        if volume > cache.get('prev_volume', 1) * 1.2:
+            commentary += " | Wolumen +20% → potwierdzenie trendu. Zwiększ pozycję."
+            if strength == 'medium':
+                strength = 'strong'
+        
+        # Session analysis
+        hour = datetime.now().hour
+        if 8 <= hour < 11:
+            commentary += " | LONDON OPEN: szukaj sweepu. Volatilność OK."
+        elif 14 <= hour < 17:
+            commentary += " | NEW YORK OPEN: watch liquidity sweep. Trend może przyspieszyć."
+        
+        genius_state['last_commentary'] = commentary
+        genius_state['signal'] = signal
+        genius_state['strength'] = strength
+        
+        return jsonify({
+            'ok': True,
+            'commentary': commentary,
+            'signal': signal,
+            'strength': strength,
+            'btc_price': btc,
+            'change_24h': change,
+            'fear_greed': fear_greed,
+            'timestamp': cache['timestamp']
+        })
+    except Exception as e:
+        logger.error(f"❌ Genius commentary error: {e}")
+        return jsonify({
+            'ok': False,
+            'commentary': '⭕ Genius loading...',
+            'error': str(e)
+        }), 500
 
 @app.route('/api/status')
 def status():

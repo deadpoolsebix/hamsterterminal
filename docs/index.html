@@ -40,6 +40,58 @@
     }
     .header-time { font-size: 1em; font-weight: 600; }
 
+    /* NAV WRAPPER + HAMBURGER */
+    .nav-wrapper { border-bottom: 1px solid var(--border); }
+    .hamburger-btn {
+      display: none;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 24px;
+      width: 100%;
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-left: 2px solid #1a1a1a;
+      color: #ffffff;
+      cursor: pointer;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .hamburger-btn span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: #ffffff;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+    .hamburger-icon { display: grid; gap: 4px; }
+    .hamburger-label { font-size: 0.9em; color: var(--gray); }
+    .hamburger-btn.open .line1 { transform: translateY(6px) rotate(45deg); }
+    .hamburger-btn.open .line2 { opacity: 0; }
+    .hamburger-btn.open .line3 { transform: translateY(-6px) rotate(-45deg); }
+    .hamburger-extra {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-top: none;
+      padding: 10px 24px;
+      display: grid;
+      gap: 8px;
+    }
+    .pill-row { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pill {
+      padding: 6px 10px;
+      border: 1px solid var(--border);
+      background: #111;
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.85em;
+      letter-spacing: 0.3px;
+    }
+    .pill-hot { border-color: var(--red); color: var(--red); }
+    .pill-cool { border-color: var(--cyan); color: var(--cyan); }
+    .pill-neutral { border-color: var(--gray); color: var(--gray); }
+    .live-comment { color: var(--gray); font-size: 0.9em; line-height: 1.5; }
+    .tactic-note { color: #ffffff; font-size: 0.92em; font-weight: 700; }
+
     /* BURGUNDY MENU BAR */
     .menu-bar {
       display: flex;
@@ -94,6 +146,19 @@
       cursor: pointer;
       font-size: 0.85em;
       letter-spacing: 0.3px;
+    }
+
+    /* COLLAPSE BEHAVIOR */
+    .nav-wrapper.collapsed .menu-bar,
+    .nav-wrapper.collapsed .menu-panels {
+      display: none;
+    }
+    @media (max-width: 1100px) {
+      .hamburger-btn { display: flex; }
+      .menu-bar { flex-wrap: wrap; }
+    }
+    @media (min-width: 1101px) {
+      .hamburger-btn { display: none; }
     }
 
     /* SECTION HEADER WITH SENTIMENT */
@@ -550,21 +615,42 @@
     <div class="header-time" id="clock">--:--:-- UTC</div>
   </div>
 
-  <!-- BURGUNDY MENU BAR -->
-  <div class="menu-bar">
-    <button class="menu-item" data-tab="dashboard">Dashboard</button>
-    <button class="menu-item" data-tab="trend-analysis">Trend Analysis</button>
-    <button class="menu-item" data-tab="kpi-correlation">KPI Correlation</button>
-    <button class="menu-item" data-tab="multi-tf-analysis">IMEFRAME ZONE • MULTI-TF ANALYSIS</button>
-    <button class="menu-item active" data-tab="hamster-genius">Hamster Genius</button>
-    <button class="menu-item" data-tab="onchain-flows">On-chain & Flows</button>
-    <button class="menu-item" data-tab="risk-positioning">Risk & Positioning</button>
-    <button class="menu-item" data-tab="execution-playbook">Execution Playbook</button>
-    <button class="menu-item" data-tab="alerts-journal">Alerts & Journal</button>
-  </div>
+  <button class="hamburger-btn" id="hamburgerToggle">
+    <div class="hamburger-icon">
+      <span class="line1"></span>
+      <span class="line2"></span>
+      <span class="line3"></span>
+    </div>
+    <div class="hamburger-label">Menu / Alerts / Flows</div>
+  </button>
 
-  <!-- DROPDOWN PANELS UNDER MENU (extra data on click) -->
-  <div class="menu-panels">
+  <div class="nav-wrapper" id="navWrapper">
+    <!-- BURGUNDY MENU BAR -->
+    <div class="menu-bar">
+      <button class="menu-item" data-tab="dashboard">Dashboard</button>
+      <button class="menu-item" data-tab="trend-analysis">Trend Analysis</button>
+      <button class="menu-item" data-tab="kpi-correlation">KPI Correlation</button>
+      <button class="menu-item" data-tab="multi-tf-analysis">IMEFRAME ZONE • MULTI-TF ANALYSIS</button>
+      <button class="menu-item active" data-tab="hamster-genius">Hamster Genius</button>
+      <button class="menu-item" data-tab="onchain-flows">On-chain & Flows</button>
+      <button class="menu-item" data-tab="risk-positioning">Risk & Positioning</button>
+      <button class="menu-item" data-tab="execution-playbook">Execution Playbook</button>
+      <button class="menu-item" data-tab="alerts-journal">Alerts & Journal</button>
+    </div>
+
+    <!-- QUICK PILLS UNDER HAMBURGER -->
+    <div class="hamburger-extra">
+      <div class="pill-row">
+        <span class="pill pill-hot">Sniper Shot: 95.2k → 97.4k</span>
+        <span class="pill pill-cool">Live Commentary: ON</span>
+        <span class="pill pill-neutral">Tactic: Liquidity Sweep</span>
+      </div>
+      <div class="live-comment">Komentarz live: świeca 5m domyka nad 95.8k, wolumen przyspiesza +18%. Utrzymaj long, podnieś SL pod 95.1k.</div>
+      <div class="tactic-note">Nietypowa taktyka: "Ghost Ladder" — rozstaw ukryte limit buy w FVG 95.0k–95.4k, TP kaskadowo 97.0k / 97.4k, alert na spike delta.</div>
+    </div>
+
+    <!-- DROPDOWN PANELS UNDER MENU (extra data on click) -->
+    <div class="menu-panels">
     <div class="menu-panel" id="panel-dashboard">
       <div class="panel-grid">
         <div class="panel-card">
@@ -672,6 +758,18 @@
           <div class="panel-title">CO DODAĆ</div>
           <div class="panel-text">Auto-rysowanie killzone NY/London, push notyfikacji z tekstem AI na wykres, sygnał Sniper BTC z poziomami i timerem świecy.</div>
         </div>
+        <div class="panel-card">
+          <div class="panel-title">SNIPER SHOT • PLAY</div>
+          <div class="panel-text">Setup: Long FVG 95.0k–95.4k, TP1 96.8k, TP2 97.4k, SL 94.8k. Timer świecy: 5m; jeśli delta < 0 przy dotknięciu FVG → odpuść.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">LIVE COMMENTARY OVERLAY</div>
+          <div class="panel-text">Overlay na wykresie: "Buy wall trzyma 95.2k, brak podaży na ask; przenieś SL pod 95.1k". Update co 30s; plan push-notyfikacji na mobile.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">NIETYPOWE TAKTYKI</div>
+          <div class="panel-text">1) Fade na sweep shortów w killzone NY; 2) Ladder TP na mikrolotach co 120$; 3) Jeżeli funding skacze >0.018% → przełącz 25% pozycji w hedge perps.</div>
+        </div>
       </div>
     </div>
 
@@ -689,6 +787,25 @@
           <div class="panel-title">EXCHANGE FLOWS</div>
           <div class="panel-text">Net outflow -3.2k BTC (24h) → presja spadku podaży na spot.</div>
         </div>
+        <div class="panel-card">
+          <div class="panel-title">DUŻE LIKWIDACJE</div>
+          <div class="mini-sparkline">
+            <svg viewBox="0 0 220 60">
+              <polyline points="5,50 45,28 85,36 125,24 165,30 205,18" fill="none" stroke="var(--red)" stroke-width="2" />
+              <circle cx="45" cy="28" r="4" fill="var(--red)" />
+              <circle cx="165" cy="30" r="4" fill="var(--red)" />
+            </svg>
+          </div>
+          <div class="panel-text">1h: $18M short liq @97.4k; 4h: $42M long liq @94.8k; 24h: $110M głównie perps. Graj pod czyszczenie shortów.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">FVG / IMBALANCE MAP</div>
+          <div class="panel-text">1H: FVG 95.0k–95.4k (long refill); 4H: 97.3k–97.6k (short fade); D1: 92.8k–93.6k (demand). Dodaj alert na ponowne dotknięcie.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">BLOCKCHAIN HEAT</div>
+          <div class="panel-text">Mempool: 82% full; Fees: 32 sat/vB (wysokie); L2 mosty: +$65M → Arbitrum; Whale outflow: -1.1k BTC z Binance → cold storage.</div>
+        </div>
       </div>
     </div>
 
@@ -705,6 +822,14 @@
         <div class="panel-card">
           <div class="panel-title">LIQUIDATION MAP</div>
           <div class="panel-text">Clustery: 97.4k (short liq), 94.8k (long liq). Graj w kierunku czyszczenia shortów.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">POZYCJE / RYZYKO</div>
+          <div class="panel-text">Wskaźnik long/short: 1.28; Delta perps vs spot: +0.9%; Heat: funding + OI + skew w zielonym → można utrzymać longi, ale hedgować 25% przy spike funding.</div>
+        </div>
+        <div class="panel-card">
+          <div class="panel-title">KILLZONE + SESJE</div>
+          <div class="panel-text">LON 8:00-11:00: szukaj sweepu low; NY 14:30-16:30: kontynuacja; Asia: mean reversion. Dostosuj SL pod zmienność sesyjną.</div>
         </div>
       </div>
     </div>
@@ -1661,7 +1786,7 @@
 
     <!-- HAMSTER GENIUS TAB (podgląd sygnałów) -->
     <div id="hamster-genius" class="tab-content active">
-      <h2 style="margin-bottom: 12px;">Hamster Genius • sygnały + overlay</h2>
+      <h2 style="margin-bottom: 12px;">Hamster Genius • sygnały + live commentary</h2>
       <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px;">
         <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px;">
           <div class="sparkline" style="margin-bottom: 10px;">
@@ -1673,16 +1798,19 @@
               <text x="240" y="36" font-size="10" fill="var(--red)">TAKE PROFIT 97.4k</text>
             </svg>
           </div>
-          <p style="color: var(--gray);">Komentarz AI: impuls po obronie FVG, brak podaży na ask; utrzymaj long do 97.4k, trailing jeśli wolumen przyspieszy.</p>
+          <div id="liveCommentary" style="color: var(--gray); font-size: 0.9em; line-height: 1.5; min-height: 60px;">
+            <p style="color: var(--cyan);">Genius inicjalizuje... (łączy się z API)</p>
+          </div>
         </div>
         <div style="background: #0d0d0d; border: 1px solid var(--border); padding: 12px;">
           <div style="font-weight: 700; color: #ffffff; margin-bottom: 8px;">Aktywne sygnały</div>
           <ul style="list-style: none; padding-left: 0; color: #ffffff; line-height: 1.6;">
-            <li>• BUY 95.2k (potwierdzony)</li>
-            <li>• SELL 97.4k (waiting liquidity sweep)</li>
-            <li>• ALERT funding > 0.012% (zmniejsz dźwignię)</li>
+            <li id="signalStatus">• Sygnał: Oczekiwanie...</li>
+            <li id="strengthStatus">• Siła: Medium</li>
+            <li id="btcPriceStatus">• BTC: Aktualizowanie...</li>
+            <li id="changeStatus">• 24H: Aktualizowanie...</li>
           </ul>
-          <p style="color: var(--gray); font-size: 0.9em; margin-top: 8px;">Do dodania: push notyfikacje, auto-linie poziomów na głównym wykresie.</p>
+          <p style="color: var(--gray); font-size: 0.9em; margin-top: 8px;">Live update co 10s; push notyfikacje na mobile przy zmianach sygnału.</p>
         </div>
       </div>
     </div>
@@ -1703,6 +1831,59 @@
     
     setInterval(updateTime, 1000);
     updateTime();
+
+    // HAMSTER GENIUS - Fetch live commentary from backend
+    async function updateGeniusCommentary() {
+      try {
+        const response = await fetch('http://localhost:5000/api/genius/commentary');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.ok) {
+            document.getElementById('liveCommentary').innerHTML = 
+              `<p style="color: #ffffff; line-height: 1.6;">${data.commentary}</p>`;
+            document.getElementById('signalStatus').textContent = 
+              `• Sygnał: ${data.signal} (${data.strength})`;
+            document.getElementById('strengthStatus').textContent = 
+              `• Siła: ${data.strength.toUpperCase()}`;
+            document.getElementById('btcPriceStatus').textContent = 
+              `• BTC: $${data.btc_price?.toLocaleString() || 'N/A'}`;
+            document.getElementById('changeStatus').textContent = 
+              `• 24H: ${data.change_24h?.toFixed(2) || '0'}%`;
+          }
+        }
+      } catch (err) {
+        console.log('Genius API not ready yet (backend offline). Local demo mode.');
+      }
+    }
+
+    // Update Genius commentary every 10 seconds
+    setInterval(updateGeniusCommentary, 10000);
+    updateGeniusCommentary(); // Initial call
+
+    // Hamburger toggle for menu
+    const navWrapper = document.getElementById('navWrapper');
+    const hamburgerBtn = document.getElementById('hamburgerToggle');
+    let navUserToggled = false;
+
+    function collapseForWidth() {
+      if (navUserToggled) return;
+      if (window.innerWidth < 1100) {
+        navWrapper?.classList.add('collapsed');
+      } else {
+        navWrapper?.classList.remove('collapsed');
+      }
+    }
+
+    if (hamburgerBtn && navWrapper) {
+      hamburgerBtn.addEventListener('click', () => {
+        navWrapper.classList.toggle('collapsed');
+        hamburgerBtn.classList.toggle('open');
+        navUserToggled = true;
+      });
+    }
+
+    collapseForWidth();
+    window.addEventListener('resize', collapseForWidth);
 
     // Timeframe selector
     document.querySelectorAll('.timeframe-btn').forEach(btn => {
@@ -1725,16 +1906,31 @@
       initialActive.classList.add('active');
     }
 
-    // TAB FUNCTIONALITY (fixed to avoid reliance on global event)
-    function showTab(tabName, clickedBtn) {
+    // TAB FUNCTIONALITY (toggle open/close + scroll to top)
+    let currentTab = null;
+    function hideAllTabs() {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
+      document.querySelectorAll('.menu-panel').forEach(panel => panel.classList.remove('active'));
+    }
+
+    function showTab(tabName, clickedBtn) {
       const selectedTab = document.getElementById(tabName);
+      const isAlreadyActive = selectedTab?.classList.contains('active');
+
+      if (isAlreadyActive) {
+        hideAllTabs();
+        currentTab = null;
+        return;
+      }
+
+      hideAllTabs();
       if (selectedTab) selectedTab.classList.add('active');
       if (clickedBtn) clickedBtn.classList.add('active');
-      document.querySelectorAll('.menu-panel').forEach(panel => panel.classList.remove('active'));
       const menuPanel = document.getElementById(`panel-${tabName}`);
       if (menuPanel) menuPanel.classList.add('active');
+      currentTab = tabName;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // Attach click handlers to menu items with data-tab attribute
