@@ -467,6 +467,42 @@
     </div>
   </div>
 
+  <!-- BTC INFO PANEL -->
+  <div class="top-grid">
+    <div class="card">
+      <div class="card-label">Price</div>
+      <div class="card-value" id="btc-price">$--</div>
+    </div>
+    <div class="card">
+      <div class="card-label">24h Change</div>
+      <div class="card-value" id="btc-change" style="color: #00ff41;">+0.00%</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Support Level</div>
+      <div class="card-value" id="btc-support" style="color: #7cff9c;">$96,500</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Resistance Level</div>
+      <div class="card-value" id="btc-resistance" style="color: #ff8c8c;">$100,000</div>
+    </div>
+    <div class="card">
+      <div class="card-label">24h Volume</div>
+      <div class="card-value" id="btc-volume">$--B</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Market Cap</div>
+      <div class="card-value" id="market-cap">$--T</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Fear & Greed</div>
+      <div class="card-value" id="fear-greed">--</div>
+    </div>
+    <div class="card">
+      <div class="card-label" id="fng-label">--</div>
+      <div class="card-value" style="font-size: 0.9em; margin-top: 4px;">Market Sentiment</div>
+    </div>
+  </div>
+
   <!-- MENU -->
   <div class="menu-bar">
     <button class="menu-item active" onclick="switchTab('dashboard')">Dashboard</button>
@@ -878,7 +914,17 @@
       // BTC Change
       if (data.btcChange24h !== undefined) {
         const changePercent = data.btcChange24h.toFixed(2);
-        document.getElementById('btc-change').textContent = `${changePercent > 0 ? '+' : ''}${changePercent}%`;
+        const changeEl = document.getElementById('btc-change');
+        changeEl.textContent = `${changePercent > 0 ? '+' : ''}${changePercent}%`;
+        changeEl.style.color = changePercent > 0 ? '#00ff41' : '#ff0033';
+      }
+      
+      // Support & Resistance (dynamic based on price)
+      if (data.btcPrice) {
+        const support = (data.btcPrice * 0.98).toFixed(0);
+        const resistance = (data.btcPrice * 1.02).toFixed(0);
+        document.getElementById('btc-support').textContent = `$${parseInt(support).toLocaleString('en-US')}`;
+        document.getElementById('btc-resistance').textContent = `$${parseInt(resistance).toLocaleString('en-US')}`;
       }
       
       // Volume
