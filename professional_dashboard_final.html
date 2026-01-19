@@ -8488,10 +8488,11 @@
         function applyTheme() {
             const theme = themes[currentThemeIndex];
             document.body.className = theme.class;
+            document.documentElement.className = theme.class;
             const nameEl = document.getElementById('current-theme-name');
             if (nameEl) nameEl.textContent = theme.name;
             localStorage.setItem('hamsterTheme', theme.id);
-            console.log('Applied theme:', theme.name);
+            console.log('Applied theme:', theme.name, 'Class:', theme.class, 'Body className:', document.body.className);
         }
         
         function nextTheme() {
@@ -8505,9 +8506,14 @@
         }
         
         // Load theme on page load
-        window.addEventListener('DOMContentLoaded', loadTheme);
-        if (document.readyState !== 'loading') loadTheme();
-        setInterval(flashTip, 15000);
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded - loading theme');
+            loadTheme();
+        });
+        if (document.readyState !== 'loading') {
+            console.log('Document ready - loading theme immediately');
+            loadTheme();
+        }
     </script>
 
     <!-- NAUKA I CIEKAWOSTKI -->
