@@ -982,6 +982,7 @@
             <div class="terminal-time" id="terminal-clock" style="display: flex; flex-direction: column; align-items: center; gap: 5px;">
                 <span id="clock-time" data-static-clock="true" style="font-size: 1.3em; font-weight: 900; color: #ffffff; font-family: 'Courier New', monospace; letter-spacing: 2px; animation: none !important;">--:--:--</span>
                 <span id="clock-zone" style="color: #ffffff; font-weight: 700; letter-spacing: 1px; font-size: 0.9em; animation: none !important; text-align: center;">� LONDON</span>
+                <span id="clock-utc-offset" style="color: #00d4ff; font-weight: 600; font-size: 0.75em; font-family: 'Roboto Mono', monospace;">UTC+0</span>
             </div>
         </div>
         
@@ -2718,9 +2719,21 @@
             
             const clockTime = document.getElementById('clock-time');
             const clockZone = document.getElementById('clock-zone');
+            const clockUtcOffset = document.getElementById('clock-utc-offset');
             if (clockTime && clockZone) {
                 clockTime.textContent = formatter.format(now);
                 clockZone.textContent = zoneName;
+                
+                // Calculate and display UTC offset
+                try {
+                    const tzDate = new Date(now.toLocaleString('en-US', { timeZone: timezone }));
+                    const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+                    const diff = (tzDate - utcDate) / 3600000;
+                    const utcOffset = 'UTC' + (diff >= 0 ? '+' : '') + diff;
+                    if (clockUtcOffset) {
+                        clockUtcOffset.textContent = utcOffset;
+                    }
+                } catch {}
             }
             
             // Visual feedback - reset all buttons
@@ -2769,9 +2782,20 @@
                 
                 const clockTime = document.getElementById('clock-time');
                 const clockZone = document.getElementById('clock-zone');
+                const clockUtcOffset = document.getElementById('clock-utc-offset');
                 if (clockTime && clockZone) {
                     const newTime = formatter.format(now);
                     const newZone = tzInfo.name;
+                    
+                    // Calculate UTC offset
+                    let utcOffset = '';
+                    try {
+                        const offsetMinutes = -new Date().getTimezoneOffset();
+                        const tzDate = new Date(now.toLocaleString('en-US', { timeZone: tzInfo.tz }));
+                        const utcDate = new Date(now.toLocaleString('en-US', { timeZone: 'UTC' }));
+                        const diff = (tzDate - utcDate) / 3600000;
+                        utcOffset = 'UTC' + (diff >= 0 ? '+' : '') + diff;
+                    } catch {}
                     
                     // Only update if text actually changed - prevent unnecessary DOM updates
                     if (clockTime.textContent !== newTime) {
@@ -2779,6 +2803,9 @@
                     }
                     if (clockZone.textContent !== newZone) {
                         clockZone.textContent = newZone;
+                    }
+                    if (clockUtcOffset && clockUtcOffset.textContent !== utcOffset) {
+                        clockUtcOffset.textContent = utcOffset;
                     }
                 }
                 
