@@ -309,30 +309,6 @@ def genius_commentary():
             'error': str(e)
         }), 500
 
-@app.route('/api/status')
-def status():
-    """Get API server status"""
-    return jsonify({
-        'ok': True,
-        'status': 'running',
-        'data_source': 'Twelve Data API',
-        'assets': {
-            'crypto': cache['crypto'],
-            'stocks': cache['stocks']
-        },
-        'fear_greed': cache['fear_greed'],
-        'uptime_seconds': int(time.time() - cache['timestamp']) if cache['timestamp'] else 0
-    })
-
-@app.route('/dashboard')
-def dashboard():
-    """Serve the Bloomberg dashboard HTML"""
-    try:
-        with open('demo_bloomberg_with_api.html', 'r', encoding='utf-8') as f:
-            return f.read()
-    except:
-        return "Dashboard file not found", 404
-
 # ========== ERROR HANDLERS ==========
 
 @app.route('/api/status')
