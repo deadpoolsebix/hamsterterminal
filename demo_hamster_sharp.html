@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hamster Terminal - Sharp Edges Demo</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family:'Roboto Mono', monospace; 
+      background:#000; 
+      color:#e0e0e0; 
+      overflow-x:hidden;
+    }
+    
+    /* HEADER - Sharp edges */
+    .terminal-header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+      padding:15px 30px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      border-bottom:2px solid #00d4ff;
+      border-radius:0; /* SHARP */
+    }
+    .terminal-title {
+      font-size:2.2em;
+      font-weight:900;
+      color:#ffff00;
+      text-shadow:0 0 15px rgba(255,255,0,0.7);
+      display:flex;
+      flex-direction:column;
+      line-height:0.95;
+    }
+    .terminal-title span:first-child { color:#ffff00; }
+    .terminal-title span:last-child { color:#00d4ff; font-size:0.85em; }
+    
+    /* BUTTONS - Sharp edges */
+    .action-buttons {
+      padding:12px 30px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      background:#0a0a0a;
+      border-bottom:1px solid #333;
+    }
+    button {
+      border:3px solid;
+      background:transparent;
+      color:#fff;
+      padding:12px 24px;
+      font-weight:900;
+      letter-spacing:2px;
+      cursor:pointer;
+      font-size:1em;
+      text-transform:uppercase;
+      border-radius:0; /* SHARP */
+      box-shadow:0 0 20px rgba(0,255,65,0.4);
+    }
+    .btn-buy { border-color:#00ff41; color:#00ff41; }
+    .btn-sell { border-color:#ff0033; color:#ff0033; }
+    .btn-nope { border-color:#ffaa00; color:#ffaa00; }
+    
+    /* TICKER - Sharp edges */
+    .ticker-wrapper {
+      margin:15px 30px;
+      padding:12px;
+      border:2px solid #00d4ff;
+      background:#000;
+      overflow:hidden;
+      border-radius:0; /* SHARP */
+      box-shadow:0 0 15px rgba(0,212,255,0.3);
+    }
+    .ticker-scroll {
+      display:inline-flex;
+      gap:25px;
+      white-space:nowrap;
+      animation:scroll 30s linear infinite;
+      font-size:1.2em;
+    }
+    @keyframes scroll {
+      0% { transform:translateX(40%); }
+      100% { transform:translateX(-120%); }
+    }
+    .ticker-group { display:inline-flex; gap:20px; }
+    .ticker-label {
+      color:#00d4ff;
+      font-weight:800;
+      padding:4px 12px;
+      background:rgba(0,212,255,0.1);
+      border-left:3px solid #00d4ff;
+      border-radius:0; /* SHARP */
+    }
+    .ticker-item { color:#ffff00; }
+    
+    /* BTC PANEL - Sharp edges */
+    .btc-panel {
+      margin:15px 30px;
+      padding:28px;
+      background:linear-gradient(135deg, #0f0f1a 0%, #0a0a0a 100%);
+      border:2px solid #00d4ff;
+      border-radius:0; /* SHARP */
+      box-shadow:0 0 30px rgba(0,212,255,0.3);
+    }
+    .btc-price { 
+      font-size:3.5em; 
+      color:#ffff00; 
+      font-weight:900;
+      text-shadow:0 0 25px rgba(255,255,0,0.8);
+    }
+    .btc-change { 
+      font-size:1.6em; 
+      color:#00ff41; 
+      font-weight:800;
+      margin-top:8px;
+    }
+    
+    /* METRICS GRID - Sharp edges */
+    .metrics-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fit, minmax(280px,1fr));
+      gap:15px;
+      padding:15px 30px;
+    }
+    .metric-card {
+      background:linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+      border:1px solid #00d4ff;
+      padding:20px;
+      border-radius:0; /* SHARP */
+      box-shadow:0 0 15px rgba(0,212,255,0.2);
+    }
+    .metric-label {
+      color:#00d4ff;
+      font-weight:700;
+      letter-spacing:1px;
+      margin-bottom:8px;
+      font-size:0.9em;
+    }
+    .metric-value {
+      font-size:2em;
+      font-weight:900;
+      color:#ffff00;
+    }
+    
+    /* CHART PLACEHOLDER - Sharp edges */
+    .chart-box {
+      margin:15px 30px;
+      height:300px;
+      background:linear-gradient(135deg, #0a0a0a 0%, #000 100%);
+      border:2px solid #ff00ff;
+      border-radius:0; /* SHARP */
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      color:#ff00ff;
+      font-size:1.5em;
+      font-weight:800;
+      box-shadow:0 0 20px rgba(255,0,255,0.3);
+    }
+    
+    /* THEME SWITCHER */
+    .theme-controls {
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-left:20px;
+    }
+    .theme-btn {
+      background:transparent;
+      border:1px solid #fff;
+      color:#fff;
+      padding:6px 10px;
+      font-size:0.85em;
+      cursor:pointer;
+      border-radius:0; /* SHARP */
+      box-shadow:none;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="terminal-header">
+    <div class="terminal-title">
+      <span>HAMSTER 🐹</span>
+      <span>TERMINAL</span>
+    </div>
+    <div style="display:flex; gap:15px; align-items:center;">
+      <div style="font-size:1.3em; color:#ffffff; font-weight:900;" id="clock">14:32:15</div>
+      <div style="color:#00d4ff; font-weight:700;">TOKYO</div>
+    </div>
+  </div>
+
+  <!-- ACTION BUTTONS -->
+  <div class="action-buttons">
+    <button class="btn-buy">▶ BUY</button>
+    <button class="btn-sell">⏹ SELL</button>
+    <button class="btn-nope">◄ NOPE</button>
+    <span style="font-family:'Press Start 2P', monospace; font-size:0.7em; color:#ffaa00; margin-left:8px;">NEVER MIND</span>
+    <div class="theme-controls">
+      <span style="font-size:0.8em; color:#fff; font-weight:700;">MODERN</span>
+      <button class="theme-btn">◄</button>
+      <button class="theme-btn">►</button>
+    </div>
+  </div>
+
+  <!-- BLOOMBERG TICKER -->
+  <div class="ticker-wrapper">
+    <div class="ticker-scroll">
+      <div class="ticker-group">
+        <span class="ticker-label">METALE</span>
+        <span class="ticker-item">XAU/USD 2031.2 ▲0.45%</span>
+        <span class="ticker-item">XAG/USD 25.3 ▼0.12%</span>
+      </div>
+      <div class="ticker-group">
+        <span class="ticker-label">INDEKSY</span>
+        <span class="ticker-item">SPX 5123 ▲0.32%</span>
+        <span class="ticker-item">INDU 39210 ▲0.18%</span>
+        <span class="ticker-item">IXIC 17988 ▲0.55%</span>
+      </div>
+      <div class="ticker-group">
+        <span class="ticker-label">MEGA CAPS</span>
+        <span class="ticker-item">AAPL 245.9 ▲1.2%</span>
+        <span class="ticker-item">NVDA 1265.9 ▲1.8%</span>
+        <span class="ticker-item">MSFT 412.3 ▲0.9%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BTC MAIN PANEL -->
+  <div class="btc-panel">
+    <div style="display:grid; grid-template-columns:0.6fr 1.4fr; gap:20px;">
+      <div>
+        <div style="color:#00d4ff; font-weight:700; margin-bottom:8px;">₿ BTC/USDT <span style="color:#00ff41;">(LIVE)</span></div>
+        <div class="btc-price">$95,501</div>
+        <div class="btc-change">+2.45%</div>
+      </div>
+      <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px;">
+        <div>
+          <div style="color:#fff; font-size:0.85em;">24h High</div>
+          <div style="color:#00ff41; font-size:1.3em; font-weight:900;">$97,861</div>
+        </div>
+        <div>
+          <div style="color:#fff; font-size:0.85em;">24h Low</div>
+          <div style="color:#00d4ff; font-size:1.3em; font-weight:900;">$94,650</div>
+        </div>
+        <div>
+          <div style="color:#fff; font-size:0.85em;">Volume</div>
+          <div style="color:#9b59b6; font-size:1.3em; font-weight:900;">$18.28B</div>
+        </div>
+        <div>
+          <div style="color:#fff; font-size:0.85em;">RSI (14)</div>
+          <div style="color:#ffaa00; font-size:1.3em; font-weight:900;">41.8</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS CARDS -->
+  <div class="metrics-grid">
+    <div class="metric-card">
+      <div class="metric-label">Fear & Greed Index</div>
+      <div class="metric-value">62</div>
+      <div style="color:#00ff41; font-weight:700; margin-top:4px;">GREED</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Funding Rate</div>
+      <div class="metric-value">0.010%</div>
+      <div style="color:#ffaa00; font-weight:700; margin-top:4px;">Binance Perps</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Open Interest</div>
+      <div class="metric-value">$18.2B</div>
+      <div style="color:#ff00ff; font-weight:700; margin-top:4px;">Futures Total</div>
+    </div>
+    <div class="metric-card">
+      <div class="metric-label">Dominance</div>
+      <div class="metric-value">52.3%</div>
+      <div style="color:#00d4ff; font-weight:700; margin-top:4px;">BTC Market</div>
+    </div>
+  </div>
+
+  <!-- CHART PLACEHOLDER -->
+  <div class="chart-box">
+    📊 LIVE CHART AREA (Plotly)
+  </div>
+
+  <script>
+    // Simple clock
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString('pl-PL');
+    }, 1000);
+  </script>
+</body>
+</html>

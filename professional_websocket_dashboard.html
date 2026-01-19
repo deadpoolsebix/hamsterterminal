@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Hamster Terminal - WebSocket Real-Time Dashboard</title>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Courier New', monospace;
+            background: #0a0e27;
+            color: #00ff00;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            padding: 20px;
+            height: 100vh;
+        }
+        
+        .card {
+            background: #1a2332;
+            border: 2px solid #00ff00;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.3);
+            overflow-y: auto;
+        }
+        
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #00ff00;
+            padding-bottom: 10px;
+        }
+        
+        .header h2 {
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+        
+        .status-indicator.connected {
+            background: #00ff00;
+            box-shadow: 0 0 10px #00ff00;
+        }
+        
+        .status-indicator.disconnected {
+            background: #ff0000;
+            box-shadow: 0 0 10px #ff0000;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .price-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr auto;
+            align-items: center;
+            gap: 15px;
+            padding: 12px;
+            margin: 8px 0;
+            background: rgba(0, 255, 0, 0.05);
+            border-left: 3px solid #00ff00;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .price-item:hover {
+            background: rgba(0, 255, 0, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .symbol {
+            font-weight: bold;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+        
+        .price {
+            font-size: 16px;
+            font-weight: bold;
+            text-align: right;
+        }
+        
+        .change {
+            font-size: 14px;
+            font-weight: bold;
+            padding: 4px 8px;
+            border-radius: 4px;
+            min-width: 60px;
+            text-align: center;
+        }
+        
+        .change.positive {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+        }
+        
+        .change.negative {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ff0000;
+        }
+        
+        .log {
+            font-size: 12px;
+            line-height: 1.5;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+        
+        .log-entry {
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(0, 255, 0, 0.2);
+            word-break: break-all;
+        }
+        
+        .log-entry.info { color: #00ff00; }
+        .log-entry.warn { color: #ffff00; }
+        .log-entry.error { color: #ff0000; }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .stat {
+            background: rgba(0, 255, 0, 0.1);
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+        
+        .stat-value {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(0, 255, 0, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: rgba(0, 255, 0, 0.3);
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(0, 255, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Prices Section -->
+        <div class="card">
+            <div class="header">
+                <h2>📊 Real-Time Prices</h2>
+                <div class="status-indicator connected" id="statusIndicator"></div>
+            </div>
+            <div id="pricesContainer">
+                <div style="color: #ffff00;">⏳ Connecting to server...</div>
+            </div>
+            <div class="stats">
+                <div class="stat">
+                    <div class="stat-label">Updates</div>
+                    <div class="stat-value" id="updateCount">0</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-label">Symbols</div>
+                    <div class="stat-value" id="symbolCount">0</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Logs Section -->
+        <div class="card">
+            <div class="header">
+                <h2>📝 Activity Log</h2>
+            </div>
+            <div class="log" id="logContainer"></div>
+        </div>
+    </div>
+    
+    <script src="professional_websocket_client.js"></script>
+    <script>
+        // Initialize WebSocket connection
+        const terminal = new HamsterTerminalWebSocket({
+            url: window.location.origin
+        });
+        
+        // Symbols to monitor
+        const symbols = ['BTC/USD', 'AAPL', 'MSFT', 'NVDA', 'SPY', 'EUR/USD', 'GBP/USD'];
+        
+        let updateCount = 0;
+        let lastUpdate = {};
+        
+        // Subscribe to price updates
+        symbols.forEach(symbol => {
+            terminal.subscribe(symbol, (data) => {
+                updatePrice(symbol, data);
+            });
+        });
+        
+        // Connection event handlers
+        terminal.on('connected', () => {
+            addLog('✅ Connected to Hamster Terminal WebSocket', 'info');
+            updateStatus(true);
+            addLog(`📡 Monitoring ${symbols.length} symbols`, 'info');
+        });
+        
+        terminal.on('disconnected', (data) => {
+            addLog(`❌ Disconnected: ${data.reason}`, 'warn');
+            updateStatus(false);
+        });
+        
+        terminal.on('error', (error) => {
+            addLog(`⚠️ Error: ${error}`, 'error');
+        });
+        
+        /**
+         * Update price display
+         */
+        function updatePrice(symbol, data) {
+            const { price, change, timestamp } = data;
+            
+            // Update or create price element
+            let priceEl = document.getElementById(`price-${symbol}`);
+            if (!priceEl) {
+                priceEl = document.createElement('div');
+                priceEl.id = `price-${symbol}`;
+                priceEl.className = 'price-item';
+                document.getElementById('pricesContainer').appendChild(priceEl);
+            }
+            
+            const changeClass = change >= 0 ? 'positive' : 'negative';
+            const changeSign = change >= 0 ? '+' : '';
+            
+            priceEl.innerHTML = `
+                <div class="symbol">${symbol}</div>
+                <div class="price">$${price?.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</div>
+                <div class="change ${changeClass}">${changeSign}${change.toFixed(2)}%</div>
+            `;
+            
+            // Animation on update
+            priceEl.style.animation = 'none';
+            setTimeout(() => {
+                priceEl.style.animation = 'pulse 0.5s ease-in-out';
+            }, 10);
+            
+            // Track updates
+            updateCount++;
+            lastUpdate[symbol] = new Date().getTime();
+            document.getElementById('updateCount').textContent = updateCount;
+            document.getElementById('symbolCount').textContent = Object.keys(lastUpdate).length;
+            
+            // Log significant changes
+            if (change > 2 || change < -2) {
+                addLog(`🔴 ${symbol} changed ${changeSign}${change.toFixed(2)}%`, 'warn');
+            }
+        }
+        
+        /**
+         * Update connection status indicator
+         */
+        function updateStatus(connected) {
+            const indicator = document.getElementById('statusIndicator');
+            if (connected) {
+                indicator.className = 'status-indicator connected';
+            } else {
+                indicator.className = 'status-indicator disconnected';
+            }
+        }
+        
+        /**
+         * Add log entry
+         */
+        function addLog(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            
+            const time = new Date().toLocaleTimeString();
+            entry.textContent = `[${time}] ${message}`;
+            
+            logContainer.insertBefore(entry, logContainer.firstChild);
+            
+            // Keep only last 100 entries
+            while (logContainer.children.length > 100) {
+                logContainer.removeChild(logContainer.lastChild);
+            }
+        }
+        
+        // Initial status
+        addLog('🚀 Hamster Terminal WebSocket Client v1.0', 'info');
+        addLog('⏳ Connecting...', 'info');
+    </script>
+</body>
+</html>

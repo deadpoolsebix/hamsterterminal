@@ -373,8 +373,36 @@
     .tab-content { display: none; }
     .tab-content.active { display: block; }
 
-    /* TradingView container */
-    #tv-chart { width: 100%; height: 320px; }
+    /* Custom chart */
+    .chart-canvas { background: #050505; border-radius: 4px; border: 1px solid #111; width: 100%; height: 320px; position: relative; overflow: hidden; }
+    .band { position: absolute; left: 0; width: 100%; height: 60px; opacity: 0.08; }
+    .band.premium { top: 0; background: linear-gradient(180deg, #ff0033 0%, transparent 100%); }
+    .band.discount { bottom: 0; background: linear-gradient(0deg, #00ff41 0%, transparent 100%); }
+    .band-label { position: absolute; left: 12px; font-size: 0.8em; color: #888; }
+    .band-label.premium { top: 8px; }
+    .band-label.discount { bottom: 8px; }
+    .level { position: absolute; left: 0; width: 100%; border-top: 1px dashed #333; }
+    .level.resistance { top: 70px; border-color: #ff5c5c; }
+    .level.support { bottom: 70px; border-color: #4caf50; }
+    .level-label { position: absolute; right: 8px; font-size: 0.8em; color: #aaa; }
+    .ema { position: absolute; width: 100%; height: 100%; pointer-events: none; }
+    .ema path { fill: none; stroke-width: 2; opacity: 0.9; }
+    .ema20 path { stroke: #00d4ff; }
+    .ema50 path { stroke: #ffb347; }
+    .ema200 path { stroke: #9b59b6; }
+    .price-line { position: absolute; right: 12px; top: 12px; color: #fff; font-weight: 700; font-size: 1em; }
+    .signal { position: absolute; display: flex; align-items: center; gap: 6px; font-size: 0.9em; color: #fff; padding: 4px 8px; border-radius: 4px; }
+    .signal.buy { background: rgba(0,255,65,0.14); border: 1px solid rgba(0,255,65,0.35); top: 120px; left: 20px; }
+    .signal.sell { background: rgba(255,0,51,0.14); border: 1px solid rgba(255,0,51,0.35); top: 60px; left: 180px; }
+    .signal .dot { width: 10px; height: 10px; border-radius: 50%; }
+    .signal.buy .dot { background: #00ff41; }
+    .signal.sell .dot { background: #ff0033; }
+    .legend { position: absolute; bottom: 10px; right: 12px; display: flex; gap: 12px; font-size: 0.8em; color: #aaa; }
+    .legend-item { display: flex; align-items: center; gap: 6px; }
+    .legend-swatch { width: 16px; height: 3px; border-radius: 2px; }
+    .swatch-ema20 { background: #00d4ff; }
+    .swatch-ema50 { background: #ffb347; }
+    .swatch-ema200 { background: #9b59b6; }
 
     /* VISUAL DARK PAGE */
     #visual-dark-page { scrollbar-width: thin; scrollbar-color: #333 #0a0a0a; }
@@ -389,12 +417,20 @@
       .genius-ai-grid { grid-template-columns: repeat(2, 1fr); }
     }
     @media (max-width: 768px) {
-      .top-grid { grid-template-columns: 1fr; }
+      body { padding-top: 4px; }
+      .top-grid { grid-template-columns: 1fr; padding: 10px 12px; }
+      .ticker-container { padding: 0 12px; }
+      .ticker-item { font-size: 0.95em; }
+      .news-grid { grid-template-columns: 1fr !important; gap: 10px; padding: 0 12px 12px 12px !important; }
+      .main-grid { padding: 10px 12px; }
+      .chart-canvas { height: 240px; }
+      .genius-ai { margin: 10px 0 0 0; }
       .genius-ai-grid { grid-template-columns: 1fr; }
       .header { flex-direction: column; gap: 10px; align-items: flex-start; }
       .theme-switcher { position: static; margin: 10px; }
       .switcher-group { flex-direction: column; }
-      #visual-dark-page { padding: 10px; }
+      .menu-bar { flex-wrap: wrap; }
+      .menu-item { flex: 1 1 48%; margin-bottom: 6px; }
     }
   </style>
 </head>
@@ -438,8 +474,38 @@
   <!-- CHART, AI, TRANSFERS -->
   <div class="main-grid">
     <div class="chart-panel">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIVE PRICE CHART (TradingView)</div>
-      <div id="tv-chart"></div>
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIVE PRICE MAP (Signals & Levels)</div>
+      <div class="chart-canvas">
+        <div class="band premium"></div>
+        <div class="band discount"></div>
+        <div class="band-label premium">Premium zone</div>
+        <div class="band-label discount">Discount zone</div>
+        <div class="level resistance"></div>
+        <div class="level support"></div>
+        <div class="level-label" style="top:66px; color:#ff8c8c;">Resistance</div>
+        <div class="level-label" style="bottom:66px; color:#7cff9c;">Support</div>
+
+        <svg class="ema ema20" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,55 C20,50 40,52 60,48 80,44 90,46 100,43" />
+        </svg>
+        <svg class="ema ema50" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,58 C20,60 40,56 60,54 80,52 90,51 100,50" />
+        </svg>
+        <svg class="ema ema200" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,62 C20,63 40,64 60,63 80,62 90,61 100,60" />
+        </svg>
+
+        <div class="signal buy"><span class="dot"></span><span>BUY signal</span></div>
+        <div class="signal sell"><span class="dot"></span><span>SELL signal</span></div>
+
+        <div class="price-line" id="chart-price-label">$98,432.50</div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch swatch-ema20"></span>EMA 20</div>
+          <div class="legend-item"><span class="legend-swatch swatch-ema50"></span>EMA 50</div>
+          <div class="legend-item"><span class="legend-swatch swatch-ema200"></span>EMA 200</div>
+        </div>
+      </div>
 
       <div class="genius-ai inline-genius">
         <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
@@ -514,7 +580,7 @@
   </div>
 
   <!-- NEWS SECTIONS -->
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 24px 14px 24px;">
+  <div class="news-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 0 24px 14px 24px;">
     <div class="news">
       <h4>LIVE NEWS</h4>
       <div class="news-item">BTC consolidating around $98.5k support level</div>
@@ -533,37 +599,9 @@
     </div>
   </div>
 
-  <!-- CHART, AI, TRANSFERS -->
+  <!-- TRANSFERS -->
   <div class="main-grid">
     <div class="chart-panel">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIVE PRICE CHART (TradingView)</div>
-      <div id="tv-chart"></div>
-
-      <div class="genius-ai" style="margin: 14px 0 0 0;">
-        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-          <h3 style="color: #ffffff; margin: 0;">GENIUS AI ANALYSIS</h3>
-          <div style="color: var(--gray); font-size: 0.9em;">Auto-updated with live insights</div>
-        </div>
-        <div class="genius-ai-grid">
-          <div class="genius-card">
-            <div class="genius-card-title">Market Pulse</div>
-            <div class="genius-card-content">Momentum tracking live — key support and resistance levels update in real time.</div>
-          </div>
-          <div class="genius-card">
-            <div class="genius-card-title">Liquidity Radar</div>
-            <div class="genius-card-content">Orderbook heatmap highlights: strong bids near $95,000, offers around $99,800.</div>
-          </div>
-          <div class="genius-card">
-            <div class="genius-card-title">Sentiment Watch</div>
-            <div class="genius-card-content">Aggregated sentiment tilts bullish; monitoring fear & greed index and funding flips.</div>
-          </div>
-          <div class="genius-card">
-            <div class="genius-card-title">Risk Monitor</div>
-            <div class="genius-card-content">Position sizing adjusted to volatility; alerts on funding spikes and correlation shifts.</div>
-          </div>
-        </div>
-      </div>
-
       <div style="color: #ffffff; font-weight: 700; margin: 14px 0 8px 0; font-size: 1.05em;">LARGE TRANSFERS</div>
       <div class="transfers-inline">
         <div class="transfer-card">
@@ -580,6 +618,67 @@
           <div style="font-weight: 700;">2,100 BTC</div>
           <div class="meta">SELL • Major Outflow</div>
           <div class="time">19:15 UTC</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GENIUS AI + PRICE MAP (bottom) -->
+  <div class="genius-ai" style="margin: 0 24px 14px 24px;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <h3 style="color: #ffffff; margin: 0;">GENIUS AI ANALYSIS</h3>
+      <div style="color: var(--gray); font-size: 0.9em;">Auto-updated with live insights</div>
+    </div>
+    <div class="genius-ai-grid">
+      <div class="genius-card">
+        <div class="genius-card-title">Market Pulse</div>
+        <div class="genius-card-content" id="genius-pulse">Momentum tracking live — key support and resistance levels update in real time.</div>
+      </div>
+      <div class="genius-card">
+        <div class="genius-card-title">Liquidity Radar</div>
+        <div class="genius-card-content" id="genius-liquidity">Orderbook heatmap highlights: strong bids near $95,000, offers around $99,800.</div>
+      </div>
+      <div class="genius-card">
+        <div class="genius-card-title">Sentiment Watch</div>
+        <div class="genius-card-content" id="genius-sentiment">Aggregated sentiment tilts bullish; monitoring fear & greed index and funding flips.</div>
+      </div>
+      <div class="genius-card">
+        <div class="genius-card-title">Risk Monitor</div>
+        <div class="genius-card-content" id="genius-risk">Position sizing adjusted to volatility; alerts on funding spikes and correlation shifts.</div>
+      </div>
+    </div>
+
+    <div style="margin-top: 14px;">
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 10px; font-size: 1.05em;">PRICE MAP (Signals & Levels)</div>
+      <div class="chart-canvas">
+        <div class="band premium"></div>
+        <div class="band discount"></div>
+        <div class="band-label premium">Premium zone</div>
+        <div class="band-label discount">Discount zone</div>
+        <div class="level resistance"></div>
+        <div class="level support"></div>
+        <div class="level-label" style="top:66px; color:#ff8c8c;">Resistance</div>
+        <div class="level-label" style="bottom:66px; color:#7cff9c;">Support</div>
+
+        <svg class="ema ema20" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,55 C20,50 40,52 60,48 80,44 90,46 100,43" />
+        </svg>
+        <svg class="ema ema50" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,58 C20,60 40,56 60,54 80,52 90,51 100,50" />
+        </svg>
+        <svg class="ema ema200" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <path d="M0,62 C20,63 40,64 60,63 80,62 90,61 100,60" />
+        </svg>
+
+        <div class="signal buy"><span class="dot"></span><span>BUY signal</span></div>
+        <div class="signal sell"><span class="dot"></span><span>SELL signal</span></div>
+
+        <div class="price-line" id="chart-price-label">$98,432.50</div>
+
+        <div class="legend">
+          <div class="legend-item"><span class="legend-swatch swatch-ema20"></span>EMA 20</div>
+          <div class="legend-item"><span class="legend-swatch swatch-ema50"></span>EMA 50</div>
+          <div class="legend-item"><span class="legend-swatch swatch-ema200"></span>EMA 200</div>
         </div>
       </div>
     </div>
@@ -660,39 +759,6 @@
     let lastDataUpdate = Date.now();
     let currentPage = 'dashboard';
 
-    // ========== TRADINGVIEW CHART LOADER ==========
-    let tvWidget = null;
-
-    function loadTradingViewScript() {
-      return new Promise(resolve => {
-        if (window.TradingView) return resolve();
-        const script = document.createElement('script');
-        script.src = 'https://s3.tradingview.com/tv.js';
-        script.onload = () => resolve();
-        script.onerror = () => resolve(); // fail silently
-        document.head.appendChild(script);
-      });
-    }
-
-    async function initChart() {
-      if (tvWidget) return; // already created
-      await loadTradingViewScript();
-      if (!window.TradingView) return;
-      tvWidget = new TradingView.widget({
-        symbol: 'BINANCE:BTCUSDT',
-        interval: '60',
-        timezone: 'Etc/UTC',
-        theme: 'dark',
-        style: '1',
-        locale: 'en',
-        backgroundColor: '#050505',
-        container_id: 'tv-chart',
-        hide_top_toolbar: false,
-        hide_legend: false,
-        autosize: true
-      });
-    }
-
     // ========== CLOCK ===========
     function updateTime() {
       const now = new Date();
@@ -732,6 +798,8 @@
       if (data.btcPrice) {
         document.getElementById('btc-price').textContent = `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
         document.getElementById('ticker-btc').textContent = `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 0 })}`;
+        const chartLabel = document.getElementById('chart-price-label');
+        if (chartLabel) chartLabel.textContent = `$${data.btcPrice.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
       }
       
       // BTC Change
@@ -815,6 +883,42 @@
         geniusCards[2].textContent = data.fear_greed !== undefined ? `Sentiment gauge: ${data.fear_greed} F&G — ${document.getElementById('fng-label').textContent}.` : 'Sentiment neutral baseline.';
         geniusCards[3].textContent = data.btcMarketCap ? `Risk: Market cap ${ (data.btcMarketCap / 1e12).toFixed(2)}T, adjust size to volatility.` : 'Risk: size positions based on volatility bands.';
       }
+
+      // LARGE TRANSFERS (dynamic whale activity based on price volatility)
+      const transfersContainers = document.querySelectorAll('.transfers-inline');
+      transfersContainers.forEach(container => {
+        const volatility = Math.abs(data.btcChange24h ?? 0);
+        const baseAmount = 500 + volatility * 10;
+        
+        const transfers = [
+          {
+            amount: (baseAmount * (1 + Math.random() * 2)).toFixed(0),
+            type: volatility > 2 ? 'SELL • Whale Activity' : 'BUY • Accumulation',
+            time: `${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} UTC`
+          },
+          {
+            amount: (baseAmount * (0.5 + Math.random())).toFixed(0),
+            type: volatility > 1.5 ? 'BUY • Buying Pressure' : 'SELL • Distribution',
+            time: `${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} UTC`
+          },
+          {
+            amount: (baseAmount * (1.5 + Math.random() * 1.5)).toFixed(0),
+            type: data.fear_greed < 50 ? 'SELL • Major Outflow' : 'BUY • Large Inflow',
+            time: `${String(Math.floor(Math.random() * 24)).padStart(2, '0')}:${String(Math.floor(Math.random() * 60)).padStart(2, '0')} UTC`
+          }
+        ];
+        
+        const cards = container.querySelectorAll('.transfer-card');
+        transfers.forEach((transfer, i) => {
+          if (cards[i]) {
+            cards[i].innerHTML = `
+              <div style="font-weight: 700;">${transfer.amount} BTC</div>
+              <div class="meta">${transfer.type}</div>
+              <div class="time">${transfer.time}</div>
+            `;
+          }
+        });
+      });
       
       // Sentiment (random for demo)
       const bulls = Math.floor(40 + Math.random() * 30);
@@ -866,7 +970,6 @@
         if (detailedModePage) detailedModePage.style.display = (page === 'detailed') ? 'block' : 'none';
         if (retroPage) retroPage.style.display = (page === 'retro') ? 'block' : 'none';
       } else {
-        initChart();
         // Show Bloomberg
         if (header) header.style.display = '';
         if (menuBar) menuBar.style.display = '';
@@ -937,7 +1040,6 @@
       switchTheme('bloomberg');
       fetchApiData();
       setInterval(fetchApiData, 10000); // Update every 10 seconds
-      initChart();
     }
 
     window.addEventListener('DOMContentLoaded', init);

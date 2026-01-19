@@ -1,26 +1,36 @@
 #!/usr/bin/env python3
 """
 🚀 HAMSTER TERMINAL - REAL-TIME API SERVER
-Serwuje rzeczywiste dane z yfinance, Binance, CoinGecko, Alternative.me
+Serwuje rzeczywiste dane z Twelve Data (crypto, stock, forex)
+WebSocket support dla real-time bez lagów
 Endpoints dla dashboarda (localhost:5000)
 """
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template_string
 from flask_cors import CORS
+from flask_socketio import SocketIO, emit, join_room, leave_room
 import requests
 import json
 import threading
 import time
 from datetime import datetime
 import logging
-import yfinance as yf
+import os
+import websockets
+import asyncio
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+# ============ TWELVE DATA API CONFIG ============
+TWELVE_DATA_API_KEY = os.getenv('TWELVE_DATA_API_KEY', 'demo')  # Replace with your key from https://twelvedata.com
+TWELVE_DATA_BASE_URL = 'https://api.twelvedata.com'
+TWELVE_DATA_WS_URL = 'wss://ws.twelvedata.com/v1/quotes/price'
+
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all endpoints
+socketio = SocketIO(app, cors_allowed_origins="*")
 
 # ============ CACHE SYSTEM ============
 cache = {
@@ -34,84 +44,189 @@ cache = {
     'open_interest': 12400000000,
     'last_update': None,
     'timestamp': 0,
+    # Stock data
+    'spy_price': 470.00,
+    'spy_change': 0.8,
+    'aapl_price': 235.50,
+    'aapl_change': 0.5,
+    'msft_price': 425.75,
+    'msft_change': 0.3,
+    'nvda_price': 145.20,
+    'nvda_change': 1.2,
+    # Forex data
+    'eurusd_price': 1.0850,
+    'eurusd_change': 0.2,
+    'gbpusd_price': 1.2650,
+    'gbpusd_change': -0.1,
     # Additional market data
     'gold_price': 2650.00,
     'gold_change': 0.5,
-    'spy_price': 470.00,
-    'spy_change': 0.8,
     'dxy_price': 103.50,
     'dxy_change': -0.2
 }
 
-# ============ YFINANCE FUNCTIONS (PRIMARY SOURCE) ============
+# ============ TWELVE DATA API FUNCTIONS ============
 
-def fetch_yfinance_prices():
-    """Fetch real BTC and ETH prices from Yahoo Finance via yfinance - FASTEST"""
+def fetch_twelve_data_crypto(symbol='BTCUSDT'):
+    """Fetch crypto price from Twelve Data"""
     try:
-        # Get BTC-USD and ETH-USD (Yahoo Finance tickers)
-        btc_ticker = yf.Ticker("BTC-USD")
-        eth_ticker = yf.Ticker("ETH-USD")
-        
-        # Get current data
-        btc_info = btc_ticker.info
-        eth_info = eth_ticker.info
-        
-        # Extract prices
-        cache['btc_price'] = btc_info.get('regularMarketPrice', btc_info.get('currentPrice', cache['btc_price']))
-        cache['eth_price'] = eth_info.get('regularMarketPrice', eth_info.get('currentPrice', cache['eth_price']))
-        
-        # Calculate 24h change from previous close
-        btc_prev = btc_info.get('regularMarketPreviousClose', btc_info.get('previousClose'))
-        eth_prev = eth_info.get('regularMarketPreviousClose', eth_info.get('previousClose'))
-        
-        if btc_prev:
-            cache['btc_change'] = ((cache['btc_price'] - btc_prev) / btc_prev) * 100
-        if eth_prev:
-            cache['eth_change'] = ((cache['eth_price'] - eth_prev) / eth_prev) * 100
+        params = {
+            'symbol': symbol,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/quote',
+            params=params,
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            if 'error' not in data:
+                return {
+                    'price': float(data.get('last_price', 0)),
+                    'change': float(data.get('percent_change', 0)),
+                    'volume': float(data.get('volume', 0))
+                }
+    except Exception as e:
+        logger.error(f"❌ Twelve Data crypto error ({symbol}): {e}")
+    return None
+
+
+def fetch_twelve_data_stock(symbol='AAPL'):
+    """Fetch stock price from Twelve Data"""
+    try:
+        params = {
+            'symbol': symbol,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/quote',
+            params=params,
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            if 'error' not in data:
+                return {
+                    'price': float(data.get('last_price', 0)),
+                    'change': float(data.get('percent_change', 0)),
+                    'volume': float(data.get('volume', 0))
+                }
+    except Exception as e:
+        logger.error(f"❌ Twelve Data stock error ({symbol}): {e}")
+    return None
+
+
+def fetch_twelve_data_forex(pair='EUR/USD'):
+    """Fetch forex price from Twelve Data"""
+    try:
+        params = {
+            'symbol': pair,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/quote',
+            params=params,
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            if 'error' not in data:
+                return {
+                    'price': float(data.get('last_price', 0)),
+                    'change': float(data.get('percent_change', 0))
+                }
+    except Exception as e:
+        logger.error(f"❌ Twelve Data forex error ({pair}): {e}")
+    return None
+
+
+def fetch_crypto_prices():
+    """Fetch BTC and ETH prices from Twelve Data"""
+    try:
+        # BTC/USDT
+        btc_data = fetch_twelve_data_crypto('BTCUSDT')
+        if btc_data:
+            cache['btc_price'] = btc_data['price']
+            cache['btc_change'] = btc_data['change']
+            cache['volume_24h'] = btc_data['volume'] * btc_data['price']
             
-        # Get volume
-        btc_vol = btc_info.get('regularMarketVolume', btc_info.get('volume', 0))
-        cache['volume_24h'] = btc_vol * cache['btc_price']
-        
-        logger.info(f"✅ yfinance: BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
+        # ETH/USDT
+        eth_data = fetch_twelve_data_crypto('ETHUSDT')
+        if eth_data:
+            cache['eth_price'] = eth_data['price']
+            cache['eth_change'] = eth_data['change']
+            
+        logger.info(f"✅ Twelve Data (Crypto): BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
         return True
         
     except Exception as e:
-        logger.error(f"❌ yfinance fetch error: {e}")
+        logger.error(f"❌ Crypto prices fetch error: {e}")
+        return False
+
+
+def fetch_stock_prices():
+    """Fetch stock prices from Twelve Data"""
+    try:
+        stocks = [
+            ('SPY', 'spy_price', 'spy_change'),
+            ('AAPL', 'aapl_price', 'aapl_change'),
+            ('MSFT', 'msft_price', 'msft_change'),
+            ('NVDA', 'nvda_price', 'nvda_change')
+        ]
+        
+        for ticker, price_key, change_key in stocks:
+            data = fetch_twelve_data_stock(ticker)
+            if data:
+                cache[price_key] = data['price']
+                cache[change_key] = data['change']
+        
+        logger.info(f"✅ Twelve Data (Stocks): SPY ${cache['spy_price']:,.2f} | AAPL ${cache['aapl_price']:,.2f} | MSFT ${cache['msft_price']:,.2f} | NVDA ${cache['nvda_price']:,.2f}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Stock prices fetch error: {e}")
+        return False
+
+
+def fetch_forex_prices():
+    """Fetch forex prices from Twelve Data"""
+    try:
+        pairs = [
+            ('EUR/USD', 'eurusd_price', 'eurusd_change'),
+            ('GBP/USD', 'gbpusd_price', 'gbpusd_change')
+        ]
+        
+        for pair, price_key, change_key in pairs:
+            data = fetch_twelve_data_forex(pair)
+            if data:
+                cache[price_key] = data['price']
+                cache[change_key] = data['change']
+        
+        logger.info(f"✅ Twelve Data (Forex): EUR/USD {cache['eurusd_price']:.4f} | GBP/USD {cache['gbpusd_price']:.4f}")
+        return True
+        
+    except Exception as e:
+        logger.error(f"❌ Forex prices fetch error: {e}")
         return False
 
 
 def fetch_market_data():
-    """Fetch additional market data: GOLD, SPY, DXY from yfinance"""
+    """Fetch additional market data from Twelve Data"""
     try:
-        # Get GOLD, SPY (S&P 500), DXY (Dollar Index)
-        gold = yf.Ticker("GC=F")  # Gold Futures
-        spy = yf.Ticker("SPY")    # S&P 500 ETF
-        dxy = yf.Ticker("DX-Y.NYB")  # Dollar Index
-        
-        gold_info = gold.info
-        spy_info = spy.info
-        dxy_info = dxy.info
-        
         # Gold
-        cache['gold_price'] = gold_info.get('regularMarketPrice', gold_info.get('currentPrice', cache['gold_price']))
-        gold_prev = gold_info.get('regularMarketPreviousClose', gold_info.get('previousClose'))
-        if gold_prev:
-            cache['gold_change'] = ((cache['gold_price'] - gold_prev) / gold_prev) * 100
-            
-        # SPY (S&P 500)
-        cache['spy_price'] = spy_info.get('regularMarketPrice', spy_info.get('currentPrice', cache['spy_price']))
-        spy_prev = spy_info.get('regularMarketPreviousClose', spy_info.get('previousClose'))
-        if spy_prev:
-            cache['spy_change'] = ((cache['spy_price'] - spy_prev) / spy_prev) * 100
-            
-        # DXY (Dollar Index)
-        cache['dxy_price'] = dxy_info.get('regularMarketPrice', dxy_info.get('currentPrice', cache['dxy_price']))
-        dxy_prev = dxy_info.get('regularMarketPreviousClose', dxy_info.get('previousClose'))
-        if dxy_prev:
-            cache['dxy_change'] = ((cache['dxy_price'] - dxy_prev) / dxy_prev) * 100
+        gold_data = fetch_twelve_data_stock('GC=F')
+        if gold_data:
+            cache['gold_price'] = gold_data['price']
+            cache['gold_change'] = gold_data['change']
         
-        logger.info(f"✅ Markets: GOLD ${cache['gold_price']:,.2f} | SPY ${cache['spy_price']:,.2f} | DXY {cache['dxy_price']:.2f}")
+        # Dollar Index
+        dxy_data = fetch_twelve_data_stock('DX-Y.NYB')
+        if dxy_data:
+            cache['dxy_price'] = dxy_data['price']
+            cache['dxy_change'] = dxy_data['change']
+        
+        logger.info(f"✅ Markets: GOLD ${cache['gold_price']:,.2f} | DXY {cache['dxy_price']:.2f}")
         return True
         
     except Exception as e:
@@ -119,83 +234,8 @@ def fetch_market_data():
         return False
 
 
-# ============ BINANCE API FUNCTIONS (BACKUP) ============
-
-def fetch_binance_prices():
-    """Fetch real BTC and ETH prices from Binance"""
-    try:
-        # Get BTC/USDT
-        btc_response = requests.get(
-            'https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT',
-            timeout=5
-        )
-        if btc_response.status_code == 200:
-            btc_data = btc_response.json()
-            cache['btc_price'] = float(btc_data['lastPrice'])
-            cache['btc_change'] = float(btc_data['priceChangePercent'])
-            
-            # Get 24h volume (using 'volume' key which is base asset volume)
-            cache['volume_24h'] = float(btc_data.get('volume', 0)) * cache['btc_price']
-            
-        # Get ETH/USDT
-        eth_response = requests.get(
-            'https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT',
-            timeout=5
-        )
-        if eth_response.status_code == 200:
-            eth_data = eth_response.json()
-            cache['eth_price'] = float(eth_data['lastPrice'])
-            cache['eth_change'] = float(eth_data['priceChangePercent'])
-            
-        logger.info(f"✅ Binance: BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%)")
-        return True
-        
-    except Exception as e:
-        logger.error(f"❌ Binance fetch error: {e}")
-        return False
-
-
-def fetch_funding_rate():
-    """Fetch BTC Futures funding rate from Binance"""
-    try:
-        response = requests.get(
-            'https://api.binance.com/api/v3/fundingRate?symbol=BTCUSDT&limit=1',
-            timeout=5
-        )
-        if response.status_code == 200:
-            data = response.json()
-            if data and len(data) > 0:
-                cache['funding_rate'] = float(data[0]['fundingRate']) * 100
-                logger.info(f"✅ Funding rate: {cache['funding_rate']:.4f}%")
-                return True
-    except Exception as e:
-        logger.error(f"❌ Funding rate error: {e}")
-    return False
-
-
-def fetch_open_interest():
-    """Fetch BTC Futures open interest from Binance"""
-    try:
-        response = requests.get(
-            'https://api.binance.com/api/v3/openInterest?symbol=BTCUSDT',
-            timeout=5
-        )
-        if response.status_code == 200:
-            data = response.json()
-            if data:
-                oi_contracts = float(data['openInterest'])
-                cache['open_interest'] = oi_contracts * cache['btc_price']
-                logger.info(f"✅ Open Interest: ${cache['open_interest']:,.0f}")
-                return True
-    except Exception as e:
-        logger.error(f"❌ Open interest error: {e}")
-    return False
-
-
-# ============ COINGECKO API FUNCTIONS ============
-
 def fetch_fear_greed():
-    """Fetch Fear & Greed Index from Alternative.me"""
+    """Fetch Fear & Greed Index from Alternative.me (free source)"""
     try:
         response = requests.get(
             'https://api.alternative.me/fng/?limit=1',
@@ -212,48 +252,128 @@ def fetch_fear_greed():
     return False
 
 
-def fetch_coingecko_data():
-    """Fetch crypto data from CoinGecko"""
+# ============ WEBSOCKET HANDLERS ============
+
+# Track connected WebSocket clients
+ws_clients = set()
+ws_thread = None
+
+@socketio.on('connect')
+def handle_connect():
+    """Handle WebSocket client connection"""
+    logger.info(f"✅ Client connected: {request.sid}")
+    emit('status', {'data': 'Connected to Hamster Terminal API'})
+    start_websocket_stream()
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    """Handle WebSocket client disconnection"""
+    logger.info(f"❌ Client disconnected: {request.sid}")
+
+@socketio.on('subscribe')
+def handle_subscribe(data):
+    """Handle subscription to real-time prices"""
+    symbols = data.get('symbols', ['BTC/USD', 'AAPL', 'EUR/USD'])
+    logger.info(f"📡 Client {request.sid} subscribed to: {symbols}")
+    emit('subscription', {'symbols': symbols, 'status': 'subscribed'})
+
+def broadcast_price_update(symbol, price, change):
+    """Broadcast price update to all connected clients"""
+    socketio.emit('price_update', {
+        'symbol': symbol,
+        'price': price,
+        'change': change,
+        'timestamp': datetime.now().isoformat()
+    }, broadcast=True)
+
+async def websocket_stream():
+    """Connect to Twelve Data WebSocket for real-time prices"""
     try:
-        response = requests.get(
-            'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum&vs_currencies=usd&include_24hr_change=true',
-            timeout=5
-        )
-        if response.status_code == 200:
-            data = response.json()
-            if 'bitcoin' in data:
-                cache['btc_price'] = data['bitcoin']['usd']
-                cache['btc_change'] = data['bitcoin'].get('usd_24h_change', 0)
-            if 'ethereum' in data:
-                cache['eth_price'] = data['ethereum']['usd']
-                cache['eth_change'] = data['ethereum'].get('usd_24h_change', 0)
-            logger.info(f"✅ CoinGecko: BTC ${cache['btc_price']:,.2f}")
-            return True
+        symbols = "BTC/USD,AAPL,MSFT,NVDA,SPY,EUR/USD,GBP/USD"
+        ws_url = f"{TWELVE_DATA_WS_URL}?apikey={TWELVE_DATA_API_KEY}"
+        
+        async with websockets.connect(ws_url) as websocket:
+            logger.info("✅ Connected to Twelve Data WebSocket")
+            
+            # Subscribe to symbols
+            subscribe_msg = {
+                "action": "subscribe",
+                "params": {"symbols": symbols}
+            }
+            await websocket.send(json.dumps(subscribe_msg))
+            logger.info(f"📡 Subscribed to: {symbols}")
+            
+            # Listen for price updates
+            while True:
+                try:
+                    msg = await websocket.recv()
+                    data = json.loads(msg)
+                    
+                    if 'price' in data:
+                        symbol = data.get('symbol', 'UNKNOWN')
+                        price = float(data.get('price', 0))
+                        change = float(data.get('percent_change', 0))
+                        
+                        # Update cache
+                        if symbol == 'BTC/USD':
+                            cache['btc_price'] = price
+                            cache['btc_change'] = change
+                        elif symbol == 'ETH/USD':
+                            cache['eth_price'] = price
+                            cache['eth_change'] = change
+                        elif symbol == 'AAPL':
+                            cache['aapl_price'] = price
+                            cache['aapl_change'] = change
+                        elif symbol == 'MSFT':
+                            cache['msft_price'] = price
+                            cache['msft_change'] = change
+                        elif symbol == 'NVDA':
+                            cache['nvda_price'] = price
+                            cache['nvda_change'] = change
+                        elif symbol == 'SPY':
+                            cache['spy_price'] = price
+                            cache['spy_change'] = change
+                        elif symbol == 'EUR/USD':
+                            cache['eurusd_price'] = price
+                            cache['eurusd_change'] = change
+                        elif symbol == 'GBP/USD':
+                            cache['gbpusd_price'] = price
+                            cache['gbpusd_change'] = change
+                        
+                        # Broadcast to all connected clients
+                        broadcast_price_update(symbol, price, change)
+                        
+                        logger.info(f"📊 {symbol}: ${price:,.2f} ({change:+.2f}%)")
+                    
+                except json.JSONDecodeError:
+                    pass
+                except Exception as e:
+                    logger.error(f"❌ WebSocket message error: {e}")
+                    
     except Exception as e:
-        logger.error(f"❌ CoinGecko error: {e}")
-    return False
+        logger.error(f"❌ WebSocket connection error: {e}")
+        logger.info("⏳ Retrying WebSocket connection in 10 seconds...")
+        await asyncio.sleep(10)
 
+def start_websocket_stream():
+    """Start WebSocket stream in background thread"""
+    global ws_thread
+    if ws_thread is None or not ws_thread.is_alive():
+        ws_thread = threading.Thread(target=lambda: asyncio.run(websocket_stream()), daemon=True)
+        ws_thread.start()
+        logger.info("🔄 WebSocket stream started")
 
-# ============ BACKGROUND UPDATE THREAD ============
 
 def update_data_loop():
     """Background thread to update data every 30 seconds"""
     logger.info("🔄 Starting background data update thread...")
     while True:
         try:
-            # Try yfinance first (fastest and most reliable)
-            if not fetch_yfinance_prices():
-                # Fallback to Binance if yfinance fails
-                fetch_binance_prices()
-            
-            # Get additional market data (GOLD, SPY, DXY)
+            # Fetch all data from Twelve Data
+            fetch_crypto_prices()
+            fetch_stock_prices()
+            fetch_forex_prices()
             fetch_market_data()
-            
-            # Get additional data from Binance
-            fetch_funding_rate()
-            fetch_open_interest()
-            
-            # Try Fear & Greed
             fetch_fear_greed()
             
             # Update timestamp
@@ -273,18 +393,17 @@ update_thread.start()
 
 # Initial data fetch
 logger.info("📡 Fetching initial data...")
-if not fetch_yfinance_prices():
-    fetch_binance_prices()
+fetch_crypto_prices()
+fetch_stock_prices()
+fetch_forex_prices()
 fetch_market_data()
-fetch_funding_rate()
-fetch_open_interest()
 fetch_fear_greed()
 
 # ============ API ENDPOINTS ============
 
 @app.route('/api/binance/summary', methods=['GET'])
 def binance_summary():
-    """Get BTC/ETH prices and basic data"""
+    """Get BTC/ETH prices and basic data (via Twelve Data)"""
     return jsonify({
         'ok': True,
         'btcPrice': round(cache['btc_price'], 2),
@@ -296,23 +415,65 @@ def binance_summary():
     })
 
 
+@app.route('/api/stocks', methods=['GET'])
+def stocks():
+    """Get stock prices"""
+    return jsonify({
+        'ok': True,
+        'spy': {
+            'price': round(cache['spy_price'], 2),
+            'change': round(cache['spy_change'], 2)
+        },
+        'aapl': {
+            'price': round(cache['aapl_price'], 2),
+            'change': round(cache['aapl_change'], 2)
+        },
+        'msft': {
+            'price': round(cache['msft_price'], 2),
+            'change': round(cache['msft_change'], 2)
+        },
+        'nvda': {
+            'price': round(cache['nvda_price'], 2),
+            'change': round(cache['nvda_change'], 2)
+        }
+    })
+
+
+@app.route('/api/forex', methods=['GET'])
+def forex():
+    """Get forex prices"""
+    return jsonify({
+        'ok': True,
+        'eurusd': {
+            'price': round(cache['eurusd_price'], 4),
+            'change': round(cache['eurusd_change'], 2)
+        },
+        'gbpusd': {
+            'price': round(cache['gbpusd_price'], 4),
+            'change': round(cache['gbpusd_change'], 2)
+        }
+    })
+
+
 @app.route('/api/binance/funding', methods=['GET'])
 def binance_funding():
-    """Get BTC futures funding rate"""
+    """Get BTC futures funding rate (fallback data)"""
     return jsonify({
         'ok': True,
         'lastFundingRate': cache['funding_rate'] / 100,
-        'fundingRatePercent': round(cache['funding_rate'], 4)
+        'fundingRatePercent': round(cache['funding_rate'], 4),
+        'note': 'For real funding rates, use Binance API directly'
     })
 
 
 @app.route('/api/binance/oi', methods=['GET'])
 def binance_oi():
-    """Get BTC futures open interest"""
+    """Get BTC futures open interest (fallback data)"""
     return jsonify({
         'ok': True,
         'openInterest': cache['open_interest'] / cache['btc_price'],
-        'openInterestValue': round(cache['open_interest'], 0)
+        'openInterestValue': round(cache['open_interest'], 0),
+        'note': 'For real OI, use Binance API directly'
     })
 
 
@@ -335,7 +496,7 @@ def fear_greed_index():
 
 @app.route('/api/coingecko/simple', methods=['GET'])
 def coingecko_simple():
-    """Get crypto prices from CoinGecko cache"""
+    """Get crypto prices from Twelve Data cache"""
     return jsonify({
         'ok': True,
         'data': {
@@ -377,17 +538,21 @@ def status():
     return jsonify({
         'ok': True,
         'status': 'running',
+        'data_source': 'Twelve Data (crypto, stocks, forex)',
         'last_update': cache['last_update'],
         'cache': {
             'btcPrice': round(cache['btc_price'], 2),
             'btcChange24h': round(cache['btc_change'], 2),
             'ethPrice': round(cache['eth_price'], 2),
             'ethChange24h': round(cache['eth_change'], 2),
-            'fearGreed': cache['fear_greed'],
-            'fundingRate': round(cache['funding_rate'], 4),
-            'volume24h': int(cache['volume_24h']),
-            'goldPrice': round(cache['gold_price'], 2),
             'spyPrice': round(cache['spy_price'], 2),
+            'aaplPrice': round(cache['aapl_price'], 2),
+            'msftPrice': round(cache['msft_price'], 2),
+            'nvdaPrice': round(cache['nvda_price'], 2),
+            'eurusd': round(cache['eurusd_price'], 4),
+            'gbpusd': round(cache['gbpusd_price'], 4),
+            'fearGreed': cache['fear_greed'],
+            'goldPrice': round(cache['gold_price'], 2),
             'dxyPrice': round(cache['dxy_price'], 2)
         }
     })
@@ -404,14 +569,20 @@ def root():
     """Root endpoint info"""
     return jsonify({
         'name': '🚀 Hamster Terminal API Server',
-        'version': '1.0',
+        'version': '2.0 - Twelve Data Edition',
+        'data_sources': 'Twelve Data (crypto, stocks, forex) + Alternative.me (Fear & Greed)',
+        'setup': {
+            'api_key': 'Get free key at https://twelvedata.com/docs',
+            'env_variable': 'TWELVE_DATA_API_KEY',
+            'current_key_status': 'demo' if TWELVE_DATA_API_KEY == 'demo' else '✅ configured'
+        },
         'endpoints': {
-            '/api/binance/summary': 'Get BTC/ETH prices',
-            '/api/binance/funding': 'Get funding rate',
-            '/api/binance/oi': 'Get open interest',
+            '/api/binance/summary': 'Get BTC/ETH prices (from Twelve Data)',
+            '/api/stocks': 'Get stock prices (AAPL, MSFT, NVDA, SPY)',
+            '/api/forex': 'Get forex pairs (EUR/USD, GBP/USD)',
+            '/api/markets': 'Get GOLD, SPY, DXY prices',
             '/api/fng': 'Get Fear & Greed Index',
-            '/api/coingecko/simple': 'Get crypto prices',
-            '/api/status': 'Server status',
+            '/api/status': 'Server status with all cached data',
             '/health': 'Health check'
         }
     })
@@ -419,13 +590,30 @@ def root():
 
 if __name__ == '__main__':
     print("=" * 80)
-    print("🚀 HAMSTER TERMINAL API SERVER (yfinance Edition)")
+    print("🚀 HAMSTER TERMINAL API SERVER v3.0 - WebSocket Edition")
     print("=" * 80)
     print("Server starting on http://0.0.0.0:5000")
-    print("Real-time data fetching from:")
-    print("  • yfinance (Yahoo Finance) - PRIMARY")
-    print("  • Binance API - BACKUP")
-    print("  • Alternative.me Fear & Greed")
+    print("")
+    print("📡 Real-time data sources:")
+    print("  🔴 WebSocket (PRIMARY) - Twelve Data real-time prices")
+    print("     Symbols: BTC/USD, AAPL, MSFT, NVDA, SPY, EUR/USD, GBP/USD")
+    print("  📊 REST API (BACKUP) - Every 30 seconds")
+    print("  😨 Alternative.me - Fear & Greed Index")
+    print("")
+    if TWELVE_DATA_API_KEY == 'demo':
+        print("⚠️  USING DEMO KEY - LIMITED TO 800 CALLS/MIN")
+        print("    Setup: https://twelvedata.com")
+        print("    Set env: $env:TWELVE_DATA_API_KEY='your_key'")
+    else:
+        print("✅ Twelve Data API Key configured")
+    print("")
+    print("🌐 WebSocket Connection:")
+    print("  Client: ws://localhost:5000/socket.io/?transport=websocket")
+    print("  Events: connect, subscribe, price_update, disconnect")
+    print("")
     print("=" * 80)
     
-    app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)
+    # Start WebSocket stream
+    start_websocket_stream()
+    
+    socketio.run(app, host='0.0.0.0', port=5000, debug=False)

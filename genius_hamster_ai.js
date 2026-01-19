@@ -623,7 +623,7 @@ function startGeniusHamsterTraining() {
  * Update Genius Hamster UI
  */
 function updateGeniusHamsterUI(commentary, analysis) {
-    const hamsterComment = document.getElementById('hamster-comment');
+    const hamsterComment = document.getElementById('hamster-commenrt');
     const hamsterEmotion = document.getElementById('hamster-emotion');
 
     if (hamsterComment) {

@@ -1,0 +1,257 @@
+<!-- BLOOMBERG-STYLE REAL-TIME TICKER (TWELVE DATA INTEGRATION) -->
+<!-- 
+    Professional Bloomberg-style ticker with:
+    - Grouped assets by category (METALS, INDICES, MEGA CAPS)
+    - Dynamic colors (green for gains, red for losses)
+    - Hover pause functionality
+    - Batch API calls (single request for all symbols)
+    - Smooth scrolling animation
+-->
+
+<style>
+    @keyframes bloombergScroll {
+        0% { transform: translateX(100%); }
+        100% { transform: translateX(-100%); }
+    }
+    
+    .bloomberg-ticker-wrapper {
+        margin-top: 12px;
+        margin-left: 30px;
+        margin-right: 30px;
+        padding: 10px 15px;
+        background: linear-gradient(90deg, #000000 0%, #0a0a0a 50%, #000000 100%);
+        border: 1px solid #1a3a1a;
+        border-radius: 3px;
+        overflow: hidden;
+        position: relative;
+        font-family: 'Roboto Mono', 'Courier New', monospace;
+        min-height: 40px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .bloomberg-ticker-scroll {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+        animation: bloombergScroll 45s linear infinite;
+        white-space: nowrap;
+        font-size: 0.95em;
+        font-weight: 600;
+        letter-spacing: 1px;
+    }
+    
+    .bloomberg-ticker-group {
+        display: inline-flex;
+        align-items: center;
+        gap: 15px;
+        flex-shrink: 0;
+    }
+    
+    .ticker-group-label {
+        font-size: 0.85em;
+        font-weight: 800;
+        color: #00d4ff;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        background: rgba(0, 212, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 2px;
+        border-left: 2px solid #00d4ff;
+    }
+    
+    .ticker-instrument-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 4px 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 2px;
+        background: rgba(0, 0, 0, 0.6);
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.5), inset 0 0 4px rgba(0, 0, 0, 0.8);
+        transition: all 0.2s ease;
+        flex-shrink: 0;
+    }
+    
+    .ticker-instrument-item:hover {
+        box-shadow: 0 0 12px rgba(0, 255, 65, 0.4), inset 0 0 4px rgba(0, 0, 0, 0.8);
+        border-color: rgba(0, 255, 65, 0.5);
+    }
+    
+    .ticker-symbol {
+        font-weight: 800;
+        color: #00ff41;
+        min-width: 50px;
+    }
+    
+    .ticker-price {
+        color: #ffff00;
+        font-weight: 800;
+        min-width: 70px;
+        text-align: right;
+    }
+    
+    .ticker-change {
+        font-weight: 800;
+        min-width: 65px;
+        text-align: right;
+        font-size: 0.9em;
+    }
+    
+    .ticker-change.positive {
+        color: #00ff41;
+    }
+    
+    .ticker-change.negative {
+        color: #ff0033;
+    }
+    
+    .bloomberg-ticker-wrapper:hover .bloomberg-ticker-scroll {
+        animation-play-state: paused;
+    }
+    
+    .ticker-loading {
+        color: #ffaa00;
+        font-weight: 700;
+        text-align: center;
+        width: 100%;
+    }
+</style>
+
+<div class="bloomberg-ticker-wrapper" id="bloombergTicker">
+    <div class="ticker-loading">Loading Bloomberg Ticker...</div>
+</div>
+
+<script>
+    // ============================================
+    // BLOOMBERG-STYLE TICKER - TWELVE DATA API
+    // ============================================
+    
+    const TWELVE_DATA_KEY = 'YOUR_API_KEY_HERE';
+    
+    const TICKER_CONFIG = {
+        'METALS': {
+            symbols: ['XAU/USD', 'XAG/USD'],
+            color: '#ffff00'
+        },
+        'INDICES': {
+            symbols: ['SPX', 'INDU', 'IXIC', 'GDAXI'],
+            color: '#00d4ff'
+        },
+        'MEGA CAPS': {
+            symbols: ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'TSLA'],
+            color: '#cccccc'
+        }
+    };
+
+    // Fetch prices from Twelve Data via single batch call
+    async function fetchTickerData() {
+        try {
+            // Flatten all symbols into one batch request
+            const allSymbols = Object.values(TICKER_CONFIG)
+                .flatMap(group => group.symbols)
+                .join(',');
+
+            const url = `https://api.twelvedata.com/quote?symbol=${allSymbols}&apikey=${TWELVE_DATA_KEY}`;
+            const response = await fetch(url);
+            
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            
+            const data = await response.json();
+            return data.results || [];
+        } catch (error) {
+            console.error('Ticker fetch failed:', error);
+            // Return mock data for demo/offline mode
+            return getMockTickerData();
+        }
+    }
+
+    // Mock data for testing
+    function getMockTickerData() {
+        return [
+            { symbol: 'XAU/USD', price: '2645.30', percent_change: '0.45' },
+            { symbol: 'XAG/USD', price: '31.25', percent_change: '0.32' },
+            { symbol: 'SPX', price: '5847.50', percent_change: '1.42' },
+            { symbol: 'INDU', price: '42850.20', percent_change: '0.87' },
+            { symbol: 'IXIC', price: '18542.30', percent_change: '1.93' },
+            { symbol: 'GDAXI', price: '18234.10', percent_change: '-0.62' },
+            { symbol: 'AAPL', price: '234.56', percent_change: '2.18' },
+            { symbol: 'MSFT', price: '445.32', percent_change: '1.87' },
+            { symbol: 'NVDA', price: '892.15', percent_change: '3.24' },
+            { symbol: 'AMZN', price: '456.78', percent_change: '-1.45' },
+            { symbol: 'TSLA', price: '347.85', percent_change: '4.32' }
+        ];
+    }
+
+    // Build and render ticker HTML
+    async function buildBloombergTicker() {
+        const priceData = await fetchTickerData();
+        const priceMap = new Map(priceData.map(item => [item.symbol, item]));
+        
+        let tickerHTML = '<div class="bloomberg-ticker-scroll">';
+        
+        // First pass - show all groups
+        for (const [groupName, groupConfig] of Object.entries(TICKER_CONFIG)) {
+            tickerHTML += '<div class="bloomberg-ticker-group">';
+            tickerHTML += `<span class="ticker-group-label">${groupName}</span>`;
+            
+            for (const symbol of groupConfig.symbols) {
+                const data = priceMap.get(symbol);
+                if (!data) continue;
+                
+                const price = parseFloat(data.price).toFixed(2);
+                const change = parseFloat(data.percent_change);
+                const changeClass = change >= 0 ? 'positive' : 'negative';
+                const changeColor = change >= 0 ? '#00ff41' : '#ff0033';
+                const changeSign = change >= 0 ? '+' : '';
+                
+                tickerHTML += `
+                    <div class="ticker-instrument-item" style="border-color: ${groupConfig.color}33;">
+                        <span class="ticker-symbol" style="color: ${groupConfig.color};">${symbol}</span>
+                        <span class="ticker-price">$${price}</span>
+                        <span class="ticker-change ${changeClass}" style="color: ${changeColor};">${changeSign}${change.toFixed(2)}%</span>
+                    </div>
+                `;
+            }
+            tickerHTML += '</div>';
+        }
+        
+        // Gap for loop
+        tickerHTML += '<div style="width: 100px;"></div>';
+        
+        // Second pass - repeat for continuous scrolling
+        for (const [groupName, groupConfig] of Object.entries(TICKER_CONFIG)) {
+            tickerHTML += '<div class="bloomberg-ticker-group">';
+            tickerHTML += `<span class="ticker-group-label">${groupName}</span>`;
+            
+            for (const symbol of groupConfig.symbols) {
+                const data = priceMap.get(symbol);
+                if (!data) continue;
+                
+                const price = parseFloat(data.price).toFixed(2);
+                const change = parseFloat(data.percent_change);
+                const changeClass = change >= 0 ? 'positive' : 'negative';
+                const changeColor = change >= 0 ? '#00ff41' : '#ff0033';
+                const changeSign = change >= 0 ? '+' : '';
+                
+                tickerHTML += `
+                    <div class="ticker-instrument-item" style="border-color: ${groupConfig.color}33;">
+                        <span class="ticker-symbol" style="color: ${groupConfig.color};">${symbol}</span>
+                        <span class="ticker-price">$${price}</span>
+                        <span class="ticker-change ${changeClass}" style="color: ${changeColor};">${changeSign}${change.toFixed(2)}%</span>
+                    </div>
+                `;
+            }
+            tickerHTML += '</div>';
+        }
+        
+        tickerHTML += '</div>';
+        
+        const ticker = document.getElementById('bloombergTicker');
+        ticker.innerHTML = tickerHTML;
+    }
+
+    // Initialize ticker and refresh every 30 seconds
+    buildBloombergTicker();
+    setInterval(buildBloombergTicker, 30000);
+</script>

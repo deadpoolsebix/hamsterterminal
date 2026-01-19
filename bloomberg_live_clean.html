@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HAMSTER TERMINAL • BLOOMBERG LIVE</title>
+<style>
+:root {
+  --orange: #ff8c00;
+  --burgundy: #800020;
+  --black: #000000;
+  --panel: #0a0a0a;
+  --border: #333333;
+  --green: #00ff41;
+  --red: #ff0033;
+  --yellow: #ffff00;
+  --cyan: #00d4ff;
+  --gray: #bdbdbd;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'Courier New', monospace;
+  background: var(--black);
+  color: #ffffff;
+  font-size: 13px;
+  line-height: 1.4;
+}
+.header {
+  background: var(--orange);
+  color: var(--black);
+  padding: 14px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+.header-title { display: flex; gap: 10px; align-items: center; }
+.header-time { font-size: 0.95em; }
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 14px;
+  padding: 14px 24px;
+}
+.left-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.ticker-row {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 12px;
+  overflow: hidden;
+}
+.ticker-track {
+  display: inline-flex;
+  gap: 20px;
+  white-space: nowrap;
+  animation: scroll 30s linear infinite;
+  font-size: 0.95em;
+}
+@keyframes scroll {
+  0% { transform: translateX(40%); }
+  100% { transform: translateX(-120%); }
+}
+.ticker-label {
+  color: var(--orange);
+  font-weight: bold;
+  padding: 2px 8px;
+  background: rgba(255,140,0,0.1);
+  border-left: 2px solid var(--orange);
+}
+.ticker-item { color: #ffffff; }
+
+.key-metrics {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 14px;
+}
+.key-metrics h4 {
+  color: var(--orange);
+  margin-bottom: 10px;
+  font-size: 1em;
+  text-transform: uppercase;
+}
+.metric-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 0.9em;
+}
+.metric-row:last-child { border-bottom: none; }
+.metric-label { color: var(--gray); }
+.metric-value { font-weight: bold; color: #ffffff; }
+
+.news-section {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 14px;
+  flex-grow: 1;
+}
+.news-section h4 {
+  color: var(--orange);
+  margin-bottom: 10px;
+  font-size: 1em;
+  text-transform: uppercase;
+}
+.news-item {
+  padding: 6px 0;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 0.9em;
+  line-height: 1.3;
+}
+.news-item:last-child { border-bottom: none; }
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.price-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 14px;
+  text-align: center;
+}
+.price-card h4 {
+  color: var(--orange);
+  font-size: 0.9em;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+}
+.price-large {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #ffffff;
+  margin: 6px 0;
+}
+.price-change { font-weight: bold; color: var(--green); }
+
+.chart-area {
+  grid-column: 1 / -1;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 20px;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gray);
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.whale-transfers {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  padding: 14px;
+}
+.whale-transfers h4 {
+  color: var(--orange);
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  text-transform: uppercase;
+}
+.transfer-item {
+  padding: 6px 0;
+  border-bottom: 1px solid #1a1a1a;
+  font-size: 0.85em;
+  display: flex;
+  justify-content: space-between;
+}
+.transfer-item:last-child { border-bottom: none; }
+
+@media (max-width: 1200px) {
+  .main-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="header-title">🐹 HAMSTER TERMINAL • BLOOMBERG LIVE</div>
+    <div class="header-time" id="clock">--:--:-- UTC</div>
+  </div>
+
+  <div class="main-grid">
+    <div class="left-section">
+      <!-- TICKER 1 -->
+      <div class="ticker-row">
+        <div class="ticker-track">
+          <span class="ticker-label">CRYPTO</span> BTC +2.1% $95,501 • ETH +1.8% $3,398 • SOL +4.2% $142.5 • MATIC -1.3% $1.05 • ADA +3.1% $1.15 • DOT -0.8% $7.32
+          <span class="ticker-label">TRADYCJE</span> DXY 102.45 • Gold $2,065 • Oil $73.2 • SPX 4,812 • NDQ 16,845
+          <span class="ticker-label">SENTIMENT</span> Fear&Greed: 48 (Neutral) • BTC Dom: 52.3% • Total Market: $2.18T
+        </div>
+      </div>
+
+      <!-- TICKER 2 -->
+      <div class="ticker-row">
+        <div class="ticker-track">
+          <span class="ticker-label">FUNDING</span> BTC: +0.012% (8h) • ETH: +0.008% (8h) • Bias: BULLISH
+          <span class="ticker-label">OPEN INTEREST</span> BTC: $18.2B (-3.4% 24h) • ETH: $7.8B (-1.2% 24h)
+          <span class="ticker-label">LIQUIDATIONS</span> 24h Total: $128M • Shorts: $78M (ALERT) • Longs: $50M
+          <span class="ticker-label">WHALE MOVES</span> +2,850 BTC moved • -1,200 ETH to exchange • Activity: HIGH
+        </div>
+      </div>
+
+      <!-- KEY METRICS -->
+      <div class="key-metrics">
+        <h4>📊 KEY MARKET METRICS</h4>
+        <div class="metric-row">
+          <span class="metric-label">24H Volume</span>
+          <span class="metric-value">$2.4B</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">Funding Rate</span>
+          <span class="metric-value" style="color:var(--green);">+0.012%</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">RSI (14)</span>
+          <span class="metric-value">41.8</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">MACD</span>
+          <span class="metric-value">+106.7 (BULLISH)</span>
+        </div>
+        <div class="metric-row">
+          <span class="metric-label">OBV</span>
+          <span class="metric-value" style="color:var(--green);">Accumulation</span>
+        </div>
+      </div>
+
+      <!-- LIVE NEWS -->
+      <div class="news-section">
+        <h4>📰 LIVE NEWS & ALERTS</h4>
+        <div class="news-item">🔴 15:42 BlackRock BTC ETF inflow +$420M today - strong institutional demand breaking resistance</div>
+        <div class="news-item">🟢 15:18 Powell dovish speech - markets rally on interest rate expectations</div>
+        <div class="news-item">🟡 14:55 Binance: BTC futures OI +8.2%, short squeeze risk elevated @$97.4k</div>
+        <div class="news-item">🔵 14:32 Whale alert: 2,850 BTC moved to unknown wallet (~$280M value)</div>
+        <div class="news-item">⚠️ 14:15 SEC delays decision on ETH ETF applications - market impact: minimal</div>
+        <div class="news-item">🟣 14:00 Liquidations spike detected - $45M shorts liquidated in 30 seconds</div>
+      </div>
+    </div>
+
+    <div class="right-section">
+      <!-- BTC PRICE -->
+      <div class="price-card">
+        <h4>BTC/USDT (LIVE)</h4>
+        <div class="price-large">$95,501</div>
+        <div class="price-change">▲ +2,345.80 (+2.44%)</div>
+        <div style="margin-top:8px; font-size:0.85em; color:var(--gray);">
+          H24: $97,861 | L24: $94,650
+        </div>
+      </div>
+
+      <!-- ETH PRICE -->
+      <div class="price-card">
+        <h4>ETH/USDT (LIVE)</h4>
+        <div class="price-large">$3,398</div>
+        <div class="price-change">▲ +156.24 (+1.95%)</div>
+        <div style="margin-top:8px; font-size:0.85em; color:var(--gray);">
+          H24: $3,462 | L24: $3,301
+        </div>
+      </div>
+
+      <!-- AI GENIUS -->
+      <div class="price-card" style="background:linear-gradient(135deg, #0f0f2a 0%, #0a0a1a 100%); border-color:var(--cyan);">
+        <h4 style="color:var(--cyan);">🧠 AI GENIUS</h4>
+        <div style="color:var(--cyan); font-weight:bold; margin-bottom:8px; font-size:0.9em;">Smart Money Setup</div>
+        <div style="text-align:left; font-size:0.85em;">
+          <div style="margin:4px 0;">🎯 Entry: $95,200 (LONG)</div>
+          <div style="margin:4px 0;">🛑 SL: $94,100</div>
+          <div style="margin:4px 0;">💰 TP1: $97,500 | TP2: $99,800</div>
+          <div style="margin:4px 0;">⚡ R/R: 1:2.4</div>
+          <div style="margin-top:8px; color:var(--green); font-weight:bold;">Confidence: 78%</div>
+        </div>
+      </div>
+
+      <!-- WHALE TRANSFERS -->
+      <div class="whale-transfers" style="flex-grow:1;">
+        <h4>🐋 LARGE TRANSACTIONS</h4>
+        <div class="transfer-item">
+          <span>🐋 +2,850 BTC</span>
+          <span style="color:var(--green);">15:42</span>
+        </div>
+        <div class="transfer-item">
+          <span>🐳 -1,200 ETH</span>
+          <span style="color:var(--red);">15:18</span>
+        </div>
+        <div class="transfer-item">
+          <span>🐋 +950 BTC</span>
+          <span style="color:var(--green);">14:55</span>
+        </div>
+        <div class="transfer-item">
+          <span>🦈 +420 ETH</span>
+          <span style="color:var(--green);">14:32</span>
+        </div>
+        <div class="transfer-item">
+          <span>🐳 -680 BTC</span>
+          <span style="color:var(--red);">14:15</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHART AREA -->
+    <div class="chart-area">
+      📊 LIVE TRADING CHART - TradingView / Plotly Integration
+    </div>
+  </div>
+
+<script>
+function updateClock() {
+  const now = new Date();
+  const utc = now.toISOString().split('T')[1].slice(0,8);
+  document.getElementById('clock').textContent = `${utc} UTC`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script>
+
+</body>
+</html>

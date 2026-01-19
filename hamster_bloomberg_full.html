@@ -16,30 +16,37 @@
         body {
             font-family: 'Roboto Mono', monospace;
             background: #000000;
-            color: #ff6600;
+            color: #ffffff;
             overflow-x: hidden;
         }
         
         .terminal-header {
-            background: #000000;
-            padding: 15px 30px;
+            background: #ff8c00;
+            padding: 12px 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 2px solid #ff6600;
+            border-bottom: none;
+            border-radius: 0;
         }
         
         .terminal-title {
-            color: #ff6600;
+            color: #000000;
+            font-weight: 700;
+            font-size: 18px;
         }
         
         .metric-card {
-            background: #000000;
-            border: 1px solid #ff6600;
+            background: #0a0a0a;
+            border: 1px solid #333333;
+            border-left: 4px solid #ff8c00;
+            border-radius: 0;
         }
         
         .metrics-panel {
-            background: #000000;
+            background: #0a0a0a;
+            border: 1px solid #333333;
+            border-radius: 0;
         }
         
         /* ===== THEME SWITCHER ===== */
@@ -51,16 +58,16 @@
         }
         
         .theme-btn {
-            background: linear-gradient(135deg, #00d4ff, #0088cc);
-            border: 2px solid #00d4ff;
-            color: #000;
+            background: #000000;
+            border: 2px solid #000000;
+            color: #ffffff;
             font-size: 1.2em;
             padding: 8px 16px;
             cursor: pointer;
-            font-weight: 900;
-            border-radius: 4px;
+            font-weight: 700;
+            border-radius: 0;
             transition: all 0.2s;
-            box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+            box-shadow: none;
         }
         
         .theme-btn:hover {
@@ -70,12 +77,38 @@
         
         .theme-name {
             font-size: 0.9em;
-            color: #00d4ff;
+            color: #000000;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 2px;
             min-width: 150px;
             text-align: center;
+        }
+
+        /* BLOOMBERG MENU BAR */
+        .bloomberg-menu-bar {
+            background: #800020;
+            padding: 10px 30px;
+            display: flex;
+            gap: 25px;
+            border-radius: 0;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .bloomberg-menu-item {
+            color: #ffffff;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .bloomberg-menu-item:hover {
+            opacity: 0.8;
+        }
+
+        .bloomberg-menu-item.active {
+            font-weight: 700;
+            text-decoration: underline;
         }
         
         /* ===== BLOOMBERG TERMINAL THEME ===== */
@@ -242,9 +275,11 @@
         }
         
         .metric-card {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            border: 1px solid #333;
-            border-radius: 8px;
+            background: #0a0a0a;
+            border-left: 4px solid #ff8c00;
+            border-top: 1px solid #333333;
+            border-right: 1px solid #333333;
+            border-bottom: 1px solid #333333;
             padding: 15px;
             transition: all 0.3s ease;
         }
@@ -256,8 +291,7 @@
         
         .metric-card:hover {
             transform: translateY(-2px);
-            border-color: #00d4ff;
-            box-shadow: 0 5px 15px rgba(0,212,255,0.2);
+            border-left-color: #ff8c00;
         }
         
         }
@@ -291,9 +325,8 @@
         .timeframe-btn {
             padding: 8px 16px;
             background: #1a1a1a;
-            border: 2px solid #333;
-            color: #fff;
-            border-radius: 6px;
+            border: 1px solid #333333;
+            color: #ffffff;
             cursor: pointer;
             font-weight: 600;
             font-size: 0.85em;
@@ -301,21 +334,19 @@
         }
         
         .timeframe-btn:hover {
-            border-color: #00d4ff;
-            color: #00d4ff;
+            border-color: #ff8c00;
+            color: #ff8c00;
         }
         
         .timeframe-btn.active {
-            background: #00d4ff;
-            border-color: #00d4ff;
-            color: #0a0a0a;
-            box-shadow: 0 0 15px rgba(0,212,255,0.5);
+            background: #ff8c00;
+            border-color: #ff8c00;
+            color: #000000;
         }
         
         .news-panel {
-            background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
-            border: 1px solid #333;
-            border-radius: 8px;
+            background: #0a0a0a;
+            border: 1px solid #333333;
             padding: 20px;
             max-height: 1400px;
             overflow-y: auto;
@@ -324,11 +355,11 @@
         .news-header {
             margin-bottom: 20px;
             padding-bottom: 15px;
-            border-bottom: 2px solid #00d4ff;
+            border-bottom: 2px solid #ff8c00;
         }
         
         .news-header h3 {
-            color: #00d4ff;
+            color: #ff8c00;
             font-size: 1.2em;
             font-weight: 700;
         }
@@ -341,9 +372,8 @@
         
         .news-item {
             background: #0f0f0f;
-            border-left: 3px solid #00d4ff;
+            border-left: 3px solid #ff8c00;
             padding: 12px;
-            border-radius: 4px;
             transition: all 0.3s ease;
         }
         
@@ -364,7 +394,7 @@
         }
         
         .news-source {
-            color: #00d4ff;
+            color: #ff8c00;
             font-weight: 600;
         }
         
@@ -1376,14 +1406,23 @@
     <script src="genius_hamster_ai.js" defer></script>
 </head>
 <body>
+    <!-- Bloomberg Menu Bar -->
+    <div class="bloomberg-menu-bar">
+        <div class="bloomberg-menu-item active">Market Data</div>
+        <div class="bloomberg-menu-item">Technical Analysis</div>
+        <div class="bloomberg-menu-item">News Feed</div>
+        <div class="bloomberg-menu-item">AI Signals</div>
+        <div class="bloomberg-menu-item">Export ▼</div>
+    </div>
+    
     <div class="terminal-header" style="padding-top: 25px;">
         <div style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
-            <div class="terminal-title" style="font-family: 'Press Start 2P', 'Courier New', monospace; font-weight: 900; letter-spacing: 4px; text-shadow: 3px 3px 0 #ff0033, 6px 6px 0 #00ff41, 0 0 30px rgba(255,0,51,0.8); color: #ffff00; font-size: 1.8em; transform: scaleY(1.1); display: flex; flex-direction: column; align-items: flex-start; gap: 5px;">
+            <div class="terminal-title" style="font-family: 'Roboto Mono', 'Courier New', monospace; font-weight: 700; letter-spacing: 2px; color: #000000; font-size: 1.8em; display: flex; flex-direction: column; align-items: flex-start; gap: 5px;">
                 <div style="display: flex; align-items: center; gap: 20px;">
-                    <span style="animation: spinHamster 2s linear infinite; display: inline-block; font-size: 1.4em;">🐹</span>
-                    <span style="animation: hamsterPush 3s ease-in-out infinite; display: inline-block; text-shadow: 0 2px 8px rgba(255,255,0,0.4), 0 4px 16px rgba(255,0,51,0.3);">HAMSTER</span>
+                    <span style="display: inline-block; font-size: 1.4em;">🐹</span>
+                    <span style="display: inline-block;">HAMSTER</span>
                 </div>
-                <div style="font-size: 0.85em; color: #00d4ff; margin-left: 60px; letter-spacing: 3px;">TERMINAL</div>
+                <div style="font-size: 0.85em; color: #000000; margin-left: 60px; letter-spacing: 3px;">TERMINAL</div>
             </div>
         </div>
         
@@ -1391,10 +1430,10 @@
         <div style="display: flex; align-items: center; justify-content: space-between; gap: 15px; padding: 10px 20px; border-top: 1px solid #222;">
             <!-- Timezone Selector with Label -->
             <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                <div style="display: flex; gap: 6px; padding: 6px; background: rgba(0,0,0,0.5); border-radius: 6px; border: 1px solid #00ff41;">
-                    <button onclick="changeTimezone('Asia/Tokyo', '🗼 TOKYO')" class="tz-btn" style="background: rgba(255,100,150,0.2); border: 1px solid #ff6496; color: #ff6496; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Tokyo Stock Exchange"><span style="display: inline-block; font-size: 1em;">🐉</span> TYO</button>
-                    <button onclick="changeTimezone('Europe/London', '� LONDON')" class="tz-btn" style="background: rgba(0,212,255,0.2); border: 1px solid #00d4ff; color: #00d4ff; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="London Stock Exchange"><span style="display: inline-block; font-size: 1em;">🕰</span> LON</button>
-                    <button onclick="changeTimezone('America/New_York', '🗽 NY')" class="tz-btn" style="background: rgba(0,255,65,0.2); border: 1px solid #00ff41; color: #00ff41; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s; min-width: 75px; display: inline-flex; align-items: center; justify-content: center;" title="New York Stock Exchange"><span style="display: inline-block; font-size: 1em; width: 1.2em;">🗽</span> NY</button>
+                <div style="display: flex; gap: 6px; padding: 6px; background: rgba(0,0,0,0.3); border: 1px solid #333333;">
+                    <button onclick="changeTimezone('Asia/Tokyo', '🗼 TOKYO')" class="tz-btn" style="background: #1a1a1a; border: 1px solid #333333; color: #ffffff; padding: 5px 10px; cursor: pointer; font-weight: 600; font-size: 1em; transition: all 0.2s;" title="Tokyo Stock Exchange"><span style="display: inline-block; font-size: 1em;">🐉</span> TYO</button>
+                    <button onclick="changeTimezone('Europe/London', '� LONDON')" class="tz-btn" style="background: #1a1a1a; border: 1px solid #333333; color: #ffffff; padding: 5px 10px; cursor: pointer; font-weight: 600; font-size: 1em; transition: all 0.2s;" title="London Stock Exchange"><span style="display: inline-block; font-size: 1em;">🕰</span> LON</button>
+                    <button onclick="changeTimezone('America/New_York', '🗽 NY')" class="tz-btn" style="background: #1a1a1a; border: 1px solid #333333; color: #ffffff; padding: 5px 10px; cursor: pointer; font-weight: 600; font-size: 1em; transition: all 0.2s; min-width: 75px; display: inline-flex; align-items: center; justify-content: center;" title="New York Stock Exchange"><span style="display: inline-block; font-size: 1em; width: 1.2em;">🗽</span> NY</button>
                     <button onclick="changeTimezone('Europe/Zurich', '🧀 ZURICH')" class="tz-btn" style="background: rgba(255,170,0,0.2); border: 1px solid #ffaa00; color: #ffaa00; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Swiss Exchange"><span style="display: inline-block; font-size: 1em;">🧀</span> ZRH</button>
                     <button onclick="changeTimezone('Australia/Sydney', '🦘 SYDNEY')" class="tz-btn" style="background: rgba(138,43,226,0.2); border: 1px solid #8a2be2; color: #8a2be2; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: 700; font-size: 1.1em; transition: all 0.2s;" title="Australian Securities Exchange"><span style="display: inline-block; font-size: 1em;">🦘</span> SYD</button>
                 </div>

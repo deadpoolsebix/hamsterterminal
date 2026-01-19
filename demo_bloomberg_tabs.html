@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hamster Terminal - Bloomberg Tabs</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #ff8c00;
+      --burgundy: #800020;
+      --black: #000000;
+      --panel: #0a0a0a;
+      --border: #333333;
+      --green: #00ff41;
+      --red: #ff0033;
+      --yellow: #ffff00;
+      --cyan: #00d4ff;
+      --gray: #bdbdbd;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Roboto Mono', monospace;
+      background: var(--black);
+      color: #ffffff;
+      line-height: 1.4;
+      padding-bottom: 40px;
+    }
+    .header {
+      background: var(--orange);
+      color: #000000;
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .header-title { display: flex; gap: 10px; align-items: center; font-size: 1.1em; }
+    .header-time { font-size: 0.95em; }
+
+    .menu-bar {
+      display: flex;
+      gap: 8px;
+      padding: 10px 24px;
+      background: var(--burgundy);
+      border-bottom: 1px solid var(--border);
+    }
+    .menu-item {
+      background: transparent;
+      border: 1px solid transparent;
+      color: #ffffff;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .menu-item.active { background: #b0303c; border-color: #d44a5c; }
+
+    .top-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+      padding: 14px 24px;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      padding: 14px;
+    }
+    .card h3 { color: var(--orange); font-size: 1em; margin-bottom: 6px; }
+    .price { font-size: 2.4em; font-weight: 700; color: var(--yellow); }
+    .change { font-weight: 700; color: var(--green); }
+    .stat-row { display: flex; justify-content: space-between; font-size: 0.9em; color: var(--gray); margin-top: 4px; }
+    .stat-row span:last-child { color: #ffffff; font-weight: 700; }
+    .sentiment-bar { height: 8px; background: #111; border: 1px solid var(--border); margin-top: 6px; }
+    .sentiment-fill { height: 100%; background: var(--green); width: 62%; }
+
+    .ticker-news {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 12px;
+      padding: 0 24px 12px 24px;
+    }
+    .ticker { background: var(--panel); border: 1px solid var(--border); padding: 10px; overflow: hidden; }
+    .ticker-track { display: inline-flex; gap: 22px; white-space: nowrap; animation: ticker 28s linear infinite; }
+    .ticker-label { color: var(--orange); font-weight: 700; }
+    @keyframes ticker { 0% { transform: translateX(40%); } 100% { transform: translateX(-120%); } }
+    .news { background: var(--panel); border: 1px solid var(--border); padding: 10px; }
+    .news h4 { color: var(--orange); margin-bottom: 8px; }
+    .news-item { font-size: 0.9em; margin-bottom: 6px; }
+
+    .tabs-wrapper { padding: 0 24px 12px 24px; }
+    .tab-panels { background: var(--panel); border: 1px solid var(--border); padding: 16px; }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+    .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+    .panel-tile { background: #0f0f0f; border: 1px solid var(--border); padding: 10px; }
+    .panel-tile h5 { color: var(--orange); margin-bottom: 6px; font-size: 0.95em; }
+    .list-row { display: flex; justify-content: space-between; font-size: 0.9em; margin-bottom: 4px; }
+
+    .middle-section {
+      display: grid;
+      grid-template-columns: 1.3fr 0.7fr;
+      gap: 14px;
+      padding: 14px 24px;
+    }
+    .chart-box { background: var(--panel); border: 1px solid var(--border); height: 380px; display: flex; align-items: center; justify-content: center; color: var(--gray); font-weight: 700; }
+    .transfers { background: var(--panel); border: 1px solid var(--border); padding: 12px; }
+    .transfer-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #161616; font-size: 0.92em; }
+    .transfer-row:last-child { border-bottom: none; }
+    .pos { color: var(--green); font-weight: 700; }
+    .neg { color: var(--red); font-weight: 700; }
+
+    @media (max-width: 960px) { .ticker-news { grid-template-columns: 1fr; } .middle-section { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-title">HAMSTER TERMINAL — BLOOMBERG</div>
+    <div class="header-time" id="clock">--:--:-- UTC</div>
+  </div>
+
+  <div class="menu-bar">
+    <button class="menu-item active" data-tab="inflection">Inflection</button>
+    <button class="menu-item" data-tab="kpi">KPI Correlation</button>
+    <button class="menu-item" data-tab="trend">Trend Analysis</button>
+    <button class="menu-item" data-tab="export">Export ▼</button>
+  </div>
+
+  <div class="top-grid">
+    <div class="card">
+      <h3>BTC/USDT (LIVE)</h3>
+        <div class="panel-tile">
+          <h5>💰 JESSE LIVERMORE</h5>
+          <div class="news-item">Tape reading, pivot points i psychologia tłumu.</div>
+          <img src="assets/livermore.png" alt="Jesse Livermore" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>📡 STREFY LIKWIDACJI + FUNDING</h5>
+          <div class="news-item">Progi funding, bias, klastery likwidacji.</div>
+          <img src="assets/liquidations.png" alt="Liquidation clusters" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>⚖️ IMBALANCE & DYW.</h5>
+          <div class="news-item">Dysproporcja bid/ask + momentum vs cena.</div>
+          <img src="assets/imbalance.png" alt="Imbalance" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>📊 ANALIZA PATTERNS</h5>
+          <div class="news-item">Krok po kroku: rozpoznanie → analiza → akcja.</div>
+          <img src="assets/patterns.png" alt="Patterns" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>🕯️ CANDLESTICK STRATEGIE</h5>
+          <div class="news-item">Wzorce świecowe, strategie i formacje wykresów.</div>
+          <img src="assets/candles.png" alt="Candlestick" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>📐 PIRAMIDOWANIE</h5>
+          <div class="news-item">Jak zwiększać pozycję w wygrywającym trendzie.</div>
+          <img src="assets/pyramiding.png" alt="Piramidowanie" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>📊 TIMEFRAME ZONE</h5>
+          <div class="news-item">Sygnały z 10 interwałów: 1m → 1Y.</div>
+          <img src="assets/timeframes.png" alt="Timeframes" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>📍 ENTRY ZONE CALCULATOR</h5>
+          <div class="news-item">Aggressive: $96,850 (SL $95,200 | TP $99,500)</div>
+          <div class="news-item">Moderate: $95,400 (SL $94,100 | TP $98,200)</div>
+          <img src="assets/entry.png" alt="Entry calculator" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>📊 AKTUALNE SYGNAŁY BUY/SELL</h5>
+          <div class="news-item">LONG: Demand Bounce @94,950 • SHORT: Supply Reject @96,150</div>
+          <div class="news-item">SCALP: Range Breakout @95,550 (TP 95,850)</div>
+          <img src="assets/signals.png" alt="Signals" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>🌊 AQUA TRADER • RSI</h5>
+          <div class="news-item">Kluczowe poziomy S/R oparte na historycznym RSI.</div>
+          <img src="assets/rsi.png" alt="RSI" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>📡 THE TAPE • LIVE INTEL</h5>
+          <div class="news-item">Order Book, Social Sentiment, Liquidations, Market Structure, Network.</div>
+          <img src="assets/tape.png" alt="Tape" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>🎯 MARKET REGIME</h5>
+          <div class="news-item">Acc/Markup/Distribution/Markdown • Trend: BULLISH.</div>
+          <img src="assets/regime.png" alt="Regime" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>⚡ LIQUIDITY GRAB ZONES</h5>
+          <div class="news-item">BUY: 94,800-95,100 • SELL: 96,000-96,300.</div>
+          <img src="assets/liquidity.png" alt="Liquidity" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>🧠 SMC • OB / FVG / BOS</h5>
+          <div class="news-item">Bull OB 94,800-95,100 • Bear OB 96,800-97,200</div>
+          <div class="news-item">Bull FVG 95,200-95,450 • Bear FVG 96,400-96,650 • BOS 95,800</div>
+          <img src="assets/smc.png" alt="SMC" style="width:100%; margin-top:6px; border:1px solid var(--border);">
+        </div>
+        <div class="panel-tile">
+          <h5>🎯 ENTRY CONFIRMATION</h5>
+          <div class="news-item">MACD > 0 • Volume >20% • brak dywergencji • RSI 50 + S/R.</div>
+          <div class="news-item">4/4 potwierdzeń = BUY signal.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>⚡ CVD ANALYSIS</h5>
+          <div class="news-item">Spot +42,850 BTC (BULL) • Futures -18,420 BTC (BEAR).</div>
+          <div class="news-item">Net +1,600 bullish ↗ • Divergence = scalp okazja.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>📦 ACCUMULATION ZONES</h5>
+          <div class="news-item">Strong 96,200-96,850 • Medium 95,500-96,200 • Weak 94,800-95,500.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>⚠️ DIVERGENCE CHECK</h5>
+          <div class="news-item">CVD rising ✓ | Price range ➡ | Status: BULLISH DIV.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>💥 LIQUIDATION ZONES</h5>
+          <div class="news-item">Shorts: $98,200+ • Longs: $93,800- • Watch: $97,500.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>⚡ MOMENTUM & SQUEEZE</h5>
+          <div class="news-item">Energy 77/100 • Short squeeze risk 72% @97,4k • Long squeeze 54% @93,8k.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>📜 HISTORYCZNE WYDARZENIA</h5>
+          <div class="news-item">15 JAN 2026 Luna 2.0 -89% • 03 JAN 2026 BlackRock Rally +$12k/72h • 28 DEC 2025 Flash Crash -18%/15m.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>📊 ORDER FLOW / DEPTH</h5>
+          <div class="news-item">BUY 95,501 (142 BTC) • SELL 95,498 (89 BTC) • Spread $0.50 • Liquidity 95/100.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>💰 DUŻE TRANSAKCJE</h5>
+          <div class="news-item">14:32:15 BUY 12.5 BTC @95,551 • 14:31:42 SELL 8.9 BTC @95,471 • 14:28:03 BUY 22.3 BTC @95,601.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>🤖 AI REKOMENDACJE</h5>
+          <div class="news-item">BUY: $94,200-$94,500 • Caution: $97,400 • Smart Money: akumulacja $94k-$95k.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>🎮 GAME BOY v2.0</h5>
+          <div class="news-item">Scalp @95.44k, TP 97.44 → 99.8k, R/R 1:2.3 • Checklist: Trend, RSI, Volume, S/R, Risk <2%.</div>
+        </div>
+        <div class="panel-tile">
+          <h5>🔢 KALKULATORY</h5>
+          <div class="news-item">Position size, SL/TP, Funding cost (do wypełnienia).</div>
+        </div>
+        <div class="panel-tile">
+          <h5>💎 WISDOM & HUMOR</h5>
+          <div class="news-item">“Focus on goals, not money.” — Bill Ackman</div>
+          <div class="news-item">“Crypto traders... kupili high i uczą jak kupować high.”</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="top-grid">
+    <div class="card">
+      <h3>BTC/USDT (LIVE)</h3>
+      <div class="price" id="btc-price">$95,501</div>
+      <div class="change">+2.45% (7d)</div>
+      <div class="stat-row"><span>High 24h</span><span>$97,861</span></div>
+      <div class="stat-row"><span>Low 24h</span><span>$94,650</span></div>
+      <div class="stat-row"><span>Vol 24h</span><span>$18.3B</span></div>
+      <div class="stat-row"><span>RSI (14)</span><span>41.8</span></div>
+    </div>
+    <div class="card">
+      <h3>ETH/USDT (LIVE)</h3>
+      <div class="price">$5,215</div>
+      <div class="change">+1.12% (7d)</div>
+      <div class="stat-row"><span>High 24h</span><span>$5,320</span></div>
+      <div class="stat-row"><span>Low 24h</span><span>$5,050</span></div>
+      <div class="stat-row"><span>Vol 24h</span><span>$9.4B</span></div>
+      <div class="stat-row"><span>RSI (14)</span><span>47.5</span></div>
+    </div>
+    <div class="card">
+      <h3>Sentyment & Start</h3>
+      <div class="stat-row"><span>Fear & Greed</span><span>62 (Greed)</span></div>
+      <div class="stat-row"><span>Funding</span><span>+0.0082%</span></div>
+      <div class="stat-row"><span>Open Interest</span><span>$12.4B</span></div>
+      <div class="stat-row"><span>Dominacja BTC</span><span>51.3%</span></div>
+      <div class="sentiment-bar"><div class="sentiment-fill"></div></div>
+    </div>
+    <div class="card">
+      <h3>AI Genius (komentarz)</h3>
+      <div class="news-item" style="margin-top:4px;">• Wykryto dywergencję RSI na H1, poziom alarmowy 95,850</div>
+      <div class="news-item">• FVG bull aktywny 95,165–95,337, preferencja buy the dip</div>
+      <div class="news-item">• OI +2.3%, funding dodatni → presja long</div>
+      <div class="news-item">• Scenariusz: retest 95,3k → target 96,4k</div>
+    </div>
+  </div>
+
+  <div class="ticker-news">
+    <div class="ticker">
+      <div class="ticker-track">
+        <span class="ticker-label">METALE</span> XAU/USD 2031.2 ▲0.45% • XAG/USD 25.3 ▼0.12%
+        <span class="ticker-label">INDEKSY</span> SPX 5123 ▲0.32% • INDU 39210 ▲0.18% • IXIC 17988 ▲0.55%
+        <span class="ticker-label">MEGA CAPS</span> AAPL 245.9 ▲1.2% • NVDA 1265.9 ▲1.8% • MSFT 412.3 ▲0.9%
+      </div>
+    </div>
+    <div class="news">
+      <h4>Live News</h4>
+      <div class="news-item">• BTC testuje 96k, byki bronią FVG na 95.2k</div>
+      <div class="news-item">• ETF spot BTC: napływy netto +$220M dzisiaj</div>
+      <div class="news-item">• Fed: rynek wycenia 2 cięcia stóp w tym roku</div>
+    </div>
+  </div>
+
+  <div class="tabs-wrapper">
+    <div class="tab-panels">
+      <div class="tab-panel active" id="inflection">
+        <div class="panel-grid" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:12px;">
+          <div class="panel-tile">
+            <h5>📚 METODA WYCKOFFA</h5>
+            <div class="news-item">Akumulacja, dystrybucja, intencje smart money.</div>
+            <div class="news-item">Phase: ACCUMULATION — Spring w toku.</div>
+            <div class="news-item">EQH: $97,583 • EQL: $94,800.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>💰 JESSE LIVERMORE</h5>
+            <div class="news-item">Tape reading, pivot points, psychologia tłumu.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📡 STREFY LIKWIDACJI + FUNDING</h5>
+            <div class="news-item">Progi funding, bias, klastery likwidacji.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>⚖️ IMBALANCE & DYW.</h5>
+            <div class="news-item">Dysproporcja bid/ask + momentum vs cena.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📊 ANALIZA PATTERNS</h5>
+            <div class="news-item">Rozpoznanie → analiza → akcja.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🕯️ CANDLESTICK STRATEGIE</h5>
+            <div class="news-item">Wzorce świecowe, formacje, taktyki.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📐 PIRAMIDOWANIE</h5>
+            <div class="news-item">Jak zwiększać pozycję w wygrywającym trendzie.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📊 TIMEFRAME ZONE</h5>
+            <div class="news-item">Multi-TF sygnały 1m → 1Y.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📍 ENTRY ZONE CALC</h5>
+            <div class="news-item">Aggressive: $96,850 (SL $95,200 / TP $99,500)</div>
+            <div class="news-item">Moderate: $95,400 (SL $94,100 / TP $98,200)</div>
+            <div class="news-item">Whale Activity: ACCUMULATING • Risk: $98,200+</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📊 AKTUALNE SYGNAŁY BUY/SELL</h5>
+            <div class="news-item">LONG: Demand Zone Bounce @94,950 (TP 95,8k / 96,5k)</div>
+            <div class="news-item">SHORT: Supply Rejection @96,150 (TP 95,4k / 94,8k)</div>
+            <div class="news-item">SCALP: Range Breakout @95,550 (TP 95,850)</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🌊 AQUA TRADER • RSI</h5>
+            <div class="news-item">Kluczowe S/R oparte na historycznym RSI.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📡 THE TAPE • LIVE INTEL</h5>
+            <div class="news-item">Order Book, Social Sentiment, Liquidations, Market Structure, Network.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🎯 MARKET REGIME</h5>
+            <div class="news-item">Wyckoff: Accumulation → Markup → Distribution → Markdown.</div>
+            <div class="news-item">Trend: BULLISH, Price: $95,501.</div>
+          </div>
+          <div class="panel-tile">
+            <h5>⚡ LIQUIDITY GRAB ZONES</h5>
+            <div class="news-item">BUY zone: $94,800-$95,100 (SL $94,500 / TP $96,300+)</div>
+            <div class="news-item">SELL zone: $96,000-$96,300 (SL $96,600 / TP $94,800-)</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🧠 SMC • ORDER BLOCKS / FVG</h5>
+            <div class="news-item">Bull OB: 94,800-95,100 • Bear OB: 96,800-97,200</div>
+            <div class="news-item">Bull FVG: 95,200-95,450 • Bear FVG: 96,400-96,650</div>
+            <div class="news-item">BOS: Bullish @ $95,800</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🎯 ENTRY CONFIRMATION</h5>
+            <div class="news-item">MACD > 0 • Volume >20% • brak dywergencji • RSI 50 + S/R</div>
+            <div class="news-item">4/4 potwierdzeń = BUY signal</div>
+          </div>
+          <div class="panel-tile">
+            <h5>⚡ CVD ANALYSIS</h5>
+            <div class="news-item">Spot: +42,850 BTC (BULL) • Futures: -18,420 BTC (BEAR)</div>
+            <div class="news-item">Net: +1,600 bullish ↗ • Divergence = scalp okazja</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📦 ACCUMULATION ZONES</h5>
+            <div class="news-item">Strong: 96,200-96,850 • Medium: 95,500-96,200 • Weak: 94,800-95,500</div>
+          </div>
+          <div class="panel-tile">
+            <h5>⚠️ DIVERGENCE CHECK</h5>
+            <div class="news-item">CVD rising ✓ | Price range ➡ | Status: BULLISH DIV</div>
+          </div>
+          <div class="panel-tile">
+            <h5>💥 LIQUIDATION ZONES</h5>
+            <div class="news-item">Shorts: $98,200+ (HOT) • Longs: $93,800-</div>
+            <div class="news-item">Level watch: $97,500 critical</div>
+          </div>
+          <div class="panel-tile">
+            <h5>⚡ MOMENTUM & SQUEEZE</h5>
+            <div class="news-item">Energy 77/100 • Distance to trigger $548 • Squeeze near.</div>
+            <div class="news-item">Short Squeeze risk 72% @97,4k | Long Squeeze risk 54% @93,8k</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📜 HISTORYCZNE WYDARZENIA</h5>
+            <div class="news-item">15 JAN 2026 Luna 2.0 Collapse -89%</div>
+            <div class="news-item">03 JAN 2026 BlackRock Rally +$12k/72h</div>
+            <div class="news-item">28 DEC 2025 Flash Crash -18%/15m</div>
+          </div>
+          <div class="panel-tile">
+            <h5>📊 ORDER FLOW / DEPTH</h5>
+            <div class="news-item">BUY 95,501 (142 BTC) • SELL 95,498 (89 BTC)</div>
+            <div class="news-item">Bid wall: 5,240 BTC @95,100 • Ask wall: 3,890 BTC @96,800</div>
+            <div class="news-item">Spread $0.50 • Liquidity Score 95/100</div>
+          </div>
+          <div class="panel-tile">
+            <h5>💰 DUŻE TRANSAKCJE</h5>
+            <div class="news-item">14:32:15 BUY 12.5 BTC @95,551</div>
+            <div class="news-item">14:31:42 SELL 8.9 BTC @95,471</div>
+            <div class="news-item">14:28:03 BUY 22.3 BTC @95,601</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🤖 AI REKOMENDACJE</h5>
+            <div class="news-item">BUY (Strong): $94,200-$94,500</div>
+            <div class="news-item">Caution: Resistance $97,400 – czekaj na potwierdzenie</div>
+            <div class="news-item">Smart Money: akumulacja $94k-$95k, cel $98,200</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🎮 GAME BOY v2.0</h5>
+            <div class="news-item">Porada: Scalp @95.44k, TP 97.44 → 99.8k, R/R 1:2.3</div>
+            <div class="news-item">Checklist: Trend, RSI, Volume, S/R, Risk <2%</div>
+          </div>
+          <div class="panel-tile">
+            <h5>🔢 KALKULATORY</h5>
+            <div class="news-item">Position size, SL/TP, Funding cost (placeholders do wypełnienia)</div>
+          </div>
+          <div class="panel-tile">
+            <h5>💎 WISDOM & HUMOR</h5>
+            <div class="news-item">“Focus on goals, not money.” — Bill Ackman</div>
+            <div class="news-item">Humor: “Crypto traders... kupili high i uczą jak kupować high.”</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="kpi">
+        <div class="panel-grid">
+          <div class="panel-tile">
+            <h5>Fear & Greed</h5>
+            <div class="list-row"><span>Obecnie</span><span>62 (Greed)</span></div>
+            <div class="list-row"><span>7d</span><span>+4 pkt</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>Funding Rate</h5>
+            <div class="list-row"><span>Perp</span><span>+0.0082%</span></div>
+            <div class="list-row"><span>Nast.</span><span>8h</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>Open Interest</h5>
+            <div class="list-row"><span>Łącznie</span><span>$12.4B</span></div>
+            <div class="list-row"><span>Δ 24h</span><span style="color: var(--green);">+2.3%</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>Stablecoin Flow</h5>
+            <div class="list-row"><span>Netto</span><span style="color: var(--green);">+$380M</span></div>
+            <div class="list-row"><span>Whales</span><span>65%</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>BTC Dominacja</h5>
+            <div class="list-row"><span>Poziom</span><span>51.3%</span></div>
+            <div class="list-row"><span>Δ 7d</span><span>+0.6pp</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="trend">
+        <div class="panel-grid">
+          <div class="panel-tile">
+            <h5>Wsparcie / Opór</h5>
+            <div class="list-row"><span>Opór</span><span>$97,400</span></div>
+            <div class="list-row"><span>Wsparcie</span><span>$94,800</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>FVG</h5>
+            <div class="list-row"><span>Bull</span><span>$95,165 - $95,337</span></div>
+            <div class="list-row"><span>Bear</span><span>$95,882 - $96,611</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>RSI / MACD</h5>
+            <div class="list-row"><span>RSI (14)</span><span>41.8</span></div>
+            <div class="list-row"><span>MACD</span><span>+106.7</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>SMT / Dywergencje</h5>
+            <div class="list-row"><span>ETH vs BTC</span><span style="color: var(--yellow);">Neutral</span></div>
+            <div class="list-row"><span>NDQ vs BTC</span><span style="color: var(--green);">Bullish</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="export">
+        <div class="panel-grid">
+          <div class="panel-tile">
+            <h5>Ostatnie transakcje</h5>
+            <div class="list-row"><span>95,480</span><span class="pos">+210 BTC</span></div>
+            <div class="list-row"><span>95,420</span><span class="neg">-120 BTC</span></div>
+            <div class="list-row"><span>95,360</span><span class="pos">+80 BTC</span></div>
+          </div>
+          <div class="panel-tile">
+            <h5>Eksport</h5>
+            <div class="list-row"><span>CSV</span><span>gotowy</span></div>
+            <div class="list-row"><span>Webhook</span><span>ON</span></div>
+            <button style="margin-top:8px; padding:8px 12px; background: var(--orange); border: 1px solid var(--border); color:#000; font-weight:700; cursor:pointer; width:100%;">Pobierz CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="middle-section">
+    <div class="chart-box">Wykres (tradingview / canvas)</div>
+    <div class="transfers">
+      <div class="list-row" style="color: var(--orange); font-weight:700; margin-bottom:6px;">Duże transfery</div>
+      <div class="transfer-row"><span>↗ BUY 1,250 BTC</span><span class="pos">$95,600</span></div>
+      <div class="transfer-row"><span>↘ SELL 890 BTC</span><span class="neg">$95,420</span></div>
+      <div class="transfer-row"><span>↗ BUY 2,100 BTC</span><span class="pos">$95,750</span></div>
+      <div class="transfer-row"><span>🧊 ICEBERG 450/3,200</span><span style="color: var(--cyan);">$95,300</span></div>
+      <div class="transfer-row"><span>🧊 ICEBERG 180/1,800</span><span style="color: var(--yellow);">$95,180</span></div>
+    </div>
+  </div>
+
+  <script>
+    // Clock updater
+    const clockEl = document.getElementById('clock');
+    setInterval(() => {
+      const now = new Date();
+      const utc = now.toISOString().split('T')[1].slice(0,8);
+      clockEl.textContent = `${utc} UTC`;
+    }, 1000);
+
+    // Tabs logic
+    const tabs = document.querySelectorAll('.menu-item');
+    const panels = document.querySelectorAll('.tab-panel');
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        tabs.forEach(b => b.classList.remove('active'));
+        panels.forEach(p => p.classList.remove('active'));
+        btn.classList.add('active');
+        const target = document.getElementById(btn.dataset.tab);
+        if (target) target.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

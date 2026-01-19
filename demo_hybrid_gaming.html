@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hamster Terminal - HYBRID GAMING Edition</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700;900&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #000000;
+      --bg-panel: #0a0a0a;
+      --cyan: #00d4ff;
+      --yellow: #ffff00;
+      --green: #00ff41;
+      --red: #ff0033;
+      --orange: #ffaa00;
+      --magenta: #ff00ff;
+      --purple: #9b59b6;
+    }
+    
+    * { margin:0; padding:0; box-sizing:border-box; }
+    
+    body {
+      font-family:'Roboto Mono', monospace;
+      background: var(--bg);
+      color: #ffffff;
+      overflow-x: hidden;
+    }
+    
+    /* ===== ANIMATIONS ===== */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 10px currentColor; }
+      50% { box-shadow: 0 0 25px currentColor; }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+    
+    @keyframes tickerScroll {
+      0% { transform: translateX(40%); }
+      100% { transform: translateX(-120%); }
+    }
+    
+    /* ===== HEADER - Gaming Style ===== */
+    .header {
+      background: linear-gradient(135deg, #1a1a1a 0%, var(--bg) 100%);
+      padding: 20px 30px;
+      border-bottom: 3px solid var(--cyan);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 4px 20px rgba(0,212,255,0.3);
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+    }
+    
+    .hamster-icon {
+      font-size: 2.5em;
+      animation: spin 4s linear infinite;
+      filter: drop-shadow(0 0 15px rgba(255,200,0,0.8));
+    }
+    
+    .logo-text {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 1.5em;
+      color: var(--yellow);
+      text-shadow: 
+        3px 3px 0 var(--red),
+        6px 6px 0 var(--cyan),
+        0 0 20px var(--yellow);
+      letter-spacing: 2px;
+    }
+    
+    .clock-zone {
+      text-align: right;
+    }
+    
+    .clock {
+      font-size: 1.6em;
+      font-weight: 900;
+      color: var(--cyan);
+      letter-spacing: 2px;
+      text-shadow: 0 0 15px var(--cyan);
+    }
+    
+    .zone {
+      color: var(--orange);
+      font-size: 0.9em;
+      font-weight: 700;
+      margin-top: 4px;
+    }
+    
+    /* ===== ACTION BUTTONS - Sharp with Glow ===== */
+    .action-bar {
+      padding: 15px 30px;
+      background: var(--bg-panel);
+      border-bottom: 2px solid #222;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    
+    .btn {
+      border: 3px solid;
+      background: transparent;
+      padding: 12px 24px;
+      font-weight: 900;
+      letter-spacing: 2px;
+      cursor: pointer;
+      font-size: 1em;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+      position: relative;
+      animation: glow 2s infinite;
+    }
+    
+    .btn-buy {
+      border-color: var(--green);
+      color: var(--green);
+    }
+    .btn-buy:hover {
+      background: var(--green);
+      color: #000;
+      transform: scale(1.05);
+    }
+    
+    .btn-sell {
+      border-color: var(--red);
+      color: var(--red);
+    }
+    .btn-sell:hover {
+      background: var(--red);
+      color: #fff;
+      transform: scale(1.05);
+    }
+    
+    .btn-hold {
+      border-color: var(--orange);
+      color: var(--orange);
+    }
+    .btn-hold:hover {
+      background: var(--orange);
+      color: #000;
+      transform: scale(1.05);
+    }
+    
+    .btc-coin {
+      margin-left: 20px;
+      font-size: 3em;
+      color: #ffd700;
+      animation: float 2s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255,215,0,0.9));
+      cursor: pointer;
+      text-shadow: 2px 2px 0 #ff9900;
+    }
+    
+    .theme-section {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .theme-label {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 0.7em;
+      color: var(--orange);
+      letter-spacing: 1px;
+      text-shadow: 2px 2px 0 #5a2b00;
+    }
+    
+    .theme-btn {
+      background: transparent;
+      border: 2px solid var(--cyan);
+      color: var(--cyan);
+      padding: 6px 12px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 1em;
+    }
+    .theme-btn:hover {
+      background: var(--cyan);
+      color: #000;
+    }
+    
+    /* ===== TICKER - Sharp with Animation ===== */
+    .ticker-wrapper {
+      margin: 20px 30px;
+      padding: 15px;
+      border: 3px solid var(--cyan);
+      background: var(--bg);
+      overflow: hidden;
+      box-shadow: 
+        0 0 20px rgba(0,212,255,0.4),
+        inset 0 0 15px rgba(0,212,255,0.1);
+    }
+    
+    .ticker-scroll {
+      display: inline-flex;
+      gap: 30px;
+      white-space: nowrap;
+      animation: tickerScroll 35s linear infinite;
+      font-size: 1.3em;
+      font-weight: 700;
+    }
+    
+    .ticker-group {
+      display: inline-flex;
+      gap: 25px;
+      align-items: center;
+    }
+    
+    .ticker-label {
+      color: var(--cyan);
+      font-weight: 900;
+      padding: 6px 14px;
+      background: rgba(0,212,255,0.15);
+      border-left: 4px solid var(--cyan);
+      box-shadow: 0 0 12px rgba(0,212,255,0.3);
+      position: relative;
+    }
+    
+    .ticker-label::before {
+      content: '|';
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--cyan);
+      font-weight: 900;
+    }
+    
+    .ticker-item {
+      color: var(--yellow);
+      text-shadow: 0 0 8px var(--yellow);
+      animation: pulse 2s infinite;
+    }
+    
+    /* ===== BTC MAIN PANEL - Sharp with Color Cycle ===== */
+    .btc-panel {
+      margin: 20px 30px;
+      padding: 30px;
+      background: linear-gradient(135deg, #0f0f1a 0%, var(--bg) 100%);
+      border: 3px solid var(--magenta);
+      animation: borderCycle 8s linear infinite;
+      box-shadow: 0 0 30px rgba(255,0,255,0.4);
+    }
+    
+    @keyframes borderCycle {
+      0% { border-color: var(--cyan); box-shadow: 0 0 30px rgba(0,212,255,0.4); }
+      25% { border-color: var(--magenta); box-shadow: 0 0 30px rgba(255,0,255,0.4); }
+      50% { border-color: var(--yellow); box-shadow: 0 0 30px rgba(255,255,0,0.4); }
+      75% { border-color: var(--green); box-shadow: 0 0 30px rgba(0,255,65,0.4); }
+      100% { border-color: var(--cyan); box-shadow: 0 0 30px rgba(0,212,255,0.4); }
+    }
+    
+    .price-layout {
+      display: grid;
+      grid-template-columns: 0.5fr 1.5fr;
+      gap: 30px;
+    }
+    
+    .price-main {
+      border-right: 2px solid #333;
+      padding-right: 30px;
+    }
+    
+    .price-label {
+      color: var(--cyan);
+      font-weight: 700;
+      font-size: 1em;
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+    
+    .price-value {
+      font-size: 4em;
+      font-weight: 900;
+      color: var(--yellow);
+      text-shadow: 0 0 30px var(--yellow);
+      line-height: 1;
+      animation: pulse 3s infinite;
+    }
+    
+    .price-change {
+      font-size: 1.8em;
+      color: var(--green);
+      font-weight: 900;
+      margin-top: 10px;
+      text-shadow: 0 0 15px var(--green);
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    
+    .stat-box {
+      padding: 12px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid #333;
+      transition: all 0.2s ease;
+    }
+    
+    .stat-box:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 15px rgba(0,212,255,0.3);
+      transform: translateY(-3px);
+    }
+    
+    .stat-label {
+      color: #999;
+      font-size: 0.8em;
+      margin-bottom: 6px;
+    }
+    
+    .stat-value {
+      font-size: 1.4em;
+      font-weight: 900;
+    }
+    
+    /* ===== METRICS CARDS ===== */
+    .metrics {
+      margin: 20px 30px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+    
+    .card {
+      background: linear-gradient(135deg, #1a1a1a 0%, var(--bg) 100%);
+      border: 2px solid;
+      padding: 20px;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: currentColor;
+    }
+    
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0,212,255,0.3);
+    }
+    
+    .card-1 { border-color: var(--green); }
+    .card-2 { border-color: var(--orange); }
+    .card-3 { border-color: var(--magenta); }
+    .card-4 { border-color: var(--cyan); }
+    
+    .card-label {
+      font-weight: 700;
+      font-size: 0.9em;
+      margin-bottom: 12px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    
+    .card-value {
+      font-size: 2.5em;
+      font-weight: 900;
+      color: var(--yellow);
+      line-height: 1;
+      text-shadow: 0 0 15px var(--yellow);
+    }
+    
+    .card-sub {
+      color: #999;
+      font-size: 0.85em;
+      margin-top: 8px;
+      font-weight: 600;
+    }
+    
+    /* ===== FOOTER - Gaming Style ===== */
+    .footer {
+      margin-top: 40px;
+      padding: 30px;
+      background: linear-gradient(180deg, var(--bg) 0%, #1a0000 100%);
+      border-top: 3px solid var(--red);
+      text-align: center;
+    }
+    
+    .game-over {
+      font-family: 'Press Start 2P', monospace;
+      font-size: 2.5em;
+      color: var(--red);
+      text-shadow: 4px 4px 0 rgba(0,0,0,0.8), 0 0 30px var(--red);
+      letter-spacing: 6px;
+      margin-bottom: 20px;
+      animation: pulse 1.5s infinite;
+    }
+    
+    .insert-coin {
+      font-size: 1.3em;
+      color: var(--orange);
+      font-weight: 700;
+      text-shadow: 2px 2px 0 rgba(0,0,0,0.8);
+      margin-bottom: 15px;
+      animation: float 2s ease-in-out infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="logo">
+      <div class="hamster-icon">🐹</div>
+      <div class="logo-text">HAMSTER<br>TERMINAL</div>
+    </div>
+    <div class="clock-zone">
+      <div class="clock" id="clock">14:32:15</div>
+      <div class="zone">LONDON • UTC+0</div>
+    </div>
+  </div>
+
+  <!-- ACTION BAR -->
+  <div class="action-bar">
+    <button class="btn btn-buy">▶ BUY</button>
+    <button class="btn btn-sell">⏹ SELL</button>
+    <button class="btn btn-hold">◄ HOLD</button>
+    <div class="btc-coin">₿</div>
+    <div class="theme-section">
+      <span class="theme-label">HYBRID</span>
+      <button class="theme-btn">◄</button>
+      <button class="theme-btn">►</button>
+    </div>
+  </div>
+
+  <!-- TICKER -->
+  <div class="ticker-wrapper">
+    <div class="ticker-scroll">
+      <div class="ticker-group">
+        <span class="ticker-label">METALS</span>
+        <span class="ticker-item">XAU 2031.2 ▲0.45%</span>
+        <span class="ticker-item">XAG 25.3 ▼0.12%</span>
+      </div>
+      <div class="ticker-group">
+        <span class="ticker-label">INDICES</span>
+        <span class="ticker-item">SPX 5123 ▲0.32%</span>
+        <span class="ticker-item">DJI 39210 ▲0.18%</span>
+        <span class="ticker-item">NDX 17988 ▲0.55%</span>
+      </div>
+      <div class="ticker-group">
+        <span class="ticker-label">MEGA CAPS</span>
+        <span class="ticker-item">AAPL 245.9 ▲1.2%</span>
+        <span class="ticker-item">NVDA 1265.9 ▲1.8%</span>
+        <span class="ticker-item">TSLA 302.4 ▼0.6%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- BTC PANEL -->
+  <div class="btc-panel">
+    <div class="price-layout">
+      <div class="price-main">
+        <div class="price-label">₿ BTC/USDT</div>
+        <div class="price-value">$95,501</div>
+        <div class="price-change">+2.45%</div>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-box">
+          <div class="stat-label">24h High</div>
+          <div class="stat-value" style="color:#00ff41;">$97,861</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">24h Low</div>
+          <div class="stat-value" style="color:#00d4ff;">$94,650</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Volume</div>
+          <div class="stat-value" style="color:#9b59b6;">$18.28B</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">RSI (14)</div>
+          <div class="stat-value" style="color:#ffaa00;">41.8</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Resistance</div>
+          <div class="stat-value" style="color:#ff4444;">$98,500</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Support</div>
+          <div class="stat-value" style="color:#00ff41;">$93,200</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">OI</div>
+          <div class="stat-value" style="color:#00d4ff;">$12.4B</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Funding</div>
+          <div class="stat-value" style="color:#ffaa00;">0.010%</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- METRICS -->
+  <div class="metrics">
+    <div class="card card-1">
+      <div class="card-label" style="color:#00ff41;">Fear & Greed</div>
+      <div class="card-value">62</div>
+      <div class="card-sub" style="color:#00ff41;">GREED</div>
+    </div>
+    <div class="card card-2">
+      <div class="card-label" style="color:#ffaa00;">Funding Rate</div>
+      <div class="card-value">0.010%</div>
+      <div class="card-sub">Binance Perps</div>
+    </div>
+    <div class="card card-3">
+      <div class="card-label" style="color:#ff00ff;">Open Interest</div>
+      <div class="card-value">$18.2B</div>
+      <div class="card-sub">Futures Total</div>
+    </div>
+    <div class="card card-4">
+      <div class="card-label" style="color:#00d4ff;">Dominance</div>
+      <div class="card-value">52.3%</div>
+      <div class="card-sub">BTC Market</div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <div class="game-over">⚠️ GAME OVER ⚠️</div>
+    <div class="insert-coin">💰 INSERT COIN TO CONTINUE 💰</div>
+    <div style="color:#ccc; font-size:0.9em; line-height:1.8;">
+      <div>🎮 Trading is a game. Play smart, manage risk.</div>
+      <div style="color:#ffaa00;">🏆 No risk no story • No guts no glory</div>
+    </div>
+  </div>
+
+  <script>
+    setInterval(() => {
+      const now = new Date();
+      document.getElementById('clock').textContent = now.toLocaleTimeString('en-GB');
+    }, 1000);
+  </script>
+</body>
+</html>

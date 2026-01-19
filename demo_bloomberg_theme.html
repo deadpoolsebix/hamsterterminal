@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Bloomberg Demo</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Roboto Mono', monospace;
+      background: #000;
+      color: #ff6600;
+    }
+    header {
+      padding: 16px 24px;
+      border-bottom: 2px solid #ff6600;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .btn-row { padding: 16px 24px; display: flex; gap: 12px; background: #000; }
+    button {
+      border: 2px solid #ff6600;
+      background: #000;
+      color: #ff6600;
+      padding: 10px 16px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .ticker {
+      margin: 12px 24px;
+      padding: 10px 14px;
+      border: 1px solid #ff6600;
+      overflow: hidden;
+      position: relative;
+      background: #000;
+    }
+    .ticker-line {
+      display: inline-flex;
+      gap: 20px;
+      white-space: nowrap;
+      animation: scroll 20s linear infinite;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(40%); }
+      100% { transform: translateX(-120%); }
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 12px;
+      padding: 12px 24px 32px;
+    }
+    .card {
+      border: 1px solid #ff6600;
+      padding: 12px;
+      background: #000;
+      box-shadow: 0 0 12px rgba(255,102,0,0.25);
+    }
+    .label { color: #00d4ff; font-weight: 700; letter-spacing: 1px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div style="font-size: 1.2em; font-weight: 900;">HAMSTER TERMINAL • BLOOMBERG</div>
+    <div>Pomarańczowy (#ff6600) na czarnym</div>
+  </header>
+
+  <div class="btn-row">
+    <button>Kup</button>
+    <button>Sprzedaj</button>
+    <button>Neutral</button>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker-line">METALE: XAU/USD 2031.2 ▲0.45% | XAG/USD 25.3 ▼0.12% | SPX 5123 ▲0.32% | INDU 39210 ▲0.18% | NVDA 1265.9 ▲1.8%</div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="label">BTC/USDT</div>
+      <div style="font-size: 1.8em; font-weight: 900; color: #ffff00;">$95,501</div>
+      <div style="color: #00ff41; font-weight: 800;">+2.45%</div>
+    </div>
+    <div class="card">
+      <div class="label">Funding Rate</div>
+      <div style="font-size: 1.4em; font-weight: 900;">0.010%</div>
+      <div style="color: #ffaa00;">Binance • Perps</div>
+    </div>
+    <div class="card">
+      <div class="label">Fear & Greed</div>
+      <div style="font-size: 1.4em; font-weight: 900;">62 / Greed</div>
+      <div style="color: #00d4ff;">Źródło: mock</div>
+    </div>
+  </div>
+</body>
+</html>

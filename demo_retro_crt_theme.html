@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <title>Retro CRT Demo</title>
+  <style>
+    :root { --bg:#000000; --fg:#00ff41; --grid:#003300; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family:'Roboto Mono', monospace; background:var(--bg); color:var(--fg); }
+    header { padding:16px 22px; border-bottom:2px solid var(--fg); display:flex; justify-content:space-between; align-items:center; letter-spacing:1px; text-shadow:0 0 6px var(--fg); }
+    .btn-row { padding:14px 22px; display:flex; gap:10px; background:rgba(0,0,0,0.9); border-bottom:1px solid var(--grid); box-shadow:0 2px 10px rgba(0,0,0,0.6); }
+    button { border:1px solid var(--fg); background:#001900; color:var(--fg); padding:9px 14px; font-weight:800; letter-spacing:1px; cursor:pointer; box-shadow:0 0 12px rgba(0,255,65,0.35); }
+    .ticker { margin:10px 22px; padding:10px 12px; border:1px solid var(--fg); background:#000; overflow:hidden; position:relative; box-shadow: inset 0 0 12px rgba(0,255,65,0.25); }
+    .ticker-line { display:inline-flex; gap:20px; white-space:nowrap; animation: scroll 24s linear infinite; }
+    @keyframes scroll { 0% { transform: translateX(38%); } 100% { transform: translateX(-140%); } }
+    .grid { background: repeating-linear-gradient( to right, transparent 0 39px, #001800 40px ), repeating-linear-gradient( to bottom, transparent 0 39px, #001800 40px ); }
+    .section { margin:12px 22px; padding:12px; border:1px solid var(--fg); box-shadow:0 0 12px rgba(0,255,65,0.25); background:#000; }
+    .cards { display:grid; grid-template-columns:repeat(auto-fit, minmax(230px,1fr)); gap:12px; }
+    .card { border:1px solid var(--fg); padding:12px; background:#000; box-shadow:0 0 10px rgba(0,255,65,0.25); }
+    .label { color:#66ff66; font-weight:700; letter-spacing:1px; }
+    table { width:100%; border-collapse:collapse; margin-top:8px; color:var(--fg); }
+    th, td { border:1px solid var(--fg); padding:6px; font-size:0.9em; }
+    th { background:#001900; }
+    .chart-box { border:1px dashed var(--fg); height:140px; display:flex; align-items:center; justify-content:center; opacity:0.85; margin-top:8px; }
+  </style>
+</head>
+<body class="grid">
+  <header>
+    <div>HAMSTER TERMINAL • RETRO CRT</div>
+    <div>Zielony fosfor #00ff41</div>
+  </header>
+
+  <div class="btn-row">
+    <button>BUY</button>
+    <button>SELL</button>
+    <button>NOPE</button>
+    <span style="margin-left:14px; font-weight:700;">TEMA: RETRO CRT</span>
+  </div>
+
+  <div class="ticker">
+    <div class="ticker-line">INDEKSY: SPX 5123 ▲0.32% | INDU 39210 ▲0.18% | IXIC 17988 ▲0.55% | METALE: XAU 2031 ▲0.45% | BTC 95501 ▲2.4%</div>
+  </div>
+
+  <div class="section">
+    <div class="cards">
+      <div class="card">
+        <div class="label">BTC/USDT</div>
+        <div style="font-size:1.6em; font-weight:900; color:#aaffaa;">$95,501</div>
+        <div style="color:#00ff41; font-weight:800;">+2.45%</div>
+        <div class="chart-box">Mini chart</div>
+      </div>
+      <div class="card">
+        <div class="label">Funding Rate</div>
+        <div style="font-size:1.3em; font-weight:900;">0.010%</div>
+        <div style="color:#66ff66;">Binance Perps</div>
+        <div class="chart-box">FR sparkline</div>
+      </div>
+      <div class="card">
+        <div class="label">Fear & Greed</div>
+        <div style="font-size:1.3em; font-weight:900;">62 / Greed</div>
+        <div style="color:#00d4ff;">Mock source</div>
+        <div class="chart-box">Gauge</div>
+      </div>
+      <div class="card">
+        <div class="label">Open Interest</div>
+        <div style="font-size:1.3em; font-weight:900;">$18.2B</div>
+        <div style="color:#ffaa00;">Futures</div>
+        <div class="chart-box">OI bar</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="label" style="margin-bottom:6px;">Top Movers</div>
+    <table>
+      <thead><tr><th>Symbol</th><th>Last</th><th>Chg%</th></tr></thead>
+      <tbody>
+        <tr><td>AAPL</td><td>245.9</td><td style="color:#00ff41;">+1.2%</td></tr>
+        <tr><td>NVDA</td><td>1265.9</td><td style="color:#00ff41;">+1.8%</td></tr>
+        <tr><td>TSLA</td><td>302.4</td><td style="color:#ff5544;">-0.6%</td></tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>
