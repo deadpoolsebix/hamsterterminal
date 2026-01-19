@@ -12,13 +12,14 @@
       --orange: #ff8c00;
       --burgundy: #800020;
       --black: #000000;
-      --panel: #0a0a0a;
-      --border: #1a1a1a;
-      --green: #00ff41;
-      --red: #ff0033;
-      --yellow: #ffff00;
+      --panel: #0d0d0d;
+      --border: #222222;
+      --green: #4ade80;
+      --red: #ff4444;
+      --yellow: #fbbf24;
       --cyan: #00d4ff;
-      --gray: #bdbdbd;
+      --gray: #999999;
+      --light-gray: #e5e5e5;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -29,15 +30,12 @@
       padding-bottom: 40px;
     }
     
-    /* WALL STREET HEADER IMAGE */
+    /* PROFESSIONAL BLOOMBERG HEADER */
     .header-image {
       width: 100%;
-      height: 140px;
-      background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 50%, #1a1a1a 100%);
-      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:%23ff8c00;stop-opacity:0.15" /><stop offset="100%" style="stop-color:%23000;stop-opacity:0.3" /></linearGradient></defs><rect width="1200" height="140" fill="%231a1a1a"/><path d="M 50 100 Q 100 50 150 80 T 250 60 T 350 90 T 450 40 T 550 85 T 650 50 T 750 95 T 850 60 T 950 80 T 1050 40 T 1150 85" stroke="%23ff8c00" stroke-width="3" fill="none" opacity="0.4"/><circle cx="100" cy="60" r="8" fill="%2300ff41" opacity="0.6"/><circle cx="400" cy="75" r="6" fill="%2300ff41" opacity="0.5"/><circle cx="750" cy="45" r="7" fill="%2300ff41" opacity="0.6"/><circle cx="1050" cy="80" r="5" fill="%2300ff41" opacity="0.4"/><text x="50%" y="30" font-family="Roboto Mono" font-size="32" font-weight="700" fill="%23ff8c00" text-anchor="middle" opacity="0.8">🐹 HAMSTER WALL STREET TERMINAL</text><text x="50%" y="65" font-family="Roboto Mono" font-size="14" fill="%23aaa" text-anchor="middle" opacity="0.6">REAL-TIME CRYPTO TRADING INTELLIGENCE</text></svg>');
-      background-size: cover;
-      background-position: center;
-      border-bottom: 2px solid var(--orange);
+      height: 100px;
+      background: linear-gradient(to right, #0a0a0a 0%, #1a1a1a 50%, #0a0a0a 100%);
+      border-bottom: 1px solid #ff8c00;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -46,19 +44,24 @@
     }
     
     .header-image::before {
-      content: '📈';
+      content: '';
       position: absolute;
-      font-size: 80px;
-      left: 30px;
-      opacity: 0.1;
+      width: 100%;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, #ff8c00, transparent);
+      top: 0;
+      opacity: 0.5;
     }
     
     .header-image::after {
-      content: '🐂';
-      position: absolute;
-      font-size: 80px;
-      right: 30px;
-      opacity: 0.1;
+      content: 'HAMSTER TRADING TERMINAL • REAL-TIME MARKET INTELLIGENCE';
+      font-family: 'Roboto Mono', monospace;
+      font-size: 1.8em;
+      font-weight: 700;
+      color: #ff8c00;
+      letter-spacing: 2px;
+      opacity: 0.85;
+      text-shadow: 0 0 20px rgba(255, 140, 0, 0.3);
     }
 
     /* THEME SWITCHER */
@@ -321,7 +324,8 @@
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
-      padding: 10px 12px;
+      padding: 12px 14px;
+      border-radius: 4px;
     }
     .card:first-child {
       grid-column: span 1;
@@ -411,7 +415,7 @@
     .card-value {
       font-size: 1.8em;
       font-weight: 700;
-      color: #00ff41;
+      color: #4ade80;
       margin-top: 4px;
     }
     .card:first-child .card-value {
@@ -453,10 +457,71 @@
     .genius-ai {
       background: var(--panel);
       border: 1px solid var(--border);
-      border-left: 2px solid #1a1a1a;
-      padding: 14px;
-      margin: 0 24px 14px 24px;
+      border-left: 2px solid #ff8c00;
+      padding: 16px;
+      margin: 14px 0;
+      border-radius: 4px;
     }
+    
+    .genius-ai-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+    
+    .genius-ai-header h3 {
+      color: #ff8c00;
+      font-size: 1em;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    
+    .genius-ai-status {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      background: #4ade80;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.6; }
+    }
+    
+    .genius-ai-content {
+      color: #e5e5e5;
+      font-size: 0.95em;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    
+    .genius-ai-warning {
+      background: rgba(255, 68, 68, 0.1);
+      border-left: 3px solid #ff4444;
+      padding: 10px 12px;
+      border-radius: 3px;
+      color: #ff6666;
+      font-weight: 600;
+      margin: 8px 0;
+      font-size: 0.9em;
+    }
+    
+    .genius-ai-insight {
+      background: rgba(74, 222, 128, 0.1);
+      border-left: 3px solid #4ade80;
+      padding: 10px 12px;
+      border-radius: 3px;
+      color: #66ff99;
+      font-weight: 600;
+      margin: 8px 0;
+      font-size: 0.9em;
+    }
+    
     .genius-inline { margin: 14px 0 0 0; }
     .genius-ai-grid {
       display: grid;
@@ -464,21 +529,23 @@
       gap: 12px;
     }
     .genius-card {
-      background: #0d0d0d;
-      padding: 12px;
-      border-left: 2px solid #333;
-      border-radius: 3px;
+      background: #1a1a1a;
+      padding: 14px;
+      border: 1px solid #333;
+      border-radius: 4px;
+      border-left: 2px solid #ff8c00;
     }
     .genius-card-title {
-      color: #ffffff;
+      color: #ff8c00;
       font-weight: 700;
-      font-size: 0.85em;
-      margin-bottom: 6px;
+      font-size: 0.8em;
+      margin-bottom: 8px;
       text-transform: uppercase;
+      letter-spacing: 0.5px;
     }
     .genius-card-content {
-      color: var(--gray);
-      font-size: 0.85em;
+      color: #e5e5e5;
+      font-size: 0.9em;
       line-height: 1.5;
     }
 
@@ -487,35 +554,35 @@
     .tab-content.active { display: block; }
 
     /* Custom chart */
-    .chart-canvas { background: #050505; border-radius: 4px; border: 1px solid #111; width: 100%; height: 320px; position: relative; overflow: hidden; }
+    .chart-canvas { background: linear-gradient(180deg, #0f0f0f 0%, #0a0a0a 100%); border-radius: 4px; border: 1px solid #222; width: 100%; height: 320px; position: relative; overflow: hidden; }
     .band { position: absolute; left: 0; width: 100%; height: 60px; opacity: 0.08; }
-    .band.premium { top: 0; background: linear-gradient(180deg, #ff0033 0%, transparent 100%); }
-    .band.discount { bottom: 0; background: linear-gradient(0deg, #00ff41 0%, transparent 100%); }
-    .band-label { position: absolute; left: 12px; font-size: 0.8em; color: #888; }
+    .band.premium { top: 0; background: linear-gradient(180deg, #ff4444 0%, transparent 100%); }
+    .band.discount { bottom: 0; background: linear-gradient(0deg, #4ade80 0%, transparent 100%); }
+    .band-label { position: absolute; left: 12px; font-size: 0.8em; color: #666; }
     .band-label.premium { top: 8px; }
     .band-label.discount { bottom: 8px; }
     .level { position: absolute; left: 0; width: 100%; border-top: 1px dashed #333; }
-    .level.resistance { top: 70px; border-color: #ff5c5c; }
-    .level.support { bottom: 70px; border-color: #4caf50; }
+    .level.resistance { top: 70px; border-color: #ff6666; }
+    .level.support { bottom: 70px; border-color: #66ff66; }
     .level-label { position: absolute; right: 8px; font-size: 0.8em; color: #aaa; }
     .ema { position: absolute; width: 100%; height: 100%; pointer-events: none; }
-    .ema path { fill: none; stroke-width: 2; opacity: 0.9; }
+    .ema path { fill: none; stroke-width: 2.5; opacity: 0.95; filter: drop-shadow(0 0 2px rgba(0,0,0,0.5)); }
     .ema20 path { stroke: #00d4ff; }
-    .ema50 path { stroke: #ffb347; }
-    .ema200 path { stroke: #9b59b6; }
-    .price-line { position: absolute; right: 12px; top: 12px; color: #fff; font-weight: 700; font-size: 1em; }
-    .signal { position: absolute; display: flex; align-items: center; gap: 6px; font-size: 0.9em; color: #fff; padding: 4px 8px; border-radius: 4px; }
-    .signal.buy { background: rgba(0,255,65,0.14); border: 1px solid rgba(0,255,65,0.35); top: 120px; left: 20px; }
-    .signal.sell { background: rgba(255,0,51,0.14); border: 1px solid rgba(255,0,51,0.35); top: 60px; left: 180px; }
-    .signal .dot { width: 10px; height: 10px; border-radius: 50%; }
-    .signal.buy .dot { background: #00ff41; }
-    .signal.sell .dot { background: #ff0033; }
-    .legend { position: absolute; bottom: 10px; right: 12px; display: flex; gap: 12px; font-size: 0.8em; color: #aaa; }
-    .legend-item { display: flex; align-items: center; gap: 6px; }
-    .legend-swatch { width: 16px; height: 3px; border-radius: 2px; }
+    .ema50 path { stroke: #ff9500; }
+    .ema200 path { stroke: #9d6ce1; }
+    .price-line { position: absolute; right: 12px; top: 12px; color: #ff8c00; font-weight: 700; font-size: 1em; background: rgba(255, 140, 0, 0.15); border: 1px solid #ff8c00; padding: 6px 12px; border-radius: 3px; }
+    .signal { position: absolute; display: flex; align-items: center; gap: 6px; font-size: 0.9em; color: #fff; padding: 6px 10px; border-radius: 4px; font-weight: 600; }
+    .signal.buy { background: rgba(74, 222, 128, 0.15); border: 1px solid #4ade80; color: #4ade80; bottom: 60px; left: 20px; }
+    .signal.sell { background: rgba(255, 68, 68, 0.15); border: 1px solid #ff4444; color: #ff4444; bottom: 60px; left: 150px; }
+    .signal .dot { width: 8px; height: 8px; border-radius: 50%; }
+    .signal.buy .dot { background: #4ade80; }
+    .signal.sell .dot { background: #ff4444; }
+    .legend { position: absolute; bottom: 10px; left: 12px; display: flex; gap: 16px; font-size: 0.75em; color: #999; }
+    .legend-item { display: flex; align-items: center; gap: 4px; font-weight: 600; }
+    .legend-swatch { width: 14px; height: 2px; border-radius: 1px; }
     .swatch-ema20 { background: #00d4ff; }
-    .swatch-ema50 { background: #ffb347; }
-    .swatch-ema200 { background: #9b59b6; }
+    .swatch-ema50 { background: #ff9500; }
+    .swatch-ema200 { background: #9d6ce1; }
 
     /* VISUAL DARK PAGE */
     #visual-dark-page { scrollbar-width: thin; scrollbar-color: #333 #0a0a0a; }
@@ -961,6 +1028,23 @@
       <div style="color: #ffffff; font-weight: 700; margin-top: 20px; margin-bottom: 12px; font-size: 1.05em;">CANDLESTICK CHART (4H)</div>
       <div id="candlestick-chart" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(20px, 1fr)); gap: 2px; height: 200px; background: var(--panel); border: 1px solid var(--border); padding: 12px; border-radius: 4px; margin-bottom: 20px;"></div>
 
+      <!-- GENIUS AI MARKET ANALYSIS -->
+      <div class="genius-ai" style="margin: 20px 0;">
+        <div class="genius-ai-header">
+          <span class="genius-ai-status"></span>
+          <h3>⚡ GENIUS MARKET ANALYSIS</h3>
+        </div>
+        <div class="genius-ai-content" id="genius-analysis">
+          📊 BTC at $98,432 showing strong consolidation. Market sentiment is BULLISH with short liquidations exceeding long liquidations by 353M. Support holding at $96,500 - crucial level to watch.
+        </div>
+        <div id="genius-warning" class="genius-ai-warning" style="display: none;">
+          ⚠️ PEAK WARNING: Price near resistance ($100,000). High risk of pullback. Consider taking profits or reducing leverage.
+        </div>
+        <div id="genius-insight" class="genius-ai-insight" style="display: none;">
+          ✓ BULLISH SIGNAL: Volume surge + Short liquidations indicate strong buying pressure. Potential breakout above $99,500 in next 4H candle.
+        </div>
+      </div>
+
       <!-- LIQUIDITY GRAB INFO -->
       <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em;">LIQUIDITY GRAB ZONES</div>
       <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px;">
@@ -981,17 +1065,17 @@
           <div style="background: rgba(255, 68, 68, 0.1); border-left: 3px solid #ff4444; padding: 10px; border-radius: 3px;">
             <div style="color: #ff4444; font-weight: 700; font-size: 0.9em;">SHORT LIQUIDATIONS</div>
             <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-shorts">$1,245M</div>
-            <div style="color: #aaa; font-size: 0.8em; margin-top: 4px;">↓ Liquidations (Bullish)</div>
+            <div style="color: #999; font-size: 0.8em; margin-top: 4px;">↓ Liquidations (Bullish)</div>
           </div>
-          <div style="background: rgba(68, 255, 68, 0.1); border-left: 3px solid #44ff44; padding: 10px; border-radius: 3px;">
-            <div style="color: #44ff44; font-weight: 700; font-size: 0.9em;">LONG LIQUIDATIONS</div>
+          <div style="background: rgba(74, 222, 128, 0.1); border-left: 3px solid #4ade80; padding: 10px; border-radius: 3px;">
+            <div style="color: #4ade80; font-weight: 700; font-size: 0.9em;">LONG LIQUIDATIONS</div>
             <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-longs">$892M</div>
-            <div style="color: #aaa; font-size: 0.8em; margin-top: 4px;">↑ Liquidations (Bearish)</div>
+            <div style="color: #999; font-size: 0.8em; margin-top: 4px;">↑ Liquidations (Bearish)</div>
           </div>
-          <div style="background: rgba(255, 255, 100, 0.1); border-left: 3px solid #ffff00; padding: 10px; border-radius: 3px;">
-            <div style="color: #ffff00; font-weight: 700; font-size: 0.9em;">TOTAL 24H</div>
+          <div style="background: rgba(255, 165, 0, 0.1); border-left: 3px solid #ff8c00; padding: 10px; border-radius: 3px;">
+            <div style="color: #ff8c00; font-weight: 700; font-size: 0.9em;">TOTAL 24H</div>
             <div style="color: #fff; font-size: 1.1em; margin-top: 4px;" id="liq-total">$2,137M</div>
-            <div style="color: #aaa; font-size: 0.8em; margin-top: 4px;">Combined liquidations</div>
+            <div style="color: #999; font-size: 0.8em; margin-top: 4px;">Combined liquidations</div>
           </div>
         </div>
       </div>
@@ -1380,6 +1464,58 @@
       });
     }
 
+    // ========== UPDATE GENIUS MARKET ANALYSIS ==========
+    function updateGeniusAnalysis(btcPrice, shortLiq, longLiq, change24h) {
+      const analysisEl = document.getElementById('genius-analysis');
+      const warningEl = document.getElementById('genius-warning');
+      const insightEl = document.getElementById('genius-insight');
+
+      if (!analysisEl) return;
+
+      let analysis = '';
+      let showWarning = false;
+      let showInsight = false;
+      let warning = '';
+      let insight = '';
+
+      // Base analysis
+      const liqDiff = shortLiq - longLiq;
+      const sentiment = liqDiff > 0 ? 'BULLISH' : 'BEARISH';
+      const sentimentEmoji = liqDiff > 0 ? '📈' : '📉';
+      const supportLevel = (btcPrice * 0.982).toFixed(0);
+      const resistanceLevel = (btcPrice * 1.015).toFixed(0);
+
+      analysis = `${sentimentEmoji} BTC at $${btcPrice.toFixed(0)} showing strong consolidation. Market sentiment is ${sentiment} with ${sentiment === 'BULLISH' ? 'short' : 'long'} liquidations exceeding counterpart by $${Math.abs(liqDiff).toFixed(0)}M. Support holding at $${supportLevel} - crucial level to watch.`;
+
+      // Peak warning - if price near resistance or very high change
+      if (btcPrice > resistanceLevel * 0.99 || change24h > 3) {
+        showWarning = true;
+        warning = `⚠️ PEAK WARNING: Price near resistance ($${resistanceLevel}). High risk of pullback. Consider taking profits or reducing leverage.`;
+      }
+
+      // Bullish insight
+      if (liqDiff > 300 && change24h > 0.5) {
+        showInsight = true;
+        insight = `✓ BULLISH SIGNAL: Volume surge + Short liquidations indicate strong buying pressure. Potential breakout above $${(btcPrice * 1.01).toFixed(0)} in next 4H candle.`;
+      }
+
+      // Update DOM
+      analysisEl.textContent = analysis;
+      if (showWarning) {
+        warningEl.textContent = warning;
+        warningEl.style.display = 'block';
+      } else {
+        warningEl.style.display = 'none';
+      }
+
+      if (showInsight) {
+        insightEl.textContent = insight;
+        insightEl.style.display = 'block';
+      } else {
+        insightEl.style.display = 'none';
+      }
+    }
+
     // ========== UPDATE LIQUIDATIONS ==========
     function updateLiquidations() {
       const shortLiq = 1245 + Math.random() * 50;
@@ -1664,6 +1800,11 @@
       const bears = 100 - bulls;
       document.getElementById('bulls-percent').textContent = `${bulls}%`;
       document.getElementById('bears-percent').textContent = `${bears}%`;
+      
+      // UPDATE GENIUS ANALYSIS
+      const shortLiq = 1245 + Math.random() * 50;
+      const longLiq = 892 + Math.random() * 45;
+      updateGeniusAnalysis(data.btcPrice || MOCK_DATA.btcPrice, shortLiq, longLiq, data.btcChange24h || MOCK_DATA.btcChange24h);
     }
 
     function setApiStatus(status, text) {
