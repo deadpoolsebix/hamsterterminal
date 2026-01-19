@@ -522,8 +522,8 @@
       display: block;
       width: 100%;
       background: rgba(26, 26, 26, 0.8);
-      border: 1px solid rgba(255, 140, 0, 0.2);
-      color: #fff;
+      border: 1px solid #ffffff;
+      color: #ffffff;
       padding: 12px 14px;
       margin-bottom: 8px;
       cursor: pointer;
@@ -533,8 +533,8 @@
       font-size: 0.95em;
       transition: all 0.3s;
     }
-    .sidebar-btn:hover { background: rgba(255, 140, 0, 0.2); border-color: var(--orange); color: var(--orange); transform: translateX(4px); }
-    .sidebar-btn.active { background: var(--orange); color: #000; border-color: var(--orange); }
+    .sidebar-btn:hover { background: rgba(255, 255, 255, 0.1); border-color: #ffffff; color: #ffffff; transform: translateX(4px); }
+    .sidebar-btn.active { background: #ffffff; color: #000; border-color: #ffffff; }
     
     .sidebar-toggle {
       position: fixed !important;
@@ -542,9 +542,9 @@
       top: 12px !important;
       z-index: 2000;
       transform: translateX(-50%) !important;
-      background: var(--orange);
-      color: #000;
-      border: none;
+      background: #ffffff !important;
+      color: #000 !important;
+      border: 2px solid #ffffff !important;
       width: 76px;
       height: 76px;
       cursor: pointer;
@@ -555,9 +555,9 @@
       align-items: center;
       justify-content: center;
       transition: all 0.3s;
-      box-shadow: 0 6px 16px rgba(255, 140, 0, 0.5);
+      box-shadow: 0 6px 16px rgba(255, 255, 255, 0.3);
     }
-    .sidebar-toggle:hover { background: #ffb347; transform: translateX(-50%) scale(1.15) rotate(5deg) !important; }
+    .sidebar-toggle:hover { background: #e0e0e0 !important; transform: translateX(-50%) scale(1.15) rotate(5deg) !important; }
     .sidebar-toggle:active { transform: translateX(-50%) scale(0.9) !important; }
 
     /* BACK BUTTON */
@@ -758,8 +758,22 @@
     </div>
   </div>
 
-  <!-- SIDEBAR TOGGLE BUTTON -->
+  <!-- SIDEBAR TOGGLE BUTTON - WHITE -->
   <button class="sidebar-toggle" onclick="toggleSidebar();">☰</button>
+
+  <!-- TOP SESSION INFO PANELS -->
+  <div style="position: fixed; top: 12px; left: 120px; right: 120px; display: flex; gap: 20px; z-index: 1999; justify-content: center;">
+    <div style="background: rgba(0,0,0,0.7); border: 1px solid #ff8c00; padding: 8px 16px; border-radius: 4px; text-align: center; min-width: 140px;">
+      <div style="color: #ff8c00; font-size: 0.7em; font-weight: 700; letter-spacing: 0.5px;">SESJA AZJA</div>
+      <div style="color: #ffffff; font-size: 1.2em; font-weight: 700; margin-top: 4px;">02:30:15</div>
+      <div style="color: #aaa; font-size: 0.75em; margin-top: 2px;">do końca</div>
+    </div>
+    <div style="background: rgba(0,0,0,0.7); border: 1px solid #666; padding: 8px 16px; border-radius: 4px; text-align: center; min-width: 140px;">
+      <div style="color: #aaa; font-size: 0.7em; font-weight: 700; letter-spacing: 0.5px;">NASTĘPNA SESJA</div>
+      <div style="color: #ffffff; font-size: 1.2em; font-weight: 700; margin-top: 4px;">EUROPA</div>
+      <div style="color: #aaa; font-size: 0.75em; margin-top: 2px;">09:00 CET</div>
+    </div>
+  </div>
 
   <!-- BACK BUTTON -->
   <button class="back-button" onclick="history.back();" title="Go back">← </button>
