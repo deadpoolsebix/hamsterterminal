@@ -3691,7 +3691,275 @@
                 }
             }
         }
+        
+        function togglePyramiding() {
+            const content = document.getElementById('pyramiding-content');
+            const icon = document.getElementById('pyramiding-toggle-icon');
+            if (content && icon) {
+                const isHidden = content.style.display === 'none';
+                content.style.display = isHidden ? 'block' : 'none';
+                icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
+        
+        function toggleWyckoff() {
+            const content = document.getElementById('wyckoff-content');
+            const icon = document.getElementById('wyckoff-toggle-icon');
+            if (content && icon) {
+                const isHidden = content.style.display === 'none';
+                content.style.display = isHidden ? 'block' : 'none';
+                icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
+        
+        function toggleLivermore() {
+            const content = document.getElementById('livermore-content');
+            const icon = document.getElementById('livermore-toggle-icon');
+            if (content && icon) {
+                const isHidden = content.style.display === 'none';
+                content.style.display = isHidden ? 'block' : 'none';
+                icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
         </script>
+    
+        <!-- PYRAMIDING METHOD (collapsible) -->
+        <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+            <div style="background: linear-gradient(135deg, #1f1a0a 0%, #0a0a0a 100%); border: 2px solid #ffc300; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(255,195,0,0.15);">
+                <div onclick="togglePyramiding()" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                        <div style="font-size: 1.05em; color: #ffc300; font-weight: 800;">📐 METODA PIRAMIDOWANIA</div>
+                        <div style="font-size: 0.95em; color: #ffe7a0; font-family: 'Roboto Mono', monospace; font-weight: 600;">Jak zwiększać pozycję w wygrywającym trendzie</div>
+                    </div>
+                    <div id="pyramiding-toggle-icon" style="font-size: 1.6em; color: #ffc300; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #ffc300, 0 0 20px #ffc300; display: inline-block; min-width: 28px; text-align: center; font-weight: bold;">▼</div>
+                </div>
+                <div id="pyramiding-content" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,195,0,0.25);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px;">
+                        <div style="background: rgba(255,195,0,0.08); border: 1px solid rgba(255,195,0,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ffc300; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">🔺 Czym jest piramidowanie?</div>
+                            <div style="color: #ffe7a0; font-size: 0.9em; line-height: 1.7;">
+                                Piramidowanie to technika <strong>stopniowego zwiększania pozycji</strong> w miarę jak rynek rusza się na twoją korzyść. Zamiast wchodzić z całym kapitałem na raz, budujesz pozycję w kilku transzach, gdy trend się potwierdza.<br><br>
+                                <strong style="color: #ffaa00;">Podstawowa zasada:</strong> Dodajesz do pozycji tylko wtedy, gdy jesteś już na zysku z poprzedniego wejścia. Nigdy nie uśredniaj strat (averaging down)!<br><br>
+                                <strong style="color: #00ff41;">Przykład:</strong> Kupujesz BTC po $95k za 30% kapitału. Cena idzie do $97k (+2%). Dodajesz kolejne 25%. Cena $99k → dodajesz 20%. Ostatnie 15% przy $101k. SL zawsze pod ostatnim swingiem.
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,195,0,0.08); border: 1px solid rgba(255,195,0,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ffc300; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">⚡ Kiedy dodawać do pozycji?</div>
+                            <div style="color: #ffe7a0; font-size: 0.9em; line-height: 1.7;">
+                                <strong>1. Po wybiciu oporu:</strong> Cena przełamała kluczowy poziom + wolumen potwierdza<br>
+                                <strong>2. Po retescie wsparcia:</strong> Cena wraca do poprzedniego oporu (teraz wsparcie) i odbija<br>
+                                <strong>3. Po nowym HH (Higher High):</strong> Trend rosnący, każdy szczyt wyższy od poprzedniego<br>
+                                <strong>4. Przy wzroście wolumenu:</strong> Instytucje wchodzą, delta zielona + OI rośnie<br><br>
+                                <strong style="color: #ff0033;">NIGDY nie dodawaj:</strong><br>
+                                • Gdy jesteś na stracie (to averaging down = katastrofa)<br>
+                                • Przy dyweregncji (cena ↑, RSI ↓)<br>
+                                • Gdy wolumen maleje przy wzrostach<br>
+                                • Blisko końca trendu (szukaj oznaki wyczerpania)
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,195,0,0.08); border: 1px solid rgba(255,195,0,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ffc300; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">🎯 Zarządzanie piramidą</div>
+                            <div style="color: #ffe7a0; font-size: 0.9em; line-height: 1.7;">
+                                <strong>Trailing Stop Loss:</strong> Po każdym dodaniu przenoś SL całej pozycji pod ostatni swing low (dla long) lub swing high (dla short).<br><br>
+                                <strong>Proporcje pozycji:</strong><br>
+                                • 1. wejście: 30-40% kapitału (największe ryzyko)<br>
+                                • 2. wejście: 25-30% (ryzyko mniejsze, już jesteś na +)<br>
+                                • 3. wejście: 20-25% (trend potwierdzony)<br>
+                                • 4. wejście: 10-15% (czyste momentum)<br><br>
+                                <strong style="color: #00d4ff;">Scaling Out:</strong> Gdy osiągniesz cel, zamykaj pozycję w transzach:<br>
+                                • 1. target (1:2) → zamknij 30%<br>
+                                • 2. target (1:3) → zamknij 30%<br>
+                                • 3. target (1:4+) → zostaw 40% z trailing SL<br><br>
+                                <strong style="color: #ffaa00;">Złota zasada:</strong> Im wyżej piramida, tym mniejsze transze. Nigdy nie dodawaj więcej niż przy pierwszym wejściu.
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,100,0,0.12); border: 1px solid rgba(255,100,0,0.4); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ff6400; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">⚠️ Pułapki i błędy</div>
+                            <div style="color: #ffe7a0; font-size: 0.9em; line-height: 1.7;">
+                                <strong style="color: #ff0033;">1. Averaging down (uśrednianie strat):</strong><br>
+                                Kupujesz po $100k, spada do $95k, dokupujesz "taniej". TO NIE JEST PIRAMIDOWANIE! To przepis na katastrofę. Piramida działa tylko w kierunku trendu, gdy jesteś na zysku.<br><br>
+                                <strong style="color: #ff0033;">2. Zbyt agresywne dodawanie:</strong><br>
+                                Dodajesz pełne transze zbyt szybko i wyczerpujesz kapitał przed końcem ruchu. Zachowaj rezerwy na ostatnie uderzenie.<br><br>
+                                <strong style="color: #ff0033;">3. Brak SL adjustment:</strong><br>
+                                Nie przesuwasz SL po każdym dodaniu. Jeden odwrót i tracisz wszystkie zyski z całej piramidy.<br><br>
+                                <strong style="color: #ffaa00;">Wskazówka:</strong> Jeśli nie masz pewności, czy dodać – nie dodawaj. Piramiduj tylko przy silnych trendach z wysokim prawdopodobieństwem kontynuacji.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- WYCKOFF METHOD (collapsible) -->
+        <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+            <div style="background: linear-gradient(135deg, #0f1a0f 0%, #0a0a0a 100%); border: 2px solid #00ff88; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(0,255,136,0.15);">
+                <div onclick="toggleWyckoff()" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                        <div style="font-size: 1.05em; color: #00ff88; font-weight: 800;">📚 METODA WYCKOFFA</div>
+                        <div style="font-size: 0.95em; color: #d0ffe8; font-family: 'Roboto Mono', monospace; font-weight: 600;">Akumulacja, dystrybucja i intencje smart money</div>
+                    </div>
+                    <div id="wyckoff-toggle-icon" style="font-size: 1.6em; color: #00ff88; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88; display: inline-block; min-width: 28px; text-align: center; font-weight: bold;">▼</div>
+                </div>
+                <div id="wyckoff-content" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(0,255,136,0.25);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px;">
+                        <div style="background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #00ff88; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">🧠 Kim był Richard Wyckoff?</div>
+                            <div style="color: #d0ffe8; font-size: 0.9em; line-height: 1.7;">
+                                Richard Wyckoff (1873-1934) to legendarny trader i analityk, który ujawnił <strong>jak wielkie pieniądze (smart money) manipulują rynkiem</strong>. Jego metoda opiera się na analizie <strong>podaży i popytu</strong> oraz rozpoznawaniu faz rynku.<br><br>
+                                <strong style="color: #ffaa00;">Główna teza:</strong> Rynek porusza się w cyklach: akumulacja (wieloryby kupują) → markup (cena rośnie) → dystrybucja (wieloryby sprzedają) → markdown (cena spada).<br><br>
+                                Wyckoff nauczył traderów <strong>czytać intencje instytucji</strong> zamiast ślepo śledzić ceny. Jego zasady działają do dziś na każdym rynku – akcje, forex, crypto.
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #00ff88; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">📊 4 fazy rynku Wyckoffa</div>
+                            <div style="color: #d0ffe8; font-size: 0.9em; line-height: 1.7;">
+                                <strong style="color: #00ff41;">1. AKUMULACJA (Accumulation):</strong><br>
+                                • Cena w konsolidacji po dużym spadku<br>
+                                • Wieloryby cicho kupują od spanikowanych<br>
+                                • Wolumen rośnie, ale cena nie spada dalej<br>
+                                • Fazy: PS (Preliminary Support) → SC (Selling Climax) → AR (Automatic Rally) → ST (Secondary Test) → Spring (pułapka) → Sign of Strength (SOS)<br>
+                                <strong>Wejście:</strong> Po Spring lub po SOS + wzrost wolumenu<br><br>
+                                <strong style="color: #ffaa00;">2. MARKUP (Wzrost):</strong><br>
+                                • Trend wzrostowy, seria HH i HL<br>
+                                • Retail dołącza dopiero teraz (FOMO)<br>
+                                • Smart money już siedzi z pozycjami z akumulacji<br>
+                                <strong>Akcja:</strong> Trzymaj pozycje, trailing SL, piramiduj ostrożnie<br><br>
+                                <strong style="color: #ff0033;">3. DYSTRYBUCJA (Distribution):</strong><br>
+                                • Cena w konsolidacji po dużym wzroście<br>
+                                • Wieloryby sprzedają retailowi na szczytach<br>
+                                • Wolumen wysoki, ale cena nie rośnie<br>
+                                • Fazy: PSY (Preliminary Supply) → BC (Buying Climax) → AR (Automatic Reaction) → ST (Secondary Test) → UTAD (Upthrust) → Sign of Weakness (SOW)<br>
+                                <strong>Wejście SHORT:</strong> Po UTAD lub SOW + spadek wolumenu na wzrostach<br><br>
+                                <strong style="color: #ff6600;">4. MARKDOWN (Spadek):</strong><br>
+                                • Trend spadkowy, seria LL i LH<br>
+                                • Retail panikuje i sprzedaje na dołkach<br>
+                                <strong>Akcja:</strong> Shorty lub cash, czekaj na nową akumulację
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(0,255,136,0.08); border: 1px solid rgba(0,255,136,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #00ff88; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">🎯 Jak Wyckoff grał na rynku?</div>
+                            <div style="color: #d0ffe8; font-size: 0.9em; line-height: 1.7;">
+                                <strong>1. Szukał akumulacji po panice:</strong><br>
+                                Gdy wszyscy sprzedawali (Selling Climax), Wyckoff obserwował wolumen. Jeśli cena przestawała spadać mimo wysokiej sprzedaży → wieloryby kupują. To był sygnał do wejścia.<br><br>
+                                <strong>2. Testował poziomy (Spring/UTAD):</strong><br>
+                                Wyckoff wiedział, że instytucje <strong>testują rynek</strong> przed dużym ruchem. Spring to fałszywe wybicie w dół (likwidacja stopów), po którym cena eksploduje w górę. UTAD to odwrotność – fałszywe wybicie w górę, po którym następuje spadek.<br><br>
+                                <strong>3. Czekał na potwierdzenie siły (SOS/SOW):</strong><br>
+                                Nie wchodził ślepo. Czekał na <strong>Sign of Strength</strong> (mocne wybicie z akumulacji z wolumenem) lub <strong>Sign of Weakness</strong> (słabe wzrosty w dystrybucji).<br><br>
+                                <strong>4. Analizował cause & effect:</strong><br>
+                                Im dłuższa akumulacja, tym silniejszy markup. Im dłuższa dystrybucja, tym głębszy markdown. Wyckoff mierzył "przyczynę" (długość konsolidacji) i przewidywał "skutek" (zasięg ruchu).<br><br>
+                                <strong style="color: #ffaa00;">Jego sekret:</strong> Nie próbował wyłapać każdy ruch. Czekał cierpliwie na <strong>high-probability setups</strong> po zakończeniu fazy akumulacji/dystrybucji.
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(0,212,255,0.1); border: 1px solid rgba(0,212,255,0.4); border-radius: 6px; padding: 14px;">
+                            <div style="color: #00d4ff; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">💡 Praktyczne wskazówki Wyckoffa</div>
+                            <div style="color: #d0ffe8; font-size: 0.9em; line-height: 1.7;">
+                                <strong>• Obserwuj wolumen, nie tylko cenę:</strong> Wolumen pokazuje intencje wielorybów. Wysokie kupno przy spadkach = akumulacja. Wysokie sprzedaże przy wzrostach = dystrybucja.<br><br>
+                                <strong>• Czytaj wykresy jak historię:</strong> Każda świeca to walka podaży z popytem. Kto wygrał? Jeśli cena zamyka w górnej połowie knota mimo presji sprzedaży → kupujący kontrolują.<br><br>
+                                <strong>• Szukaj "pułapek" (Spring, UTAD):</strong> To najlepsze wejścia, bo retailer wyleciał na SL, a ty wchodzisz w kierunku smart money.<br><br>
+                                <strong>• Nie wal na oślep w konsolidację:</strong> Poczekaj na wybicie z akumulacji/dystrybucji z wolumenem. To daje edge.<br><br>
+                                <strong>• Pamiętaj: rynek się powtarza:</strong> Cykle Wyckoffa działają od 100 lat, bo psychologia tłumu się nie zmienia. Instytucje zawsze będą kupować tanio i sprzedawać drogo.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- JESSE LIVERMORE METHOD (collapsible) -->
+        <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
+            <div style="background: linear-gradient(135deg, #1a0a1a 0%, #0a0a0a 100%); border: 2px solid #ff0099; border-radius: 8px; padding: 15px; cursor: pointer; box-shadow: 0 0 15px rgba(255,0,153,0.15);">
+                <div onclick="toggleLivermore()" style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 15px; flex: 1;">
+                        <div style="font-size: 1.05em; color: #ff0099; font-weight: 800;">💰 JESSE LIVERMORE - BOY PLUNGER</div>
+                        <div style="font-size: 0.95em; color: #ffd0ee; font-family: 'Roboto Mono', monospace; font-weight: 600;">Tape reading, pivot points i psychologia tłumu</div>
+                    </div>
+                    <div id="livermore-toggle-icon" style="font-size: 1.6em; color: #ff0099; transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55); text-shadow: 0 0 10px #ff0099, 0 0 20px #ff0099; display: inline-block; min-width: 28px; text-align: center; font-weight: bold;">▼</div>
+                </div>
+                <div id="livermore-content" style="display: none; margin-top: 12px; padding-top: 12px; border-top: 1px solid rgba(255,0,153,0.25);">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px;">
+                        <div style="background: rgba(255,0,153,0.08); border: 1px solid rgba(255,0,153,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ff0099; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">🎩 Kim był Jesse Livermore?</div>
+                            <div style="color: #ffd0ee; font-size: 0.9em; line-height: 1.7;">
+                                Jesse Livermore (1877-1940) to legenda Wall Street. W wieku 15 lat zaczął tradować w "bucket shops" (nielegalne kasyna giełdowe). <strong>W 1929 roku zarobił $100 milionów ($1.5 miliarda dzisiaj) shortując krach na giełdzie</strong> – stał się znany jako "Boy Plunger" i "The Great Bear of Wall Street".<br><br>
+                                Livermore zbudował fortunę 4 razy i 3 razy ją stracił. Jego ostateczne zasady tradingu, spisane w książce <em>"Reminiscences of a Stock Operator"</em>, do dziś są biblią dla spekulantów.<br><br>
+                                <strong style="color: #ffaa00;">Jego filozofia:</strong> "Nie pieniądze cię rujnują, ale głupia pycha i brak dyscypliny. Rynek zawsze ma rację – ty musisz się dostosować."
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,0,153,0.08); border: 1px solid rgba(255,0,153,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ff0099; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">📈 Pivot Points - kluczowe poziomy</div>
+                            <div style="color: #ffd0ee; font-size: 0.9em; line-height: 1.7;">
+                                Livermore wynalazł koncepcję <strong>Pivot Points</strong> – kluczowych poziomów cen, które decydują o kierunku trendu.<br><br>
+                                <strong style="color: #00ff41;">Pivot Points to:</strong><br>
+                                • Szczyty (resistance) i dołki (support) poprzednich ruchów<br>
+                                • Poziomy, przy których cena "zawahała się" wielokrotnie<br>
+                                • Miejsca, gdzie wieloryby składały duże zlecenia<br><br>
+                                <strong>Zasada Livermore'a:</strong><br>
+                                • Jeśli cena przebije pivot w górę → kupuj (momentum long)<br>
+                                • Jeśli cena przebije pivot w dół → sprzedaj/short (momentum bear)<br>
+                                • Jeśli cena nie może przebić pivota → odwrócenie trendu<br><br>
+                                <strong style="color: #ffaa00;">Nowoczesna wersja:</strong> Dzisiejsze pivot points to often: (High + Low + Close) / 3, ale Livermore używał prostszego podejścia – obserwował gdzie cena "zatrzymuje się" najwięcej razy.
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,0,153,0.08); border: 1px solid rgba(255,0,153,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ff0099; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">🎯 Jak Livermore tradował?</div>
+                            <div style="color: #ffd0ee; font-size: 0.9em; line-height: 1.7;">
+                                <strong>1. Tape Reading (czytanie taśmy):</strong><br>
+                                W jego czasach nie było wykresów – tylko "ticker tape" z cenami w czasie rzeczywistym. Livermore nauczył się <strong>czytać intencje rynku z przepływu zleceń</strong>. Dzisiaj to odpowiednik order flow i delta/volume analysis.<br><br>
+                                <strong>2. Follow the trend ("linia najmniejszego oporu"):</strong><br>
+                                Livermore nigdy nie walczył z trendem. Mówił: "Rynek idzie gdzie chce, a ty musisz za nim podążać." Jeśli trend był wzrostowy, kupował tylko przy cofnięciach. Jeśli spadkowy – shortował przy odbitkach.<br><br>
+                                <strong>3. Czekał na potwierdzenie:</strong><br>
+                                Nie wchodził "za wcześnie". Czekał aż cena <strong>przebije kluczowy pivot</strong> + wolumen potwierdzi. Dopiero wtedy stawiał duże pozycje.<br><br>
+                                <strong>4. "Siedź cicho" (sit tight):</strong><br>
+                                Jego najbardziej znana zasada: <strong>"It was never my thinking that made big money, it was my sitting."</strong> Największe zyski przychodziły z trzymania wygrywających pozycji przez tygodnie/miesiące, nie z overtradingu.<br><br>
+                                <strong>5. Szybkie SL, wolne TP:</strong><br>
+                                Jeśli trade szedł przeciw niemu – wychodził natychmiast. Jeśli szedł po jego myśli – trzymał tak długo, jak trend się nie odwrócił. R/R często 1:10 lub więcej.
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,0,153,0.08); border: 1px solid rgba(255,0,153,0.3); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ff0099; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">📉 Krach 1929 – jak zarobił $100M</div>
+                            <div style="color: #ffd0ee; font-size: 0.9em; line-height: 1.7;">
+                                W 1929 roku Livermore zauważył oznaki <strong>końcowego szczytu</strong> (top):<br>
+                                • Wszyscy byli "bullish" – nawet kierowcy taksówek dawali stock tips<br>
+                                • Wolumen rósł, ale cena przestała rosnąć (dystrybucja Wyckoffa)<br>
+                                • Wielkie "insiders" (JP Morgan, Rockefeller) cicho sprzedawali<br><br>
+                                <strong>Jego strategia:</strong><br>
+                                1. Otworzył małe pozycje short "testując wody"<br>
+                                2. Gdy cena zaczęła spadać – dodawał agresywnie (piramidował shorty)<br>
+                                3. Trzymał pozycje przez cały krach (październik 1929)<br>
+                                4. Wyszedł dopiero gdy zobaczyż "paniczną kapitulację" (dno)<br><br>
+                                <strong style="color: #ffaa00;">Lekcja:</strong> Livermore zarobił więcej niż 99% traderów, bo <strong>miał odwagę iść przeciwko tłumowi</strong> i cierpliwość by trzymać wygrywające pozycje. Większość ludzi stracila fortuny, bo kupowali na szczycie i sprzedawali na dnie.
+                            </div>
+                        </div>
+                        
+                        <div style="background: rgba(255,170,0,0.12); border: 1px solid rgba(255,170,0,0.4); border-radius: 6px; padding: 14px;">
+                            <div style="color: #ffaa00; font-weight: 800; margin-bottom: 10px; font-size: 1.05em;">💎 Zasady Livermore'a (aktualne do dziś)</div>
+                            <div style="color: #ffd0ee; font-size: 0.9em; line-height: 1.7;">
+                                <strong>1. "There is nothing new in Wall Street. There can't be because speculation is as old as the hills."</strong><br>
+                                → Historia się powtarza. Patterne, cykle, psychologia tłumu – to samo od 100 lat.<br><br>
+                                <strong>2. "The big money is not in the buying or selling, but in the waiting."</strong><br>
+                                → Największe zyski z długoterminowych trendów, nie z scalpingu.<br><br>
+                                <strong>3. "Don't take action with a trade until the market, itself, confirms your opinion."</strong><br>
+                                → Czekaj na potwierdzenie (wybicie pivota + wolumen). Nie anticipuj.<br><br>
+                                <strong>4. "Never average down. If you buy at 50 and it goes to 45, don't buy more. Wait for 55."</strong><br>
+                                → Dodawaj tylko do wygrywających pozycji, nigdy do przegranych.<br><br>
+                                <strong>5. "Cut your losses quickly and let your profits run."</strong><br>
+                                → Klasyka. SL = twój najlepszy przyjaciel.<br><br>
+                                <strong style="color: #ff0033;">Ostrzeżenie:</strong> Livermore stracił fortunę 3 razy, głównie przez overtrading, brak dyscypliny i emocje po rozwodzie. Nawet geniusze padają, jeśli złamią własne zasady. Trading to 80% psychologia, 20% technika.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     
         <!-- TIMEFRAME ZONE • MULTI-TF ANALYSIS (collapsible) -->
         <div style="padding: 0 30px 10px 30px; background: #0a0a0a;">
