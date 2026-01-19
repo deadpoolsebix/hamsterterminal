@@ -1323,12 +1323,6 @@
             <div class="terminal-title" style="font-family: 'Press Start 2P', 'Courier New', monospace; font-weight: 900; letter-spacing: 4px; text-shadow: 3px 3px 0 #ff0033, 6px 6px 0 #00ff41, 0 0 30px rgba(255,0,51,0.8); color: #ffff00; font-size: 1.8em; transform: scaleY(1.1); display: flex; align-items: center; gap: 20px;">
                 <span style="animation: spinHamster 2s linear infinite; display: inline-block; font-size: 1.4em;">🐹</span>
                 <span style="animation: hamsterPush 3s ease-in-out infinite; display: inline-block; text-shadow: 0 2px 8px rgba(255,255,0,0.4), 0 4px 16px rgba(255,0,51,0.3);">HAMSTER</span> TERMINAL
-                <span style="margin-left: 20px; display: inline-flex; align-items: center; gap: 8px; border-left: 2px solid #fff; padding-left: 20px;">
-                    <span style="font-size: 1em; font-weight: 900; color: #fff;">Ƀ</span>
-                    <button class="theme-btn" onclick="previousTheme()" style="background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; font-weight: 700; font-size: 0.8em; cursor: pointer; border-radius: 3px;">◄</button>
-                    <span style="font-size: 0.75em; color: #fff; font-weight: 700; min-width: 70px; text-align: center;" id="current-theme-name">MODERN</span>
-                    <button class="theme-btn" onclick="nextTheme()" style="background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; font-weight: 700; font-size: 0.8em; cursor: pointer; border-radius: 3px;">►</button>
-                </span>
             </div>
         </div>
         
@@ -1490,8 +1484,13 @@
             <button onclick="playBeep(440, 100);" style="background: linear-gradient(135deg, #ff0033, #7f001a); color: #fff; font-weight: 900; border: 3px solid #ff0033; padding: 12px 24px; border-radius: 0; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 20px rgba(255,0,51,0.6), inset 0 0 20px rgba(255,0,51,0.2); animation: pulse 1.2s infinite; cursor: pointer; font-size: 1em; transition: all 0.1s;" onmouseover="this.style.boxShadow='0 0 30px rgba(255,0,51,0.8), inset 0 0 30px rgba(255,0,51,0.3)'" onmouseout="this.style.boxShadow='0 0 20px rgba(255,0,51,0.6), inset 0 0 20px rgba(255,0,51,0.2)'">⏹ SELL</button>
             <button onclick="playBeep(320, 80);" style="background: linear-gradient(135deg, #ffaa00, #884400); color: #000; font-weight: 900; border: 3px solid #ffaa00; padding: 12px 24px; border-radius: 0; text-transform: uppercase; letter-spacing: 2px; box-shadow: 0 0 20px rgba(255,170,0,0.6), inset 0 0 20px rgba(255,170,0,0.2); animation: blink 1.4s infinite; cursor: pointer; font-size: 1em; transition: all 0.1s;" onmouseover="this.style.boxShadow='0 0 30px rgba(255,170,0,0.8), inset 0 0 30px rgba(255,170,0,0.3)'" onmouseout="this.style.boxShadow='0 0 20px rgba(255,170,0,0.6), inset 0 0 20px rgba(255,170,0,0.2)'">◄ NOPE</button>
             <span style="font-family: 'Press Start 2P', 'Courier New', monospace; font-size: 0.7em; color: #ffaa00; letter-spacing: 2px; text-shadow: 2px 2px 0 #5a2b00, 0 0 10px rgba(255,170,0,0.7); padding-left: 8px;">NEVER MIND</span>
+            <div style="margin-left: 20px; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 0.8em; color: #fff; font-weight: 700; text-align: center;" id="current-theme-name">MODERN</span>
+                <button onclick="previousTheme()" style="background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; font-weight: 700; font-size: 0.8em; cursor: pointer; border-radius: 3px;">◄</button>
+                <button onclick="nextTheme()" style="background: transparent; border: 1px solid #fff; color: #fff; padding: 4px 8px; font-weight: 700; font-size: 0.8em; cursor: pointer; border-radius: 3px;">►</button>
+            </div>
         </div>
-        <!-- Bitcoin Coin only -->
+        <!-- Bitcoin Coin -->
         <div style="margin-left: 20px; display: flex; align-items: center; gap: 20px; height: 50px;">
             <div style="font-size: 3em; animation: btcRotate 3s linear infinite; filter: drop-shadow(0 0 15px rgba(255,200,0,0.9)); color: #ffd700; text-shadow: 2px 2px 0 #ff9900, 4px 4px 0 #ffaa00; font-weight: 900; cursor: pointer;" title="HODL!">₿</div>
         </div>
@@ -1639,60 +1638,75 @@
     </script>
 
     <!-- ===== BLOOMBERG TICKER ===== -->
-    <div class="bloomberg-ticker-wrapper" id="bloombergTicker" style="margin: 15px 30px; padding: 15px; background: linear-gradient(135deg, #0a0a0a 0%, #0f0f0f 100%); border: 2px solid #333; border-radius: 8px; overflow: hidden;">
-        <div class="bloomberg-ticker-scroll">
+    <div class="bloomberg-ticker-wrapper" id="bloombergTicker" style="margin: 15px 30px;">
+        <div class="bloomberg-ticker-scroll" id="ticker-scroll">
             <!-- METALE -->
-            <div class="bloomberg-ticker-group" style="display: flex; align-items: center; gap: 15px;">
-                <span class="ticker-group-label" style="color: #ffff00; font-weight: 900; font-size: 0.9em; text-transform: uppercase; border-right: 2px solid #333; padding-right: 10px;">METALE</span>
-                <div class="ticker-instrument-item" id="metal-1" style="border-right: 2px solid #333; padding-right: 15px;">
+            <div class="bloomberg-ticker-group">
+                <span class="ticker-group-label" style="color: #ffff00;">METALE</span>
+                <div class="ticker-instrument-item" id="metal-1" style="border-color: #ffff0033;">
                     <span class="ticker-symbol" style="color: #ffff00;">XAU/USD</span>
-                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
-                <div class="ticker-instrument-item" id="metal-2">
+                <div class="ticker-instrument-item" id="metal-2" style="border-color: #ffff0033;">
                     <span class="ticker-symbol" style="color: #ffff00;">XAG/USD</span>
-                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
             </div>
             
             <!-- INDEKSY -->
-            <div class="bloomberg-ticker-group" style="display: flex; align-items: center; gap: 15px; margin-left: 30px;">
-                <span class="ticker-group-label" style="color: #00d4ff; font-weight: 900; font-size: 0.9em; text-transform: uppercase; border-right: 2px solid #333; padding-right: 10px;">INDEKSY</span>
-                <div class="ticker-instrument-item" id="index-1" style="border-right: 2px solid #333; padding-right: 15px;">
+            <div class="bloomberg-ticker-group">
+                <span class="ticker-group-label" style="color: #00d4ff;">INDEKSY</span>
+                <div class="ticker-instrument-item" id="index-1" style="border-color: #00d4ff33;">
                     <span class="ticker-symbol" style="color: #00d4ff;">SPX</span>
-                    <span class="ticker-price" style="margin-left: 8px;">--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
-                <div class="ticker-instrument-item" id="index-2" style="border-right: 2px solid #333; padding-right: 15px;">
+                <div class="ticker-instrument-item" id="index-2" style="border-color: #00d4ff33;">
                     <span class="ticker-symbol" style="color: #00d4ff;">INDU</span>
-                    <span class="ticker-price" style="margin-left: 8px;">--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
-                <div class="ticker-instrument-item" id="index-3">
+                <div class="ticker-instrument-item" id="index-3" style="border-color: #00d4ff33;">
                     <span class="ticker-symbol" style="color: #00d4ff;">IXIC</span>
-                    <span class="ticker-price" style="margin-left: 8px;">--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
             </div>
             
             <!-- MEGA CAPS -->
-            <div class="bloomberg-ticker-group" style="display: flex; align-items: center; gap: 15px; margin-left: 30px;">
-                <span class="ticker-group-label" style="color: #cccccc; font-weight: 900; font-size: 0.9em; text-transform: uppercase; border-right: 2px solid #333; padding-right: 10px;">MEGA CAPS</span>
-                <div class="ticker-instrument-item" id="stock-1" style="border-right: 2px solid #333; padding-right: 15px;">
+            <div class="bloomberg-ticker-group">
+                <span class="ticker-group-label" style="color: #cccccc;">MEGA CAPS</span>
+                <div class="ticker-instrument-item" id="stock-1" style="border-color: #cccccc33;">
                     <span class="ticker-symbol" style="color: #cccccc;">AAPL</span>
-                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
-                <div class="ticker-instrument-item" id="stock-2" style="border-right: 2px solid #333; padding-right: 15px;">
+                <div class="ticker-instrument-item" id="stock-2" style="border-color: #cccccc33;">
                     <span class="ticker-symbol" style="color: #cccccc;">MSFT</span>
-                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
-                <div class="ticker-instrument-item" id="stock-3">
+                <div class="ticker-instrument-item" id="stock-3" style="border-color: #cccccc33;">
                     <span class="ticker-symbol" style="color: #cccccc;">TSLA</span>
-                    <span class="ticker-price" style="margin-left: 8px;">$--</span>
-                    <span class="ticker-change" style="margin-left: 8px; color: #00ff41;">--</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+            </div>
+            
+            <!-- POWTÓRZENIE DLA CIĄGŁEJ ANIMACJI -->
+            <div class="bloomberg-ticker-group">
+                <span class="ticker-group-label" style="color: #ffff00;">METALE</span>
+                <div class="ticker-instrument-item" id="metal-1-repeat" style="border-color: #ffff0033;">
+                    <span class="ticker-symbol" style="color: #ffff00;">XAU/USD</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
+                </div>
+                <div class="ticker-instrument-item" id="metal-2-repeat" style="border-color: #ffff0033;">
+                    <span class="ticker-symbol" style="color: #ffff00;">XAG/USD</span>
+                    <span class="ticker-price" style="color: #fff;">$--</span>
+                    <span class="ticker-change" style="color: #00ff41;">--</span>
                 </div>
             </div>
         </div>
