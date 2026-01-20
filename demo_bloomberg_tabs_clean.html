@@ -1310,9 +1310,27 @@
       background: rgba(0, 212, 255, 0.05);
       border-left: 2px solid var(--cyan);
     }
+
+    /* HAMSTER TERMINAL HEADER BAR */
+    .hamster-header {
+      width: 100%;
+      height: 40px;
+      background: linear-gradient(90deg, rgba(255, 200, 0, 0.1) 0%, rgba(255, 200, 0, 0.05) 100%);
+      border-bottom: 2px solid var(--yellow);
+      display: flex;
+      align-items: center;
+      padding: 0 24px;
+      font-size: 0.95em;
+      color: var(--yellow);
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
   </style>
 </head>
 <body>
+  <!-- HAMSTER TERMINAL HEADER -->
+  <div class="hamster-header">🐹 HAMSTER TERMINAL</div>
+
   <!-- NEWS TICKER BAR (LIVE BREAKING NEWS) -->
   <div class="news-ticker-bar">
     <div class="news-ticker-content" id="newsTickerContent">
