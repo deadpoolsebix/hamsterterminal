@@ -160,9 +160,9 @@
     .ticker-bar {
       width: 100%;
       height: 80px; /* 2x size (100% increase from 40px) */
-      background: linear-gradient(180deg, #0a0a0a 0%, #121212 100%);
-      border-top: 2px solid var(--orange);
-      border-bottom: 2px solid var(--orange);
+      background: #000000;
+      border-top: 1px solid #333333;
+      border-bottom: 1px solid #333333;
       overflow: hidden;
       position: relative;
       display: flex;
@@ -180,27 +180,29 @@
       display: flex;
       align-items: center;
       gap: 16px; /* 2x gap */
-      font-size: 1.8em; /* 2x font size (from 0.9em) */
+      font-size: 0.9em;
       font-weight: 700;
       letter-spacing: 1px;
     }
     .ticker-symbol {
-      color: var(--orange);
-      text-shadow: 0 0 10px rgba(255, 102, 0, 0.4);
+      color: #ffffff;
+      font-size: 2.2em; /* Large headers only */
+      text-shadow: none;
     }
     .ticker-price {
-      color: #ffffff;
+      color: #cccccc;
       min-width: 160px; /* 2x width */
     }
     .ticker-change {
       min-width: 120px; /* 2x width */
       font-size: 0.85em;
+      color: #999999;
     }
     .ticker-change.up {
-      color: var(--green);
+      color: #aaaaaa;
     }
     .ticker-change.down {
-      color: var(--red);
+      color: #888888;
     }
     @keyframes ticker-scroll {
       0% { transform: translateX(0); }
@@ -1382,6 +1384,11 @@
           <span class="ticker-price" id="ticker-gold">$2,687.40</span>
           <span class="ticker-change up" id="ticker-gold-change">+0.95%</span>
         </div>
+        <div class="ticker-item">
+          <span class="ticker-symbol">NASDAQ</span>
+          <span class="ticker-price" id="ticker-nasdaq">19,241.50</span>
+          <span class="ticker-change up" id="ticker-nasdaq-change">+0.28%</span>
+        </div>
         <!-- Duplicate for seamless loop -->
         <div class="ticker-item">
           <span class="ticker-symbol">BTC/USD</span>
@@ -1417,6 +1424,11 @@
           <span class="ticker-symbol">GOLD</span>
           <span class="ticker-price">$2,687.40</span>
           <span class="ticker-change up">+0.95%</span>
+        </div>
+        <div class="ticker-item">
+          <span class="ticker-symbol">NASDAQ</span>
+          <span class="ticker-price">19,241.50</span>
+          <span class="ticker-change up">+0.28%</span>
         </div>
       </div>
     </div>
