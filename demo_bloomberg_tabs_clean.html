@@ -156,11 +156,12 @@
     .menu-item.active { background: #b0303c; border-color: #d44a5c; }
     .menu-item:hover { opacity: 0.9; }
 
-    /* NEWS TICKER BAR (TOP HEADER) - 20% bigger than bottom ticker */
+    /* NEWS TICKER BAR (TOP HEADER) - MARKET TICKER */
     .news-ticker-bar {
       width: 100%;
-      height: 96px; /* 20% bigger than 80px */
+      height: 80px;
       background: #000000;
+      border-top: 1px solid #333333;
       border-bottom: 1px solid #333333;
       overflow: hidden;
       position: relative;
@@ -172,35 +173,36 @@
       align-items: center;
       white-space: nowrap;
       animation: ticker-scroll 45s linear infinite;
-      gap: 6px;
+      gap: 60px;
       padding: 0 40px;
     }
     .news-ticker-item {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 16px;
       font-size: 0.9em;
       font-weight: 700;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
     }
     .news-ticker-label {
       color: #ffffff;
-      font-size: 0.95em;
-      font-weight: 700;
-      background: rgba(0, 212, 255, 0.1);
-      padding: 4px 8px;
-      border-left: 3px solid var(--cyan);
-      min-width: 50px;
+      font-size: 2.2em;
+      text-shadow: none;
     }
     .news-ticker-text {
       color: #cccccc;
-      font-size: 0.9em;
-      min-width: 80px;
+      min-width: 160px;
     }
     .news-ticker-time {
+      min-width: 120px;
+      font-size: 0.85em;
       color: #999999;
-      font-size: 0.75em;
-      margin-left: 12px;
+    }
+    .news-ticker-time.up {
+      color: #aaaaaa;
+    }
+    .news-ticker-time.down {
+      color: #888888;
     }
 
     /* TICKER BAR (BELOW RADAR, ABOVE BURGUNDY MENU) */
@@ -1331,79 +1333,89 @@
   </style>
 </head>
 <body>
-  <!-- NEWS TICKER BAR (LIVE BREAKING NEWS) -->
+  <!-- MARKET TICKER BAR (TOP HEADER) -->
   <div class="news-ticker-bar">
     <div class="news-ticker-content" id="newsTickerContent">
       <div class="news-ticker-item">
+        <span class="news-ticker-label">BTC/USD</span>
+        <span class="news-ticker-text" id="ticker-top-btc">$95,247.00</span>
+        <span class="news-ticker-time up" id="ticker-top-btc-change">+2.34%</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">ETH/USD</span>
+        <span class="news-ticker-text" id="ticker-top-eth">$3,487.20</span>
+        <span class="news-ticker-time up" id="ticker-top-eth-change">+3.12%</span>
+      </div>
+      <div class="news-ticker-item">
         <span class="news-ticker-label">SPX</span>
-        <span class="news-ticker-text">5,123.00</span>
-        <span class="news-ticker-time">Δ0.32%</span>
+        <span class="news-ticker-text" id="ticker-top-spx">5,975.23</span>
+        <span class="news-ticker-time down" id="ticker-top-spx-change">-0.42%</span>
       </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
-      <div class="news-ticker-item">
-        <span class="news-ticker-label">INDU</span>
-        <span class="news-ticker-text">39,210.00</span>
-        <span class="news-ticker-time">Δ0.18%</span>
-      </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
-      <div class="news-ticker-item">
-        <span class="news-ticker-label">IXIC</span>
-        <span class="news-ticker-text">17,988.00</span>
-        <span class="news-ticker-time">Δ0.55%</span>
-      </div>
-      <span style="color: #666; margin: 0 8px; font-weight: 700; color: #fff;">MEGA CAPS</span>
       <div class="news-ticker-item">
         <span class="news-ticker-label">AAPL</span>
-        <span class="news-ticker-text">245.90</span>
-        <span class="news-ticker-time">Δ1.2%</span>
+        <span class="news-ticker-text" id="ticker-top-aapl">$225.10</span>
+        <span class="news-ticker-time up" id="ticker-top-aapl-change">+1.85%</span>
       </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
         <span class="news-ticker-label">NVDA</span>
-        <span class="news-ticker-text">1,265.90</span>
-        <span class="news-ticker-time">Δ1.8%</span>
+        <span class="news-ticker-text" id="ticker-top-nvda">$135.72</span>
+        <span class="news-ticker-time up" id="ticker-top-nvda-change">+4.21%</span>
       </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">MSFT</span>
-        <span class="news-ticker-text">412.30</span>
-        <span class="news-ticker-time">Δ0.9%</span>
+        <span class="news-ticker-label">EUR/USD</span>
+        <span class="news-ticker-text" id="ticker-top-eur">1.0287</span>
+        <span class="news-ticker-time down" id="ticker-top-eur-change">-0.18%</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">GOLD</span>
+        <span class="news-ticker-text" id="ticker-top-gold">$2,687.40</span>
+        <span class="news-ticker-time up" id="ticker-top-gold-change">+0.95%</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">NASDAQ</span>
+        <span class="news-ticker-text" id="ticker-top-nasdaq">19,241.50</span>
+        <span class="news-ticker-time up" id="ticker-top-nasdaq-change">+0.28%</span>
       </div>
       <!-- Duplicate for seamless loop -->
       <div class="news-ticker-item">
+        <span class="news-ticker-label">BTC/USD</span>
+        <span class="news-ticker-text">$95,247.00</span>
+        <span class="news-ticker-time up">+2.34%</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">ETH/USD</span>
+        <span class="news-ticker-text">$3,487.20</span>
+        <span class="news-ticker-time up">+3.12%</span>
+      </div>
+      <div class="news-ticker-item">
         <span class="news-ticker-label">SPX</span>
-        <span class="news-ticker-text">5,123.00</span>
-        <span class="news-ticker-time">Δ0.32%</span>
+        <span class="news-ticker-text">5,975.23</span>
+        <span class="news-ticker-time down">-0.42%</span>
       </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
-      <div class="news-ticker-item">
-        <span class="news-ticker-label">INDU</span>
-        <span class="news-ticker-text">39,210.00</span>
-        <span class="news-ticker-time">Δ0.18%</span>
-      </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
-      <div class="news-ticker-item">
-        <span class="news-ticker-label">IXIC</span>
-        <span class="news-ticker-text">17,988.00</span>
-        <span class="news-ticker-time">Δ0.55%</span>
-      </div>
-      <span style="color: #666; margin: 0 8px; font-weight: 700; color: #fff;">MEGA CAPS</span>
       <div class="news-ticker-item">
         <span class="news-ticker-label">AAPL</span>
-        <span class="news-ticker-text">245.90</span>
-        <span class="news-ticker-time">Δ1.2%</span>
+        <span class="news-ticker-text">$225.10</span>
+        <span class="news-ticker-time up">+1.85%</span>
       </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
         <span class="news-ticker-label">NVDA</span>
-        <span class="news-ticker-text">1,265.90</span>
-        <span class="news-ticker-time">Δ1.8%</span>
+        <span class="news-ticker-text">$135.72</span>
+        <span class="news-ticker-time up">+4.21%</span>
       </div>
-      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">MSFT</span>
-        <span class="news-ticker-text">412.30</span>
-        <span class="news-ticker-time">Δ0.9%</span>
+        <span class="news-ticker-label">EUR/USD</span>
+        <span class="news-ticker-text">1.0287</span>
+        <span class="news-ticker-time down">-0.18%</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">GOLD</span>
+        <span class="news-ticker-text">$2,687.40</span>
+        <span class="news-ticker-time up">+0.95%</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">NASDAQ</span>
+        <span class="news-ticker-text">19,241.50</span>
+        <span class="news-ticker-time up">+0.28%</span>
       </div>
     </div>
   </div>
@@ -1478,94 +1490,6 @@
       <button class="menu-item" data-tab="risk-positioning">Risk & Positioning</button>
       <button class="menu-item" data-tab="execution-playbook">Execution Playbook</button>
       <button class="menu-item" data-tab="alerts-journal">Alerts & Journal</button>
-    </div>
-
-    <!-- MARKET TICKER BAR (BELOW RADAR, ABOVE MENU) -->
-    <div class="ticker-bar">
-      <div class="ticker-content" id="tickerContent">
-        <!-- Duplicate content for seamless loop -->
-        <div class="ticker-item">
-          <span class="ticker-symbol">BTC/USD</span>
-          <span class="ticker-price" id="ticker-btc">$95,247.00</span>
-          <span class="ticker-change up" id="ticker-btc-change">+2.34%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">ETH/USD</span>
-          <span class="ticker-price" id="ticker-eth">$3,487.20</span>
-          <span class="ticker-change up" id="ticker-eth-change">+3.12%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">SPX</span>
-          <span class="ticker-price" id="ticker-spx">5,975.23</span>
-          <span class="ticker-change down" id="ticker-spx-change">-0.42%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">AAPL</span>
-          <span class="ticker-price" id="ticker-aapl">$225.10</span>
-          <span class="ticker-change up" id="ticker-aapl-change">+1.85%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">NVDA</span>
-          <span class="ticker-price" id="ticker-nvda">$135.72</span>
-          <span class="ticker-change up" id="ticker-nvda-change">+4.21%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">EUR/USD</span>
-          <span class="ticker-price" id="ticker-eur">1.0287</span>
-          <span class="ticker-change down" id="ticker-eur-change">-0.18%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">GOLD</span>
-          <span class="ticker-price" id="ticker-gold">$2,687.40</span>
-          <span class="ticker-change up" id="ticker-gold-change">+0.95%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">NASDAQ</span>
-          <span class="ticker-price" id="ticker-nasdaq">19,241.50</span>
-          <span class="ticker-change up" id="ticker-nasdaq-change">+0.28%</span>
-        </div>
-        <!-- Duplicate for seamless loop -->
-        <div class="ticker-item">
-          <span class="ticker-symbol">BTC/USD</span>
-          <span class="ticker-price">$95,247.00</span>
-          <span class="ticker-change up">+2.34%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">ETH/USD</span>
-          <span class="ticker-price">$3,487.20</span>
-          <span class="ticker-change up">+3.12%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">SPX</span>
-          <span class="ticker-price">5,975.23</span>
-          <span class="ticker-change down">-0.42%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">AAPL</span>
-          <span class="ticker-price">$225.10</span>
-          <span class="ticker-change up">+1.85%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">NVDA</span>
-          <span class="ticker-price">$135.72</span>
-          <span class="ticker-change up">+4.21%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">EUR/USD</span>
-          <span class="ticker-price">1.0287</span>
-          <span class="ticker-change down">-0.18%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">GOLD</span>
-          <span class="ticker-price">$2,687.40</span>
-          <span class="ticker-change up">+0.95%</span>
-        </div>
-        <div class="ticker-item">
-          <span class="ticker-symbol">NASDAQ</span>
-          <span class="ticker-price">19,241.50</span>
-          <span class="ticker-change up">+0.28%</span>
-        </div>
-      </div>
     </div>
 
     <!-- ANALYTICS RADAR PANEL (BOTTOM EXPANDABLE) -->
