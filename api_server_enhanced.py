@@ -51,6 +51,17 @@ genius_state = {
     'strength': 'medium'
 }
 
+# Optional ML model for Genius
+try:
+    from genius_model import load_model, infer_signal, commentary_for
+    GENIUS_MODEL = load_model()
+    print("[ML] Model zaladowany pomyslnie!")
+except Exception as e:
+    GENIUS_MODEL = None
+    print(f"[WARNING] Model nie zaladowany: {e}")
+    import traceback
+    traceback.print_exc()
+
 # ========== DATA FETCHERS ==========
 
 def fetch_binance_data():
@@ -235,57 +246,61 @@ def fear_greed():
 
 @app.route('/api/genius/commentary')
 def genius_commentary():
-    """Generate live Genius commentary based on real-time data analysis"""
+    """Generate live Genius commentary enhanced by ML when available"""
     try:
         btc = cache['btc_price']
         change = cache['btc_change_24h']
         fear_greed = cache['fear_greed']
         volume = cache['btc_volume']
-        
-        # Analyze conditions
-        signal = 'NEUTRAL'
-        strength = 'medium'
-        commentary = ''
-        
-        # Price momentum analysis
-        if change > 1.5:
-            signal = 'BULL'
-            strength = 'strong'
-            commentary = f"🟢 BTC momentum strong (+{change:.2f}%). Byki dominują. Utrzymaj longa, podnieś SL pod 95.1k."
-        elif change > 0.5:
-            signal = 'BULL'
-            strength = 'medium'
-            commentary = f"🟢 Lekki wzrost (+{change:.2f}%). Trend pozytywny. Czekaj na retest 95.2k FVG."
-        elif change < -1.5:
-            signal = 'BEAR'
-            strength = 'strong'
-            commentary = f"🔴 Spadek ostry ({change:.2f}%). Bieżnie protect longs. Czekaj na support 94.8k."
-        elif change < -0.5:
-            signal = 'BEAR'
-            strength = 'medium'
-            commentary = f"🔴 Pullback ({change:.2f}%). Zmiana nastroju. Uważaj na poziom 95k."
-        else:
-            signal = 'NEUTRAL'
-            commentary = "⭕ Konsolidacja. RSI likely 45-55. Scalp opportunity w FVG."
-        
-        # Fear & Greed factor
-        if fear_greed > 70:
-            commentary += f" | Fear&Greed {fear_greed} (GREED) → rezerwuj 30% TP na 97.4k."
-        elif fear_greed < 30:
-            commentary += f" | Fear&Greed {fear_greed} (FEAR) → trzymaj hedgi, czekaj na reversal."
-        
-        # Volume analysis
-        if volume > cache.get('prev_volume', 1) * 1.2:
-            commentary += " | Wolumen +20% → potwierdzenie trendu. Zwiększ pozycję."
-            if strength == 'medium':
-                strength = 'strong'
-        
-        # Session analysis
+        prev_vol = cache.get('prev_volume', max(1.0, volume))
+        vol_ratio = (volume / prev_vol) if prev_vol else 1.0
         hour = datetime.now().hour
-        if 8 <= hour < 11:
-            commentary += " | LONDON OPEN: szukaj sweepu. Volatilność OK."
-        elif 14 <= hour < 17:
-            commentary += " | NEW YORK OPEN: watch liquidity sweep. Trend może przyspieszyć."
+        # Optional extra flow features if analytics computed
+        long_short_ratio = 1.0
+        
+        # Compose feature dict
+        features = {
+            'change': change,
+            'fear_greed': fear_greed,
+            'volume_ratio': vol_ratio,
+            'hour': hour,
+            'long_short_ratio': long_short_ratio,
+        }
+        
+        # Use ML model if present, else heuristics
+        if GENIUS_MODEL is not None:
+            signal, strength, score = infer_signal(GENIUS_MODEL, features)
+            commentary = commentary_for(signal, strength, features) + f" | ML score {score:.2f}"
+        else:
+            # Fallback to previous rule-based logic
+            signal = 'NEUTRAL'
+            strength = 'medium'
+            commentary = ''
+            if change > 1.5:
+                signal = 'BULL'; strength = 'strong'
+                commentary = f"🟢 BTC momentum strong (+{change:.2f}%). Byki dominują. Utrzymaj longa, podnieś SL pod 95.1k."
+            elif change > 0.5:
+                signal = 'BULL'; strength = 'medium'
+                commentary = f"🟢 Lekki wzrost (+{change:.2f}%). Trend pozytywny. Czekaj na retest 95.2k FVG."
+            elif change < -1.5:
+                signal = 'BEAR'; strength = 'strong'
+                commentary = f"🔴 Spadek ostry ({change:.2f}%). Bieżnie protect longs. Czekaj na support 94.8k."
+            elif change < -0.5:
+                signal = 'BEAR'; strength = 'medium'
+                commentary = f"🔴 Pullback ({change:.2f}%). Zmiana nastroju. Uważaj na poziom 95k."
+            else:
+                commentary = "⭕ Konsolidacja. RSI likely 45-55. Scalp opportunity w FVG."
+            if fear_greed > 70:
+                commentary += f" | Fear&Greed {fear_greed} (GREED) → rezerwuj 30% TP na 97.4k."
+            elif fear_greed < 30:
+                commentary += f" | Fear&Greed {fear_greed} (FEAR) → trzymaj hedgi, czekaj na reversal."
+            if vol_ratio > 1.2 and strength == 'medium':
+                strength = 'strong'
+                commentary += " | Wolumen +20% → potwierdzenie trendu. Zwiększ pozycję."
+            if 8 <= hour < 11:
+                commentary += " | LONDON OPEN: szukaj sweepu. Volatilność OK."
+            elif 14 <= hour < 17:
+                commentary += " | NEW YORK OPEN: watch liquidity sweep. Trend może przyspieszyć."
         
         genius_state['last_commentary'] = commentary
         genius_state['signal'] = signal
