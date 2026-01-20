@@ -171,34 +171,35 @@
       display: flex;
       align-items: center;
       white-space: nowrap;
-      animation: ticker-scroll 50s linear infinite;
-      gap: 72px; /* 20% bigger: 60px * 1.2 */
-      padding: 0 48px; /* 20% bigger: 40px * 1.2 */
+      animation: ticker-scroll 45s linear infinite;
+      gap: 6px;
+      padding: 0 40px;
     }
     .news-ticker-item {
       display: flex;
       align-items: center;
-      gap: 19px; /* 20% bigger: 16px * 1.2 */
-      font-size: 1.08em; /* 20% bigger: 0.9em * 1.2 */
+      gap: 8px;
+      font-size: 0.9em;
       font-weight: 700;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
     .news-ticker-label {
       color: #ffffff;
-      font-size: 2.64em; /* 20% bigger: 2.2em * 1.2 */
+      font-size: 0.95em;
       font-weight: 700;
-      background: rgba(0, 212, 255, 0.05);
+      background: rgba(0, 212, 255, 0.1);
       padding: 4px 8px;
       border-left: 3px solid var(--cyan);
+      min-width: 50px;
     }
     .news-ticker-text {
       color: #cccccc;
-      font-size: 1.2em; /* 20% bigger: 1em * 1.2 */
-      max-width: 800px;
+      font-size: 0.9em;
+      min-width: 80px;
     }
     .news-ticker-time {
       color: #999999;
-      font-size: 1.02em; /* 20% bigger: 0.85em * 1.2 */
+      font-size: 0.75em;
       margin-left: 12px;
     }
 
@@ -1332,65 +1333,75 @@
   <div class="news-ticker-bar">
     <div class="news-ticker-content" id="newsTickerContent">
       <div class="news-ticker-item">
-        <span class="news-ticker-label">BREAKING</span>
-        <span class="news-ticker-text">Bitcoin surges past $95K as institutional demand hits record highs</span>
-        <span class="news-ticker-time">2 min ago</span>
+        <span class="news-ticker-label">SPX</span>
+        <span class="news-ticker-text">5,123.00</span>
+        <span class="news-ticker-time">Δ0.32%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">MARKET</span>
-        <span class="news-ticker-text">Fed signals potential rate cut in Q2 2026, markets rally</span>
-        <span class="news-ticker-time">15 min ago</span>
+        <span class="news-ticker-label">INDU</span>
+        <span class="news-ticker-text">39,210.00</span>
+        <span class="news-ticker-time">Δ0.18%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">CRYPTO</span>
-        <span class="news-ticker-text">Ethereum upgrade successful, gas fees drop 40%</span>
-        <span class="news-ticker-time">28 min ago</span>
+        <span class="news-ticker-label">IXIC</span>
+        <span class="news-ticker-text">17,988.00</span>
+        <span class="news-ticker-time">Δ0.55%</span>
       </div>
+      <span style="color: #666; margin: 0 8px; font-weight: 700; color: #fff;">MEGA CAPS</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">STOCKS</span>
-        <span class="news-ticker-text">NVIDIA announces new AI chip, stock jumps 5% in pre-market</span>
-        <span class="news-ticker-time">1 hour ago</span>
+        <span class="news-ticker-label">AAPL</span>
+        <span class="news-ticker-text">245.90</span>
+        <span class="news-ticker-time">Δ1.2%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">ALERT</span>
-        <span class="news-ticker-text">Major whale movement detected: 10,000 BTC transferred to exchange</span>
-        <span class="news-ticker-time">1 hour ago</span>
+        <span class="news-ticker-label">NVDA</span>
+        <span class="news-ticker-text">1,265.90</span>
+        <span class="news-ticker-time">Δ1.8%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">GLOBAL</span>
-        <span class="news-ticker-text">Gold hits new all-time high at $2,700/oz amid geopolitical tensions</span>
-        <span class="news-ticker-time">2 hours ago</span>
+        <span class="news-ticker-label">MSFT</span>
+        <span class="news-ticker-text">412.30</span>
+        <span class="news-ticker-time">Δ0.9%</span>
       </div>
       <!-- Duplicate for seamless loop -->
       <div class="news-ticker-item">
-        <span class="news-ticker-label">BREAKING</span>
-        <span class="news-ticker-text">Bitcoin surges past $95K as institutional demand hits record highs</span>
-        <span class="news-ticker-time">2 min ago</span>
+        <span class="news-ticker-label">SPX</span>
+        <span class="news-ticker-text">5,123.00</span>
+        <span class="news-ticker-time">Δ0.32%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">MARKET</span>
-        <span class="news-ticker-text">Fed signals potential rate cut in Q2 2026, markets rally</span>
-        <span class="news-ticker-time">15 min ago</span>
+        <span class="news-ticker-label">INDU</span>
+        <span class="news-ticker-text">39,210.00</span>
+        <span class="news-ticker-time">Δ0.18%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">CRYPTO</span>
-        <span class="news-ticker-text">Ethereum upgrade successful, gas fees drop 40%</span>
-        <span class="news-ticker-time">28 min ago</span>
+        <span class="news-ticker-label">IXIC</span>
+        <span class="news-ticker-text">17,988.00</span>
+        <span class="news-ticker-time">Δ0.55%</span>
       </div>
+      <span style="color: #666; margin: 0 8px; font-weight: 700; color: #fff;">MEGA CAPS</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">STOCKS</span>
-        <span class="news-ticker-text">NVIDIA announces new AI chip, stock jumps 5% in pre-market</span>
-        <span class="news-ticker-time">1 hour ago</span>
+        <span class="news-ticker-label">AAPL</span>
+        <span class="news-ticker-text">245.90</span>
+        <span class="news-ticker-time">Δ1.2%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">ALERT</span>
-        <span class="news-ticker-text">Major whale movement detected: 10,000 BTC transferred to exchange</span>
-        <span class="news-ticker-time">1 hour ago</span>
+        <span class="news-ticker-label">NVDA</span>
+        <span class="news-ticker-text">1,265.90</span>
+        <span class="news-ticker-time">Δ1.8%</span>
       </div>
+      <span style="color: #666; margin: 0 4px;">•</span>
       <div class="news-ticker-item">
-        <span class="news-ticker-label">GLOBAL</span>
-        <span class="news-ticker-text">Gold hits new all-time high at $2,700/oz amid geopolitical tensions</span>
-        <span class="news-ticker-time">2 hours ago</span>
+        <span class="news-ticker-label">MSFT</span>
+        <span class="news-ticker-text">412.30</span>
+        <span class="news-ticker-time">Δ0.9%</span>
       </div>
     </div>
   </div>
