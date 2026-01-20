@@ -156,6 +156,50 @@
     .menu-item.active { background: #b0303c; border-color: #d44a5c; }
     .menu-item:hover { opacity: 0.9; }
 
+    /* NEWS TICKER BAR (TOP HEADER) - 20% bigger than bottom ticker */
+    .news-ticker-bar {
+      width: 100%;
+      height: 96px; /* 20% bigger than 80px */
+      background: #000000;
+      border-bottom: 1px solid #333333;
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .news-ticker-content {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      animation: ticker-scroll 50s linear infinite;
+      gap: 80px; /* 20% bigger spacing */
+      padding: 0 48px; /* 20% bigger padding */
+    }
+    .news-ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 20px; /* 20% bigger gap */
+      font-size: 1.1em;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+    .news-ticker-label {
+      color: #ffffff;
+      font-size: 2.64em; /* 20% bigger than 2.2em */
+      text-shadow: none;
+      font-weight: 700;
+    }
+    .news-ticker-text {
+      color: #cccccc;
+      font-size: 1.1em;
+      max-width: 800px;
+    }
+    .news-ticker-time {
+      color: #888888;
+      font-size: 0.85em;
+      margin-left: 12px;
+    }
+
     /* TICKER BAR (BELOW RADAR, ABOVE BURGUNDY MENU) */
     .ticker-bar {
       width: 100%;
@@ -1267,10 +1311,71 @@
   </style>
 </head>
 <body>
-  <!-- BLOOMBERG HEADER -->
-  <div class="header">
-    <div>🐹 BTC USD Crypto | HAMSTER TERMINAL</div>
-    <div class="header-time" id="clock">--:--:-- UTC</div>
+  <!-- NEWS TICKER BAR (LIVE BREAKING NEWS) -->
+  <div class="news-ticker-bar">
+    <div class="news-ticker-content" id="newsTickerContent">
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">🔴 BREAKING</span>
+        <span class="news-ticker-text">Bitcoin surges past $95K as institutional demand hits record highs</span>
+        <span class="news-ticker-time">2 min ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">📊 MARKET</span>
+        <span class="news-ticker-text">Fed signals potential rate cut in Q2 2026, markets rally</span>
+        <span class="news-ticker-time">15 min ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">💰 CRYPTO</span>
+        <span class="news-ticker-text">Ethereum upgrade successful, gas fees drop 40%</span>
+        <span class="news-ticker-time">28 min ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">🏦 STOCKS</span>
+        <span class="news-ticker-text">NVIDIA announces new AI chip, stock jumps 5% in pre-market</span>
+        <span class="news-ticker-time">1 hour ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">⚡ ALERT</span>
+        <span class="news-ticker-text">Major whale movement detected: 10,000 BTC transferred to exchange</span>
+        <span class="news-ticker-time">1 hour ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">🌍 GLOBAL</span>
+        <span class="news-ticker-text">Gold hits new all-time high at $2,700/oz amid geopolitical tensions</span>
+        <span class="news-ticker-time">2 hours ago</span>
+      </div>
+      <!-- Duplicate for seamless loop -->
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">🔴 BREAKING</span>
+        <span class="news-ticker-text">Bitcoin surges past $95K as institutional demand hits record highs</span>
+        <span class="news-ticker-time">2 min ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">📊 MARKET</span>
+        <span class="news-ticker-text">Fed signals potential rate cut in Q2 2026, markets rally</span>
+        <span class="news-ticker-time">15 min ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">💰 CRYPTO</span>
+        <span class="news-ticker-text">Ethereum upgrade successful, gas fees drop 40%</span>
+        <span class="news-ticker-time">28 min ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">🏦 STOCKS</span>
+        <span class="news-ticker-text">NVIDIA announces new AI chip, stock jumps 5% in pre-market</span>
+        <span class="news-ticker-time">1 hour ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">⚡ ALERT</span>
+        <span class="news-ticker-text">Major whale movement detected: 10,000 BTC transferred to exchange</span>
+        <span class="news-ticker-time">1 hour ago</span>
+      </div>
+      <div class="news-ticker-item">
+        <span class="news-ticker-label">🌍 GLOBAL</span>
+        <span class="news-ticker-text">Gold hits new all-time high at $2,700/oz amid geopolitical tensions</span>
+        <span class="news-ticker-time">2 hours ago</span>
+      </div>
+    </div>
   </div>
 
   <!-- LEFT TOOLS DRAWER HANDLE -->
