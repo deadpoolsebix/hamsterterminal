@@ -557,15 +557,36 @@
                     <!-- AI SIGNAL -->
                     <div class="signal-box">
                         <div class="signal-title">🐹 AI HAMSTER SIGNAL</div>
-                        <div class="signal-value">BUY</div>
-                        <div class="signal-confidence">CONFIDENCE: 87.5%</div>
+                        <div class="signal-value" id="signalBadge">--</div>
+                        <div class="signal-confidence" id="signalStrength">CONFIDENCE: --</div>
                         <div class="confidence-bar">
-                            <div class="confidence-fill" style="width: 87.5%;"></div>
+                            <div class="confidence-fill" id="signalStrengthFill" style="width: 0%;"></div>
                         </div>
-                        <div style="margin-top: 15px; font-size: 11px; color: #cccccc;">
-                            <div>ENTRY: $98,432.50</div>
-                            <div>TARGET: $105,000.00</div>
-                            <div>STOP LOSS: $95,000.00</div>
+                        <div style="margin-top: 12px; font-size: 11px; color: #cccccc; display: grid; gap: 4px;">
+                            <div id="signalStatus">• Sygnał: --</div>
+                            <div id="strengthStatus">• Siła: --</div>
+                            <div id="btcPriceStatus">• BTC: --</div>
+                            <div id="changeStatus">• 24H: --</div>
+                        </div>
+                        <div id="liveCommentary" style="margin-top: 14px; padding: 12px; background: rgba(0, 212, 255, 0.08); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 4px; font-size: 12px; line-height: 1.6; color: #e6f7ff;">
+                            Genius inicjalizuje… oczekiwanie na odpowiedź API.
+                        </div>
+                        <div id="geniusQuantPanel" style="margin-top: 12px; padding: 12px; background: rgba(255, 140, 0, 0.06); border: 1px solid rgba(255, 140, 0, 0.35); border-radius: 4px; font-size: 11px; line-height: 1.5; color: #ffe9cc;">
+                            Quant Insights w trakcie ładowania…
+                        </div>
+                        <div id="geniusLiveBias" style="margin-top: 12px; font-size: 11px; color: #cccccc; line-height: 1.5;">
+                            Live-bias zostanie pokazany po pierwszym pobraniu danych.
+                        </div>
+                        <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 11px; color: #cccccc;">
+                            <label for="geniusAudioLang" style="font-size: 11px;">Audio język:</label>
+                            <select id="geniusAudioLang" style="background: #0a0a0a; color: #ffffff; border: 1px solid var(--border-gray); padding: 4px 8px; font-size: 11px;">
+                                <option value="pl">PL</option>
+                                <option value="en">EN</option>
+                                <option value="de">DE</option>
+                                <option value="sk">SK</option>
+                            </select>
+                            <button id="geniusAudioPlay" style="background: var(--bloomberg-orange); color: #000; border: none; padding: 6px 12px; font-size: 11px; font-weight: 700; cursor: pointer;">▶ Audio Genius</button>
+                            <span id="geniusAudioStatus" style="color: #aaaaaa; font-size: 10px;">Gotowe</span>
                         </div>
                     </div>
 
@@ -639,6 +660,17 @@
     </div>
 
     <script>
+        // Auto-play spoken intro using browser speech synthesis
+        function playIntroAudio() {
+            if (!('speechSynthesis' in window)) {
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance('Cześć, jestem Hamster Genius. Będę ci pomagać w grze.');
+            utterance.lang = 'pl-PL';
+            speechSynthesis.cancel();
+            speechSynthesis.speak(utterance);
+        }
+
         // Update time
         function updateTime() {
             const now = new Date();
@@ -648,9 +680,299 @@
             const dateStr = now.toISOString().split('T')[0];
             document.getElementById('current-date').textContent = dateStr;
         }
-        
+
+        const LOCAL_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0'];
+        const HAMSTER_DOMAIN = 'hamsterterminal.com';
+        const isLocalhost = LOCAL_HOSTS.includes(window.location.hostname);
+        const isHamsterDomain = window.location.hostname === HAMSTER_DOMAIN || window.location.hostname.endsWith(`.${HAMSTER_DOMAIN}`);
+        const productionApiBase = 'https://api.hamsterterminal.com';
+        const API_BASE = isLocalhost
+            ? 'http://localhost:5000'
+            : (isHamsterDomain ? productionApiBase : window.location.origin);
+        console.log(`🔌 API Mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | Base=${API_BASE}`);
+
+        let geniusAudioHandle = null;
+        let latestGeniusCommentary = '';
+
+        const geniusSignalEmoji = {
+            BULL: '🚀',
+            BEAR: '😱',
+            NEUTRAL: '🤔'
+        };
+
+        function safeNumberText(value, decimals = 2, fallback = '--') {
+            if (typeof value !== 'number' || !Number.isFinite(value)) {
+                return fallback;
+            }
+            return value.toFixed(decimals);
+        }
+
+        function formatNumber(value, decimals = 2) {
+            if (typeof value !== 'number' || !Number.isFinite(value)) {
+                return '--';
+            }
+            return Number(value).toLocaleString('en-US', {
+                minimumFractionDigits: decimals,
+                maximumFractionDigits: decimals
+            });
+        }
+
+        function formatStrengthLabel(strength) {
+            if (!strength) {
+                return '--';
+            }
+            const text = typeof strength === 'string' ? strength : String(strength);
+            return text.trim().length ? text.toUpperCase() : '--';
+        }
+
+        function renderQuantPanel(report) {
+            const panel = document.getElementById('geniusQuantPanel');
+            if (!panel) return;
+
+            if (!report || report.error) {
+                panel.innerHTML = '⚠️ Quant engine offline – oczekiwanie na backend.';
+                return;
+            }
+
+            const insights = report.insights || {};
+            const perf = insights.performance || {};
+            const risk = insights.risk || {};
+            const ffn = insights.ffn || {};
+            const options = insights.options || {};
+            const warnings = Array.isArray(report.warnings) ? report.warnings : [];
+
+            const optionKeys = Object.keys(options);
+            const firstOption = optionKeys.length ? options[optionKeys[0]] : null;
+            let optionPrice = null;
+            if (firstOption && typeof firstOption === 'object') {
+                const candidates = [
+                    firstOption.call_price,
+                    firstOption.price,
+                    firstOption.binomial_price,
+                    firstOption.value,
+                    firstOption.delta_call
+                ];
+                optionPrice = candidates.find(val => typeof val === 'number' && Number.isFinite(val)) ?? null;
+            }
+
+            const timestamp = typeof report.generated_at === 'number' && report.generated_at > 0
+                ? new Date(report.generated_at * 1000).toLocaleTimeString()
+                : new Date().toLocaleTimeString();
+
+            const warningText = warnings.length
+                ? `<div style="margin-top:6px; color:#ffbf80;">⚠️ ${warnings.slice(0, 2).join(' • ')}</div>`
+                : '';
+
+            panel.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                    <span style="color:#ffda9e; font-weight:700;">Quant Insights</span>
+                    <span style="color:#ffd5a8; font-size:0.75em;">${timestamp}</span>
+                </div>
+                <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:8px; font-size:0.9em;">
+                    <div style="background:rgba(0,255,65,0.08); border:1px solid rgba(0,255,65,0.25); padding:6px; border-radius:3px;">
+                        <div style="color:#9fff9f; font-weight:700;">σ 1d</div>
+                        <div>${safeNumberText(perf.daily_volatility, 3)}</div>
+                    </div>
+                    <div style="background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.25); padding:6px; border-radius:3px;">
+                        <div style="color:#ffcc66; font-weight:700;">VaR 95%</div>
+                        <div>${safeNumberText(risk.value_at_risk, 4)}</div>
+                    </div>
+                    <div style="background:rgba(187,134,252,0.08); border:1px solid rgba(187,134,252,0.25); padding:6px; border-radius:3px;">
+                        <div style="color:#bb86fc; font-weight:700;">Sharpe*</div>
+                        <div>${safeNumberText(perf.sharpe_like, 2)}</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; font-size:0.85em;">
+                    ${typeof ffn.cagr === 'number' ? `<span style="background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.3); padding:4px 6px; border-radius:3px; color:#00d4ff;">FFN CAGR ${(ffn.cagr * 100).toFixed(2)}%</span>` : ''}
+                    ${optionPrice !== null ? `<span style="background:rgba(255,0,51,0.1); border:1px solid rgba(255,0,51,0.25); padding:4px 6px; border-radius:3px; color:#ff6688;">Option ${optionPrice.toFixed(2)}</span>` : ''}
+                    ${typeof perf.sortino_like === 'number' ? `<span style="background:rgba(0,255,65,0.1); border:1px solid rgba(0,255,65,0.25); padding:4px 6px; border-radius:3px; color:#7dff7d;">Sortino ${safeNumberText(perf.sortino_like, 2)}</span>` : ''}
+                </div>
+                ${warningText}
+            `;
+        }
+
+        function renderLiveBias(liveBias) {
+            const container = document.getElementById('geniusLiveBias');
+            if (!container) return;
+
+            if (!liveBias || typeof liveBias !== 'object') {
+                container.textContent = 'Brak aktualnych danych live-bias.';
+                return;
+            }
+
+            const mtfFocus = (liveBias.mtfFocus || [])
+                .map(item => {
+                    if (!item) return '';
+                    const tag = typeof item === 'string' ? item : (item.label || item.note || '');
+                    return tag ? `<span style="background: rgba(255,140,0,0.12); border: 1px solid rgba(255,140,0,0.35); padding: 2px 6px; margin-right: 6px; border-radius: 3px; color: #ffcc91;">${tag}</span>` : '';
+                })
+                .filter(Boolean)
+                .join(' ');
+
+            const contextNotes = (liveBias.recentContext || [])
+                .map(item => {
+                    if (!item) return '';
+                    const note = typeof item === 'string' ? item : (item.note || item.label || '');
+                    return note ? `<li>${note}</li>` : '';
+                })
+                .filter(Boolean)
+                .join('');
+
+            container.innerHTML = `
+                <div style="color:#ffe0b3; font-weight:700; margin-bottom:4px;">Bias: ${liveBias.primaryBias?.toUpperCase() || 'N/A'} • Playbook: ${liveBias.playbook || '--'}</div>
+                <div style="margin-bottom:6px;">MTF Focus: ${mtfFocus || '—'}</div>
+                <div>Sentiment: ${liveBias.sentimentShift || '--'} • Wolumen: ${liveBias.volumeNote || '--'}</div>
+                <div style="margin-top:4px;">Callout: ${liveBias.sessionCallout || '--'}</div>
+                ${contextNotes ? `<div style="margin-top:6px; color:#ffd2a3; font-size:0.95em;">Ostatnie notatki:<ul style="margin-left:16px; margin-top:4px;">${contextNotes}</ul></div>` : ''}
+            `;
+        }
+
+        function applyGeniusPayload(payload) {
+            const signalStatusEl = document.getElementById('signalStatus');
+            const strengthStatusEl = document.getElementById('strengthStatus');
+            const btcStatusEl = document.getElementById('btcPriceStatus');
+            const changeStatusEl = document.getElementById('changeStatus');
+            const commentaryEl = document.getElementById('liveCommentary');
+            const signalBadgeEl = document.getElementById('signalBadge');
+            const signalStrengthEl = document.getElementById('signalStrength');
+            const signalStrengthFillEl = document.getElementById('signalStrengthFill');
+
+            if (!payload || typeof payload !== 'object') {
+                if (signalStatusEl) signalStatusEl.textContent = '• Sygnał: --';
+                if (strengthStatusEl) strengthStatusEl.textContent = '• Siła: --';
+                if (btcStatusEl) btcStatusEl.textContent = '• BTC: --';
+                if (changeStatusEl) changeStatusEl.textContent = '• 24H: --';
+                if (commentaryEl) commentaryEl.textContent = 'Genius w trybie offline — użyj danych demonstracyjnych.';
+                if (signalBadgeEl) signalBadgeEl.textContent = '--';
+                if (signalStrengthEl) signalStrengthEl.textContent = 'CONFIDENCE: --';
+                if (signalStrengthFillEl) signalStrengthFillEl.style.width = '0%';
+                latestGeniusCommentary = '';
+                renderQuantPanel(null);
+                renderLiveBias(null);
+                return;
+            }
+
+            const signal = (payload.signal || 'NEUTRAL').toUpperCase();
+            const strength = formatStrengthLabel(payload.strength);
+            const strengthScore = typeof payload.strength_score === 'number' && Number.isFinite(payload.strength_score)
+                ? Math.round(payload.strength_score * 100)
+                : null;
+
+            const confidenceText = strengthScore !== null ? `CONFIDENCE: ${strengthScore}%` : `CONFIDENCE: ${strength}`;
+            if (signalStrengthEl) signalStrengthEl.textContent = confidenceText;
+            if (signalStrengthFillEl) {
+                const fillPercent = strengthScore !== null ? Math.max(0, Math.min(100, strengthScore)) : 0;
+                signalStrengthFillEl.style.width = `${fillPercent}%`;
+            }
+
+            if (signalBadgeEl) {
+                const emoji = geniusSignalEmoji[signal] || '•';
+                signalBadgeEl.textContent = `${emoji} ${signal}`;
+            }
+
+            if (signalStatusEl) {
+                const emoji = geniusSignalEmoji[signal] || '•';
+                signalStatusEl.textContent = `• Sygnał: ${emoji} ${signal}`;
+            }
+
+            if (strengthStatusEl) {
+                const suffix = strengthScore !== null ? ` (${strengthScore}%)` : '';
+                strengthStatusEl.textContent = `• Siła: ${strength}${suffix}`;
+            }
+
+            if (btcStatusEl) {
+                const btcText = formatNumber(payload.btc_price, 0);
+                btcStatusEl.textContent = `• BTC: $${btcText}`;
+            }
+
+            if (changeStatusEl) {
+                if (typeof payload.change_24h === 'number' && Number.isFinite(payload.change_24h)) {
+                    const sign = payload.change_24h >= 0 ? '+' : '';
+                    changeStatusEl.textContent = `• 24H: ${sign}${payload.change_24h.toFixed(2)}%`;
+                } else {
+                    changeStatusEl.textContent = '• 24H: --';
+                }
+            }
+
+            if (commentaryEl) {
+                const commentary = payload.commentary || 'Brak komentarza z silnika Genius.';
+                commentaryEl.innerHTML = `<div style="margin-bottom:4px; font-weight:600;">${commentary}</div>`;
+                latestGeniusCommentary = commentary;
+            }
+
+            renderLiveBias(payload.liveBias);
+            renderQuantPanel(payload.quant);
+        }
+
+        async function updateGeniusCommentary() {
+            try {
+                const response = await fetch(`${API_BASE}/api/genius/commentary?symbol=BTCUSDT`, { cache: 'no-store' });
+                if (response.ok) {
+                    const payload = await response.json();
+                    if (payload && payload.ok) {
+                        applyGeniusPayload(payload);
+                        return;
+                    }
+                    console.warn('Genius API responded without ok flag', payload);
+                } else {
+                    console.warn('Genius API HTTP error', response.status);
+                }
+            } catch (error) {
+                console.log('Genius API offline, fallback activated.', error);
+            }
+
+            applyGeniusPayload(null);
+        }
+
+        async function playGeniusAudio(lang) {
+            const statusEl = document.getElementById('geniusAudioStatus');
+            if (statusEl) {
+                statusEl.textContent = 'Generuję audio...';
+            }
+            try {
+                const url = new URL(`${API_BASE}/api/genius/audio`);
+                if (lang) {
+                    url.searchParams.set('lang', lang);
+                }
+                const response = await fetch(url.toString());
+                if (!response.ok) throw new Error('Audio API error');
+                const data = await response.json();
+                if (!data.ok || !data.audioBase64) throw new Error(data.error || 'Brak audio');
+                const audioSrc = `data:${data.mimeType || 'audio/mpeg'};base64,${data.audioBase64}`;
+                if (geniusAudioHandle) {
+                    geniusAudioHandle.pause();
+                }
+                geniusAudioHandle = new Audio(audioSrc);
+                await geniusAudioHandle.play();
+                if (statusEl) {
+                    statusEl.textContent = `Odtwarzanie (${(data.language || lang || 'pl').toUpperCase()})`;
+                }
+                geniusAudioHandle.onended = () => {
+                    if (statusEl) statusEl.textContent = 'Gotowe';
+                };
+            } catch (err) {
+                console.log('Audio TTS error', err);
+                if (statusEl) {
+                    statusEl.textContent = 'Błąd audio, spróbuj ponownie';
+                }
+            }
+        }
+
         setInterval(updateTime, 1000);
         updateTime();
+        setInterval(updateGeniusCommentary, 10000);
+        updateGeniusCommentary();
+
+        const geniusAudioBtn = document.getElementById('geniusAudioPlay');
+        const geniusAudioLang = document.getElementById('geniusAudioLang');
+        if (geniusAudioBtn) {
+            geniusAudioBtn.addEventListener('click', () => {
+                const lang = geniusAudioLang ? geniusAudioLang.value : 'pl';
+                playGeniusAudio(lang);
+            });
+        }
+
+        window.addEventListener('load', playIntroAudio);
     </script>
 </body>
 </html>
