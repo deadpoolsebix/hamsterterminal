@@ -1979,8 +1979,10 @@
             <br>• ALERT: funding > 0.012% → zmniejsz long.</div>
         </div>
         <div class="panel-card">
-          <div class="panel-title">GENIUS ROADMAP</div>
-          <div class="panel-text">Rozbuduj Genius do trybu live-bias: automatyczne playbooki MTF, audio callouts przy zmianie sentymentu i pamięć kontekstu, by komentarz adaptował wcześniejsze alerty.</div>
+          <div class="panel-title">GENIUS QUANT PANEL</div>
+          <div id="geniusQuantPanelInline" class="panel-text" style="color: #cce8ff; font-size: 0.9em; line-height: 1.5; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.25); padding: 10px; border-radius: 4px;">
+            Quant engine inicjalizuje… oczekiwanie na odpowiedź API.
+          </div>
         </div>
         <div class="panel-card" style="grid-column: span 3; grid-row: span 2;">
           <div class="panel-title">HAMSTER GENIUS • WYKRES + KOMENTARZ</div>
@@ -3156,8 +3158,14 @@
     setInterval(updateTime, 1000);
     updateTime();
 
-    const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const API_BASE = isLocalhost ? 'http://localhost:5000' : window.location.origin;
+    const LOCAL_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0'];
+    const HAMSTER_DOMAIN = 'hamsterterminal.com';
+    const isLocalhost = LOCAL_HOSTS.includes(window.location.hostname);
+    const isHamsterDomain = window.location.hostname === HAMSTER_DOMAIN || window.location.hostname.endsWith(`.${HAMSTER_DOMAIN}`);
+    const productionApiBase = 'https://pcs-injuries-willow-prairie.trycloudflare.com';
+    const API_BASE = isLocalhost
+      ? 'http://localhost:5000'
+      : (isHamsterDomain ? productionApiBase : window.location.origin);
     console.log(`🔌 API mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | base=${API_BASE}`);
 
     const killzoneClassMap = {
@@ -3229,11 +3237,19 @@
     }
 
     function renderQuantPanel(report) {
-      const panel = document.getElementById('geniusQuantPanel');
-      if (!panel) return;
+      const panelIds = ['geniusQuantPanel', 'geniusQuantPanelInline'];
+      const panels = panelIds
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+      if (!panels.length) {
+        return;
+      }
 
       if (!report || report.error) {
-        panel.innerHTML = '<div style="color:#ff8888; font-size:0.82em;">⚠️ Quant engine offline – oczekiwanie na backend.</div>';
+        const offlineHtml = '<div style="color:#ff8888; font-size:0.82em;">⚠️ Quant engine offline – oczekiwanie na backend.</div>';
+        panels.forEach(panel => {
+          panel.innerHTML = offlineHtml;
+        });
         return;
       }
 
@@ -3266,7 +3282,7 @@
         ? `<div style="margin-top:8px; color:#ffaa55;">⚠️ ${warnings.slice(0, 2).join(' • ')}</div>`
         : '';
 
-      panel.innerHTML = `
+      const html = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <span style="color:var(--cyan); font-weight:700;">Quant Insights</span>
           <span style="color:var(--gray); font-size:0.75em;">${timestamp}</span>
@@ -3292,6 +3308,9 @@
         </div>
         ${warningText}
       `;
+      panels.forEach(panel => {
+        panel.innerHTML = html;
+      });
     }
 
     function applyGeniusPayload(payload) {

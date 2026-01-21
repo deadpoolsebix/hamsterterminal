@@ -159,7 +159,7 @@
     /* NEWS TICKER BAR (TOP HEADER) - MARKET TICKER */
     .news-ticker-bar {
       width: 100%;
-      height: 80px;
+      height: 96px; /* 20% larger than Sniper ticker */
       background: #000000;
       border-top: 1px solid #333333;
       border-bottom: 1px solid #333333;
@@ -173,29 +173,30 @@
       align-items: center;
       white-space: nowrap;
       animation: ticker-scroll 45s linear infinite;
-      gap: 60px;
-      padding: 0 40px;
+      gap: 72px;
+      padding: 0 48px;
     }
     .news-ticker-item {
       display: flex;
       align-items: center;
-      gap: 16px;
-      font-size: 0.9em;
+      gap: 20px;
+      font-size: 1.08em;
       font-weight: 700;
       letter-spacing: 1px;
     }
     .news-ticker-label {
       color: #ffffff;
-      font-size: 2.2em;
+      font-size: 2.64em;
       text-shadow: none;
     }
     .news-ticker-text {
       color: #cccccc;
-      min-width: 160px;
+      min-width: 192px;
+      font-size: 1em;
     }
     .news-ticker-time {
-      min-width: 120px;
-      font-size: 0.85em;
+      min-width: 144px;
+      font-size: 1.02em;
       color: #999999;
     }
     .news-ticker-time.up {
@@ -273,6 +274,12 @@
     .panel-card { background: #0d0d0d; border: 1px solid var(--border); padding: 12px; }
     .panel-title { font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; font-size: 0.95em; }
     .panel-text { color: var(--gray); font-size: 0.9em; line-height: 1.5; }
+    .panel-text-strong { color: #f5f5f5; font-size: 0.96em; line-height: 1.6; }
+    .panel-text-xl { color: #ffffff; font-size: 1.05em; line-height: 1.7; font-weight: 600; letter-spacing: 0.3px; }
+    .panel-bullets { margin: 4px 0 0 16px; padding: 0; list-style: square; color: #f5f5f5; font-size: 0.96em; line-height: 1.6; }
+    .panel-bullets li { margin-bottom: 4px; }
+    .text-buy { color: var(--green); font-weight: 700; }
+    .text-sell { color: var(--red); font-weight: 700; }
     .signal-tag { display: inline-block; padding: 4px 8px; border: 1px solid var(--border); background: #111; color: #fff; font-weight: 700; font-size: 0.8em; letter-spacing: 0.5px; margin-right: 6px; }
     .sparkline { width: 100%; height: 80px; background: #0a0a0a; border: 1px solid var(--border); padding: 6px; }
     .sparkline svg { width: 100%; height: 100%; }
@@ -401,18 +408,20 @@
 
     /* TICKER */
     .ticker-wrapper {
-      padding: 0 24px 12px 24px;
+      padding: 0 24px 17px 24px;
     }
     .ticker {
       background: var(--panel);
       border: 1px solid var(--border);
-      padding: 10px;
+      padding: 14px;
       overflow: hidden;
-      margin-bottom: 12px;
+      margin-bottom: 17px;
+      font-size: 1.4em;
+      line-height: 1.3;
     }
     .ticker-track {
       display: inline-flex;
-      gap: 22px;
+      gap: 30px;
       white-space: nowrap;
       animation: ticker 28s linear infinite;
     }
@@ -649,6 +658,145 @@
       font-size: 11px;
       fill: #ffffff;
       font-weight: bold;
+    }
+    .session-module {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 2px solid #1a1a1a;
+      padding: 14px 16px 16px 16px;
+      margin-bottom: 18px;
+    }
+    .session-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .session-title {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.95em;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .session-timer {
+      color: var(--yellow);
+      font-weight: 700;
+      font-size: 0.85em;
+      letter-spacing: 0.4px;
+    }
+    .session-svg {
+      width: 100%;
+      height: 160px;
+      background: #050505;
+      border: 1px solid #101010;
+    }
+    .killzone-rect {
+      fill-opacity: 0.18;
+      stroke-width: 1;
+      stroke-dasharray: 4,4;
+    }
+    .killzone-london {
+      fill: rgba(0, 212, 255, 0.16);
+      stroke: var(--cyan);
+    }
+    .killzone-ny {
+      fill: rgba(255, 0, 51, 0.16);
+      stroke: var(--red);
+    }
+    .killzone-asia {
+      fill: rgba(255, 196, 0, 0.16);
+      stroke: var(--yellow);
+    }
+    .killzone-block {
+      transition: transform 0.3s ease;
+    }
+    .killzone-block.killzone-active {
+      transform: scaleY(1.02);
+    }
+    .killzone-block.killzone-active .killzone-rect {
+      stroke-width: 2;
+      filter: drop-shadow(0 0 6px rgba(255, 196, 0, 0.35));
+    }
+    .killzone-block.killzone-upcoming .killzone-rect {
+      stroke-dasharray: 6,4;
+      opacity: 0.9;
+    }
+    .session-axis {
+      stroke: #1a1a1a;
+      stroke-width: 0.5;
+    }
+    .session-bubble {
+      fill: rgba(255, 140, 0, 0.12);
+      stroke: var(--orange);
+      stroke-width: 1;
+    }
+    .session-bubble-tail {
+      fill: rgba(255, 140, 0, 0.12);
+      stroke: var(--orange);
+      stroke-width: 1;
+    }
+    .session-bubble-text {
+      font-size: 9px;
+      fill: var(--orange);
+      font-weight: 600;
+    }
+    .session-sniper-line {
+      stroke: var(--green);
+      stroke-width: 1.2;
+      stroke-dasharray: 5,3;
+    }
+    .session-footer {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 12px;
+      margin-top: 14px;
+    }
+    .session-signal-box,
+    .session-push-box {
+      background: #0d0d0d;
+      border: 1px solid #1a1a1a;
+      padding: 10px 12px;
+    }
+    .session-label {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.85em;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: block;
+    }
+    .session-signal-box span {
+      display: block;
+      color: var(--gray);
+      font-size: 0.82em;
+      line-height: 1.5;
+    }
+    .session-push-box {
+      color: var(--gray);
+      font-size: 0.83em;
+      line-height: 1.5;
+    }
+    .genius-commentary {
+      background: #0d0d0d;
+      border: 1px solid var(--border);
+      border-left: 2px solid var(--orange);
+      padding: 12px 16px;
+      margin-bottom: 20px;
+    }
+    .genius-commentary-title {
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.9em;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .genius-commentary-text {
+      color: var(--gray);
+      font-size: 0.85em;
+      line-height: 1.6;
     }
     .transfers {
       background: var(--panel);
@@ -1330,6 +1478,30 @@
       white-space: nowrap;
       flex-shrink: 0;
     }
+    .hamster-header-icon {
+      font-size: 1.4em;
+      margin-right: 10px;
+    }
+    .hamster-header-text {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #ffffff;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+    .hamster-header-market {
+      color: #ffffff;
+      letter-spacing: 1.2px;
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+    }
+    .hamster-header-crypto {
+      color: var(--yellow);
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -1387,10 +1559,31 @@
         <span>RADAR</span>
       </button>
       <!-- HAMSTER TERMINAL LABEL -->
-      <div class="hamster-header" style="margin: 0 8px; width: auto; height: auto; background: none; border: none; padding: 0 12px;">🐹 HAMSTER TERMINAL</div>
+      <div class="hamster-header" style="margin: 0 8px; width: auto; height: auto; background: none; border: none; padding: 0 12px;">
+        <span class="hamster-header-icon" aria-hidden="true">🐹</span>
+        <span class="hamster-header-text">
+          <span class="hamster-header-market">
+            <span>BTC USD</span>
+            <span class="hamster-header-crypto">Crypto</span>
+          </span>
+          <span>|</span>
+          <span>Hamster Terminal</span>
+        </span>
+      </div>
       <button class="analytics-btn" id="drawerBtn" style="margin-left: 4px;" title="Advanced Analytics (Side)">
         <span>ADVANCED</span>
       </button>
+    </div>
+
+    <!-- BLOOMBERG NEWS TICKER (TOP) -->
+    <div class="news-ticker-bar">
+      <div class="news-ticker-content" id="newsTickerContent" aria-live="polite">
+        <div class="news-ticker-item">
+          <span class="news-ticker-label">LADOWANIE</span>
+          <span class="news-ticker-text">Pobieram naglowki z API...</span>
+          <span class="news-ticker-time">--</span>
+        </div>
+      </div>
     </div>
 
     <!-- BURGUNDY MENU BAR -->
@@ -1644,88 +1837,36 @@
     </div>
 
     <!-- MARKET TICKER BAR (SNIPER SECTION) -->
-    <div class="news-ticker-bar">
-      <div class="news-ticker-content" id="newsTickerContent">
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">BTC/USD</span>
-          <span class="news-ticker-text" id="ticker-top-btc">$95,247.00</span>
-          <span class="news-ticker-time up" id="ticker-top-btc-change">+2.34%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">ETH/USD</span>
-          <span class="news-ticker-text" id="ticker-top-eth">$3,487.20</span>
-          <span class="news-ticker-time up" id="ticker-top-eth-change">+3.12%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">SPX</span>
-          <span class="news-ticker-text" id="ticker-top-spx">5,975.23</span>
-          <span class="news-ticker-time down" id="ticker-top-spx-change">-0.42%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">AAPL</span>
-          <span class="news-ticker-text" id="ticker-top-aapl">$225.10</span>
-          <span class="news-ticker-time up" id="ticker-top-aapl-change">+1.85%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">NVDA</span>
-          <span class="news-ticker-text" id="ticker-top-nvda">$135.72</span>
-          <span class="news-ticker-time up" id="ticker-top-nvda-change">+4.21%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">EUR/USD</span>
-          <span class="news-ticker-text" id="ticker-top-eur">1.0287</span>
-          <span class="news-ticker-time down" id="ticker-top-eur-change">-0.18%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">GOLD</span>
-          <span class="news-ticker-text" id="ticker-top-gold">$2,687.40</span>
-          <span class="news-ticker-time up" id="ticker-top-gold-change">+0.95%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">NASDAQ</span>
-          <span class="news-ticker-text" id="ticker-top-nasdaq">19,241.50</span>
-          <span class="news-ticker-time up" id="ticker-top-nasdaq-change">+0.28%</span>
-        </div>
-        <!-- Duplicate for seamless loop -->
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">BTC/USD</span>
-          <span class="news-ticker-text">$95,247.00</span>
-          <span class="news-ticker-time up">+2.34%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">ETH/USD</span>
-          <span class="news-ticker-text">$3,487.20</span>
-          <span class="news-ticker-time up">+3.12%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">SPX</span>
-          <span class="news-ticker-text">5,975.23</span>
-          <span class="news-ticker-time down">-0.42%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">AAPL</span>
-          <span class="news-ticker-text">$225.10</span>
-          <span class="news-ticker-time up">+1.85%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">NVDA</span>
-          <span class="news-ticker-text">$135.72</span>
-          <span class="news-ticker-time up">+4.21%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">EUR/USD</span>
-          <span class="news-ticker-text">1.0287</span>
-          <span class="news-ticker-time down">-0.18%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">GOLD</span>
-          <span class="news-ticker-text">$2,687.40</span>
-          <span class="news-ticker-time up">+0.95%</span>
-        </div>
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">NASDAQ</span>
-          <span class="news-ticker-text">19,241.50</span>
-          <span class="news-ticker-time up">+0.28%</span>
+    <div class="ticker-wrapper">
+      <div class="ticker">
+        <div class="ticker-track" id="sniperTickerTrack">
+          <span class="ticker-label">CRYPTO</span>
+          <span class="ticker-item">
+            <span class="ticker-symbol">BTC</span>
+            <span class="ticker-price" id="ticker-btc">--</span>
+            <span class="ticker-change" id="ticker-btc-change">--</span>
+          </span>
+          <span class="ticker-item">
+            <span class="ticker-symbol">ETH</span>
+            <span class="ticker-price" id="ticker-eth">--</span>
+            <span class="ticker-change" id="ticker-eth-change">--</span>
+          </span>
+          <span class="ticker-label">INDEKSY</span>
+          <span class="ticker-item">
+            <span class="ticker-symbol">NASDAQ</span>
+            <span class="ticker-price" id="ticker-nasdaq">--</span>
+            <span class="ticker-change" id="ticker-nasdaq-change">--</span>
+          </span>
+          <span class="ticker-item">
+            <span class="ticker-symbol">S&amp;P 500</span>
+            <span class="ticker-price" id="ticker-sp500">--</span>
+            <span class="ticker-change" id="ticker-sp500-change">--</span>
+          </span>
+          <span class="ticker-item">
+            <span class="ticker-symbol">DAX</span>
+            <span class="ticker-price" id="ticker-dax">--</span>
+            <span class="ticker-change" id="ticker-dax-change">--</span>
+          </span>
         </div>
       </div>
     </div>
@@ -1828,17 +1969,8 @@
     <div class="menu-panel active" id="panel-hamster-genius">
       <div class="panel-grid">
         <div class="panel-card" style="grid-column: span 2;">
-          <div class="panel-title">HAMSTER GENIUS • WYKRES + KOMENTARZ</div>
-          <div class="sparkline">
-            <svg viewBox="0 0 320 90" preserveAspectRatio="xMidYMid meet">
-              <polyline points="10,70 60,52 110,40 160,45 210,33 260,42 310,36" fill="none" stroke="var(--yellow)" stroke-width="2" />
-              <circle cx="110" cy="40" r="5" fill="var(--green)" />
-              <text x="94" y="26" font-size="9" fill="var(--green)">LONG 95.2k</text>
-              <circle cx="260" cy="42" r="5" fill="var(--red)" />
-              <text x="244" y="24" font-size="9" fill="var(--red)">TAKE PROFIT 97.4k</text>
-            </svg>
-          </div>
-          <div class="mini-label">Komentarz: momentum rośnie po obronie buy walli. Ryzyko: wybicie 94.8k = stop.</div>
+          <div class="panel-title">LIVE COMMENTARY OVERLAY</div>
+          <div class="panel-text panel-text-strong">Overlay na wykresie: "Buy wall trzyma 95.2k, brak podaży na ask; przenieś SL pod 95.1k". Update co 30s; plan push-notyfikacji na mobile.</div>
         </div>
         <div class="panel-card">
           <div class="panel-title">SYGNAŁY LIVE</div>
@@ -1847,20 +1979,49 @@
             <br>• ALERT: funding > 0.012% → zmniejsz long.</div>
         </div>
         <div class="panel-card">
-          <div class="panel-title">CO DODAĆ</div>
-          <div class="panel-text">Auto-rysowanie killzone NY/London, push notyfikacji z tekstem AI na wykres, sygnał Sniper BTC z poziomami i timerem świecy.</div>
+          <div class="panel-title">GENIUS QUANT PANEL</div>
+          <div id="geniusQuantPanelInline" class="panel-text" style="color: #cce8ff; font-size: 0.9em; line-height: 1.5; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.25); padding: 10px; border-radius: 4px;">
+            Quant engine inicjalizuje… oczekiwanie na odpowiedź API.
+          </div>
+        </div>
+        <div class="panel-card" style="grid-column: span 3; grid-row: span 2;">
+          <div class="panel-title">HAMSTER GENIUS • WYKRES + KOMENTARZ</div>
+          <div class="sparkline" style="height: 180px;">
+            <svg viewBox="0 0 620 160" preserveAspectRatio="xMidYMid meet">
+              <polyline points="30,125 150,90 250,70 330,78 420,55 510,68 590,52" fill="none" stroke="var(--yellow)" stroke-width="3" />
+              <circle cx="250" cy="70" r="8" fill="var(--green)" />
+              <text x="216" y="40" font-size="12" fill="var(--green)">LONG 95.2k</text>
+              <circle cx="510" cy="68" r="8" fill="var(--red)" />
+              <text x="474" y="48" font-size="12" fill="var(--red)">TAKE PROFIT 97.4k</text>
+            </svg>
+          </div>
+          <div class="panel-text panel-text-xl">
+            <div><span class="text-buy">LONG 95.2k</span></div>
+            <div><span class="text-sell">TAKE PROFIT 97.4k</span></div>
+            <div>Komentarz: momentum rośnie po obronie buy walli. Ryzyko: wybicie 94.8k = stop.</div>
+          </div>
+          <div class="panel-text" id="geniusLiveBias" style="margin-top: 10px; color: var(--gray); font-size: 0.95em; line-height: 1.6;">
+            Ładowanie danych live-bias...
+          </div>
+          <div class="panel-text" style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+            <label for="geniusAudioLang" style="color: var(--gray); font-size: 0.85em;">Audio język:</label>
+            <select id="geniusAudioLang" style="background: #0a0a0a; color: #ffffff; border: 1px solid var(--border); padding: 4px 8px;">
+              <option value="pl">PL</option>
+              <option value="en">EN</option>
+              <option value="de">DE</option>
+              <option value="sk">SK</option>
+            </select>
+            <button id="geniusAudioPlay" class="tools-btn" style="padding: 6px 12px;">▶ Odtwórz koment</button>
+            <span id="geniusAudioStatus" style="color: var(--gray); font-size: 0.8em;">Gotowe</span>
+          </div>
         </div>
         <div class="panel-card">
           <div class="panel-title">SNIPER SHOT • PLAY</div>
-          <div class="panel-text">Setup: Long FVG 95.0k–95.4k, TP1 96.8k, TP2 97.4k, SL 94.8k. Timer świecy: 5m; jeśli delta < 0 przy dotknięciu FVG → odpuść.</div>
-        </div>
-        <div class="panel-card">
-          <div class="panel-title">LIVE COMMENTARY OVERLAY</div>
-          <div class="panel-text">Overlay na wykresie: "Buy wall trzyma 95.2k, brak podaży na ask; przenieś SL pod 95.1k". Update co 30s; plan push-notyfikacji na mobile.</div>
+          <div class="panel-text"><strong>Poziomy natychmiast:</strong> <span class="text-buy">95.0k–95.4k BUY</span> | <span class="text-sell">97.3k–97.6k SELL</span><br><span class="text-sell">SELL.</span> Invalidation: wybicie 97.8k.<br>Setup: Long FVG 95.0k–95.4k, TP1 96.8k, TP2 97.4k, SL 94.8k. Timer świecy: 5m; jeśli delta < 0 przy dotknięciu FVG → odpuść.</div>
         </div>
         <div class="panel-card">
           <div class="panel-title">NIETYPOWE TAKTYKI</div>
-          <div class="panel-text">1) Fade na sweep shortów w killzone NY; 2) Ladder TP na mikrolotach co 120$; 3) Jeżeli funding skacze >0.018% → przełącz 25% pozycji w hedge perps.</div>
+          <div class="panel-text">1) Fade na sweep shortów w killzone NY; 2) Ladder TP na mikrolotach co 120$; 3) Jeżeli funding skacze &gt;0.018% → przełącz 25% pozycji w hedge perps.</div>
         </div>
       </div>
     </div>
@@ -2047,18 +2208,6 @@
     </div>
   </div>
 
-  <!-- TICKER + NEWS + BREAKING NEWS -->
-  <div class="ticker-wrapper">
-    <div class="ticker">
-      <div class="ticker-track">
-        <span class="ticker-label">CRYPTO</span> BTC +2.1% • ETH +1.8% • SOL +4.2% • MATIC -1.3% • ADA +0.8%
-        <span class="ticker-label">METALE</span> XAU/USD 2031.2 ▲0.45% • XAG/USD 25.3 ▼0.12%
-        <span class="ticker-label">INDEKSY</span> SPX 5123 ▲0.32% • INDU 39210 ▲0.18% • IXIC 17988 ▲0.55%
-        <span class="ticker-label">MEGA CAPS</span> AAPL 245.9 ▲1.2% • NVDA 1265.9 ▲1.8% • MSFT 412.3 ▲0.9%
-      </div>
-    </div>
-  </div>
-
   <!-- LIVE NEWS + BREAKING NEWS SIDE BY SIDE -->
   <div class="news-breaking-wrapper">
     <div class="news">
@@ -2103,6 +2252,39 @@
     </div>
   </div>
 
+  <!-- GENIUS AI (ABOVE CHART) -->
+  <div style="padding: 0 24px 15px 24px;">
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 15px;">
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 15px; font-size: 1.1em; letter-spacing: 0.5px; text-transform: uppercase;">GENIUS AI ANALYSIS</div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px;">
+        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">BUY SIGNAL</div>
+          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Strong momentum + RSI bounce from 48. Target: $97.4k</div>
+        </div>
+
+        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">LIQUIDITY ALERT</div>
+          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Major buy wall detected at $94.8k. Support confirmed.</div>
+        </div>
+
+        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">FVG ANALYSIS</div>
+          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Fair Value Gap detected. Expect retest at $95.2k zone.</div>
+        </div>
+
+        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
+          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">RISK WARNING</div>
+          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Resistance at $97.4k strong. Watch for rejection signals.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 13px; padding-top: 13px; border-top: 1px solid #1a1a1a; text-align: right;">
+        <span style="color: var(--gray); font-size: 0.84em;">AI Confidence: </span>
+        <span style="color: #ffffff; font-weight: 700; font-size: 0.89em;">87%</span>
+      </div>
+    </div>
+  </div>
 
 
   <!-- CHART + TRANSFERS -->
@@ -2252,6 +2434,89 @@
         <text x="645" y="57" class="chart-label" fill="var(--orange)" font-size="9">RSI: 62</text>
       </svg>
     </div>
+
+    <!-- SESSION KILLZONE + SNIPER OVERLAY -->
+    <div class="session-module">
+      <div class="session-header">
+        <span class="session-title" id="sessionTitle">Nakładka Killzone Sesji</span>
+        <span class="session-timer" id="sessionTimer">Świeca zamyka się za 02:14</span>
+      </div>
+      <svg class="session-svg" viewBox="0 0 860 160" preserveAspectRatio="xMidYMid meet">
+        <!-- TIME AXIS -->
+        <line x1="60" y1="130" x2="820" y2="130" class="session-axis"/>
+        <line x1="60" y1="40" x2="820" y2="40" class="session-axis" opacity="0.3"/>
+        <line x1="60" y1="85" x2="820" y2="85" class="session-axis" opacity="0.3"/>
+
+        <!-- AUTO KILLZONES -->
+        <g class="killzone-block" data-zone="asia">
+          <rect id="killzoneRect-asia" x="80" y="45" width="150" height="70" class="killzone-rect killzone-asia"/>
+          <text id="killzoneLabel-asia" data-role="label" x="90" y="60" class="chart-label" fill="var(--yellow)" font-size="10">Killzone Azja</text>
+          <text id="killzoneTime-asia" data-role="time" x="90" y="78" class="chart-label" fill="var(--yellow)" font-size="9">01:00 - 05:00 UTC</text>
+        </g>
+
+        <g class="killzone-block" data-zone="london_open">
+          <rect id="killzoneRect-london_open" x="250" y="45" width="210" height="70" class="killzone-rect killzone-london"/>
+          <text id="killzoneLabel-london_open" data-role="label" x="260" y="60" class="chart-label" fill="var(--cyan)" font-size="10">Killzone Londyn</text>
+          <text id="killzoneTime-london_open" data-role="time" x="260" y="78" class="chart-label" fill="var(--cyan)" font-size="9">07:30 - 10:30 UTC</text>
+        </g>
+
+        <g class="killzone-block" data-zone="ny_am">
+          <rect id="killzoneRect-ny_am" x="500" y="45" width="220" height="70" class="killzone-rect killzone-ny"/>
+          <text id="killzoneLabel-ny_am" data-role="label" x="510" y="60" class="chart-label" fill="var(--red)" font-size="10">Killzone Nowy Jork</text>
+          <text id="killzoneTime-ny_am" data-role="time" x="510" y="78" class="chart-label" fill="var(--red)" font-size="9">12:30 - 16:00 UTC</text>
+        </g>
+
+        <g class="killzone-block" data-zone="ny_pm">
+          <rect id="killzoneRect-ny_pm" x="740" y="45" width="110" height="70" class="killzone-rect killzone-ny" opacity="0.65"/>
+          <text id="killzoneLabel-ny_pm" data-role="label" x="750" y="60" class="chart-label" fill="var(--red)" font-size="10">NY PM Fixing</text>
+          <text id="killzoneTime-ny_pm" data-role="time" x="750" y="78" class="chart-label" fill="var(--red)" font-size="9">18:30 - 21:00 UTC</text>
+        </g>
+
+        <!-- PRICE PATH INSIDE KILLZONES -->
+        <polyline points="80,105 140,96 200,88 260,92 320,86 380,82 440,84 500,78 560,82 620,90 680,96 740,100 800,94" stroke="var(--yellow)" stroke-width="2" fill="none"/>
+        <circle cx="600" cy="82" r="4" fill="var(--yellow)" stroke="#000000" stroke-width="0.5"/>
+        <text x="612" y="78" class="chart-label" fill="var(--yellow)" font-size="9">Impuls NY</text>
+
+        <!-- AI PUSH NOTIFICATION -->
+        <rect id="aiAlertBubble" x="600" y="15" width="220" height="58" rx="8" class="session-bubble"/>
+        <polygon points="710,73 692,73 710,95" class="session-bubble-tail"/>
+        <text id="aiAlertTitle" x="610" y="32" class="session-bubble-text">ALERT AI</text>
+        <text id="aiAlertLine1" x="610" y="48" class="session-bubble-text" font-size="8.5">Momentum zgrywa się z killzone NY.</text>
+        <text id="aiAlertLine2" x="610" y="61" class="session-bubble-text" font-size="8.5">Oczekuj wybicia w ciągu 5 min.</text>
+
+        <!-- SNIPER SIGNAL LEVELS -->
+        <line x1="60" y1="110" x2="820" y2="110" class="session-sniper-line"/>
+        <circle cx="600" cy="110" r="5" fill="var(--green)" stroke="#0a0a0a" stroke-width="1"/>
+        <text id="sniperEntryLabel" x="612" y="105" class="chart-label" fill="var(--green)" font-size="10">Wejście Sniper 95 280</text>
+        <text id="sniperTargetsLabel" x="612" y="120" class="chart-label" fill="#bbbbbb" font-size="9">Cele 96 400 / 97 400</text>
+        <text id="sniperTimerLabel" x="760" y="26" class="chart-label" fill="#bbbbbb" font-size="9">Timer: 02:14</text>
+
+        <!-- SESSION TIME MARKERS -->
+        <text x="90" y="145" class="chart-label" fill="#666666" font-size="9">Sesja Azja</text>
+        <text x="270" y="145" class="chart-label" fill="#666666" font-size="9">Otwarcie Londyn</text>
+        <text x="520" y="145" class="chart-label" fill="#666666" font-size="9">Przed otwarciem NY</text>
+        <text x="720" y="145" class="chart-label" fill="#666666" font-size="9">Fixing NY PM</text>
+      </svg>
+
+      <div class="session-footer">
+        <div class="session-signal-box">
+          <span class="session-label" id="sessionCurrentLabel">Sniper BTC</span>
+          <span id="sniperEntryLine">Wejście: 95 280 • TP1: 96 400 • TP2: 97 400</span>
+          <span id="sniperStopLine">Stop: 94 750 • Ryzyko na trade: 0.75%</span>
+          <span id="sessionRecommendation" style="display: block; margin-top: 4px; color: var(--gray); font-size: 0.85em;">Rekomendacja: Pilnuj momentum NY.</span>
+        </div>
+        <div class="session-push-box">
+          <span class="session-label" style="margin-bottom: 6px;">Powiadomienie Push</span>
+          <div id="aiPushNote">Notatka AI: "Sweep płynności pokrywa się z killzone NY. Przygotuj schodkowe wejścia teraz." Powiadomienia wysłane na desktop i mobile.</div>
+          <div id="sessionUpcomingNote" style="margin-top: 6px; color: var(--gray); font-size: 0.85em;">Następna killzone za 45 min.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="genius-commentary">
+      <div class="genius-commentary-title">Komentarz Genius AI</div>
+      <div class="genius-commentary-text">Killzony ustawione automatycznie; okno NY pokrywa się z longiem Sniper, więc bias pozostaje wzrostowy, a RSI schładza się. Utrzymaj schodkowe TP na 96.4k i 97.4k, alert push już wysłany.</div>
+    </div>
     </div>
     
     <!-- LARGE TRANSFERS (BLOOMBERG STYLE) -->
@@ -2304,40 +2569,6 @@
       
       <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1a1a1a;">
         <div style="color: var(--gray); font-size: 0.75em;">Total Volume: <span style="color: #ffffff; font-weight: 700;">7,440 BTC</span></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- GENIUS AI (BLOOMBERG STYLE - POD WYKRESEM) -->
-  <div style="padding: 0 24px 14px 24px;">
-    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 14px;">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 14px; font-size: 1.05em; letter-spacing: 0.5px; text-transform: uppercase;">GENIUS AI ANALYSIS</div>
-      
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">BUY SIGNAL</div>
-          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Strong momentum + RSI bounce from 48. Target: $97.4k</div>
-        </div>
-        
-        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">LIQUIDITY ALERT</div>
-          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Major buy wall detected at $94.8k. Support confirmed.</div>
-        </div>
-        
-        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">FVG ANALYSIS</div>
-          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Fair Value Gap detected. Expect retest at $95.2k zone.</div>
-        </div>
-        
-        <div style="background: #0d0d0d; padding: 12px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.85em; margin-bottom: 6px; text-transform: uppercase;">RISK WARNING</div>
-          <div style="color: var(--gray); font-size: 0.85em; line-height: 1.5;">Resistance at $97.4k strong. Watch for rejection signals.</div>
-        </div>
-      </div>
-      
-      <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #1a1a1a; text-align: right;">
-        <span style="color: var(--gray); font-size: 0.8em;">AI Confidence: </span>
-        <span style="color: #ffffff; font-weight: 700; font-size: 0.85em;">87%</span>
       </div>
     </div>
   </div>
@@ -2879,7 +3110,7 @@
     <!-- HAMSTER GENIUS TAB (podgląd sygnałów) -->
     <div id="hamster-genius" class="tab-content active">
       <h2 style="margin-bottom: 12px;">Hamster Genius • sygnały + live commentary</h2>
-      <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px;">
+      <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px;">
         <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px;">
           <div class="sparkline" style="margin-bottom: 10px;">
             <svg viewBox="0 0 360 120" preserveAspectRatio="xMidYMid meet">
@@ -2890,8 +3121,11 @@
               <text x="240" y="36" font-size="10" fill="var(--red)">TAKE PROFIT 97.4k</text>
             </svg>
           </div>
-          <div id="liveCommentary" style="color: var(--gray); font-size: 0.9em; line-height: 1.5; min-height: 60px;">
+          <div id="liveCommentary" style="color: #f0f0f0; font-size: 1.05em; line-height: 1.75; min-height: 110px; letter-spacing: 0.3px; background: rgba(0, 212, 255, 0.06); border-left: 3px solid var(--cyan); padding: 14px 16px; border-radius: 4px;">
             <p style="color: var(--cyan);">Genius inicjalizuje... (łączy się z API)</p>
+          </div>
+          <div id="geniusQuantPanel" style="margin-top: 12px; padding: 12px; border-radius: 4px; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.25); color: #cce8ff; font-size: 0.85em; line-height: 1.5;">
+            Quant engine inicjalizuje… oczekiwanie na odpowiedź API.
           </div>
         </div>
         <div style="background: #0d0d0d; border: 1px solid var(--border); padding: 12px;">
@@ -2924,28 +3158,492 @@
     setInterval(updateTime, 1000);
     updateTime();
 
+    const LOCAL_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0'];
+    const HAMSTER_DOMAIN = 'hamsterterminal.com';
+    const isLocalhost = LOCAL_HOSTS.includes(window.location.hostname);
+    const isHamsterDomain = window.location.hostname === HAMSTER_DOMAIN || window.location.hostname.endsWith(`.${HAMSTER_DOMAIN}`);
+    const productionApiBase = 'https://pcs-injuries-willow-prairie.trycloudflare.com';
+    const API_BASE = isLocalhost
+      ? 'http://localhost:5000'
+      : (isHamsterDomain ? productionApiBase : window.location.origin);
+    console.log(`🔌 API mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | base=${API_BASE}`);
+
+    const killzoneClassMap = {
+      london_open: 'killzone-london',
+      ny_am: 'killzone-ny',
+      ny_pm: 'killzone-ny',
+      asia: 'killzone-asia'
+    };
+
+    const SESSION_AXIS_WIDTH = 760;
+
+    const priorityColorMap = {
+      high: 'var(--cyan)',
+      medium: 'var(--yellow)',
+      low: 'var(--gray)'
+    };
+
+    function restartAnimation(element) {
+      if (!element) return;
+      element.style.animation = 'none';
+      void element.offsetWidth;
+      element.style.animation = '';
+    }
+
+    function formatUsd(value, decimals = 0) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+      return Number(value).toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    function formatNumber(value, decimals = 2) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return '--';
+      return Number(value).toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+    }
+
+    function formatTickerChange(value, decimals = 2) {
+      if (value === null || value === undefined || Number.isNaN(Number(value))) return '';
+      const numeric = Number(value);
+      const cls = numeric >= 0 ? 'up' : 'down';
+      const sign = numeric >= 0 ? '+' : '';
+      return `<span class="ticker-change ${cls}">${sign}${numeric.toFixed(decimals)}%</span>`;
+    }
+
+    let latestGeniusCommentary = '';
+    let geniusAudioHandle = null;
+
+    const geniusSignalEmoji = {
+      BULL: '🚀',
+      BEAR: '😱',
+      NEUTRAL: '🤔'
+    };
+
+    function safeNumberText(value, decimals = 2, fallback = '--') {
+      if (typeof value !== 'number' || !Number.isFinite(value)) {
+        return fallback;
+      }
+      return value.toFixed(decimals);
+    }
+
+    function formatStrengthLabel(strength) {
+      if (!strength) return '--';
+      const text = typeof strength === 'string' ? strength : String(strength);
+      return text.trim().length ? text.toUpperCase() : '--';
+    }
+
+    function renderQuantPanel(report) {
+      const panelIds = ['geniusQuantPanel', 'geniusQuantPanelInline'];
+      const panels = panelIds
+        .map(id => document.getElementById(id))
+        .filter(Boolean);
+      if (!panels.length) {
+        return;
+      }
+
+      if (!report || report.error) {
+        const offlineHtml = '<div style="color:#ff8888; font-size:0.82em;">⚠️ Quant engine offline – oczekiwanie na backend.</div>';
+        panels.forEach(panel => {
+          panel.innerHTML = offlineHtml;
+        });
+        return;
+      }
+
+      const insights = report.insights || {};
+      const perf = insights.performance || {};
+      const risk = insights.risk || {};
+      const ffn = insights.ffn || {};
+      const options = insights.options || {};
+      const warnings = Array.isArray(report.warnings) ? report.warnings : [];
+
+      const optionKeys = Object.keys(options);
+      const firstOption = optionKeys.length ? options[optionKeys[0]] : null;
+      let optionPrice = null;
+      if (firstOption && typeof firstOption === 'object') {
+        const candidates = [
+          firstOption.call_price,
+          firstOption.price,
+          firstOption.binomial_price,
+          firstOption.value,
+          firstOption.delta_call
+        ];
+        optionPrice = candidates.find(val => typeof val === 'number' && Number.isFinite(val)) ?? null;
+      }
+
+      const timestamp = typeof report.generated_at === 'number' && report.generated_at > 0
+        ? new Date(report.generated_at * 1000).toLocaleTimeString()
+        : new Date().toLocaleTimeString();
+
+      const warningText = warnings.length
+        ? `<div style="margin-top:8px; color:#ffaa55;">⚠️ ${warnings.slice(0, 2).join(' • ')}</div>`
+        : '';
+
+      const html = `
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <span style="color:var(--cyan); font-weight:700;">Quant Insights</span>
+          <span style="color:var(--gray); font-size:0.75em;">${timestamp}</span>
+        </div>
+        <div style="display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:8px; font-size:0.82em; color:#ffffff;">
+          <div style="background:rgba(0,255,65,0.08); border:1px solid rgba(0,255,65,0.25); padding:6px; border-radius:4px;">
+            <div style="color:#9fff9f; font-weight:700;">σ 1d</div>
+            <div>${safeNumberText(perf.daily_volatility, 3)}</div>
+          </div>
+          <div style="background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.25); padding:6px; border-radius:4px;">
+            <div style="color:#ffcc66; font-weight:700;">VaR 95%</div>
+            <div>${safeNumberText(risk.value_at_risk, 4)}</div>
+          </div>
+          <div style="background:rgba(187,134,252,0.08); border:1px solid rgba(187,134,252,0.25); padding:6px; border-radius:4px;">
+            <div style="color:#bb86fc; font-weight:700;">Sharpe*</div>
+            <div>${safeNumberText(perf.sharpe_like, 2)}</div>
+          </div>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; font-size:0.78em;">
+          ${typeof ffn.cagr === 'number' ? `<span style="background:rgba(0,212,255,0.08); border:1px solid rgba(0,212,255,0.25); padding:4px 6px; border-radius:3px; color:#00d4ff;">FFN CAGR ${(ffn.cagr * 100).toFixed(2)}%</span>` : ''}
+          ${optionPrice !== null ? `<span style='background:rgba(255,0,51,0.1); border:1px solid rgba(255,0,51,0.25); padding:4px 6px; border-radius:3px; color:#ff6688;'>Option ${optionPrice.toFixed(2)}</span>` : ''}
+          ${typeof perf.sortino_like === 'number' ? `<span style="background:rgba(0,255,65,0.1); border:1px solid rgba(0,255,65,0.25); padding:4px 6px; border-radius:3px; color:#7dff7d;">Sortino ${safeNumberText(perf.sortino_like, 2)}</span>` : ''}
+        </div>
+        ${warningText}
+      `;
+      panels.forEach(panel => {
+        panel.innerHTML = html;
+      });
+    }
+
+    function applyGeniusPayload(payload) {
+      if (!payload || typeof payload !== 'object') {
+        renderQuantPanel(null);
+        renderLiveBias(null);
+        const commentEl = document.getElementById('liveCommentary');
+        if (commentEl) {
+          commentEl.innerHTML = '<p style="margin: 0; color: var(--gray);">Genius w trybie offline — użyj danych demonstracyjnych.</p>';
+        }
+        latestGeniusCommentary = '';
+        const signalEl = document.getElementById('signalStatus');
+        if (signalEl) signalEl.textContent = '• Sygnał: --';
+        const strengthEl = document.getElementById('strengthStatus');
+        if (strengthEl) strengthEl.textContent = '• Siła: --';
+        const btcEl = document.getElementById('btcPriceStatus');
+        if (btcEl) btcEl.textContent = '• BTC: --';
+        const changeEl = document.getElementById('changeStatus');
+        if (changeEl) changeEl.textContent = '• 24H: --';
+        return;
+      }
+
+      const commentary = payload.commentary || 'Brak komentarza z silnika Genius.';
+      const commentEl = document.getElementById('liveCommentary');
+      if (commentEl) {
+        commentEl.innerHTML = `<p style="margin: 0;">${commentary}</p>`;
+      }
+
+      latestGeniusCommentary = commentary;
+
+      const signal = (payload.signal || 'NEUTRAL').toUpperCase();
+      const strength = formatStrengthLabel(payload.strength);
+      const strengthScore = typeof payload.strength_score === 'number' && Number.isFinite(payload.strength_score)
+        ? ` (${Math.round(payload.strength_score * 100)}%)`
+        : '';
+
+      const signalEl = document.getElementById('signalStatus');
+      if (signalEl) {
+        const emoji = geniusSignalEmoji[signal] || '•';
+        signalEl.textContent = `• Sygnał: ${emoji} ${signal}`;
+      }
+
+      const strengthEl = document.getElementById('strengthStatus');
+      if (strengthEl) {
+        strengthEl.textContent = `• Siła: ${strength}${strengthScore}`;
+      }
+
+      const btcEl = document.getElementById('btcPriceStatus');
+      if (btcEl) {
+        const btcText = formatNumber(payload.btc_price, 0);
+        btcEl.textContent = `• BTC: $${btcText}`;
+      }
+
+      const changeEl = document.getElementById('changeStatus');
+      if (changeEl) {
+        if (typeof payload.change_24h === 'number' && Number.isFinite(payload.change_24h)) {
+          const sign = payload.change_24h >= 0 ? '+' : '';
+          changeEl.textContent = `• 24H: ${sign}${payload.change_24h.toFixed(2)}%`;
+        } else {
+          changeEl.textContent = '• 24H: --';
+        }
+      }
+
+      renderLiveBias(payload.liveBias);
+      renderQuantPanel(payload.quant);
+    }
+
+    function renderLiveBias(liveBias) {
+      const container = document.getElementById('geniusLiveBias');
+      if (!container) return;
+      if (!liveBias || typeof liveBias !== 'object') {
+        container.textContent = 'Brak aktualnych danych live-bias.';
+        return;
+      }
+
+      const mtfFocus = (liveBias.mtfFocus || [])
+        .map(item => {
+          if (!item) return '';
+          const tag = typeof item === 'string' ? item : (item.label || item.note || '');
+          return tag ? `<span style="background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.25); padding: 2px 6px; margin-right: 6px; border-radius: 4px; color: var(--cyan); font-size: 0.82em;">${tag}</span>` : '';
+        })
+        .filter(Boolean)
+        .join(' ');
+
+      const contextNotes = (liveBias.recentContext || [])
+        .map(item => {
+          if (!item) return '';
+          const note = typeof item === 'string' ? item : (item.note || item.label || '');
+          return note ? `<li style="margin-left: 16px; font-size: 0.82em;">${note}</li>` : '';
+        })
+        .filter(Boolean)
+        .join('');
+
+      container.innerHTML = `
+        <div style="color:#ffffff; font-weight:700; margin-bottom:4px;">Bias: ${liveBias.primaryBias?.toUpperCase() || 'N/A'} • Playbook: ${liveBias.playbook || '--'}</div>
+        <div style="margin-bottom:6px;">MTF Focus: ${mtfFocus || '—'}</div>
+        <div>Sentiment: ${liveBias.sentimentShift || '--'} • Wolumen: ${liveBias.volumeNote || '--'}</div>
+        <div style="margin-top:4px;">Callout: ${liveBias.sessionCallout || '--'}</div>
+        ${contextNotes ? `<div style="margin-top:6px; color:#ffffff; font-size:0.85em;">Ostatnie notatki:<ul style="margin-top:4px;">${contextNotes}</ul></div>` : ''}
+      `;
+    }
+
+    function formatMinutesToText(minutes) {
+      if (minutes === null || minutes === undefined || Number.isNaN(Number(minutes))) return '--';
+      const total = Math.max(0, Math.round(Number(minutes)));
+      const hours = Math.floor(total / 60);
+      const mins = total % 60;
+      if (hours > 0) {
+        return `${hours}h ${mins}m`;
+      }
+      return `${mins}m`;
+    }
+
+    function minutesToPosition(minute) {
+      if (minute === null || minute === undefined || Number.isNaN(Number(minute))) return 60;
+      const clamped = Math.max(0, Math.min(1440, Number(minute)));
+      return 60 + (clamped / 1440) * SESSION_AXIS_WIDTH;
+    }
+
+    function applyKillzoneRect(rectEl, labelEl, timeEl, zoneMeta, overlayMeta) {
+      if (!rectEl || !labelEl || !timeEl) return;
+      if (!zoneMeta || !overlayMeta) {
+        rectEl.setAttribute('width', 0);
+        labelEl.textContent = 'Brak danych';
+        labelEl.setAttribute('fill', 'var(--gray)');
+        timeEl.textContent = '--';
+        timeEl.setAttribute('fill', 'var(--gray)');
+        return;
+      }
+
+      const startX = minutesToPosition(overlayMeta.startMinute);
+      const endX = minutesToPosition(overlayMeta.endMinute);
+      const width = Math.max(20, endX - startX);
+      rectEl.setAttribute('x', startX.toFixed(1));
+      rectEl.setAttribute('width', width.toFixed(1));
+
+      const rectClass = `killzone-rect ${killzoneClassMap[zoneMeta.name] || 'killzone-london'}`;
+      rectEl.setAttribute('class', rectClass);
+
+      const color = priorityColorMap[zoneMeta.priority] || 'var(--gray)';
+      labelEl.textContent = zoneMeta.label || 'Killzone';
+      labelEl.setAttribute('fill', color);
+      labelEl.setAttribute('x', (startX + 10).toFixed(1));
+
+      timeEl.textContent = `${overlayMeta.startTime} - ${overlayMeta.endTime} UTC`;
+      timeEl.setAttribute('fill', color);
+      timeEl.setAttribute('x', (startX + 10).toFixed(1));
+    }
+
+    function splitAiNote(note) {
+      if (!note || typeof note !== 'string') {
+        return ['Brak notatki', ''];
+      }
+      const parts = note.split(/\.|\|/).map(str => str.trim()).filter(Boolean);
+      if (!parts.length) {
+        return [note, ''];
+      }
+      const first = parts[0];
+      const second = parts.slice(1).join('. ');
+      return [first, second];
+    }
+
+    function buildTickerSegment(segment) {
+      if (!segment || !segment.entries || !segment.entries.length) return '';
+      const items = segment.entries
+        .filter(Boolean)
+        .map(entry => {
+          if (entry.text) {
+            return entry.text;
+          }
+          const decimals = entry.decimals ?? 2;
+          const currencySymbol = entry.currencySymbol !== undefined ? entry.currencySymbol : '$';
+          const priceText = entry.price !== undefined ? `${currencySymbol}${formatNumber(entry.price, decimals)}` : '';
+          const changeSpan = entry.change !== undefined ? formatTickerChange(entry.change, entry.changeDecimals ?? 2) : '';
+          return `${entry.symbol || ''} ${entry.prefix || ''}${priceText}${entry.suffix || ''}${changeSpan ? ` ${changeSpan}` : ''}`.trim();
+        })
+        .filter(Boolean);
+      if (!items.length) return '';
+      return `<span class="ticker-label">${segment.label}</span> ${items.join(' • ')}`;
+    }
+
+    function renderSniperTicker(data) {
+      const track = document.getElementById('sniperTickerTrack');
+      if (!track) return;
+
+      const segments = [];
+      const cryptoEntries = [];
+      if (typeof data.btcPrice === 'number') {
+        cryptoEntries.push({ symbol: 'BTC', price: data.btcPrice, change: data.btcChange24h });
+      }
+      if (typeof data.ethPrice === 'number') {
+        cryptoEntries.push({ symbol: 'ETH', price: data.ethPrice, change: data.ethChange24h });
+      }
+      if (cryptoEntries.length) {
+        segments.push({ label: 'CRYPTO', entries: cryptoEntries });
+      }
+
+      const stockEntries = [];
+      const stocks = data.stocks || {};
+      const stocksChange = data.stocksChange || {};
+      Object.keys(stocks).forEach(symbol => {
+        stockEntries.push({
+          symbol,
+          price: stocks[symbol],
+          change: stocksChange[symbol],
+          decimals: 2
+        });
+      });
+      if (stockEntries.length) {
+        segments.push({ label: 'AKCJE', entries: stockEntries });
+      }
+
+      const indexEntries = [];
+      const indices = data.indices || {};
+      const indicesChange = data.indicesChange || {};
+      if (typeof indices.NASDAQ === 'number') {
+        indexEntries.push({
+          symbol: 'NASDAQ',
+          price: indices.NASDAQ,
+          change: indicesChange.NASDAQ,
+          decimals: 0,
+          currencySymbol: '',
+          suffix: ' pkt',
+          changeDecimals: 2
+        });
+      }
+      if (typeof indices.SP500 === 'number') {
+        indexEntries.push({
+          symbol: 'S&P 500',
+          price: indices.SP500,
+          change: indicesChange.SP500,
+          decimals: 0,
+          currencySymbol: '',
+          suffix: ' pkt',
+          changeDecimals: 2
+        });
+      }
+      if (typeof indices.DAX === 'number') {
+        indexEntries.push({
+          symbol: 'DAX',
+          price: indices.DAX,
+          change: indicesChange.DAX,
+          decimals: 0,
+          currencySymbol: '',
+          suffix: ' pkt',
+          changeDecimals: 2
+        });
+      }
+      if (indexEntries.length) {
+        segments.push({ label: 'INDEKSY', entries: indexEntries });
+      }
+
+      const sentimentEntries = [];
+      if (typeof data.fearGreed === 'number') {
+        sentimentEntries.push({ text: `Fear&Greed ${data.fearGreed}` });
+      }
+      if (typeof data.btcVolume === 'number' && data.btcVolume > 0) {
+        const billions = data.btcVolume / 1e9;
+        sentimentEntries.push({ text: `Wolumen $${billions.toFixed(2)}B` });
+      }
+      if (sentimentEntries.length) {
+        segments.push({ label: 'SENTYMENT', entries: sentimentEntries });
+      }
+
+      const combined = segments
+        .map(segment => buildTickerSegment(segment))
+        .filter(Boolean)
+        .join(' ');
+
+      track.innerHTML = combined ? `${combined} ${combined}` : '<span class="ticker-label">INFO</span> Brak danych z API';
+      restartAnimation(track);
+    }
+
+    function renderNewsTicker(headlines) {
+      const newsContent = document.getElementById('newsTickerContent');
+      if (!newsContent || !Array.isArray(headlines)) return;
+
+      const items = headlines.map(item => {
+        const label = item.category || 'NEWS';
+        const text = item.headline || '';
+        const time = item.timeAgo || '--';
+        const changeClass = item.sentiment === 'bearish' ? 'down' : item.sentiment === 'bullish' ? 'up' : '';
+        return `
+          <div class="news-ticker-item">
+            <span class="news-ticker-label">${label}</span>
+            <span class="news-ticker-text">${text}</span>
+            <span class="news-ticker-time ${changeClass}">${time}</span>
+          </div>
+        `;
+      });
+
+      newsContent.innerHTML = items.length ? `${items.join('')} ${items.join('')}` : `
+        <div class="news-ticker-item">
+          <span class="news-ticker-label">INFO</span>
+          <span class="news-ticker-text">Brak naglowkow</span>
+          <span class="news-ticker-time">--</span>
+        </div>`;
+
+      restartAnimation(newsContent);
+    }
+
+    async function updateNewsTicker() {
+      try {
+        const response = await fetch(`${API_BASE}/api/news/headlines`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (data.ok) {
+          renderNewsTicker(data.headlines || []);
+        }
+      } catch (err) {
+        console.log('News API offline, pozostaje tryb demo');
+      }
+    }
+
     // HAMSTER GENIUS - Fetch live commentary from backend
     async function updateGeniusCommentary() {
       try {
-        const response = await fetch('http://localhost:5000/api/genius/commentary');
+        const response = await fetch(`${API_BASE}/api/genius/commentary?symbol=BTCUSDT`, { cache: 'no-store' });
         if (response.ok) {
-          const data = await response.json();
-          if (data.ok) {
-            document.getElementById('liveCommentary').innerHTML = 
-              `<p style="color: #ffffff; line-height: 1.6;">${data.commentary}</p>`;
-            document.getElementById('signalStatus').textContent = 
-              `• Sygnał: ${data.signal} (${data.strength})`;
-            document.getElementById('strengthStatus').textContent = 
-              `• Siła: ${data.strength.toUpperCase()}`;
-            document.getElementById('btcPriceStatus').textContent = 
-              `• BTC: $${data.btc_price?.toLocaleString() || 'N/A'}`;
-            document.getElementById('changeStatus').textContent = 
-              `• 24H: ${data.change_24h?.toFixed(2) || '0'}%`;
+          const payload = await response.json();
+          if (payload && payload.ok) {
+            applyGeniusPayload(payload);
+            return;
           }
+          console.warn('Genius API responded without ok flag', payload);
+        } else {
+          console.warn('Genius API HTTP error', response.status);
         }
       } catch (err) {
-        console.log('Genius API not ready yet (backend offline). Local demo mode.');
+        console.log('Genius API offline, fallback in use.', err);
       }
+
+      applyGeniusPayload(null);
     }
 
     // Update Genius commentary every 10 seconds
@@ -2955,42 +3653,11 @@
     // TICKER BAR - Update live market data
     async function updateTickerBar() {
       try {
-        const response = await fetch('http://localhost:5000/api/binance/summary');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.ok) {
-            // Update BTC
-            const btcPrice = data.btcPrice?.toFixed(2) || '0';
-            const btcChange = data.btcChange24h?.toFixed(2) || '0';
-            const btcPriceEls = document.querySelectorAll('#ticker-btc');
-            const btcChangeEls = document.querySelectorAll('#ticker-btc-change');
-            btcPriceEls.forEach(el => el.textContent = `$${Number(btcPrice).toLocaleString()}`);
-            btcChangeEls.forEach(el => {
-              el.textContent = `${btcChange >= 0 ? '+' : ''}${btcChange}%`;
-              el.className = `ticker-change ${btcChange >= 0 ? 'up' : 'down'}`;
-            });
-
-            // Update ETH
-            const ethPrice = data.ethPrice?.toFixed(2) || '0';
-            const ethChangeEls = document.querySelectorAll('#ticker-eth-change');
-            document.querySelectorAll('#ticker-eth').forEach(el => 
-              el.textContent = `$${Number(ethPrice).toLocaleString()}`
-            );
-
-            // Update stocks if available
-            if (data.stocks) {
-              if (data.stocks.AAPL) {
-                document.querySelectorAll('#ticker-aapl').forEach(el => 
-                  el.textContent = `$${Number(data.stocks.AAPL).toFixed(2)}`
-                );
-              }
-              if (data.stocks.NVDA) {
-                document.querySelectorAll('#ticker-nvda').forEach(el => 
-                  el.textContent = `$${Number(data.stocks.NVDA).toFixed(2)}`
-                );
-              }
-            }
-          }
+        const response = await fetch(`${API_BASE}/api/binance/summary`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (data.ok) {
+          renderSniperTicker(data);
         }
       } catch (err) {
         console.log('Ticker API not ready yet. Using static values.');
@@ -3001,10 +3668,14 @@
     setInterval(updateTickerBar, 5000);
     updateTickerBar(); // Initial call
 
+    // Update news ticker every 45 seconds
+    setInterval(updateNewsTicker, 45000);
+    updateNewsTicker();
+
     // UPDATE SIDEBAR with live data
     async function updateSidebar() {
       try {
-        const response = await fetch('http://localhost:5000/api/binance/summary');
+        const response = await fetch(`${API_BASE}/api/binance/summary`);
         if (response.ok) {
           const data = await response.json();
           if (data.ok) {
@@ -3026,24 +3697,38 @@
             }
             
             // Fear & Greed
-            const fg = data.fear_greed || '--';
-            const fgColor = fg > 70 ? 'color: var(--red)' : (fg < 30 ? 'color: var(--green)' : 'color: var(--yellow)');
+            const fgValue = typeof data.fearGreed === 'number' ? data.fearGreed : data.fear_greed;
+            const fg = fgValue !== undefined ? fgValue : '--';
+            const fgNumeric = typeof fg === 'number' ? fg : null;
+            const fgColor = fgNumeric !== null
+              ? (fgNumeric > 70 ? 'color: var(--red)' : (fgNumeric < 30 ? 'color: var(--green)' : 'color: var(--yellow)'))
+              : 'color: var(--yellow)';
             const fgEl = document.getElementById('sidebarFG');
             if (fgEl) {
               fgEl.style.cssText = fgColor;
-              fgEl.textContent = `${fg} ${fg > 70 ? '😱' : (fg < 30 ? '😨' : '😐')}`;
+              if (fgNumeric !== null) {
+                fgEl.textContent = `${fgNumeric} ${fgNumeric > 70 ? '😱' : (fgNumeric < 30 ? '😨' : '😐')}`;
+              } else {
+                fgEl.textContent = `${fg}`;
+              }
             }
             
             // Stocks
             let stocksHtml = '';
             if (data.stocks) {
               for (const [sym, price] of Object.entries(data.stocks)) {
-                stocksHtml += `<div><strong>${sym}:</strong> $${price?.toLocaleString(undefined, {maximumFractionDigits: 2}) || '0'}</div>`;
+                const change = data.stocksChange ? data.stocksChange[sym] : undefined;
+                const changeNumber = typeof change === 'number' ? change : null;
+                const changeColor = changeNumber !== null ? (changeNumber >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--gray)';
+                const changeText = changeNumber !== null ? `${changeNumber >= 0 ? '+' : ''}${changeNumber.toFixed(2)}%` : '--';
+                const formattedPrice = price?.toLocaleString(undefined, {maximumFractionDigits: 2}) || '0';
+                stocksHtml += `<div><strong>${sym}:</strong> $${formattedPrice} <span style="color:${changeColor}; margin-left:4px;">${changeText}</span></div>`;
                   // Update market pulse bar
                   const stockId = `stock${sym}`;
                   const stockEl = document.getElementById(stockId);
                   if (stockEl) {
-                    stockEl.textContent = `$${price?.toLocaleString(undefined, {maximumFractionDigits: 2}) || '0'}`;
+                    stockEl.textContent = `$${formattedPrice}`;
+                    stockEl.style.color = changeNumber !== null ? (changeNumber >= 0 ? 'var(--green)' : 'var(--red)') : 'var(--gray)';
                   }
               }
             }
@@ -3065,7 +3750,7 @@
     // ===== LIVE ANALYTICS DATA UPDATE (EVERY 10 SECONDS) =====
     async function updateAnalyticsData() {
       try {
-        const response = await fetch('http://localhost:5000/api/analytics');
+        const response = await fetch(`${API_BASE}/api/analytics`);
         if (response.ok) {
           const data = await response.json();
           if (data.ok) {
@@ -3127,6 +3812,164 @@
     // Update analytics data every 10 seconds
     setInterval(updateAnalyticsData, 10000);
     updateAnalyticsData(); // Initial call
+
+    // Update killzone overlay every 20 seconds
+    setInterval(updateKillzoneOverlay, 20000);
+    updateKillzoneOverlay();
+
+    async function playGeniusAudio(lang) {
+      const statusEl = document.getElementById('geniusAudioStatus');
+      if (statusEl) {
+        statusEl.textContent = 'Generuję audio...';
+      }
+      try {
+        const url = new URL(`${API_BASE}/api/genius/audio`);
+        if (lang) {
+          url.searchParams.set('lang', lang);
+        }
+        const response = await fetch(url.toString());
+        if (!response.ok) throw new Error('Błąd API audio');
+        const data = await response.json();
+        if (!data.ok || !data.audioBase64) throw new Error(data.error || 'Brak audio');
+        const audioSrc = `data:${data.mimeType || 'audio/mpeg'};base64,${data.audioBase64}`;
+        if (geniusAudioHandle) {
+          geniusAudioHandle.pause();
+        }
+        geniusAudioHandle = new Audio(audioSrc);
+        await geniusAudioHandle.play();
+        if (statusEl) {
+          statusEl.textContent = `Odtwarzanie (${data.language?.toUpperCase() || '??'})`;
+        }
+        geniusAudioHandle.onended = () => {
+          if (statusEl) statusEl.textContent = 'Gotowe';
+        };
+      } catch (err) {
+        console.log('Audio TTS error', err);
+        if (statusEl) {
+          statusEl.textContent = 'Błąd audio, spróbuj ponownie';
+        }
+      }
+    }
+
+    async function updateKillzoneOverlay() {
+      try {
+        const response = await fetch(`${API_BASE}/api/killzones/overview`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (!data.ok) return;
+
+        const overlayMap = {};
+        (data.overlays || []).forEach(item => {
+          overlayMap[item.name] = item;
+        });
+
+        const current = data.current || {};
+        const upcoming = data.upcoming || null;
+
+        const killzoneBlocks = document.querySelectorAll('.killzone-block');
+        killzoneBlocks.forEach(block => {
+          const zoneName = block.getAttribute('data-zone');
+          const rectEl = block.querySelector('.killzone-rect');
+          const labelEl = block.querySelector('[data-role="label"]');
+          const timeEl = block.querySelector('[data-role="time"]');
+          const zoneMeta = overlayMap[zoneName];
+          applyKillzoneRect(rectEl, labelEl, timeEl, zoneMeta, zoneMeta);
+          block.classList.remove('killzone-active', 'killzone-upcoming');
+          if (current && current.name === zoneName) {
+            block.classList.add('killzone-active');
+          }
+          if (upcoming && upcoming.name === zoneName) {
+            block.classList.add('killzone-upcoming');
+          }
+        });
+
+        const timerText = data.sessionClock?.timerText || '--:--';
+        const sessionTimerEl = document.getElementById('sessionTimer');
+        if (sessionTimerEl) {
+          sessionTimerEl.textContent = `Świeca zamyka się za ${timerText}`;
+        }
+
+        const sessionTitleEl = document.getElementById('sessionTitle');
+        if (sessionTitleEl) {
+          sessionTitleEl.textContent = current.label ? `Nakładka Killzone • ${current.label}` : 'Nakładka Killzone Sesji';
+        }
+
+        const sniperTimerLabel = document.getElementById('sniperTimerLabel');
+        if (sniperTimerLabel) {
+          sniperTimerLabel.textContent = `Timer: ${timerText}`;
+        }
+
+        const sniper = data.sniper || {};
+        const entry = sniper.entry !== undefined && sniper.entry !== null ? `$${formatUsd(sniper.entry)}` : '--';
+        const tp1 = sniper.targets && sniper.targets[0] !== undefined ? `$${formatUsd(sniper.targets[0])}` : '--';
+        const tp2 = sniper.targets && sniper.targets[1] !== undefined ? `$${formatUsd(sniper.targets[1])}` : '--';
+        const stop = sniper.stop !== undefined && sniper.stop !== null ? `$${formatUsd(sniper.stop)}` : '--';
+
+        const sniperEntryLabel = document.getElementById('sniperEntryLabel');
+        if (sniperEntryLabel) {
+          sniperEntryLabel.textContent = entry !== '--' ? `Wejście Sniper ${entry}` : 'Wejście Sniper --';
+        }
+
+        const sniperTargetsLabel = document.getElementById('sniperTargetsLabel');
+        if (sniperTargetsLabel) {
+          sniperTargetsLabel.textContent = (tp1 !== '--' || tp2 !== '--') ? `Cele ${tp1} / ${tp2}` : 'Cele --';
+        }
+
+        const sessionLabel = document.getElementById('sessionCurrentLabel');
+        if (sessionLabel) {
+          const biasLabel = sniper.bias ? sniper.bias.toUpperCase() : 'NEUTRAL';
+          sessionLabel.textContent = `Sniper BTC • ${biasLabel}`;
+        }
+
+        const sniperEntryLine = document.getElementById('sniperEntryLine');
+        if (sniperEntryLine) {
+          sniperEntryLine.textContent = `Wejście: ${entry} • TP1: ${tp1} • TP2: ${tp2}`;
+        }
+
+        const sniperStopLine = document.getElementById('sniperStopLine');
+        if (sniperStopLine) {
+          const biasReadable = sniper.bias === 'bearish' ? 'Bearish' : sniper.bias === 'bullish' ? 'Bullish' : 'Neutral';
+          sniperStopLine.textContent = `Stop: ${stop} • Bias: ${biasReadable}`;
+        }
+
+        const sessionRecommendation = document.getElementById('sessionRecommendation');
+        if (sessionRecommendation) {
+          sessionRecommendation.textContent = `Rekomendacja: ${current.recommendation || 'Monitoruj rynek.'}`;
+        }
+
+        const aiPushNote = document.getElementById('aiPushNote');
+        if (aiPushNote) {
+          aiPushNote.textContent = `Notatka AI: ${data.aiNote || 'Brak informacji.'}`;
+        }
+
+        const sessionUpcomingNote = document.getElementById('sessionUpcomingNote');
+        if (sessionUpcomingNote) {
+          if (upcoming && typeof upcoming.minutesUntilStart === 'number') {
+            sessionUpcomingNote.textContent = `Następna killzone (${upcoming.label}) za ${formatMinutesToText(upcoming.minutesUntilStart)}`;
+          } else {
+            sessionUpcomingNote.textContent = 'Brak kolejnej killzone dziś.';
+          }
+        }
+
+        const [alertLine1, alertLine2] = splitAiNote(data.aiNote);
+        const aiAlertLine1 = document.getElementById('aiAlertLine1');
+        const aiAlertLine2 = document.getElementById('aiAlertLine2');
+        if (aiAlertLine1) aiAlertLine1.textContent = alertLine1;
+        if (aiAlertLine2) aiAlertLine2.textContent = alertLine2 || 'Monitoruj Sniper i RSI.';
+
+      } catch (err) {
+        console.log('Killzone API offline, tryb statyczny');
+      }
+    }
+
+    const geniusAudioBtn = document.getElementById('geniusAudioPlay');
+    const geniusAudioLang = document.getElementById('geniusAudioLang');
+    if (geniusAudioBtn) {
+      geniusAudioBtn.addEventListener('click', () => {
+        const lang = geniusAudioLang ? geniusAudioLang.value : 'pl';
+        playGeniusAudio(lang);
+      });
+    }
 
     // ===== NEW: HAMBURGER MENU TOGGLE =====
     const hamburgerMenu = document.getElementById('hamburgerMenu');

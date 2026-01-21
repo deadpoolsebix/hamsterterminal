@@ -685,7 +685,7 @@
         const HAMSTER_DOMAIN = 'hamsterterminal.com';
         const isLocalhost = LOCAL_HOSTS.includes(window.location.hostname);
         const isHamsterDomain = window.location.hostname === HAMSTER_DOMAIN || window.location.hostname.endsWith(`.${HAMSTER_DOMAIN}`);
-        const productionApiBase = 'https://api.hamsterterminal.com';
+        const productionApiBase = 'https://pcs-injuries-willow-prairie.trycloudflare.com';
         const API_BASE = isLocalhost
             ? 'http://localhost:5000'
             : (isHamsterDomain ? productionApiBase : window.location.origin);
