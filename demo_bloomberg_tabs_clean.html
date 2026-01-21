@@ -3158,14 +3158,19 @@
     setInterval(updateTime, 1000);
     updateTime();
 
-    const LOCAL_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0'];
-    const HAMSTER_DOMAIN = 'hamsterterminal.com';
-    const isLocalhost = LOCAL_HOSTS.includes(window.location.hostname);
-    const isHamsterDomain = window.location.hostname === HAMSTER_DOMAIN || window.location.hostname.endsWith(`.${HAMSTER_DOMAIN}`);
-    const productionApiBase = 'https://pcs-injuries-willow-prairie.trycloudflare.com';
-    const API_BASE = isLocalhost
-      ? 'http://localhost:5000'
-      : (isHamsterDomain ? productionApiBase : window.location.origin);
+    const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0', '']);
+    const hostname = window.location.hostname;
+    const isLocalhost = LOCAL_HOSTS.has(hostname);
+    const DEFAULT_PRODUCTION_API = 'https://tutorials-gentle-operations-vatican.trycloudflare.com';
+    const params = new URLSearchParams(window.location.search);
+    const queryApiBase = params.get('apiBase');
+    const globalOverride = typeof window.HAMSTER_API_BASE === 'string' ? window.HAMSTER_API_BASE.trim() : '';
+    const storedOverride = localStorage.getItem('hamsterApiBase') || '';
+    const chosenProductionApi = (queryApiBase && queryApiBase.trim()) || globalOverride || storedOverride || DEFAULT_PRODUCTION_API;
+    if (queryApiBase && queryApiBase.trim()) {
+      localStorage.setItem('hamsterApiBase', queryApiBase.trim());
+    }
+    const API_BASE = isLocalhost ? 'http://localhost:5000' : chosenProductionApi;
     console.log(`🔌 API mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | base=${API_BASE}`);
 
     const killzoneClassMap = {
