@@ -10,24 +10,21 @@ from datetime import datetime, timedelta
 import numpy as np
 import pandas as pd
 
+logger = logging.getLogger(__name__)
+
 # Backtrader import
 try:
     import backtrader as bt
     BACKTRADER_AVAILABLE = True
-except ImportError:
-    BACKTRADER_AVAILABLE = False
-
-logger = logging.getLogger(__name__)
-
-
-class HamsterStrategy(bt.Strategy):
-    """
-    Hamster Terminal trading strategy for backtrader
-    Combines technical indicators with AI signals
-    """
     
-    params = (
-        ('rsi_period', 14),
+    class HamsterStrategy(bt.Strategy):
+        """
+        Hamster Terminal trading strategy for backtrader
+        Combines technical indicators with AI signals
+        """
+        
+        params = (
+            ('rsi_period', 14),
         ('rsi_oversold', 30),
         ('rsi_overbought', 70),
         ('macd_fast', 12),
@@ -123,6 +120,11 @@ class HamsterStrategy(bt.Strategy):
                 elif current_pnl_pct > self.params.take_profit_pct:
                     logger.info(f'TAKE PROFIT triggered at {current_pnl_pct:.2%}')
                     self.order = self.sell()
+
+except ImportError:
+    BACKTRADER_AVAILABLE = False
+    HamsterStrategy = None
+    logger.warning("⚠️ backtrader not available - backtesting disabled")
 
 
 class BacktestEngine:
