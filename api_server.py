@@ -550,7 +550,7 @@ def broadcast_price_update(symbol, price, change):
         'price': price,
         'change': change,
         'timestamp': datetime.now().isoformat()
-    }, broadcast=True)
+    })
 
 async def websocket_stream():
     """Connect to Twelve Data WebSocket for real-time prices"""

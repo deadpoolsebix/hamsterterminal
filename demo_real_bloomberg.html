@@ -681,14 +681,11 @@
             document.getElementById('current-date').textContent = dateStr;
         }
 
-        const LOCAL_HOSTS = ['localhost', '127.0.0.1', '0.0.0.0'];
-        const HAMSTER_DOMAIN = 'hamsterterminal.com';
-        const isLocalhost = LOCAL_HOSTS.includes(window.location.hostname);
-        const isHamsterDomain = window.location.hostname === HAMSTER_DOMAIN || window.location.hostname.endsWith(`.${HAMSTER_DOMAIN}`);
-        const productionApiBase = 'https://pcs-injuries-willow-prairie.trycloudflare.com';
-        const API_BASE = isLocalhost
-            ? 'http://localhost:5000'
-            : (isHamsterDomain ? productionApiBase : window.location.origin);
+        const LOCAL_HOSTS = new Set(['localhost', '127.0.0.1', '0.0.0.0', '']);
+        const productionApiBase = 'https://tutorials-gentle-operations-vatican.trycloudflare.com';
+        const hostname = window.location.hostname;
+        const isLocalhost = LOCAL_HOSTS.has(hostname);
+        const API_BASE = isLocalhost ? 'http://localhost:5000' : productionApiBase;
         console.log(`🔌 API Mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | Base=${API_BASE}`);
 
         let geniusAudioHandle = null;

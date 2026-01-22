@@ -1,104 +1,49 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-Test Script - Weryfikacja Zainstalowanych Bibliotek
-Data: 15 stycznia 2026
-"""
+import importlib
+import unittest
 
-import sys
-print("=" * 60)
-print("TEST ZAINSTALOWANYCH BIBLIOTEK")
-print("=" * 60)
+REQUIRED_MODULES = [
+    'numpy',
+    'pandas',
+    'scipy',
+    'matplotlib',
+    'requests',
+]
 
-# Test bibliotek finansowych
-print("\n[1] Testowanie bibliotek finansowych...")
-try:
-    import finvizfinance
-    print("✓ finvizfinance zainstalowana")
-except ImportError as e:
-    print(f"✗ finvizfinance błąd: {e}")
+OPTIONAL_MODULES = [
+    'finvizfinance',
+    'pyql',
+    'tensortrade',
+    'tensorflow',
+    'keras',
+    'gym',
+    'bs4',
+    'vollib',
+]
 
-try:
-    import pyql
-    print("✓ PyQL zainstalowana")
-except ImportError as e:
-    print(f"✗ PyQL błąd: {e}")
 
-try:
-    import tensortrade
-    print("✓ tensortrade zainstalowana")
-except ImportError as e:
-    print(f"✗ tensortrade błąd: {e}")
+class TestRequiredLibraries(unittest.TestCase):
+    """Ensure core scientific dependencies are available."""
 
-# Test bibliotek naukowych
-print("\n[2] Testowanie bibliotek naukowych...")
-try:
-    import numpy as np
-    print(f"✓ numpy {np.__version__} zainstalowana")
-except ImportError as e:
-    print(f"✗ numpy błąd: {e}")
+    def test_required_modules(self) -> None:
+        for module in REQUIRED_MODULES:
+            with self.subTest(module=module):
+                importlib.import_module(module)
 
-try:
-    import pandas as pd
-    print(f"✓ pandas {pd.__version__} zainstalowana")
-except ImportError as e:
-    print(f"✗ pandas błąd: {e}")
 
-try:
-    import scipy
-    print(f"✓ scipy zainstalowana")
-except ImportError as e:
-    print(f"✗ scipy błąd: {e}")
+class TestOptionalLibraries(unittest.TestCase):
+    """Informative checks for optional packages."""
 
-try:
-    import matplotlib.pyplot as plt
-    print("✓ matplotlib zainstalowana")
-except ImportError as e:
-    print(f"✗ matplotlib błąd: {e}")
+    def test_optional_modules(self) -> None:
+        missing = []
+        for module in OPTIONAL_MODULES:
+            try:
+                importlib.import_module(module)
+            except ImportError as exc:
+                missing.append(f"{module}: {exc}")
+        if missing:
+            self.skipTest("Optional modules missing → " + ", ".join(missing))
 
-# Test ML
-print("\n[3] Testowanie bibliotek Machine Learning...")
-try:
-    import tensorflow as tf
-    print(f"✓ TensorFlow {tf.__version__} zainstalowana")
-except ImportError as e:
-    print(f"✗ TensorFlow błąd: {e}")
 
-try:
-    import keras
-    print(f"✓ Keras zainstalowana")
-except ImportError as e:
-    print(f"✗ Keras błąd: {e}")
-
-try:
-    import gym
-    print("✓ gym zainstalowana")
-except ImportError as e:
-    print(f"✗ gym błąd: {e}")
-
-# Test web scraping
-print("\n[4] Testowanie bibliotek Web...")
-try:
-    import requests
-    print("✓ requests zainstalowana")
-except ImportError as e:
-    print(f"✗ requests błąd: {e}")
-
-try:
-    from bs4 import BeautifulSoup
-    print("✓ BeautifulSoup zainstalowana")
-except ImportError as e:
-    print(f"✗ BeautifulSoup błąd: {e}")
-
-# Test vollib
-print("\n[5] Testowanie vollib...")
-try:
-    import vollib
-    print("✓ vollib zainstalowana")
-except ImportError as e:
-    print(f"✗ vollib nie zainstalowana: {e}")
-    print("  Uwaga: vollib wymaga SWIG do kompilacji")
-
-print("\n" + "=" * 60)
-print("TEST ZAKOŃCZONY")
-print("=" * 60)
+if __name__ == '__main__':  # pragma: no cover
+    unittest.main()

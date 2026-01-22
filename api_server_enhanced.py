@@ -11,10 +11,18 @@ import requests
 import json
 import threading
 import time
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 import logging
 import os
 import random
+import pandas as pd
+import base64
+from io import BytesIO
+from gtts import gTTS
+from typing import Any, Dict, List, Set
+
+from trading_bot.strategies.smt_killzones import KillzonesManager
+from trading_bot.analysis.genius_quant import GeniusQuantEngine
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
@@ -33,6 +41,7 @@ cache = {
     'btc_price': 0,
     'btc_change_24h': 0,
     'eth_price': 0,
+    'eth_change_24h': 0,
     'btc_volume': 0,
     'btc_market_cap': 0,
     'fear_greed': 0,
@@ -41,15 +50,309 @@ cache = {
     'prev_price': 0,
     'prev_volume': 0,
     'stocks': {'AAPL': 0, 'MSFT': 0, 'NVDA': 0},
-    'crypto': {'BTCUSDT': 0, 'ETHUSDT': 0}
+    'stocks_change': {'AAPL': 0, 'MSFT': 0, 'NVDA': 0},
+    'crypto': {'BTCUSDT': 0, 'ETHUSDT': 0},
+    'crypto_change': {'BTCUSDT': 0, 'ETHUSDT': 0},
+    'indices': {'NASDAQ': 0, 'SP500': 0, 'DAX': 0},
+    'indices_change': {'NASDAQ': 0, 'SP500': 0, 'DAX': 0},
+    'news_headlines': [],
+    'killzone_snapshot': {},
+    'sniper_signal': {},
+    'last_news_update': None,
+    'genius_audio_cache': {}
 }
 
 # Genius state for commentary
 genius_state = {
     'last_commentary': '',
     'signal': 'NEUTRAL',
-    'strength': 'medium'
+    'strength': 'medium',
+    'context_memory': [],
+    'last_features': {}
 }
+
+killzones_manager = KillzonesManager()
+genius_quant_engine = GeniusQuantEngine()
+
+KILLZONE_LABELS = {
+    'london_open': 'Killzone Londyn',
+    'ny_am': 'Killzone Nowy Jork (AM)',
+    'ny_pm': 'Killzone Nowy Jork (PM)',
+    'asia': 'Killzone Azja'
+}
+
+KILLZONE_OVERLAYS = {
+    'london_open': {'start': 7.5, 'end': 10.5, 'priority': 'high'},
+    'ny_am': {'start': 12.5, 'end': 16.0, 'priority': 'high'},
+    'ny_pm': {'start': 18.5, 'end': 21.0, 'priority': 'medium'},
+    'asia': {'start': 1.0, 'end': 5.0, 'priority': 'low'}
+}
+
+ZONE_NOTE_LABELS = {
+    'london_open': 'Londyn',
+    'ny_am': 'Nowy Jork (AM)',
+    'ny_pm': 'Nowy Jork (PM)',
+    'asia': 'Sesja Azja'
+}
+
+
+def format_hour(hour_float: float) -> str:
+    hour = int(hour_float)
+    minute = int(round((hour_float - hour) * 60))
+    if minute == 60:
+        hour = (hour + 1) % 24
+        minute = 0
+    return f"{hour:02d}:{minute:02d}"
+
+
+def format_duration(seconds: int) -> str:
+    seconds = max(0, int(seconds))
+    minutes, secs = divmod(seconds, 60)
+    return f"{minutes:02d}:{secs:02d}"
+
+
+def update_context_memory(entry: str) -> None:
+    """Store latest Genius insights for contextual memory"""
+    if not entry:
+        return
+    memory = genius_state.setdefault('context_memory', [])
+    memory.append({'note': entry, 'timestamp': datetime.now(timezone.utc).isoformat()})
+    if len(memory) > 6:
+        del memory[0]
+
+
+def build_live_bias_payload(features: dict) -> dict:
+    """Compose live-bias metadata using heuristics and stored context"""
+    change = features.get('change', 0)
+    fear_greed = features.get('fear_greed', 50)
+    volume_ratio = features.get('volume_ratio', 1.0)
+    hour = features.get('hour', datetime.now(timezone.utc).hour)
+
+    if change >= 1.2:
+        primary_bias = 'bullish'
+        playbook = 'Trend-Follow Long'
+        mtf_focus = ['15m Momentum', '1h Structure', '4h Liquidity']
+    elif change <= -1.2:
+        primary_bias = 'bearish'
+        playbook = 'Breakdown Fade Short'
+        mtf_focus = ['15m Breakdown', '1h Supply', '4h Reversal']
+    else:
+        primary_bias = 'neutral'
+        playbook = 'Range Mean Revert'
+        mtf_focus = ['5m Range', '15m VWAP', '1h Liquidity Void']
+
+    sentiment_shift = 'neutral'
+    if fear_greed >= 65:
+        sentiment_shift = 'overheated-greed'
+    elif fear_greed <= 35:
+        sentiment_shift = 'fear-driven'
+
+    volume_note = 'standard flow'
+    if volume_ratio >= 1.3:
+        volume_note = 'aggressive buyers'
+    elif volume_ratio <= 0.7:
+        volume_note = 'exhausted volume'
+
+    session_callout = 'Monitor Asia range rotation'
+    if 7 <= hour < 11:
+        session_callout = 'London open: szukaj sweepu high/low'
+    elif 13 <= hour < 17:
+        session_callout = 'New York open: przygotuj callouty delta/imbalances'
+    elif 22 <= hour or hour < 2:
+        session_callout = 'Sesja późna: uwaga na płytką płynność'
+
+    context_memory = genius_state.get('context_memory', [])[-3:]
+
+    return {
+        'primaryBias': primary_bias,
+        'playbook': playbook,
+        'mtfFocus': mtf_focus,
+        'sentimentShift': sentiment_shift,
+        'volumeNote': volume_note,
+        'sessionCallout': session_callout,
+        'recentContext': context_memory
+    }
+
+
+SUPPORTED_TTS_LANGS = {
+    'pl': 'pl',
+    'en': 'en',
+    'de': 'de',
+    'sk': 'sk'
+}
+
+
+def synthesize_genius_audio(text: str, lang_code: str) -> str:
+    """Generate Base64 audio for commentary using gTTS with caching"""
+    if not text:
+        raise ValueError('Brak tekstu do syntezy audio.')
+
+    target_lang = SUPPORTED_TTS_LANGS.get(lang_code, 'en')
+    cache_key = f"{target_lang}:{hash(text)}"
+    audio_cache = cache.setdefault('genius_audio_cache', {})
+
+    cached_audio = audio_cache.get(cache_key)
+    if cached_audio:
+        return cached_audio
+
+    tts = gTTS(text=text, lang=target_lang)
+    buffer = BytesIO()
+    tts.write_to_fp(buffer)
+    buffer.seek(0)
+    audio_b64 = base64.b64encode(buffer.read()).decode('ascii')
+
+    audio_cache[cache_key] = audio_b64
+    # Keep cache from growing indefinitely
+    if len(audio_cache) > 20:
+        for _ in range(len(audio_cache) - 20):
+            audio_cache.pop(next(iter(audio_cache)))
+
+    return audio_b64
+
+
+def update_news_cache() -> list:
+    """Refresh cached news headlines, preferring live Twelve Data feed."""
+    headlines = fetch_twelve_data_news()
+    if headlines:
+        cache['news_headlines'] = headlines
+        cache['last_news_update'] = datetime.now(timezone.utc).isoformat()
+        return headlines
+
+    price = cache.get('btc_price') or 0
+    change = cache.get('btc_change_24h') or 0
+    fear = cache.get('fear_greed') or '--'
+    now = datetime.now(timezone.utc)
+
+    templates = [
+        ('PILNE', f"BTC utrzymuje ${price:,.0f}; ETF w naplywie +{max(change*12, 0):.0f} mln$", 2, 'bullish'),
+        ('MAKRO', 'Rentownosci USA cofaja sie po danych PMI, apetyt na ryzyko rosnacy', 5, 'neutral'),
+        ('KRYPTO', f"Wolumen perps wzrosl +{max(change, 0):.1f}% vs 24h avg", 8, 'bullish' if change >= 0 else 'neutral'),
+        ('FX', 'DXY traci dynamike; EURUSD utrzymuje sie nad 1.09', 11, 'neutral'),
+        ('SUROWCE', 'Zloto stabilne przy 2k USD; ropa testuje 83 USD', 14, 'neutral'),
+        ('AKCJE', 'Mega capy tech kontynuuja rajd; NVDA i MSFT prowadza', 18, 'bullish'),
+        ('SENTYMENT', f"Fear & Greed Index = {fear}; monitoruj reakcje przy NY open", 20, 'neutral')
+    ]
+
+    fallback_headlines = []
+    for idx, (category, headline, minutes_ago, sentiment) in enumerate(templates):
+        fallback_headlines.append({
+            'id': idx,
+            'category': category,
+            'headline': headline,
+            'timeAgo': f"{minutes_ago} min temu",
+            'ageMinutes': minutes_ago,
+            'sentiment': sentiment,
+            'timestamp': (now - timedelta(minutes=minutes_ago)).isoformat()
+        })
+
+    random.shuffle(fallback_headlines)
+    cache['news_headlines'] = fallback_headlines
+    cache['last_news_update'] = now.isoformat()
+    return fallback_headlines
+
+
+def build_sniper_levels(seconds_remaining: int) -> dict:
+    price = cache.get('btc_price') or 0
+    change = cache.get('btc_change_24h') or 0
+    bias = 'bullish' if change >= 0 else 'bearish'
+
+    entry_factor = 0.9985 if bias == 'bullish' else 1.0015
+    tp1_factor = 1.0120 if bias == 'bullish' else 0.9880
+    tp2_factor = 1.0240 if bias == 'bullish' else 0.9760
+    stop_factor = 0.9925 if bias == 'bullish' else 1.0075
+
+    sniper = {
+        'entry': round(price * entry_factor, 2) if price else None,
+        'targets': [
+            round(price * tp1_factor, 2) if price else None,
+            round(price * tp2_factor, 2) if price else None
+        ],
+        'stop': round(price * stop_factor, 2) if price else None,
+        'bias': bias,
+        'timerText': format_duration(seconds_remaining),
+        'changePercent': round(change, 2)
+    }
+    return sniper
+
+
+def update_killzone_cache() -> dict:
+    now = pd.Timestamp.utcnow()
+    current_zone = killzones_manager.get_current_killzone(now)
+    upcoming_zone = killzones_manager.get_next_killzone(now)
+
+    overlays = []
+    for name, meta in KILLZONE_OVERLAYS.items():
+        overlays.append({
+            'name': name,
+            'label': KILLZONE_LABELS.get(name, name.replace('_', ' ').title()),
+            'startMinute': int(meta['start'] * 60),
+            'endMinute': int(meta['end'] * 60),
+            'startTime': format_hour(meta['start']),
+            'endTime': format_hour(meta['end']),
+            'priority': meta['priority']
+        })
+
+    current_overlay = next((item for item in overlays if item['name'] == current_zone['name']), None)
+    upcoming_overlay = None
+    if upcoming_zone:
+        upcoming_overlay = next((item for item in overlays if item['name'] == upcoming_zone['name']), None)
+
+    seconds_into_candle = ((now.minute % 5) * 60) + now.second
+    seconds_remaining = 300 - seconds_into_candle
+    if seconds_remaining < 0:
+        seconds_remaining = 0
+
+    current_hour = now.hour + now.minute / 60.0
+    minutes_remaining = None
+    if current_overlay:
+        end_hour = KILLZONE_OVERLAYS[current_overlay['name']]['end']
+        minutes_remaining = max(0, int((end_hour - current_hour) * 60))
+
+    next_start_minutes = None
+    if upcoming_overlay:
+        start_hour = KILLZONE_OVERLAYS[upcoming_overlay['name']]['start']
+        next_start_minutes = max(0, int((start_hour - current_hour) * 60))
+
+    sniper = build_sniper_levels(seconds_remaining)
+
+    ai_zone = ZONE_NOTE_LABELS.get(current_zone['name'], current_zone['name'])
+    if current_zone['active']:
+        ai_note = f"Killzone {ai_zone} aktywna. Bias {sniper['bias']} - weryfikuj Sniper i momentum."
+    else:
+        ai_note = f"Poza kluczowymi killzone. Przygotuj wejscia pod {ZONE_NOTE_LABELS.get(upcoming_zone['name'], upcoming_zone['name']) if upcoming_zone else 'kolejna sesje'}."
+
+    snapshot = {
+        'timestamp': now.isoformat(),
+        'current': {
+            'name': current_zone['name'],
+            'label': KILLZONE_LABELS.get(current_zone['name'], current_zone['name']),
+            'active': current_zone['active'],
+            'priority': current_zone['priority'],
+            'recommendation': current_zone['recommendation'],
+            'startTime': current_overlay['startTime'] if current_overlay else None,
+            'endTime': current_overlay['endTime'] if current_overlay else None,
+            'minutesRemaining': minutes_remaining
+        },
+        'upcoming': {
+            'name': upcoming_zone['name'],
+            'label': KILLZONE_LABELS.get(upcoming_zone['name'], upcoming_zone['name']),
+            'priority': upcoming_zone['priority'],
+            'startTime': upcoming_overlay['startTime'] if upcoming_overlay else None,
+            'minutesUntilStart': next_start_minutes
+        } if upcoming_zone else None,
+        'overlays': overlays,
+        'sessionClock': {
+            'candleSecondsRemaining': seconds_remaining,
+            'timerText': format_duration(seconds_remaining),
+            'interval': '5m'
+        },
+        'sniper': sniper,
+        'aiNote': ai_note
+    }
+
+    cache['killzone_snapshot'] = snapshot
+    cache['sniper_signal'] = sniper
+    return snapshot
 
 # Optional ML model for Genius
 try:
@@ -141,64 +444,159 @@ def fetch_twelve_data_quote(symbol='BTCUSDT'):
         )
         if response.status_code == 200:
             data = response.json()
-            if 'error' not in data and 'last_price' in data:
-                return {
-                    'price': float(data.get('last_price', 0)),
-                    'change': float(data.get('percent_change', 0)),
-                    'volume': float(data.get('volume', 0)),
-                    'bid': float(data.get('bid', 0)),
-                    'ask': float(data.get('ask', 0))
-                }
+            if isinstance(data, dict) and 'error' not in data:
+                def _to_float(value: Any) -> float:
+                    try:
+                        return float(value)
+                    except (TypeError, ValueError):
+                        return 0.0
+
+                price = _to_float(data.get('last_price') or data.get('close') or data.get('price'))
+                change = _to_float(data.get('percent_change') or data.get('change_percent') or data.get('change'))
+                volume = _to_float(data.get('volume') or data.get('average_volume') or data.get('rolling_volume'))
+                bid = _to_float(data.get('bid'))
+                ask = _to_float(data.get('ask'))
+
+                if price != 0.0 or change != 0.0:
+                    return {
+                        'price': price,
+                        'change': change,
+                        'volume': volume,
+                        'bid': bid,
+                        'ask': ask
+                    }
     except Exception as e:
         logger.error(f"❌ Twelve Data error ({symbol}): {e}")
     return None
 
 def fetch_twelve_data_assets():
-    """Fetch BTC, ETH, stocks from Twelve Data"""
+    """Fetch BTC, ETH, and select equities from Twelve Data."""
     try:
         # BTC
-        btc_data = fetch_twelve_data_quote('BTCUSDT')
+        btc_data = fetch_twelve_data_quote('BTC/USD')
         if btc_data:
             cache['btc_price'] = btc_data['price']
             cache['btc_change_24h'] = btc_data['change']
             cache['btc_volume'] = btc_data['volume']
             cache['crypto']['BTCUSDT'] = btc_data['price']
-            logger.info(f"✅ BTC: ${btc_data['price']:,.2f} ({btc_data['change']:+.2f}%)")
-        
+            cache['crypto_change']['BTCUSDT'] = btc_data['change']
+            logger.info(f"[DATA] BTC: ${btc_data['price']:,.2f} ({btc_data['change']:+.2f}%)")
+
         # ETH
-        eth_data = fetch_twelve_data_quote('ETHUSDT')
+        eth_data = fetch_twelve_data_quote('ETH/USD')
         if eth_data:
             cache['eth_price'] = eth_data['price']
+            cache['eth_change_24h'] = eth_data['change']
             cache['crypto']['ETHUSDT'] = eth_data['price']
-            logger.info(f"✅ ETH: ${eth_data['price']:,.2f} ({eth_data['change']:+.2f}%)")
-        
+            cache['crypto_change']['ETHUSDT'] = eth_data['change']
+            logger.info(f"[DATA] ETH: ${eth_data['price']:,.2f} ({eth_data['change']:+.2f}%)")
+
         # STOCKS
         for stock in ['AAPL', 'MSFT', 'NVDA']:
             stock_data = fetch_twelve_data_quote(stock)
             if stock_data:
                 cache['stocks'][stock] = stock_data['price']
-                logger.info(f"✅ {stock}: ${stock_data['price']:,.2f}")
-        
+                cache['stocks_change'][stock] = stock_data['change']
+                logger.info(f"[DATA] {stock}: ${stock_data['price']:,.2f} ({stock_data['change']:+.2f}%)")
+
         return True
     except Exception as e:
-        logger.error(f"❌ Twelve Data assets fetch error: {e}")
+        logger.error(f"[ERROR] Twelve Data asset fetch error: {e}")
         return False
+def fetch_twelve_data_news(symbols=None, per_symbol_limit=3):
+    """Fetch latest news from Twelve Data for a basket of symbols."""
+    if symbols is None:
+        symbols = ['BTC/USD', 'ETH/USD', 'AAPL', 'MSFT', 'SPX']
 
-def data_update_loop():
-    """Background thread to update data every 30 seconds"""
-    logger.info("🔄 Starting background data update thread...")
+    collected: List[Dict[str, Any]] = []
+    seen_titles: Set[str] = set()
+    now = datetime.now(timezone.utc)
+
+    for symbol in symbols:
+        try:
+            params = {
+                'symbol': symbol,
+                'limit': per_symbol_limit,
+                'apikey': TWELVE_DATA_API_KEY
+            }
+            response = requests.get(
+                f'{TWELVE_DATA_BASE_URL}/news',
+                params=params,
+                timeout=5
+            )
+            if response.status_code != 200:
+                continue
+            payload = response.json()
+            items = payload.get('data') if isinstance(payload, dict) else None
+            if not items:
+                continue
+            for item in items:
+                title = item.get('title') or item.get('headline') or ''
+                if not title or title in seen_titles:
+                    continue
+                seen_titles.add(title)
+
+                published_raw = item.get('datetime') or item.get('date') or item.get('published_at')
+                published_dt = None
+                if isinstance(published_raw, str):
+                    raw = published_raw.strip()
+                    try:
+                        published_dt = datetime.fromisoformat(raw.replace('Z', '+00:00'))
+                    except ValueError:
+                        for fmt in ('%Y-%m-%d %H:%M:%S', '%Y-%m-%dT%H:%M:%S'):  # noqa: E241
+                            try:
+                                published_dt = datetime.strptime(raw[:19], fmt)
+                                break
+                            except ValueError:
+                                continue
+                if published_dt is None:
+                    published_dt = now
+
+                if published_dt.tzinfo is None:
+                    published_dt = published_dt.replace(tzinfo=timezone.utc)
+
+                minutes_ago = max(0, int((now - published_dt).total_seconds() // 60)) if published_dt else None
+                time_label = f"{minutes_ago} min temu" if minutes_ago is not None else '--'
+
+                collected.append({
+                    'category': item.get('source', symbol) or symbol,
+                    'headline': title,
+                    'timeAgo': time_label,
+                    'ageMinutes': minutes_ago if minutes_ago is not None else 0,
+                    'sentiment': item.get('sentiment', '').lower() if isinstance(item.get('sentiment'), str) else 'neutral',
+                    'symbol': symbol,
+                    'url': item.get('url') or item.get('link')
+                })
+        except Exception as news_exc:  # pragma: no cover - network errors
+            logger.warning(f"[WARN] Twelve Data news fetch error ({symbol}): {news_exc}")
+            continue
+
+    # Sort by recency and cap total volume
+    collected.sort(key=lambda x: x.get('ageMinutes', 9999))
+    top_items = collected[:20]
+    for idx, item in enumerate(top_items):
+        item['id'] = idx
+    return top_items
+
+    
+
+def data_update_loop() -> None:
+    """Background loop keeping market data and news fresh."""
     while True:
         try:
-            cache['prev_price'] = cache['btc_price']
-            cache['prev_volume'] = cache['btc_volume']
             fetch_twelve_data_assets()
             fetch_fear_greed()
-            cache['last_update'] = datetime.now().isoformat()
+            update_news_cache()
+            update_killzone_cache()
+            cache['last_update'] = datetime.now(timezone.utc).isoformat()
             cache['timestamp'] = time.time()
-            logger.info(f"🧠 Genius: {genius_state['signal']} | {genius_state['strength'].upper()}")
-            time.sleep(30)  # Update every 30 seconds
-        except Exception as e:
-            logger.error(f"❌ Update loop error: {e}")
+            logger.info(
+                f"[LOOP] Genius signal: {genius_state.get('signal', '--')} "
+                f"({genius_state.get('strength', '--')})"
+            )
+            time.sleep(30)
+        except Exception as loop_exc:  # pragma: no cover - resilience against runtime issues
+            logger.error(f"[ERROR] Update loop error: {loop_exc}")
             time.sleep(30)
 
 # ========== API ENDPOINTS ==========
@@ -229,8 +627,14 @@ def binance_summary():
         'btcVolume': cache['btc_volume'],
         'btcMarketCap': cache['btc_market_cap'],
         'ethPrice': cache['eth_price'],
+        'ethChange24h': cache['eth_change_24h'],
         'stocks': cache['stocks'],
+        'stocksChange': cache['stocks_change'],
         'crypto': cache['crypto'],
+        'cryptoChange': cache['crypto_change'],
+        'indices': cache['indices'],
+        'indicesChange': cache['indices_change'],
+        'fearGreed': cache['fear_greed'],
         'timestamp': cache['timestamp'],
         'lastUpdate': cache['last_update']
     })
@@ -267,6 +671,16 @@ def genius_commentary():
             'long_short_ratio': long_short_ratio,
         }
         
+        # Quant insight
+        quant_symbol = request.args.get('symbol', 'BTCUSDT')
+        quant_report: Dict[str, Any]
+        try:
+            quant_report = genius_quant_engine.analyze_market(quant_symbol)
+            cache['genius_quant'] = quant_report
+        except Exception as quant_exc:  # pragma: no cover - safe guard for runtime failures
+            logger.error(f"❌ Genius quant engine error: {quant_exc}")
+            quant_report = {'ok': False, 'error': str(quant_exc)}
+
         # Use ML model if present, else heuristics
         if GENIUS_MODEL is not None:
             signal, strength, score = infer_signal(GENIUS_MODEL, features)
@@ -305,6 +719,9 @@ def genius_commentary():
         genius_state['last_commentary'] = commentary
         genius_state['signal'] = signal
         genius_state['strength'] = strength
+        genius_state['last_features'] = features
+        update_context_memory(commentary)
+        live_bias = build_live_bias_payload(features)
         
         return jsonify({
             'ok': True,
@@ -314,7 +731,9 @@ def genius_commentary():
             'btc_price': btc,
             'change_24h': change,
             'fear_greed': fear_greed,
-            'timestamp': cache['timestamp']
+            'timestamp': cache['timestamp'],
+            'liveBias': live_bias,
+            'quant': quant_report
         })
     except Exception as e:
         logger.error(f"❌ Genius commentary error: {e}")
@@ -323,6 +742,74 @@ def genius_commentary():
             'commentary': '⭕ Genius loading...',
             'error': str(e)
         }), 500
+
+
+@app.route('/api/genius/live-bias')
+def genius_live_bias():
+    """Expose Genius live-bias details and context memory"""
+    try:
+        features = genius_state.get('last_features') or {}
+        payload = build_live_bias_payload(features)
+        return jsonify({
+            'ok': True,
+            'signal': genius_state.get('signal', 'NEUTRAL'),
+            'strength': genius_state.get('strength', 'medium'),
+            'liveBias': payload,
+            'timestamp': cache.get('timestamp')
+        })
+    except Exception as e:
+        logger.error(f"❌ Genius live-bias error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/genius/audio')
+def genius_audio():
+    """Serve audio commentary in requested language"""
+    try:
+        lang = request.args.get('lang', 'pl').lower()
+        commentary_text = request.args.get('text') or genius_state.get('last_commentary')
+        if not commentary_text:
+            return jsonify({'ok': False, 'error': 'Brak komentarza do odczytania.'}), 400
+
+        audio_b64 = synthesize_genius_audio(commentary_text, lang)
+        return jsonify({
+            'ok': True,
+            'language': lang,
+            'audioBase64': audio_b64,
+            'mimeType': 'audio/mpeg'
+        })
+    except Exception as e:
+        logger.error(f"❌ Genius audio error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/news/headlines')
+def news_headlines():
+    """Return curated news headlines for Bloomberg ticker"""
+    try:
+        if not cache.get('news_headlines'):
+            update_news_cache()
+        return jsonify({
+            'ok': True,
+            'timestamp': cache.get('last_news_update'),
+            'headlines': cache.get('news_headlines', [])
+        })
+    except Exception as e:
+        logger.error(f"❌ News endpoint error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/killzones/overview')
+def killzones_overview():
+    """Return session killzone snapshot for overlay"""
+    try:
+        if not cache.get('killzone_snapshot'):
+            update_killzone_cache()
+        snapshot = cache.get('killzone_snapshot', {})
+        return jsonify({'ok': True, **snapshot})
+    except Exception as e:
+        logger.error(f"❌ Killzone endpoint error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
 
 # ========== ERROR HANDLERS ==========
 
@@ -454,6 +941,8 @@ if __name__ == '__main__':
     # Initial data fetch
     fetch_twelve_data_assets()
     fetch_fear_greed()
+    update_news_cache()
+    update_killzone_cache()
     
     # Run Flask app
     app.run(host='0.0.0.0', port=5000, debug=False, threaded=True)

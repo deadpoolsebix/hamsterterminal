@@ -24,6 +24,27 @@ except:
     RandomForestRegressor = None
 import os
 
+try:
+    from tensortrade_support import (
+        run_tensortrade_training,
+        is_tensortrade_available,
+        is_tensorflow_available,
+    )
+except Exception:  # pragma: no cover - defensive when helper missing
+    def run_tensortrade_training(*args, **kwargs):  # type: ignore
+        return {
+            'status': 'helper_missing',
+            'notes': ['tensortrade_support.py missing from workspace'],
+            'tensortrade_ready': False,
+            'framework': '',
+        }
+
+    def is_tensortrade_available() -> bool:  # type: ignore
+        return False
+
+    def is_tensorflow_available() -> bool:  # type: ignore
+        return False
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -36,6 +57,7 @@ brain_state = {
     'liquidity_analysis': {},
     'predictions': {},
     'risk_metrics': {},
+    'advanced_models': {},
     'last_update': 0
 }
 
@@ -135,15 +157,15 @@ def calculate_technical_signals(symbol='BTCUSDT'):
         df['open'] = df['open'].astype(float)
         
         # === MOVING AVERAGES ===
-        df['ema_20'] = ta.trend.ema_indicator(df['close'], window=20).iloc[-1]
-        df['ema_50'] = ta.trend.ema_indicator(df['close'], window=50).iloc[-1]
-        df['ema_200'] = ta.trend.ema_indicator(df['close'], window=200).iloc[-1]
-        
+        ema_20_series = ta.trend.ema_indicator(df['close'], window=20)
+        ema_50_series = ta.trend.ema_indicator(df['close'], window=50)
+        ema_200_series = ta.trend.ema_indicator(df['close'], window=200)
+
         current_price = df['close'].iloc[-1]
         signals['price'] = current_price
-        signals['ema_20'] = float(df['ema_20'])
-        signals['ema_50'] = float(df['ema_50'])
-        signals['ema_200'] = float(df['ema_200'])
+        signals['ema_20'] = float(ema_20_series.iloc[-1])
+        signals['ema_50'] = float(ema_50_series.iloc[-1])
+        signals['ema_200'] = float(ema_200_series.iloc[-1])
         
         # === RSI ===
         rsi = ta.momentum.rsi(df['close'], window=14)
@@ -152,8 +174,9 @@ def calculate_technical_signals(symbol='BTCUSDT'):
         
         # === MACD ===
         macd = ta.trend.macd(df['close'])
+        macd_signal = ta.trend.macd_signal(df['close'])
         signals['macd'] = float(macd.iloc[-1]) if macd is not None else 0
-        signals['macd_signal'] = float(ta.trend.macd_signal(df['close']).iloc[-1]) if ta.trend.macd_signal(df['close']) is not None else 0
+        signals['macd_signal'] = float(macd_signal.iloc[-1]) if macd_signal is not None else 0
         
         # === BOLLINGER BANDS ===
         bb = ta.volatility.bollinger_wband(df['close'], window=20, window_dev=2)
@@ -170,8 +193,8 @@ def calculate_technical_signals(symbol='BTCUSDT'):
         high_20 = df['high'].tail(20).max()
         is_upthrust = current_price < high_20 * 0.99 and df['high'].iloc[-1] > high_20 * 0.995
         
-        signals['wyckoff_spring'] = is_spring  # BULLISH
-        signals['wyckoff_upthrust'] = is_upthrust  # BEARISH
+        signals['wyckoff_spring'] = bool(is_spring)  # BULLISH
+        signals['wyckoff_upthrust'] = bool(is_upthrust)  # BEARISH
         
         # === TREND ===
         if current_price > signals['ema_20'] > signals['ema_50'] > signals['ema_200']:
@@ -189,7 +212,7 @@ def calculate_technical_signals(symbol='BTCUSDT'):
         avg_volume = df['volume'].tail(20).mean()
         current_volume = df['volume'].iloc[-1]
         signals['volume_ratio'] = float(current_volume / avg_volume) if avg_volume > 0 else 1.0
-        signals['high_volume'] = signals['volume_ratio'] > 1.5
+        signals['high_volume'] = bool(signals['volume_ratio'] > 1.5)
         
         brain_state['technical_signals'] = signals
         logger.info(f"📈 TA: {signals['trend']} | Price: ${current_price:.0f} | RSI: {signals['rsi']:.1f} | Trend: {signals['trend']}")
@@ -398,6 +421,58 @@ def calculate_risk_metrics(symbol='BTCUSDT'):
 
 # ============ BACKGROUND UPDATER ============
 
+
+def update_tensortrade_models(symbol: str = 'BTCUSDT'):
+    """Run the advanced ML / TensorTrade pipeline on recent closes."""
+    try:
+        klines_resp = requests.get(
+            f'https://api.binance.com/api/v3/klines?symbol={symbol}&interval=1h&limit=720',
+            timeout=5,
+        )
+
+        if klines_resp.status_code != 200:
+            brain_state['advanced_models'] = {
+                'status': 'data_error',
+                'message': 'Unable to download price history from Binance.',
+                'tensortrade_available': is_tensortrade_available(),
+                'tensorflow_available': is_tensorflow_available(),
+            }
+            return brain_state['advanced_models']
+
+        closes = [float(item[4]) for item in klines_resp.json()]
+        report = run_tensortrade_training(closes)
+        report.update(
+            {
+                'symbol': symbol,
+                'last_price': closes[-1] if closes else None,
+                'last_updated': datetime.utcnow().isoformat() + 'Z',
+                'tensortrade_available': is_tensortrade_available(),
+                'tensorflow_available': is_tensorflow_available(),
+            }
+        )
+
+        brain_state['advanced_models'] = report
+
+        if report.get('status') == 'trained':
+            move_pct = report.get('expected_move_pct', 0.0) or 0.0
+            logger.info(
+                f"🧮 Tensor LSTM {report.get('direction', 'NEUTRAL')} | Δ {move_pct:+.2f}% | confidence {report.get('confidence', 0.0):.1f}%"
+            )
+        else:
+            logger.info(f"🧮 Tensor pipeline status: {report.get('status')}")
+
+        return report
+
+    except Exception as exc:
+        logger.error(f"❌ TensorTrade pipeline error: {exc}")
+        brain_state['advanced_models'] = {
+            'status': 'error',
+            'message': str(exc),
+            'tensortrade_available': is_tensortrade_available(),
+            'tensorflow_available': is_tensorflow_available(),
+        }
+        return brain_state['advanced_models']
+
 def background_brain_update():
     """Aktualizuj wszystkie metryki co 2 minuty"""
     logger.info("🧠 Hamster Brain starting...")
@@ -409,6 +484,7 @@ def background_brain_update():
             detect_liquidity_grabs()
             predict_trend()
             calculate_risk_metrics()
+            update_tensortrade_models()
             
             brain_state['last_update'] = time.time()
             
@@ -428,6 +504,7 @@ calculate_technical_signals()
 detect_liquidity_grabs()
 predict_trend()
 calculate_risk_metrics()
+update_tensortrade_models()
 
 # ============ API ROUTES ============
 
@@ -466,6 +543,14 @@ def get_risk():
     resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
 
+
+@app.route('/api/brain/research', methods=['GET'])
+def get_research():
+    """Advanced ML/TensorTrade research output"""
+    resp = jsonify(brain_state['advanced_models'])
+    resp.headers['Access-Control-Allow-Origin'] = '*'
+    return resp
+
 @app.route('/api/brain/full', methods=['GET'])
 def get_full_brain():
     """WSZYSTKO - full brain analysis"""
@@ -475,6 +560,7 @@ def get_full_brain():
         'liquidity': brain_state['liquidity_analysis'],
         'predictions': brain_state['predictions'],
         'risk': brain_state['risk_metrics'],
+        'research': brain_state['advanced_models'],
         'timestamp': brain_state['last_update'],
         'signal': generate_trading_signal()
     }
@@ -494,6 +580,7 @@ def generate_trading_signal():
         tech = brain_state['technical_signals']
         sent = brain_state['market_sentiment']
         pred = brain_state['predictions']
+        research = brain_state.get('advanced_models', {})
         
         score = 0
         
@@ -526,6 +613,19 @@ def generate_trading_signal():
             score += pred.get('confidence', 0) / 50
         else:
             score -= pred.get('confidence', 0) / 50
+
+        # Tensor/Research insight
+        if research.get('status') == 'trained':
+            direction = research.get('direction')
+            confidence = research.get('confidence', 0)
+            if direction == 'BULLISH':
+                score += confidence / 60
+                signal['factors'].append('Tensor LSTM bullish bias')
+            elif direction == 'BEARISH':
+                score -= confidence / 60
+                signal['factors'].append('Tensor LSTM bearish bias')
+        elif research.get('status') == 'tensorflow_missing':
+            signal['factors'].append('Tensor stack unavailable')
         
         # Fear & Greed
         fg = sent.get('fear_greed', 50)
@@ -560,6 +660,7 @@ if __name__ == '__main__':
     logger.info("💧 /api/brain/liquidity - Liquidity grabs")
     logger.info("🤖 /api/brain/predictions - ML predictions")
     logger.info("⚠️  /api/brain/risk - Risk metrics")
+    logger.info("🧮 /api/brain/research - TensorFlow/TensorTrade insights")
     logger.info("🎯 /api/brain/full - Complete analysis + signal")
     logger.info("")
     

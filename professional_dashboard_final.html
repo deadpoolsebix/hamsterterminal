@@ -6828,7 +6828,7 @@
         
         // Data sources configuration - auto-detect localhost vs production
         const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const API_BASE = isLocalhost ? 'http://localhost:5000' : '';
+        const API_BASE = isLocalhost ? 'http://localhost:5000' : window.location.origin;
         
         const DATA_SOURCES = {
             binance: `${API_BASE}/api/binance`,
@@ -7532,8 +7532,102 @@
             window.hamsterInterval = setInterval(updateHamsterCommentary, 3000);
         }
         
-        function updateHamsterCommentary() {
+        const geniusSignalEmoji = {
+            'BULL': '🚀',
+            'BEAR': '😱',
+            'NEUTRAL': '🤔'
+        };
+
+        const geniusSignalToBadge = {
+            'BULL': 'buy',
+            'BEAR': 'sell',
+            'NEUTRAL': 'bounce'
+        };
+
+        function applyGeniusPayload(payload) {
+            const commentEl = document.getElementById('hamster-comment');
+            const emotionEl = document.getElementById('hamster-emotion');
+            if (commentEl) {
+                commentEl.textContent = payload.commentary || '⭕ GENIUS HAMSTER aktualizuje dane...';
+                const tone = payload.signal === 'BULL' ? '#44ff44' : payload.signal === 'BEAR' ? '#ff4444' : '#9fff9f';
+                commentEl.style.color = tone;
+            }
+            if (emotionEl) {
+                emotionEl.textContent = geniusSignalEmoji[payload.signal] || '🤔';
+            }
+
+            updateSignalHighlights(geniusSignalToBadge[payload.signal] || 'bounce');
+            renderQuantPanel(payload.quant);
+        }
+
+        function renderQuantPanel(report) {
+            const panel = document.getElementById('hamster-quant');
+            if (!panel) return;
+
+            if (!report || report.error) {
+                panel.innerHTML = `<div style="color:#ff6666; font-size:0.75em;">⚠️ Quant engine offline – fallback na lokalną analizę.</div>`;
+                return;
+            }
+
+            const perf = (report.insights && report.insights.performance) || {};
+            const risk = (report.insights && report.insights.risk) || {};
+            const ffn = (report.insights && report.insights.ffn) || {};
+            const options = (report.insights && report.insights.options) || {};
+            const warnings = report.warnings || [];
+
+            const optionKeys = Object.keys(options);
+            const firstOptionKey = optionKeys.length ? optionKeys[0] : null;
+            const optionSnippet = firstOptionKey ? options[firstOptionKey] : {};
+            const optionValueRaw = optionSnippet && typeof optionSnippet === 'object'
+                ? (optionSnippet.call_price ?? optionSnippet.price ?? optionSnippet.binomial_price ?? optionSnippet.value ?? optionSnippet.delta_call)
+                : null;
+            const optionValue = typeof optionValueRaw === 'number' ? optionValueRaw : null;
+
+            panel.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+                    <span style="color:#bb86fc; font-size:0.75em; font-weight:700;">Quant Insights</span>
+                    <span style="color:#666; font-size:0.65em;">${new Date(report.generated_at * 1000).toLocaleTimeString()}</span>
+                </div>
+                <div style="display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:8px; font-size:0.7em;">
+                    <div style="background:rgba(0,255,65,0.08); border:1px solid rgba(0,255,65,0.3); padding:6px; border-radius:4px;">
+                        <div style="color:#9fff9f; font-weight:700;">σ<sub>1d</sub></div>
+                        <div style="color:#fff;">${(perf.daily_volatility || 0).toFixed(3)}</div>
+                    </div>
+                    <div style="background:rgba(255,204,0,0.08); border:1px solid rgba(255,204,0,0.3); padding:6px; border-radius:4px;">
+                        <div style="color:#ffcc00; font-weight:700;">VaR 95%</div>
+                        <div style="color:#fff;">${(risk.value_at_risk || 0).toFixed(4)}</div>
+                    </div>
+                    <div style="background:rgba(187,134,252,0.08); border:1px solid rgba(187,134,252,0.3); padding:6px; border-radius:4px;">
+                        <div style="color:#bb86fc; font-weight:700;">Sharpe*</div>
+                        <div style="color:#fff;">${(perf.sharpe_like || 0).toFixed(2)}</div>
+                    </div>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:8px; font-size:0.68em;">
+                    ${ffn.cagr !== undefined ? `<span style="background:rgba(0,212,255,0.1); border:1px solid rgba(0,212,255,0.3); padding:4px 6px; border-radius:3px; color:#00d4ff;">FFN CAGR ${(ffn.cagr * 100).toFixed(2)}%</span>` : ''}
+                    ${optionValue !== null ? `<span style="background:rgba(255,0,51,0.1); border:1px solid rgba(255,0,51,0.3); padding:4px 6px; border-radius:3px; color:#ff3366;">Opt Price ${optionValue.toFixed(2)}</span>` : ''}
+                    ${warnings.length ? `<span style="background:rgba(255,102,0,0.1); border:1px solid rgba(255,102,0,0.3); padding:4px 6px; border-radius:3px; color:#ff9966;">${warnings.length} warn</span>` : ''}
+                </div>
+            `;
+        }
+
+        async function updateHamsterCommentary() {
             try {
+                const response = await fetch(`${API_BASE}/api/genius/commentary?symbol=BTCUSDT`, { cache: 'no-store' });
+                if (response.ok) {
+                    const payload = await response.json();
+                    if (payload && payload.ok) {
+                        applyGeniusPayload(payload);
+                        return;
+                    }
+                }
+                console.warn('Genius API fallback triggered', response.status);
+            } catch (apiError) {
+                console.warn('Genius API unreachable, switching to local logic', apiError);
+            }
+
+            try {
+                renderQuantPanel({ error: 'fallback' });
+
                 // Get REAL data from chart
                 const chartData = getRealChartData();
                 if (!chartData) {

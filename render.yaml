@@ -1,14 +1,12 @@
 services:
   - type: web
-    name: hamsterterminal
+    name: hamster-api
     env: python
     plan: free
-    buildCommand: pip install -r requirements.txt
-    startCommand: python -m http.server 8000 --bind 0.0.0.0
-    routes:
-      - path: /
-        matchType: prefix
-    staticPublicPath: ./
+    buildCommand: "pip install -r requirements.txt"
+    startCommand: "gunicorn --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 --bind 0.0.0.0:$PORT api_server:app"
     envVars:
-      - key: PORT
-        value: 8000
+      - key: PYTHON_VERSION
+        value: 3.11.5
+      - key: TWELVE_DATA_API_KEY
+        sync: false
