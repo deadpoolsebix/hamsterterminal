@@ -81,7 +81,7 @@ class LSTMPredictor:
         
         return np.array(X), np.array(y)
     
-    def build_model(self, input_shape: Tuple[int, int]) -> keras.Model:
+    def build_model(self, input_shape: Tuple[int, int]):
         """
         Build LSTM architecture
         Architecture inspired by research papers + fund practices
@@ -90,7 +90,7 @@ class LSTMPredictor:
             input_shape: (timesteps, features)
             
         Returns:
-            Compiled Keras model
+            Compiled Keras model or None if TF not available
         """
         if not TF_AVAILABLE:
             return None
