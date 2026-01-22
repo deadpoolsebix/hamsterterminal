@@ -4256,7 +4256,11 @@
     }
     function toggleToolsDrawer() {
       if (!toolsDrawer) return;
-      if (toolsDrawer.classList.contains('open')) closeToolsDrawer(); else openToolsDrawer();
+      if (toolsDrawer.classList.contains('open')) {
+        closeToolsDrawer();
+      } else {
+        openToolsDrawer();
+      }
     }
 
     // Click on handle toggles
