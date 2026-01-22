@@ -34,6 +34,20 @@ except ImportError as e:
     logger = logging.getLogger(__name__)
     logger.warning(f"⚠️ AI Modules not available: {e}")
 
+# Advanced Quant Modules
+try:
+    from portfolio_optimizer import portfolio_optimizer
+    from lstm_predictor import lstm_predictor, ensemble_predictor
+    from exchange_manager import exchange_manager
+    from backtest_engine import backtest_engine
+    QUANT_MODULES_AVAILABLE = True
+    logger = logging.getLogger(__name__)
+    logger.info("✅ Quant Modules loaded (Portfolio, LSTM, Exchange, Backtest)!")
+except ImportError as e:
+    QUANT_MODULES_AVAILABLE = False
+    logger = logging.getLogger(__name__)
+    logger.warning(f"⚠️ Quant Modules not available: {e}")
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -1035,16 +1049,227 @@ def root():
             '/api/analytics': 'Advanced analytics snapshot',
             '/api/killzones/overview': 'Session killzone overlay data',
             '/api/status': 'Server status with all cached data',
-            '/health': 'Health check'
+            '/health': 'Health check',
+            # Advanced Quant Endpoints
+            '/api/portfolio/optimize': 'Portfolio optimization (POST)',
+            '/api/lstm/predict': 'LSTM price prediction',
+            '/api/exchanges/prices': 'Multi-exchange price comparison',
+            '/api/exchanges/arbitrage': 'Arbitrage opportunities',
+            '/api/backtest/run': 'Run strategy backtest (POST)'
         }
     })
 
 
+# ============ ADVANCED QUANT ENDPOINTS ============
+
+@app.route('/api/portfolio/optimize', methods=['POST'])
+def portfolio_optimize():
+    """
+    Optimize portfolio weights using Modern Portfolio Theory
+    Method: sharpe, min_variance, risk_parity
+    """
+    if not QUANT_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'Quant modules not available'})
+    
+    try:
+        data = request.get_json()
+        returns_data = data.get('returns')  # Dict of asset returns
+        method = data.get('method', 'sharpe')
+        
+        if not returns_data:
+            return jsonify({'ok': False, 'error': 'No returns data provided'})
+        
+        # Convert to DataFrame
+        import pandas as pd
+        returns_df = pd.DataFrame(returns_data)
+        
+        # Optimize
+        weights = portfolio_optimizer.optimize_portfolio_weights(returns_df, method)
+        
+        return jsonify({
+            'ok': True,
+            'weights': weights,
+            'method': method,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Portfolio optimization error: {e}")
+        return jsonify({'ok': False, 'error': str(e)})
+
+
+@app.route('/api/lstm/predict', methods=['GET'])
+def lstm_predict():
+    """Get LSTM price prediction for BTC"""
+    if not QUANT_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'LSTM not available'})
+    
+    try:
+        # Get recent prices from cache (simulated)
+        recent_prices = np.array([cache['btc_price']] * 60)  # Placeholder
+        
+        # Make prediction
+        prediction = ensemble_predictor.predict_with_ensemble(
+            recent_prices,
+            {
+                'rsi': cache.get('rsi', 50),
+                'macd': cache.get('macd', 0)
+            }
+        )
+        
+        return jsonify({
+            'ok': True,
+            'prediction': prediction,
+            'current_price': float(cache['btc_price']),
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"LSTM prediction error: {e}")
+        return jsonify({'ok': False, 'error': str(e)})
+
+
+@app.route('/api/exchanges/prices', methods=['GET'])
+def exchange_prices():
+    """Get BTC price from multiple exchanges"""
+    if not QUANT_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'Exchange manager not available'})
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USDT')
+        
+        # Get prices from all connected exchanges
+        prices = exchange_manager.get_all_prices(symbol)
+        
+        return jsonify({
+            'ok': True,
+            'symbol': symbol,
+            'prices': prices,
+            'connected_exchanges': exchange_manager.get_connected_exchanges(),
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Exchange prices error: {e}")
+        return jsonify({'ok': False, 'error': str(e)})
+
+
+@app.route('/api/exchanges/arbitrage', methods=['GET'])
+def exchange_arbitrage():
+    """Find arbitrage opportunities across exchanges"""
+    if not QUANT_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'Exchange manager not available'})
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USDT')
+        min_spread = float(request.args.get('min_spread', 0.005))
+        
+        # Find arbitrage
+        opportunity = exchange_manager.find_arbitrage_opportunity(symbol, min_spread)
+        
+        return jsonify({
+            'ok': True,
+            'opportunity': opportunity,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Arbitrage search error: {e}")
+        return jsonify({'ok': False, 'error': str(e)})
+
+
+@app.route('/api/backtest/run', methods=['POST'])
+def run_backtest():
+    """Run strategy backtest"""
+    if not QUANT_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'Backtest engine not available'})
+    
+    try:
+        data = request.get_json()
+        ohlcv_data = data.get('data')  # OHLCV DataFrame as dict
+        
+        if not ohlcv_data:
+            return jsonify({'ok': False, 'error': 'No OHLCV data provided'})
+        
+        # Convert to DataFrame
+        import pandas as pd
+        df = pd.DataFrame(ohlcv_data)
+        
+        # Ensure datetime index
+        if 'timestamp' in df.columns:
+            df['timestamp'] = pd.to_datetime(df['timestamp'])
+            df.set_index('timestamp', inplace=True)
+        
+        # Run backtest
+        results = backtest_engine.run_backtest(df)
+        
+        return jsonify({
+            'ok': True,
+            'results': results,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Backtest error: {e}")
+        return jsonify({'ok': False, 'error': str(e)})
+
+
+@app.route('/api/performance/metrics', methods=['POST'])
+def performance_metrics():
+    """Calculate performance metrics using empyrical"""
+    if not QUANT_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'Portfolio optimizer not available'})
+    
+    try:
+        data = request.get_json()
+        returns = data.get('returns')  # List of returns
+        
+        if not returns:
+            return jsonify({'ok': False, 'error': 'No returns provided'})
+        
+        # Convert to Series
+        import pandas as pd
+        returns_series = pd.Series(returns)
+        
+        # Calculate metrics
+        metrics = portfolio_optimizer.calculate_performance_metrics(returns_series)
+        
+        return jsonify({
+            'ok': True,
+            'metrics': metrics,
+            'timestamp': datetime.now().isoformat()
+        })
+        
+    except Exception as e:
+        logger.error(f"Performance metrics error: {e}")
+        return jsonify({'ok': False, 'error': str(e)})
+
+
 if __name__ == '__main__':
     print("=" * 80)
-    print("🚀 HAMSTER TERMINAL API SERVER v3.0 - WebSocket Edition")
+    print("🚀 HAMSTER TERMINAL API SERVER v4.0 - PROFESSIONAL QUANT EDITION")
     print("=" * 80)
     print("Server starting on http://0.0.0.0:5000")
+    print("")
+    print("🧠 AI/ML Stack:")
+    if AI_MODULES_AVAILABLE:
+        print("  ✅ Sentiment Analysis (OpenAI GPT + TextBlob)")
+        print("  ✅ News Processing (NewsAPI + Alpha Vantage)")
+        print("  ✅ LLM Genius Brain (GPT-powered commentary)")
+    else:
+        print("  ⚠️  AI modules in fallback mode")
+    
+    print("")
+    print("📊 Quant Modules:")
+    if QUANT_MODULES_AVAILABLE:
+        print("  ✅ Portfolio Optimization (Mean-Variance, Risk Parity, Sharpe)")
+        print("  ✅ LSTM Price Prediction (TensorFlow/Keras)")
+        print("  ✅ Multi-Exchange Integration (ccxt - 70+ exchanges)")
+        print("  ✅ Professional Backtesting (backtrader framework)")
+        print("  ✅ Performance Metrics (empyrical, statsmodels)")
+    else:
+        print("  ⚠️  Quant modules not loaded")
+    
     print("")
     print("📡 Real-time data sources:")
     print("  🔴 WebSocket (PRIMARY) - Twelve Data real-time prices")
@@ -1062,6 +1287,14 @@ if __name__ == '__main__':
     print("🌐 WebSocket Connection:")
     print("  Client: ws://localhost:5000/socket.io/?transport=websocket")
     print("  Events: connect, subscribe, price_update, disconnect")
+    print("")
+    print("🎯 New Advanced Endpoints:")
+    print("  POST /api/portfolio/optimize - Portfolio optimization")
+    print("  GET  /api/lstm/predict - LSTM price prediction")
+    print("  GET  /api/exchanges/prices - Multi-exchange prices")
+    print("  GET  /api/exchanges/arbitrage - Arbitrage finder")
+    print("  POST /api/backtest/run - Strategy backtesting")
+    print("  POST /api/performance/metrics - Performance analysis")
     print("")
     print("=" * 80)
     
