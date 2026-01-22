@@ -4,6 +4,7 @@
 Serwuje rzeczywiste dane z Twelve Data (crypto, stock, forex)
 WebSocket support dla real-time bez lagów
 Endpoints dla dashboarda (localhost:5000)
+Enhanced with AI Sentiment Analysis & LLM Integration
 """
 
 from flask import Flask, jsonify, request, render_template_string
@@ -20,6 +21,19 @@ import websockets
 import asyncio
 import random
 
+# AI/ML Modules Integration
+try:
+    from sentiment_analyzer import SentimentAnalyzer
+    from news_processor import NewsProcessor
+    from llm_genius_integration import LLMGeniusIntegration
+    AI_MODULES_AVAILABLE = True
+    logger = logging.getLogger(__name__)
+    logger.info("✅ AI Modules loaded successfully!")
+except ImportError as e:
+    AI_MODULES_AVAILABLE = False
+    logger = logging.getLogger(__name__)
+    logger.warning(f"⚠️ AI Modules not available: {e}")
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -32,6 +46,18 @@ TWELVE_DATA_WS_URL = 'wss://ws.twelvedata.com/v1/quotes/price'
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all endpoints
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+# ============ AI MODULES INITIALIZATION ============
+if AI_MODULES_AVAILABLE:
+    sentiment_analyzer = SentimentAnalyzer()
+    news_processor = NewsProcessor()
+    llm_genius = LLMGeniusIntegration()
+    logger.info("🧠 Genius Hamster AI Brain activated!")
+else:
+    sentiment_analyzer = None
+    news_processor = None
+    llm_genius = None
+    logger.warning("🐹 Genius Hamster running in basic mode (no AI)")
 
 # ============ CACHE SYSTEM ============
 cache = {
@@ -286,28 +312,67 @@ def update_session_clock():
 
 
 def update_news_cache():
+    """Update news cache with AI-powered news fetching"""
     now = datetime.utcnow()
     headlines = []
-    btc_price = cache.get('btc_price', 0)
-    btc_change = cache.get('btc_change', 0)
-    fear = cache.get('fear_greed', 0)
-    templates = [
-        ('MAKRO', 'Fed monitoruje inflację usług; rynek liczy na cięcia w Q2', 4, 'neutral'),
-        ('KRYPTO', f'BTC utrzymuje {btc_price:,.0f} USD, zmiana {btc_change:+.2f}%', 7, 'bullish' if btc_change >= 0 else 'bearish'),
-        ('AKCJE', 'Tech mega-caps ciągną NASDAQ w górę, popyt na AI rośnie', 11, 'bullish'),
-        ('FX', 'EUR/USD stabilny przed publikacją PMI; DXY w konsolidacji', 15, 'neutral'),
-        ('SENTYMENT', f'Fear & Greed na poziomie {fear} – apetyt na ryzyko umiarkowany', 20, 'neutral'),
-    ]
-    for idx, (category, headline, age_min, sentiment) in enumerate(templates, start=1):
-        headlines.append({
-            'id': idx,
-            'category': category,
-            'headline': headline,
-            'timeAgo': f"{age_min} min temu",
-            'ageMinutes': age_min,
-            'sentiment': sentiment,
-            'timestamp': (now - timedelta(minutes=age_min)).isoformat()
-        })
+    
+    # Try to fetch real news using AI modules
+    if AI_MODULES_AVAILABLE and news_processor:
+        try:
+            symbols = ['BTC', 'ETH', 'CRYPTO']
+            news_items = news_processor.fetch_all_news(symbols, days_back=1)
+            
+            # Convert to our format
+            for idx, item in enumerate(news_items[:5], start=1):
+                age_minutes = int((now - item.published_at).total_seconds() / 60)
+                
+                # Determine sentiment
+                sentiment = 'neutral'
+                if item.sentiment > 0.2:
+                    sentiment = 'bullish'
+                elif item.sentiment < -0.2:
+                    sentiment = 'bearish'
+                
+                headlines.append({
+                    'id': idx,
+                    'category': 'KRYPTO' if item.symbol in ['BTC', 'ETH'] else 'MAKRO',
+                    'headline': item.title[:100],
+                    'timeAgo': f"{age_minutes} min temu" if age_minutes < 60 else f"{age_minutes // 60}h temu",
+                    'ageMinutes': age_minutes,
+                    'sentiment': sentiment,
+                    'timestamp': item.published_at.isoformat(),
+                    'url': item.url,
+                    'source': item.source
+                })
+            
+            if headlines:
+                logger.info(f"✅ Fetched {len(headlines)} AI-powered news items")
+        except Exception as e:
+            logger.error(f"❌ AI news fetch failed: {e}")
+    
+    # Fallback to template news if no AI news
+    if not headlines:
+        btc_price = cache.get('btc_price', 0)
+        btc_change = cache.get('btc_change', 0)
+        fear = cache.get('fear_greed', 0)
+        templates = [
+            ('MAKRO', 'Fed monitoruje inflację usług; rynek liczy na cięcia w Q2', 4, 'neutral'),
+            ('KRYPTO', f'BTC utrzymuje {btc_price:,.0f} USD, zmiana {btc_change:+.2f}%', 7, 'bullish' if btc_change >= 0 else 'bearish'),
+            ('AKCJE', 'Tech mega-caps ciągną NASDAQ w górę, popyt na AI rośnie', 11, 'bullish'),
+            ('FX', 'EUR/USD stabilny przed publikacją PMI; DXY w konsolidacji', 15, 'neutral'),
+            ('SENTYMENT', f'Fear & Greed na poziomie {fear} – apetyt na ryzyko umiarkowany', 20, 'neutral'),
+        ]
+        for idx, (category, headline, age_min, sentiment) in enumerate(templates, start=1):
+            headlines.append({
+                'id': idx,
+                'category': category,
+                'headline': headline,
+                'timeAgo': f"{age_min} min temu",
+                'ageMinutes': age_min,
+                'sentiment': sentiment,
+                'timestamp': (now - timedelta(minutes=age_min)).isoformat()
+            })
+    
     random.shuffle(headlines)
     cache['news_headlines'] = headlines
     cache['last_news_update'] = now.isoformat()
@@ -315,36 +380,94 @@ def update_news_cache():
 
 
 def build_genius_payload():
+    """Build Genius Hamster commentary with AI enhancement"""
     btc_price = cache.get('btc_price', 0)
     btc_change = cache.get('btc_change', 0)
     fear = cache.get('fear_greed', 0)
     volume = cache.get('volume_24h', 0)
-    bias = 'BULL' if btc_change >= 0 else 'BEAR'
-    strength = 'strong' if abs(btc_change) > 1.5 else 'medium'
-    sentiment_note = 'Greed rośnie' if fear > 70 else 'Neutralnie' if fear >= 30 else 'Fear dominuje'
-    commentary = (
-        f"{'🟢' if bias == 'BULL' else '🔴'} BTC {btc_price:,.0f} USD, zmiana {btc_change:+.2f}% 24h. "
-        f"Wolumen {volume/1e9:.2f}B. {sentiment_note}."
-    )
-    context_notes = [
-        'Monitoruj reakcję na strefę 4h FVG',
-        'London fix może dodać zmienności',
-        'Utrzymaj trailing stop pod lokalnym swingiem'
-    ]
+    
+    # Try to use AI for enhanced commentary
+    if AI_MODULES_AVAILABLE and llm_genius:
+        try:
+            # Prepare market data for AI
+            market_data = {
+                'price': btc_price,
+                'rsi': cache.get('rsi', 50),
+                'macd': cache.get('macd', 0),
+                'volume_ratio': volume / 24e9 if volume > 0 else 1.0,
+                'trend': 'uptrend' if btc_change > 0 else 'downtrend',
+                'fear_greed': fear
+            }
+            
+            # Get sentiment data if available
+            sentiment_data = None
+            if sentiment_analyzer and cache.get('news_headlines'):
+                try:
+                    # Analyze recent news
+                    news_texts = [item.get('headline', '') for item in cache['news_headlines'][:3]]
+                    sentiment_results = []
+                    for text in news_texts:
+                        sentiment = sentiment_analyzer.analyze_text_sentiment(text, 'BTC')
+                        sentiment_results.append(sentiment)
+                    
+                    sentiment_data = sentiment_analyzer.calculate_market_sentiment(sentiment_results, 'BTC')
+                except Exception as e:
+                    logger.error(f"Sentiment analysis error: {e}")
+            
+            # Get AI-powered analysis
+            ai_result = llm_genius.analyze_market_data(market_data, sentiment_data)
+            
+            commentary = ai_result.get('commentary', '')
+            signal = ai_result.get('signal', 'NEUTRAL')
+            confidence = ai_result.get('confidence', 50)
+            strength = 'strong' if confidence > 70 else 'medium' if confidence > 40 else 'weak'
+            
+            context_notes = [
+                ai_result.get('reasoning', 'Multiple factors considered'),
+                'AI-powered market analysis',
+                f"Confidence: {confidence}%"
+            ]
+            
+            logger.info(f"🧠 AI Genius: {signal} ({confidence}%) - {commentary[:50]}...")
+            
+        except Exception as e:
+            logger.error(f"❌ AI Genius analysis failed: {e}")
+            # Fallback to rule-based
+            ai_result = None
+    else:
+        ai_result = None
+    
+    # Fallback to rule-based commentary if AI not available
+    if not ai_result or not ai_result.get('commentary'):
+        bias = 'BULL' if btc_change >= 0 else 'BEAR'
+        strength = 'strong' if abs(btc_change) > 1.5 else 'medium'
+        sentiment_note = 'Greed rośnie' if fear > 70 else 'Neutralnie' if fear >= 30 else 'Fear dominuje'
+        commentary = (
+            f"{'🟢' if bias == 'BULL' else '🔴'} BTC {btc_price:,.0f} USD, zmiana {btc_change:+.2f}% 24h. "
+            f"Wolumen {volume/1e9:.2f}B. {sentiment_note}."
+        )
+        signal = bias
+        context_notes = [
+            'Monitoruj reakcję na strefę 4h FVG',
+            'London fix może dodać zmienności',
+            'Utrzymaj trailing stop pod lokalnym swingiem'
+        ]
+    
     payload = {
         'ok': True,
         'commentary': commentary,
-        'signal': bias,
+        'signal': signal,
         'strength': strength,
         'btc_price': btc_price,
         'change_24h': btc_change,
         'fear_greed': fear,
         'timestamp': time.time(),
+        'ai_powered': AI_MODULES_AVAILABLE and ai_result is not None,
         'liveBias': {
-            'primaryBias': 'bullish' if bias == 'BULL' else 'bearish',
+            'primaryBias': 'bullish' if 'BULL' in signal or 'BUY' in signal else 'bearish' if 'BEAR' in signal or 'SELL' in signal else 'neutral',
             'playbook': 'NY Open Sweep',
             'mtfFocus': ['1H Trend', '15M Liquidity'],
-            'sentimentShift': sentiment_note,
+            'sentimentShift': f"Fear & Greed: {fear}",
             'volumeNote': f"{volume/1e9:.2f}B vs 24h avg",
             'sessionCallout': 'Patrz na NY lunch fade',
             'recentContext': context_notes
