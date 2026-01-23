@@ -56,6 +56,7 @@ logger = logging.getLogger(__name__)
 TWELVE_DATA_API_KEY = os.getenv('TWELVE_DATA_API_KEY', 'demo')  # Replace with your key from https://twelvedata.com
 TWELVE_DATA_BASE_URL = 'https://api.twelvedata.com'
 TWELVE_DATA_WS_URL = 'wss://ws.twelvedata.com/v1/quotes/price'
+COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3'
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all endpoints
@@ -195,23 +196,87 @@ def fetch_twelve_data_forex(pair='EUR/USD'):
     return None
 
 
+def fetch_coingecko_crypto(asset_ids=None):
+    """Fallback crypto prices from CoinGecko when Twelve Data returns zeros."""
+    asset_ids = asset_ids or ['bitcoin', 'ethereum']
+    try:
+        params = {
+            'ids': ','.join(asset_ids),
+            'vs_currencies': 'usd',
+            'include_24hr_change': 'true',
+            'include_24hr_vol': 'true'
+        }
+        response = requests.get(
+            f"{COINGECKO_BASE_URL}/simple/price",
+            params=params,
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            result = {}
+            for asset in asset_ids:
+                entry = data.get(asset)
+                if not entry:
+                    continue
+                result[asset] = {
+                    'price': float(entry.get('usd', 0)),
+                    'change': float(entry.get('usd_24h_change', 0)),
+                    'volume': float(entry.get('usd_24h_vol', 0))
+                }
+            return result
+    except Exception as e:
+        logger.error(f"❌ CoinGecko fallback error: {e}")
+    return {}
+
+
 def fetch_crypto_prices():
     """Fetch BTC and ETH prices from Twelve Data"""
     try:
+        fallback_data = {}
+        btc_from_fallback = False
+        eth_from_fallback = False
+
         # BTC/USDT
         btc_data = fetch_twelve_data_crypto('BTCUSDT')
+        # ETH/USDT
+        eth_data = fetch_twelve_data_crypto('ETHUSDT')
+
+        needs_fallback = (
+            not btc_data or btc_data.get('price', 0) <= 0 or
+            not eth_data or eth_data.get('price', 0) <= 0
+        )
+
+        if needs_fallback:
+            fallback_data = fetch_coingecko_crypto(['bitcoin', 'ethereum'])
+
+        if (not btc_data) or btc_data.get('price', 0) <= 0:
+            cg_btc = fallback_data.get('bitcoin') if fallback_data else None
+            if cg_btc:
+                btc_data = cg_btc
+                btc_from_fallback = True
+                logger.info("↩️ Using CoinGecko fallback for BTC price")
+
+        if (not eth_data) or eth_data.get('price', 0) <= 0:
+            cg_eth = fallback_data.get('ethereum') if fallback_data else None
+            if cg_eth:
+                eth_data = cg_eth
+                eth_from_fallback = True
+                logger.info("↩️ Using CoinGecko fallback for ETH price")
+
         if btc_data:
             cache['btc_price'] = btc_data['price']
             cache['btc_change'] = btc_data['change']
-            cache['volume_24h'] = btc_data['volume'] * btc_data['price']
+            if btc_from_fallback:
+                # CoinGecko volume is already in notional USD
+                cache['volume_24h'] = btc_data.get('volume', 0)
+            else:
+                cache['volume_24h'] = btc_data.get('volume', 0) * btc_data['price']
             
-        # ETH/USDT
-        eth_data = fetch_twelve_data_crypto('ETHUSDT')
         if eth_data:
             cache['eth_price'] = eth_data['price']
             cache['eth_change'] = eth_data['change']
             
-        logger.info(f"✅ Twelve Data (Crypto): BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
+        logger.info(f"✅ Crypto: BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
         return True
         
     except Exception as e:

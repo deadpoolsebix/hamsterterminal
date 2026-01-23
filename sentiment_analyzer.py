@@ -34,6 +34,15 @@ class SentimentAnalyzer:
         self.openai_api_key = openai_api_key or os.getenv('OPENAI_API_KEY', '')
         self.use_openai = bool(self.openai_api_key and self.openai_api_key != 'demo')
         self.logger = logging.getLogger(__name__)
+        self.vader = None
+
+        try:
+            from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+            self.vader = SentimentIntensityAnalyzer()
+            self.logger.info("VADER sentiment available; using as primary fallback.")
+        except Exception:
+            # Keep silent when VADER is missing to avoid log spam on every call.
+            self.vader = None
         
     def analyze_text_sentiment(self, text: str, symbol: str = None) -> SentimentData:
         """
@@ -47,9 +56,20 @@ class SentimentAnalyzer:
             SentimentData with score and confidence
         """
         if self.use_openai:
-            return self._analyze_with_openai(text, symbol)
-        else:
-            return self._analyze_with_textblob(text, symbol)
+            result = self._analyze_with_openai(text, symbol)
+            if result:
+                return result
+
+        if self.vader:
+            result = self._analyze_with_vader(text, symbol)
+            if result:
+                return result
+
+        result = self._analyze_with_textblob(text, symbol)
+        if result:
+            return result
+
+        return self._create_default_sentiment(text, symbol)
     
     def _analyze_with_openai(self, text: str, symbol: str) -> SentimentData:
         """Analyze sentiment using OpenAI GPT"""
@@ -98,7 +118,35 @@ class SentimentAnalyzer:
             
         except Exception as e:
             self.logger.error(f"OpenAI sentiment analysis failed: {e}")
-            return self._analyze_with_textblob(text, symbol)
+            return None
+
+    def _analyze_with_vader(self, text: str, symbol: str) -> Optional[SentimentData]:
+        """Fallback sentiment using VADER (no extra corpora required)."""
+        try:
+            if not self.vader:
+                return None
+
+            scores = self.vader.polarity_scores(text)
+            compound = scores.get('compound', 0.0)
+            # Confidence scaled by non-neutrality and magnitude of sentiment
+            confidence = min(1.0, abs(compound) + 0.5)
+
+            keywords = [word for word in text.lower().split() if len(word) > 4][:5]
+            market_impact = "bullish" if compound > 0.2 else "bearish" if compound < -0.2 else "neutral"
+
+            return SentimentData(
+                timestamp=datetime.now(),
+                symbol=symbol or "GENERAL",
+                sentiment_score=compound,
+                confidence=confidence,
+                source="VADER",
+                text=text,
+                keywords=keywords,
+                market_impact=market_impact
+            )
+        except Exception as e:
+            self.logger.error(f"VADER sentiment analysis failed: {e}")
+            return None
     
     def _analyze_with_textblob(self, text: str, symbol: str) -> SentimentData:
         """Fallback sentiment analysis using TextBlob"""
@@ -137,8 +185,9 @@ class SentimentAnalyzer:
             )
             
         except Exception as e:
-            self.logger.error(f"TextBlob sentiment analysis failed: {e}")
-            return self._create_default_sentiment(text, symbol)
+            # Downgrade to warning to avoid noisy logs when corpora are missing.
+            self.logger.warning(f"TextBlob sentiment analysis unavailable: {e}")
+            return None
     
     def _create_default_sentiment(self, text: str, symbol: str) -> SentimentData:
         """Create default neutral sentiment"""
