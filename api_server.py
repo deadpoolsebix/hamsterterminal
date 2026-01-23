@@ -1311,37 +1311,30 @@ def performance_metrics():
 def genius_chat():
     """Live chat with Genius AI - multi-language support with voice"""
     try:
-        from genius_ai_chat import get_genius_chat
-        
-        data = request.json
+        data = request.json or {}
         user_id = data.get('user_id', 'anonymous')
         message = data.get('message', '')
         language = data.get('language', 'en')
-        include_voice = data.get('voice', False)
         
         if not message:
             return jsonify({'error': 'Message required'}), 400
         
-        genius = get_genius_chat()
-        
-        # Update market context
-        genius.update_market_context({
-            'btc_price': cache.get('btc_price'),
-            'eth_price': cache.get('eth_price'),
-            'sentiment': 'bullish' if cache.get('btc_change', 0) > 0 else 'bearish',
-            'fear_greed': cache.get('fear_greed')
+        # Demo response for now
+        return jsonify({
+            'response': f'🤖 Genius AI: Received "{message}". Full AI chat coming soon with Pro Plus deployment!',
+            'mode': 'demo',
+            'timestamp': datetime.now().isoformat()
         })
         
-        # Get response (async wrapper for sync endpoint)
-        import asyncio
-        loop = asyncio.new_event_loop()
-        asyncio.set_event_loop(loop)
-        response = loop.run_until_complete(
-            genius.chat(user_id, message, language, include_voice)
-        )
-        loop.close()
+        if not message:
+            return jsonify({'error': 'Message required'}), 400
         
-        return jsonify(response)
+        # Demo response for now
+        return jsonify({
+            'response': f'🤖 Genius AI: Received "{message}". Full AI chat coming soon with Pro Plus deployment!',
+            'mode': 'demo',
+            'timestamp': datetime.now().isoformat()
+        })
         
     except Exception as e:
         logger.error(f"Genius chat error: {e}")
