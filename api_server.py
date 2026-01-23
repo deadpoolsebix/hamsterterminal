@@ -1392,6 +1392,187 @@ def onchain_defi():
         return jsonify({'error': str(e)}), 500
 
 
+# ============ SMART ALERTS ENDPOINTS ============
+@app.route('/api/alerts/create', methods=['POST'])
+def create_alert():
+    """Create new smart alert"""
+    try:
+        from smart_alerts import get_alerts_system
+        
+        data = request.json
+        user_id = data.get('user_id', 'anonymous')
+        symbol = data.get('symbol', 'BTC').upper()
+        condition = data.get('condition', 'above')
+        value = float(data.get('value', 0))
+        alert_type = data.get('type', 'price')
+        
+        alerts = get_alerts_system()
+        alert_id = alerts.add_alert(user_id, symbol, condition, value, alert_type)
+        
+        return jsonify({
+            'ok': True,
+            'alert_id': alert_id,
+            'message': f'Alert created: {symbol} {condition} {value}'
+        })
+        
+    except Exception as e:
+        logger.error(f"Create alert error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/alerts/list', methods=['GET'])
+def list_alerts():
+    """Get user's alerts"""
+    try:
+        from smart_alerts import get_alerts_system
+        
+        user_id = request.args.get('user_id', 'anonymous')
+        alerts = get_alerts_system()
+        user_alerts = alerts.get_user_alerts(user_id)
+        
+        return jsonify({
+            'ok': True,
+            'alerts': user_alerts,
+            'count': len(user_alerts)
+        })
+        
+    except Exception as e:
+        logger.error(f"List alerts error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/alerts/delete/<alert_id>', methods=['DELETE'])
+def delete_alert(alert_id):
+    """Delete alert"""
+    try:
+        from smart_alerts import get_alerts_system
+        
+        alerts = get_alerts_system()
+        success = alerts.remove_alert(alert_id)
+        
+        return jsonify({
+            'ok': success,
+            'message': 'Alert deleted' if success else 'Alert not found'
+        })
+        
+    except Exception as e:
+        logger.error(f"Delete alert error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/alerts/suggest', methods=['GET'])
+def suggest_alerts():
+    """Get suggested alert levels"""
+    try:
+        from smart_alerts import get_alerts_system
+        
+        symbol = request.args.get('symbol', 'BTC').upper()
+        price = float(request.args.get('price', cache.get('btc_price', 95000)))
+        
+        alerts = get_alerts_system()
+        suggestions = alerts.suggest_alerts(symbol, price)
+        
+        return jsonify({
+            'ok': True,
+            'symbol': symbol,
+            'current_price': price,
+            'suggestions': suggestions
+        })
+        
+    except Exception as e:
+        logger.error(f"Suggest alerts error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+# ============ NEWS INTELLIGENCE ENDPOINTS ============
+@app.route('/api/news/intelligence', methods=['GET'])
+def news_intelligence():
+    """Get latest news with sentiment analysis"""
+    try:
+        from news_intelligence import get_news_intelligence
+        
+        limit = int(request.args.get('limit', 20))
+        news = get_news_intelligence()
+        articles = news.get_latest_news(limit=limit)
+        
+        return jsonify({
+            'ok': True,
+            'articles': articles,
+            'count': len(articles)
+        })
+        
+    except Exception as e:
+        logger.error(f"News intelligence error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/news/sentiment', methods=['GET'])
+def news_sentiment():
+    """Get overall market sentiment from news"""
+    try:
+        from news_intelligence import get_news_intelligence
+        
+        timeframe = request.args.get('timeframe', '24h')
+        news = get_news_intelligence()
+        sentiment = news.get_sentiment_summary(timeframe=timeframe)
+        
+        return jsonify({
+            'ok': True,
+            **sentiment
+        })
+        
+    except Exception as e:
+        logger.error(f"News sentiment error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/news/top-stories', methods=['GET'])
+def top_stories():
+    """Get top 3 stories with Genius commentary"""
+    try:
+        from news_intelligence import get_news_intelligence
+        
+        limit = int(request.args.get('limit', 3))
+        news = get_news_intelligence()
+        stories = news.get_top_stories(limit=limit)
+        
+        return jsonify({
+            'ok': True,
+            'stories': stories
+        })
+        
+    except Exception as e:
+        logger.error(f"Top stories error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+# ============ PORTFOLIO HEALTH ENDPOINTS ============
+@app.route('/api/portfolio/health', methods=['POST'])
+def portfolio_health():
+    """Analyze portfolio health"""
+    try:
+        from portfolio_health import get_portfolio_health
+        
+        data = request.json
+        positions = data.get('positions', [])
+        prices = data.get('prices', {})
+        
+        if not positions:
+            return jsonify({'ok': False, 'error': 'No positions provided'}), 400
+        
+        health = get_portfolio_health()
+        analysis = health.analyze_portfolio(positions, prices)
+        
+        return jsonify({
+            'ok': True,
+            **analysis
+        })
+        
+    except Exception as e:
+        logger.error(f"Portfolio health error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     print("=" * 80)
     print("🚀 HAMSTER TERMINAL API SERVER v4.0 - PROFESSIONAL QUANT EDITION")
