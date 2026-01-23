@@ -1306,6 +1306,92 @@ def performance_metrics():
         return jsonify({'ok': False, 'error': str(e)})
 
 
+# ============ GENIUS AI CHAT ENDPOINTS ============
+@app.route('/api/genius/chat', methods=['POST'])
+def genius_chat():
+    """Live chat with Genius AI - multi-language support with voice"""
+    try:
+        from genius_ai_chat import get_genius_chat
+        
+        data = request.json
+        user_id = data.get('user_id', 'anonymous')
+        message = data.get('message', '')
+        language = data.get('language', 'en')
+        include_voice = data.get('voice', False)
+        
+        if not message:
+            return jsonify({'error': 'Message required'}), 400
+        
+        genius = get_genius_chat()
+        
+        # Update market context
+        genius.update_market_context({
+            'btc_price': cache.get('btc_price'),
+            'eth_price': cache.get('eth_price'),
+            'sentiment': 'bullish' if cache.get('btc_change', 0) > 0 else 'bearish',
+            'fear_greed': cache.get('fear_greed')
+        })
+        
+        # Get response (async wrapper for sync endpoint)
+        import asyncio
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        response = loop.run_until_complete(
+            genius.chat(user_id, message, language, include_voice)
+        )
+        loop.close()
+        
+        return jsonify(response)
+        
+    except Exception as e:
+        logger.error(f"Genius chat error: {e}")
+        return jsonify({
+            'response': '🤖 AI chat temporarily unavailable. Try again later.',
+            'mode': 'error',
+            'error': str(e)
+        })
+
+
+# ============ ON-CHAIN DATA ENDPOINTS ============
+@app.route('/api/onchain/trending', methods=['GET'])
+def onchain_trending():
+    """Get trending coins from CoinGecko"""
+    try:
+        from onchain_data import get_onchain_provider
+        provider = get_onchain_provider()
+        data = provider.get_trending_coins()
+        return jsonify(data)
+    except Exception as e:
+        logger.error(f"On-chain trending error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/onchain/global', methods=['GET'])
+def onchain_global():
+    """Get global crypto market metrics"""
+    try:
+        from onchain_data import get_onchain_provider
+        provider = get_onchain_provider()
+        data = provider.get_global_metrics()
+        return jsonify(data)
+    except Exception as e:
+        logger.error(f"On-chain global error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
+@app.route('/api/onchain/defi', methods=['GET'])
+def onchain_defi():
+    """Get DeFi protocol metrics"""
+    try:
+        from onchain_data import get_onchain_provider
+        provider = get_onchain_provider()
+        data = provider.get_defi_metrics()
+        return jsonify(data)
+    except Exception as e:
+        logger.error(f"On-chain DeFi error: {e}")
+        return jsonify({'error': str(e)}), 500
+
+
 if __name__ == '__main__':
     print("=" * 80)
     print("🚀 HAMSTER TERMINAL API SERVER v4.0 - PROFESSIONAL QUANT EDITION")
@@ -1356,6 +1442,10 @@ if __name__ == '__main__':
     print("  GET  /api/exchanges/arbitrage - Arbitrage finder")
     print("  POST /api/backtest/run - Strategy backtesting")
     print("  POST /api/performance/metrics - Performance analysis")
+    print("  POST /api/genius/chat - Live AI chat with Genius")
+    print("  GET  /api/onchain/trending - Trending coins")
+    print("  GET  /api/onchain/global - Global crypto metrics")
+    print("  GET  /api/onchain/defi - DeFi metrics")
     print("")
     print("=" * 80)
     
