@@ -3538,10 +3538,10 @@
     function updateTime() {
       const now = new Date();
       const utc = now.toISOString().split('T')[1].slice(0,8);
-      clockEl.textContent = `${utc} UTC`;
+      if (clockEl) clockEl.textContent = `${utc} UTC`;
       
       const dateStr = now.toISOString().split('T')[0];
-      dateEl.textContent = dateStr;
+      if (dateEl) dateEl.textContent = dateStr;
     }
     
     setInterval(updateTime, 1000);
