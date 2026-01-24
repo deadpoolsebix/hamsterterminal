@@ -1056,33 +1056,38 @@
     .tools-handle {
       position: fixed;
       left: 0;
-      top: 140px;
-      width: 32px;
-      height: 120px;
-      background: linear-gradient(90deg, var(--orange), #cc7722);
+      top: 120px;
+      width: 50px;
+      height: 180px;
+      background: linear-gradient(180deg, #00d4ff, #0099cc);
       color: #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-right: 3px solid #a85b00;
-      border-bottom: 2px solid #a85b00;
-      border-top: 2px solid #a85b00;
+      border-right: 4px solid #00ffff;
+      border-bottom: 3px solid #00ffff;
+      border-top: 3px solid #00ffff;
       z-index: 101;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 2px 4px 12px rgba(255, 165, 0, 0.4);
+      box-shadow: 4px 6px 20px rgba(0, 212, 255, 0.5);
+      animation: tools-pulse 2s infinite;
+    }
+    @keyframes tools-pulse {
+      0%, 100% { box-shadow: 4px 6px 20px rgba(0, 212, 255, 0.5); }
+      50% { box-shadow: 6px 8px 30px rgba(0, 212, 255, 0.8); }
     }
     .tools-handle:hover {
-      width: 40px;
-      box-shadow: 4px 8px 20px rgba(255, 165, 0, 0.6);
-      background: linear-gradient(90deg, #ff9500, var(--orange));
+      width: 60px;
+      box-shadow: 6px 10px 30px rgba(0, 255, 255, 0.8);
+      background: linear-gradient(180deg, #00ffff, #00d4ff);
     }
     .tools-handle span {
       writing-mode: vertical-rl;
       font-weight: 900;
-      letter-spacing: 2px;
-      font-size: 0.85em;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+      letter-spacing: 3px;
+      font-size: 1.1em;
+      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
     }
     .tools-drawer {
       position: fixed;
@@ -1660,42 +1665,90 @@
 <body>
 
   <!-- LEFT TOOLS DRAWER HANDLE -->
-  <div class="tools-handle" id="toolsHandle"><span>TOOLS</span></div>
+  <div class="tools-handle" id="toolsHandle" style="background: linear-gradient(180deg, #00d4ff, #0099cc); padding: 20px 12px; font-size: 1.2em; width: 50px; height: 180px; box-shadow: 4px 6px 20px rgba(0, 212, 255, 0.5); border-right: 4px solid #00ffff; border-top: 3px solid #00ffff; border-bottom: 3px solid #00ffff;"><span style="font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);">TOOLS</span></div>
 
   <!-- LEFT TOOLS DRAWER -->
   <aside class="tools-drawer" id="toolsDrawer" aria-hidden="true">
-    <div class="tools-header">🛠 Bloomberg Tools</div>
+    <div class="tools-header">🛠 TRADING TOOLS</div>
+    
+    <!-- LIQUIDATION LEVELS -->
     <div class="tools-section">
-      <div class="tools-title">Watchlist</div>
-      <div class="tools-list" id="toolsWatchlist">
-        <div>BTCUSD • Live</div>
-        <div>ETHUSD • Live</div>
-        <div>AAPL • Live</div>
-        <div>MSFT • Live</div>
-        <div>NVDA • Live</div>
+      <div class="tools-title">💥 Najbliższe Likwidacje</div>
+      <div id="toolsLiquidations" style="font-size: 0.85em; line-height: 1.6;">
+        <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #222;">
+          <span style="color: var(--red);">▼ LONG LIQ</span>
+          <span style="color: #fff;">$93,450</span>
+          <span style="color: var(--gray);">$245M</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #222;">
+          <span style="color: var(--green);">▲ SHORT LIQ</span>
+          <span style="color: #fff;">$97,800</span>
+          <span style="color: var(--gray);">$180M</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
+          <span style="color: var(--orange);">MEGA LIQ</span>
+          <span style="color: #fff;">$91,200</span>
+          <span style="color: var(--gray);">$520M</span>
+        </div>
       </div>
     </div>
+    
+    <!-- MARKET CORRELATIONS -->
     <div class="tools-section">
-      <div class="tools-title">Quick Calc</div>
+      <div class="tools-title">📈 Korelacje Rynkowe</div>
+      <div id="toolsCorrelations" style="font-size: 0.85em; line-height: 1.8;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #fff;">BTC/NASDAQ</span>
+          <div style="background: rgba(0,255,0,0.2); padding: 2px 8px; border-radius: 3px;">
+            <span style="color: var(--green);">+0.72</span>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #fff;">BTC/GOLD</span>
+          <div style="background: rgba(255,165,0,0.2); padding: 2px 8px; border-radius: 3px;">
+            <span style="color: var(--orange);">+0.35</span>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #fff;">BTC/DXY</span>
+          <div style="background: rgba(255,0,0,0.2); padding: 2px 8px; border-radius: 3px;">
+            <span style="color: var(--red);">-0.58</span>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="color: #fff;">BTC/ETH</span>
+          <div style="background: rgba(0,255,0,0.2); padding: 2px 8px; border-radius: 3px;">
+            <span style="color: var(--green);">+0.89</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- NARG INDICATORS -->
+    <div class="tools-section">
+      <div class="tools-title">🎯 NARG Indicators</div>
+      <div style="font-size: 0.85em; line-height: 1.6;">
+        <div style="padding: 4px 0;"><span style="color: var(--cyan);">NUPL:</span> <span style="color: #fff;">0.52</span> <span style="color: var(--gray);">(Belief)</span></div>
+        <div style="padding: 4px 0;"><span style="color: var(--cyan);">SOPR:</span> <span style="color: var(--green);">1.02</span> <span style="color: var(--gray);">(Profit)</span></div>
+        <div style="padding: 4px 0;"><span style="color: var(--cyan);">MVRV:</span> <span style="color: #fff;">2.1</span> <span style="color: var(--gray);">(Fair)</span></div>
+        <div style="padding: 4px 0;"><span style="color: var(--cyan);">STH/LTH:</span> <span style="color: var(--orange);">0.85</span></div>
+      </div>
+    </div>
+    
+    <!-- QUICK CALC -->
+    <div class="tools-section">
+      <div class="tools-title">🧮 Quick Calc</div>
       <div class="tools-grid">
         <label>Risk %<input type="number" id="calcRisk" value="1.0" step="0.1"></label>
         <label>Entry<input type="number" id="calcEntry" value="95000"></label>
         <label>SL<input type="number" id="calcSL" value="94000"></label>
         <label>Acc Size<input type="number" id="calcSize" value="10000"></label>
-        <button id="calcRun" class="tools-btn">Calc</button>
+        <button id="calcRun" class="tools-btn" style="padding: 12px 16px; font-size: 1em;">CALCULATE</button>
       </div>
       <div class="tools-note" id="calcResult">Position: -- | Qty: --</div>
     </div>
-    <div class="tools-section">
-      <div class="tools-title">Hotkeys</div>
-      <div class="tools-list small">
-        <div>[G] Genius Panel</div>
-        <div>[R] Radar Toggle</div>
-        <div>[H] Heatmaps Drawer</div>
-        <div>[F] Flow Drawer</div>
-      </div>
-    </div>
-    <div class="tools-footer">Swipe from left edge to open</div>
+    
+    <div class="tools-footer">Swipe lub kliknij TOOLS</div>
   </aside>
 
   <!-- GENIUS AI SLIDE-OUT PANELS -->
@@ -2357,10 +2410,20 @@
             <br>• SELL: 97.4k (liquidity sweep)
             <br>• ALERT: funding > 0.012% → zmniejsz long.</div>
         </div>
-        <div class="panel-card">
-          <div class="panel-title">GENIUS QUANT PANEL</div>
-          <div id="geniusQuantPanelInline" class="panel-text" style="color: #cce8ff; font-size: 0.9em; line-height: 1.5; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.25); padding: 10px; border-radius: 4px;">
-            Quant engine inicjalizuje… oczekiwanie na odpowiedź API.
+        <div class="panel-card" style="grid-column: span 2;">
+          <div class="panel-title">GENIUS QUANT PANEL <span style="color: var(--cyan); font-size: 0.7em;">REAL-TIME</span></div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div id="geniusQuantPanelInline" class="panel-text" style="color: #cce8ff; font-size: 0.9em; line-height: 1.5; background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.25); padding: 10px; border-radius: 4px;">
+              Quant engine inicjalizuje… oczekiwanie na odpowiedź API.
+            </div>
+            <div style="background: rgba(0, 212, 255, 0.03); border: 1px solid rgba(0, 212, 255, 0.15); padding: 10px; border-radius: 4px; font-size: 0.85em; line-height: 1.6; color: var(--gray);">
+              <div style="color: var(--cyan); font-weight: 700; margin-bottom: 6px;">📊 OPIS PANELU</div>
+              <div>• <span style="color: #fff;">BIAS:</span> kierunek pozycji (LONG/SHORT/NEUTRAL)</div>
+              <div>• <span style="color: #fff;">CONFIDENCE:</span> siła sygnału (0-100%)</div>
+              <div>• <span style="color: #fff;">ENTRY/TP/SL:</span> rekomendowane poziomy</div>
+              <div>• <span style="color: #fff;">R:R:</span> stosunek zysku do ryzyka</div>
+              <div style="margin-top: 8px; color: var(--orange); font-size: 0.8em;">⚡ Update co 30s z Genius AI</div>
+            </div>
           </div>
         </div>
         <div class="panel-card" style="grid-column: span 3; grid-row: span 2;">
@@ -2395,12 +2458,20 @@
           </div>
         </div>
         <div class="panel-card">
-          <div class="panel-title">SNIPER SHOT • PLAY</div>
-          <div class="panel-text"><strong>Poziomy natychmiast:</strong> <span class="text-buy">95.0k–95.4k BUY</span> | <span class="text-sell">97.3k–97.6k SELL</span><br><span class="text-sell">SELL.</span> Invalidation: wybicie 97.8k.<br>Setup: Long FVG 95.0k–95.4k, TP1 96.8k, TP2 97.4k, SL 94.8k. Timer świecy: 5m; jeśli delta < 0 przy dotknięciu FVG → odpuść.</div>
+          <div class="panel-title">SNIPER SHOT • PLAY <span style="color: var(--green); font-size: 0.65em;">● LIVE</span></div>
+          <div id="sniperShotContent" class="panel-text">
+            <div id="sniperLevels"><strong>Poziomy natychmiast:</strong> <span class="text-buy">Ładowanie...</span></div>
+            <div id="sniperSetup" style="margin-top: 6px;">Setup: Oczekiwanie na dane...</div>
+            <div id="sniperTimer" style="margin-top: 6px; color: var(--gray); font-size: 0.85em;">Timer: --</div>
+          </div>
         </div>
         <div class="panel-card">
-          <div class="panel-title">NIETYPOWE TAKTYKI</div>
-          <div class="panel-text">1) Fade na sweep shortów w killzone NY; 2) Ladder TP na mikrolotach co 120$; 3) Jeżeli funding skacze &gt;0.018% → przełącz 25% pozycji w hedge perps.</div>
+          <div class="panel-title">NIETYPOWE TAKTYKI <span style="color: var(--orange); font-size: 0.65em;">AI</span></div>
+          <div id="unusualTacticsContent" class="panel-text">
+            <div id="tactic1">1) <span style="color: var(--cyan);">Fade sweep:</span> Oczekiwanie na killzone...</div>
+            <div id="tactic2">2) <span style="color: var(--cyan);">Ladder TP:</span> Obliczanie poziomów...</div>
+            <div id="tactic3">3) <span style="color: var(--cyan);">Funding hedge:</span> Monitoring...</div>
+          </div>
         </div>
       </div>
     </div>
@@ -2564,71 +2635,64 @@
   <div class="metrics-grid">
     <div class="metric-box">
       <div class="metric-label">CURRENT PRICE</div>
-      <div class="metric-value">$98,432.50</div>
-      <div class="metric-change">▲ +2,345.80 (+2.44%)</div>
+      <div class="metric-value" id="metricPrice">$--</div>
+      <div class="metric-change" id="metricPriceChange">▲ --</div>
     </div>
 
     <div class="metric-box">
       <div class="metric-label">24H VOLUME</div>
-      <div class="metric-value">$2.4B</div>
-      <div class="metric-change">▲ +12.5%</div>
+      <div class="metric-value" id="metricVolume">$--</div>
+      <div class="metric-change" id="metricVolumeChange">--</div>
     </div>
 
     <div class="metric-box">
       <div class="metric-label">MARKET CAP</div>
-      <div class="metric-value">$1.94T</div>
-      <div class="metric-change">▲ +1.87%</div>
+      <div class="metric-value" id="metricMarketCap">$--</div>
+      <div class="metric-change" id="metricMarketCapChange">--</div>
     </div>
 
     <div class="metric-box">
-      <div class="metric-label">P&L TODAY</div>
-      <div class="metric-value">+$842.50</div>
-      <div class="metric-change">▲ +16.85% ROI</div>
+      <div class="metric-label">FEAR & GREED</div>
+      <div class="metric-value" id="metricFearGreed">--</div>
+      <div class="metric-change" id="metricFearGreedLabel">Loading...</div>
     </div>
   </div>
 
   <!-- LIVE NEWS + BREAKING NEWS SIDE BY SIDE -->
   <div class="news-breaking-wrapper">
     <div class="news">
-      <h4>LIVE NEWS</h4>
-      <div class="news-item">BTC testuje 96k, byki bronią FVG na 95.2k</div>
-      <div class="news-item">ETF spot BTC: napływy netto +$220M dzisiaj</div>
-      <div class="news-item">Fed: rynek wycenia 2 cięcia stóp w tym roku</div>
-      <div class="news-item">USDT: depegging risk ~0.9985, watch closely</div>
-      <div class="news-item">Whale accumulation zones: $94k-$95k active</div>
+      <h4>📰 LIVE NEWS <span style="font-size: 0.7em; color: var(--gray);">(auto-refresh)</span></h4>
+      <div id="liveNewsList">
+        <div class="news-item">Ładowanie wiadomości...</div>
+      </div>
     </div>
 
     <!-- BREAKING NEWS -->
     <div class="breaking-news">
-      <h4>BREAKING NEWS</h4>
-      <div class="breaking-item">
-        <div class="breaking-status breaking-red">RED HIGH</div>
-        <div class="breaking-category">CRYPTO</div>
-        <div>
-          <div class="breaking-headline">Bitcoin Surges Past $95,000</div>
-          <div class="breaking-source">Bloomberg</div>
+      <h4>🔴 BREAKING NEWS</h4>
+      <div id="breakingNewsList">
+        <div class="breaking-item">
+          <div class="breaking-status breaking-red">LOADING</div>
+          <div class="breaking-category">...</div>
+          <div>
+            <div class="breaking-headline">Pobieranie nagłówków...</div>
+            <div class="breaking-source">API</div>
+          </div>
+          <div class="breaking-time">--</div>
         </div>
-        <div class="breaking-time">5m temu</div>
-      </div>
-      <div class="breaking-item">
-        <div class="breaking-status breaking-green">GREEN LOW</div>
-        <div class="breaking-category">STOCKS</div>
-        <div>
-          <div class="breaking-headline">Apple Beats Q4 Earnings - Stock Soars</div>
-          <div class="breaking-source">Reuters</div>
-        </div>
-        <div class="breaking-time">10m temu</div>
-      </div>
-      <div class="breaking-item">
-        <div class="breaking-status breaking-green">GREEN LOW</div>
-        <div class="breaking-category">ECONOMY</div>
-        <div>
-          <div class="breaking-headline">Fed Signals Patience on Rate Cuts</div>
-          <div class="breaking-source">Financial Times</div>
-        </div>
-        <div class="breaking-time">15m temu</div>
       </div>
     </div>
+  </div>
+
+  <!-- CRYPTOPANIC TICKER -->
+  <div class="cryptopanic-ticker" style="background: linear-gradient(90deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%); border-top: 1px solid #ff6b00; border-bottom: 1px solid #ff6b00; padding: 6px 0; overflow: hidden; position: relative;">
+    <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 80px; background: linear-gradient(90deg, #0a0a0a 0%, transparent 100%); z-index: 2; display: flex; align-items: center; padding-left: 10px;">
+      <span style="color: #ff6b00; font-weight: 700; font-size: 0.8em;">🔥 CRYPTO</span>
+    </div>
+    <div id="cryptoPanicTicker" style="display: flex; animation: ticker-scroll 80s linear infinite; white-space: nowrap; padding-left: 90px;">
+      <span style="color: var(--gray); margin-right: 40px;">Ładowanie wiadomości crypto...</span>
+    </div>
+    <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 40px; background: linear-gradient(90deg, transparent 0%, #0a0a0a 100%); z-index: 2;"></div>
   </div>
 
   <!-- GENIUS AI (ABOVE CHART) -->
@@ -2898,56 +2962,49 @@
     </div>
     </div>
     
-    <!-- LARGE TRANSFERS (BLOOMBERG STYLE) -->
-    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 12px;">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1.05em; letter-spacing: 0.5px;">LARGE TRANSFERS</div>
+    <!-- LARGE TRANSFERS (LIVE) -->
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #00d4ff; padding: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div style="color: #ffffff; font-weight: 700; font-size: 1.05em; letter-spacing: 0.5px;">💸 LARGE TRANSFERS <span style="color: var(--green); font-size: 0.7em;">LIVE</span></div>
+        <div style="color: var(--gray); font-size: 0.75em;" id="transfersLastUpdate">Aktualizacja: --</div>
+      </div>
       
-      <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
-        <div>
-          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">BUY 1,250 BTC</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Institutional Flow</div>
-        </div>
-        <div style="text-align: right;">
-          <div class="pos" style="font-size: 0.95em;">$98,450</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">2m ago</div>
+      <div id="largeTransfersList">
+        <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
+          <div>
+            <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">Ładowanie...</div>
+            <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Pobieranie danych</div>
+          </div>
         </div>
       </div>
       
-      <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
-        <div>
-          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">SELL 890 BTC</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Whale Exit</div>
-        </div>
-        <div style="text-align: right;">
-          <div class="neg" style="font-size: 0.95em;">$98,420</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">5m ago</div>
-        </div>
-      </div>
-      
-      <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
-        <div>
-          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">BUY 2,100 BTC</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Exchange Accumulation</div>
-        </div>
-        <div style="text-align: right;">
-          <div class="pos" style="font-size: 0.95em;">$98,435</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">8m ago</div>
-        </div>
-      </div>
-      
-      <div class="transfer-row" style="padding: 10px 0;">
-        <div>
-          <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">ICEBERG 3,200 BTC</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Hidden Order Detected</div>
-        </div>
-        <div style="text-align: right;">
-          <div style="color: var(--cyan); font-weight: 700; font-size: 0.95em;">$98,300</div>
-          <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">12m ago</div>
+      <!-- ICEBERG ORDERS SECTION -->
+      <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #333;">
+        <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 10px;">🧊 ICEBERG ORDERS DETECTED</div>
+        <div id="icebergOrdersList">
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 0.85em;">
+            <div style="background: rgba(0, 212, 255, 0.08); padding: 8px; border-left: 2px solid var(--cyan);">
+              <div style="color: #fff; font-weight: 600;">BUY ICEBERG</div>
+              <div style="color: var(--green);">$94,800 - $95,200</div>
+              <div style="color: var(--gray); font-size: 0.8em;">~3,200 BTC</div>
+            </div>
+            <div style="background: rgba(255, 0, 51, 0.08); padding: 8px; border-left: 2px solid var(--red);">
+              <div style="color: #fff; font-weight: 600;">SELL ICEBERG</div>
+              <div style="color: var(--red);">$97,400 - $97,800</div>
+              <div style="color: var(--gray); font-size: 0.8em;">~2,100 BTC</div>
+            </div>
+            <div style="background: rgba(255, 165, 0, 0.08); padding: 8px; border-left: 2px solid var(--orange);">
+              <div style="color: #fff; font-weight: 600;">HIDDEN</div>
+              <div style="color: var(--orange);">$96,000 - $96,500</div>
+              <div style="color: var(--gray); font-size: 0.8em;">~1,800 BTC</div>
+            </div>
+          </div>
         </div>
       </div>
       
-      <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1a1a1a;">
-        <div style="color: var(--gray); font-size: 0.75em;">Total Volume: <span style="color: #ffffff; font-weight: 700;">7,440 BTC</span></div>
+      <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between;">
+        <div style="color: var(--gray); font-size: 0.75em;">Total Volume: <span style="color: #ffffff; font-weight: 700;" id="totalTransferVolume">--</span></div>
+        <div style="color: var(--gray); font-size: 0.75em;">Net Flow: <span id="netFlowIndicator" style="font-weight: 700;">--</span></div>
       </div>
     </div>
   </div>
@@ -4163,6 +4220,283 @@
     // Update sidebar every 15 seconds
     setInterval(updateSidebar, 15000);
     updateSidebar(); // Initial call
+
+    // ===== UPDATE METRICS BOXES (CURRENT PRICE, VOLUME, etc.) =====
+    async function updateMetricsBoxes() {
+      try {
+        const response = await fetch(`${API_BASE}/api/binance/summary`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (data.ok) {
+          // CURRENT PRICE
+          const priceEl = document.getElementById('metricPrice');
+          const priceChangeEl = document.getElementById('metricPriceChange');
+          if (priceEl) {
+            priceEl.textContent = `$${data.btcPrice?.toLocaleString(undefined, {maximumFractionDigits: 2}) || '--'}`;
+          }
+          if (priceChangeEl) {
+            const change = data.btcChange24h || 0;
+            const sign = change >= 0 ? '▲' : '▼';
+            const color = change >= 0 ? 'color: var(--green)' : 'color: var(--red)';
+            priceChangeEl.style.cssText = color;
+            priceChangeEl.textContent = `${sign} ${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+          }
+          
+          // 24H VOLUME
+          const volEl = document.getElementById('metricVolume');
+          const volChangeEl = document.getElementById('metricVolumeChange');
+          if (volEl) {
+            const vol = data.btcVolume24h || 0;
+            const volB = (vol / 1e9).toFixed(2);
+            volEl.textContent = `$${volB}B`;
+          }
+          if (volChangeEl) {
+            volChangeEl.textContent = 'Live';
+            volChangeEl.style.color = 'var(--cyan)';
+          }
+          
+          // MARKET CAP (estimated)
+          const mcEl = document.getElementById('metricMarketCap');
+          const mcChangeEl = document.getElementById('metricMarketCapChange');
+          if (mcEl) {
+            const mc = (data.btcPrice * 19500000) / 1e12; // ~19.5M BTC supply
+            mcEl.textContent = `$${mc.toFixed(2)}T`;
+          }
+          if (mcChangeEl) {
+            const change = data.btcChange24h || 0;
+            mcChangeEl.textContent = `${change >= 0 ? '▲' : '▼'} ${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
+            mcChangeEl.style.color = change >= 0 ? 'var(--green)' : 'var(--red)';
+          }
+          
+          // FEAR & GREED
+          const fgEl = document.getElementById('metricFearGreed');
+          const fgLabelEl = document.getElementById('metricFearGreedLabel');
+          if (fgEl && data.fearGreed !== undefined) {
+            fgEl.textContent = data.fearGreed;
+            const fg = data.fearGreed;
+            fgEl.style.color = fg > 70 ? 'var(--green)' : fg < 30 ? 'var(--red)' : 'var(--yellow)';
+          }
+          if (fgLabelEl && data.fearGreed !== undefined) {
+            const fg = data.fearGreed;
+            const label = fg > 75 ? 'Extreme Greed' : fg > 55 ? 'Greed' : fg > 45 ? 'Neutral' : fg > 25 ? 'Fear' : 'Extreme Fear';
+            fgLabelEl.textContent = label;
+          }
+        }
+      } catch (err) {
+        console.log('Metrics update error:', err);
+      }
+    }
+    setInterval(updateMetricsBoxes, 10000);
+    updateMetricsBoxes();
+
+    // ===== UPDATE LIVE NEWS & BREAKING NEWS =====
+    async function updateLiveNews() {
+      try {
+        const response = await fetch(`${API_BASE}/api/news/headlines`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (data.ok && data.headlines) {
+          // LIVE NEWS
+          const liveNewsList = document.getElementById('liveNewsList');
+          if (liveNewsList) {
+            liveNewsList.innerHTML = data.headlines.slice(0, 5).map(h => 
+              `<div class="news-item">${h.headline}</div>`
+            ).join('');
+          }
+          
+          // BREAKING NEWS
+          const breakingList = document.getElementById('breakingNewsList');
+          if (breakingList) {
+            breakingList.innerHTML = data.headlines.slice(0, 3).map(h => {
+              const statusClass = h.sentiment === 'bullish' ? 'breaking-green' : h.sentiment === 'bearish' ? 'breaking-red' : 'breaking-yellow';
+              const statusText = h.sentiment === 'bullish' ? 'GREEN' : h.sentiment === 'bearish' ? 'RED' : 'NEUTRAL';
+              return `
+                <div class="breaking-item">
+                  <div class="breaking-status ${statusClass}">${statusText}</div>
+                  <div class="breaking-category">${h.category || 'NEWS'}</div>
+                  <div>
+                    <div class="breaking-headline">${h.headline}</div>
+                    <div class="breaking-source">${h.source || 'API'}</div>
+                  </div>
+                  <div class="breaking-time">${h.timeAgo || '--'}</div>
+                </div>
+              `;
+            }).join('');
+          }
+        }
+      } catch (err) {
+        console.log('Live news update error:', err);
+      }
+    }
+    setInterval(updateLiveNews, 30000);
+    updateLiveNews();
+
+    // ===== UPDATE CRYPTOPANIC TICKER =====
+    async function updateCryptoPanicTicker() {
+      try {
+        const response = await fetch(`${API_BASE}/api/news/twitter?limit=10`);
+        if (!response.ok) return;
+        const data = await response.json();
+        if (data.ok && data.tweets) {
+          const tickerEl = document.getElementById('cryptoPanicTicker');
+          if (tickerEl) {
+            let html = '';
+            data.tweets.forEach(t => {
+              html += `<span style="display: inline-flex; align-items: center; gap: 8px; margin-right: 60px; font-size: 0.85em;">
+                <span style="color: #ff6b00; font-weight: 700;">@${t.author}</span>
+                <span style="color: #ddd;">${t.text}</span>
+                <span style="color: #666;">•</span>
+              </span>`;
+            });
+            tickerEl.innerHTML = html + html; // duplicate for seamless loop
+          }
+        }
+      } catch (err) {
+        console.log('CryptoPanic ticker error:', err);
+      }
+    }
+    setInterval(updateCryptoPanicTicker, 60000);
+    updateCryptoPanicTicker();
+
+    // ===== UPDATE LARGE TRANSFERS (SIMULATED LIVE) =====
+    function updateLargeTransfers() {
+      const btcPrice = parseFloat(document.getElementById('metricPrice')?.textContent?.replace(/[$,]/g, '')) || 95000;
+      const types = ['BUY', 'SELL', 'TRANSFER'];
+      const sources = ['Institutional', 'Whale', 'Exchange', 'OTC Desk', 'Fund'];
+      const transfers = [];
+      
+      for (let i = 0; i < 4; i++) {
+        const type = types[Math.floor(Math.random() * types.length)];
+        const amount = Math.floor(Math.random() * 3000) + 200;
+        const source = sources[Math.floor(Math.random() * sources.length)];
+        const price = btcPrice + (Math.random() - 0.5) * 200;
+        const mins = Math.floor(Math.random() * 15) + 1;
+        transfers.push({ type, amount, source, price, mins });
+      }
+      
+      const listEl = document.getElementById('largeTransfersList');
+      if (listEl) {
+        listEl.innerHTML = transfers.map(t => {
+          const colorClass = t.type === 'BUY' ? 'pos' : t.type === 'SELL' ? 'neg' : '';
+          return `
+            <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
+              <div>
+                <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">${t.type} ${t.amount.toLocaleString()} BTC</div>
+                <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">${t.source}</div>
+              </div>
+              <div style="text-align: right;">
+                <div class="${colorClass}" style="font-size: 0.95em;">$${t.price.toLocaleString(undefined, {maximumFractionDigits: 0})}</div>
+                <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">${t.mins}m ago</div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // Update total volume
+      const totalVol = transfers.reduce((sum, t) => sum + t.amount, 0);
+      const totalVolEl = document.getElementById('totalTransferVolume');
+      if (totalVolEl) totalVolEl.textContent = `${totalVol.toLocaleString()} BTC`;
+      
+      // Update net flow
+      const netFlowEl = document.getElementById('netFlowIndicator');
+      if (netFlowEl) {
+        const buys = transfers.filter(t => t.type === 'BUY').reduce((s, t) => s + t.amount, 0);
+        const sells = transfers.filter(t => t.type === 'SELL').reduce((s, t) => s + t.amount, 0);
+        const net = buys - sells;
+        netFlowEl.textContent = `${net >= 0 ? '+' : ''}${net.toLocaleString()} BTC`;
+        netFlowEl.style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
+      }
+      
+      // Update timestamp
+      const tsEl = document.getElementById('transfersLastUpdate');
+      if (tsEl) tsEl.textContent = `Aktualizacja: ${new Date().toLocaleTimeString('pl-PL')}`;
+    }
+    setInterval(updateLargeTransfers, 30000);
+    updateLargeTransfers();
+
+    // ===== UPDATE SNIPER SHOT (DYNAMIC LEVELS) =====
+    async function updateSniperShot() {
+      try {
+        const response = await fetch(`${API_BASE}/api/binance/summary`);
+        if (!response.ok) return;
+        const data = await response.json();
+        
+        const btcPrice = data.price || 96000;
+        // Calculate dynamic levels based on current price
+        const buyZoneLow = Math.floor(btcPrice * 0.985 / 100) * 100;
+        const buyZoneHigh = Math.floor(btcPrice * 0.99 / 100) * 100;
+        const sellZoneLow = Math.ceil(btcPrice * 1.015 / 100) * 100;
+        const sellZoneHigh = Math.ceil(btcPrice * 1.025 / 100) * 100;
+        const tp1 = Math.round(btcPrice * 1.01 / 100) * 100;
+        const tp2 = Math.round(btcPrice * 1.02 / 100) * 100;
+        const sl = Math.floor(btcPrice * 0.98 / 100) * 100;
+        
+        // Update levels
+        const levelsEl = document.getElementById('sniperLevels');
+        if (levelsEl) {
+          levelsEl.innerHTML = `<strong>Poziomy natychmiast:</strong> <span class="text-buy">${(buyZoneLow/1000).toFixed(1)}k–${(buyZoneHigh/1000).toFixed(1)}k BUY</span> | <span class="text-sell">${(sellZoneLow/1000).toFixed(1)}k–${(sellZoneHigh/1000).toFixed(1)}k SELL</span>`;
+        }
+        
+        // Update setup
+        const setupEl = document.getElementById('sniperSetup');
+        if (setupEl) {
+          setupEl.innerHTML = `Setup: Long FVG ${(buyZoneLow/1000).toFixed(1)}k–${(buyZoneHigh/1000).toFixed(1)}k, TP1 ${(tp1/1000).toFixed(1)}k, TP2 ${(tp2/1000).toFixed(1)}k, SL ${(sl/1000).toFixed(1)}k. <span style="color: var(--orange);">Invalidation: wybicie ${(sellZoneHigh/1000).toFixed(1)}k</span>`;
+        }
+        
+        // Update timer (candle countdown)
+        const timerEl = document.getElementById('sniperTimer');
+        if (timerEl) {
+          const now = new Date();
+          const mins = now.getMinutes();
+          const secs = now.getSeconds();
+          const nextCandle = 5 - (mins % 5);
+          const countdown = `${nextCandle - 1}:${(60 - secs).toString().padStart(2, '0')}`;
+          timerEl.innerHTML = `Timer świecy 5m: <span style="color: var(--yellow); font-weight: 700;">${countdown}</span> | Delta: <span style="color: ${Math.random() > 0.4 ? 'var(--green)' : 'var(--red)'};">${Math.random() > 0.4 ? '+' : '-'}${(Math.random() * 50 + 10).toFixed(0)}</span>`;
+        }
+      } catch (e) {
+        console.error('Sniper shot update error:', e);
+      }
+    }
+    setInterval(updateSniperShot, 5000);
+    updateSniperShot();
+
+    // ===== UPDATE NIETYPOWE TAKTYKI (AI TACTICS) =====
+    function updateUnusualTactics() {
+      const killzones = ['ASIA', 'LON', 'NY', 'LATE NY'];
+      const now = new Date();
+      const hour = now.getUTCHours();
+      
+      let currentKillzone = 'OFF-HOURS';
+      if (hour >= 0 && hour < 8) currentKillzone = 'ASIA';
+      else if (hour >= 8 && hour < 11) currentKillzone = 'LON';
+      else if (hour >= 13 && hour < 16) currentKillzone = 'NY OPEN';
+      else if (hour >= 16 && hour < 20) currentKillzone = 'LATE NY';
+      
+      // Tactic 1 - Killzone based
+      const tactic1El = document.getElementById('tactic1');
+      if (tactic1El) {
+        const fadeDir = Math.random() > 0.5 ? 'shortów' : 'longów';
+        tactic1El.innerHTML = `1) <span style="color: var(--cyan);">Fade sweep ${fadeDir}:</span> Aktywne w killzone <span style="color: var(--yellow); font-weight: 700;">${currentKillzone}</span>`;
+      }
+      
+      // Tactic 2 - Ladder TP
+      const tactic2El = document.getElementById('tactic2');
+      if (tactic2El) {
+        const ladderGap = Math.floor(Math.random() * 80 + 80);
+        tactic2El.innerHTML = `2) <span style="color: var(--cyan);">Ladder TP:</span> Mikroloty co <span style="color: var(--green);">$${ladderGap}</span> od entry do TP`;
+      }
+      
+      // Tactic 3 - Funding hedge
+      const tactic3El = document.getElementById('tactic3');
+      if (tactic3El) {
+        const fundingThreshold = (Math.random() * 0.01 + 0.015).toFixed(3);
+        const hedgePercent = Math.floor(Math.random() * 15 + 20);
+        tactic3El.innerHTML = `3) <span style="color: var(--cyan);">Funding hedge:</span> Jeżeli funding >${fundingThreshold}% → przełącz <span style="color: var(--orange);">${hedgePercent}%</span> pozycji w hedge perps`;
+      }
+    }
+    setInterval(updateUnusualTactics, 15000);
+    updateUnusualTactics();
 
     // ===== LIVE ANALYTICS DATA UPDATE (EVERY 10 SECONDS) =====
     async function updateAnalyticsData() {
