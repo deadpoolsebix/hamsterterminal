@@ -5090,14 +5090,20 @@
     }
 
     // ===== SESSION COUNTDOWN - EUROPEAN TIME (CET/CEST) =====
-    // Sessions defined in CET (Central European Time) - non-overlapping
-    // Real trading killzones based on market hours
+    // Sessions defined in CET (Central European Time)
+    // Real market hours:
+    // - Japan (TSE, Tokyo): 01:00 – 07:30 CET
+    // - Germany (Xetra, Frankfurt): 09:00 – 17:30 CET
+    // - UK (LSE, London): 09:00 – 17:30 CET
+    // - USA (NYSE, NASDAQ): 15:30 – 22:00 CET
+    // Note: Summer/winter time may shift US markets by 1 hour (14:30-21:00)
     const KILLZONE_SESSIONS = [
-      { name: 'Asia Session', label: 'Asia', startHour: 2, endHour: 8, color: '#9d4edd' },
-      { name: 'Frankfurt Open', label: 'Frankfurt', startHour: 8, endHour: 9, color: '#ff9500' },
-      { name: 'London Session', label: 'London', startHour: 9, endHour: 14, color: '#00d4ff' },
-      { name: 'NY Session', label: 'NY Open', startHour: 14, endHour: 18, color: '#00ff88' },
-      { name: 'NY PM Session', label: 'NY Close', startHour: 18, endHour: 22, color: '#ff6b35' }
+      { name: 'Tokyo Session', label: 'Tokyo', startHour: 1, endHour: 7, color: '#9d4edd' },
+      { name: 'Pre-Market EU', label: 'Pre-EU', startHour: 7, endHour: 9, color: '#666666' },
+      { name: 'Frankfurt/London', label: 'EU Open', startHour: 9, endHour: 15, color: '#00d4ff' },
+      { name: 'NY Session', label: 'NY Open', startHour: 15, endHour: 17, color: '#00ff88' },
+      { name: 'EU Close + NY', label: 'EU Close', startHour: 17, endHour: 18, color: '#ff9500' },
+      { name: 'NY PM Session', label: 'NY PM', startHour: 18, endHour: 22, color: '#ff6b35' }
     ];
 
     // Get CET/CEST time (Europe/Warsaw timezone)
