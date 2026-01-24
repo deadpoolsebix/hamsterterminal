@@ -628,15 +628,15 @@
       display: inline-flex;
       gap: 30px;
       white-space: nowrap;
-      animation: ticker 60s linear infinite;
+      animation: ticker-seamless 60s linear infinite;
     }
     .ticker-label {
       color: #ffffff;
       font-weight: 700;
     }
-    @keyframes ticker {
-      0% { transform: translateX(20%); }
-      100% { transform: translateX(-100%); }
+    @keyframes ticker-seamless {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
     /* NEWS */
@@ -4296,6 +4296,23 @@
       });
       if (cryptoEntries.length) {
         segments.push({ label: 'CRYPTO', entries: cryptoEntries });
+      }
+
+      const commodityEntries = [];
+      const commodities = data.commodities || {};
+      const commoditiesChange = data.commoditiesChange || {};
+      ['GOLD', 'SILVER'].forEach(symbol => {
+        if (typeof commodities[symbol] === 'number') {
+          commodityEntries.push({
+            symbol,
+            price: commodities[symbol],
+            change: commoditiesChange[symbol],
+            decimals: symbol === 'SILVER' ? 2 : 2
+          });
+        }
+      });
+      if (commodityEntries.length) {
+        segments.push({ label: 'SUROWCE', entries: commodityEntries });
       }
 
       const stockEntries = [];

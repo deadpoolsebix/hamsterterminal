@@ -139,6 +139,8 @@ cache = {
     # Additional market data
     'gold_price': 2650.00,
     'gold_change': 0.5,
+    'silver_price': 30.50,
+    'silver_change': 0.3,
     'dxy_price': 103.50,
     'dxy_change': -0.2,
     'news_headlines': [],
@@ -420,13 +422,19 @@ def fetch_market_data():
             cache['gold_price'] = gold_data['price']
             cache['gold_change'] = gold_data['change']
         
+        # Silver
+        silver_data = fetch_twelve_data_stock('SI=F')
+        if silver_data:
+            cache['silver_price'] = silver_data['price']
+            cache['silver_change'] = silver_data['change']
+        
         # Dollar Index
         dxy_data = fetch_twelve_data_stock('DX-Y.NYB')
         if dxy_data:
             cache['dxy_price'] = dxy_data['price']
             cache['dxy_change'] = dxy_data['change']
         
-        logger.info(f"✅ Markets: GOLD ${cache['gold_price']:,.2f} | DXY {cache['dxy_price']:.2f}")
+        logger.info(f"✅ Markets: GOLD ${cache['gold_price']:,.2f} | SILVER ${cache['silver_price']:.2f} | DXY {cache['dxy_price']:.2f}")
         return True
         
     except Exception as e:
@@ -967,6 +975,14 @@ def get_crypto_summary():
         },
         'lastUpdate': cache['last_update'],
         'source': 'Twelve Data Pro',
+        'commodities': {
+            'GOLD': round(cache['gold_price'], 2),
+            'SILVER': round(cache['silver_price'], 2)
+        },
+        'commoditiesChange': {
+            'GOLD': round(cache['gold_change'], 2),
+            'SILVER': round(cache['silver_change'], 2)
+        },
         'stocks': {
             'SPY': round(cache['spy_price'], 2),
             'AAPL': round(cache['aapl_price'], 2),
