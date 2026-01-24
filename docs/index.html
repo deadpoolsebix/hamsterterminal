@@ -2885,7 +2885,7 @@
     </div>
   </div>
 
-  <!-- CURRENT PRICE + GENIUS AI ANALYSIS (SIDE BY SIDE) -->
+  <!-- CURRENT PRICE + LIVE COMMENTARY -->
   <div style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
     <!-- CURRENT PRICE BOX -->
     <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
@@ -2894,35 +2894,67 @@
       <div class="metric-change" id="metricPriceChange" style="font-size: 1.1em; margin-top: 6px;">▲ --</div>
     </div>
 
-    <!-- GENIUS AI ANALYSIS -->
-    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 3px solid rgba(255, 140, 0, 0.6); padding: 15px; box-shadow: inset 3px 0 8px rgba(255, 140, 0, 0.15);">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1em; letter-spacing: 0.5px; text-transform: uppercase;">🧠 GENIUS AI ANALYSIS</div>
+    <!-- LIVE COMMENTARY + AUDIO -->
+    <div style="background: var(--panel); border: 1px solid var(--border); padding: 15px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <div style="color: #ffffff; font-weight: 700; font-size: 0.9em; letter-spacing: 0.5px; text-transform: uppercase;">LIVE COMMENTARY</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <select id="voiceSelect" style="background: #0a0a0a; color: #888; border: 1px solid #333; padding: 4px 8px; font-size: 0.75em; cursor: pointer;">
+            <option value="pl-PL">PL</option>
+            <option value="en-US">EN</option>
+            <option value="de-DE">DE</option>
+          </select>
+          <button id="playCommentaryBtn" style="background: #1a1a1a; border: 1px solid #333; color: #888; padding: 4px 12px; font-size: 0.75em; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span>▶</span> PLAY
+          </button>
+        </div>
+      </div>
+      
+      <div id="liveCommentaryText" style="color: #ccc; font-size: 0.9em; line-height: 1.6; min-height: 60px; padding: 12px; background: #0a0a0a; border-left: 2px solid #333;">
+        Ładowanie komentarza z API...
+      </div>
+      
+      <div style="margin-top: 12px; color: #666; font-size: 0.7em; display: flex; justify-content: space-between;">
+        <span>Update: <span id="commentaryLastUpdate">--</span></span>
+        <span id="audioStatus" style="color: #444;">Ready</span>
+      </div>
+    </div>
+  </div>
 
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
-        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--green);">
-          <div style="color: var(--green); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">BUY SIGNAL</div>
-          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Strong momentum + RSI bounce from 48. Target: $97.4k</div>
+  <!-- GENIUS AI ANALYSIS (BLOOMBERG STYLE) -->
+  <div style="padding: 0 24px 14px 24px;">
+    <div style="background: var(--panel); border: 1px solid var(--border); padding: 15px;">
+      <div style="color: #888; font-weight: 700; margin-bottom: 12px; font-size: 0.8em; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 8px;">ANALYSIS</div>
+
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+        <div style="padding: 10px 0; border-right: 1px solid #222;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">SIGNAL</div>
+          <div id="analysisSignal" style="color: #fff; font-size: 0.85em; font-weight: 600;">BUY</div>
+          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">RSI bounce from 48</div>
         </div>
 
-        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--cyan);">
-          <div style="color: var(--cyan); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">LIQUIDITY ALERT</div>
-          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Major buy wall detected at $94.8k. Support confirmed.</div>
+        <div style="padding: 10px 0; border-right: 1px solid #222;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">LIQUIDITY</div>
+          <div style="color: #fff; font-size: 0.85em; font-weight: 600;">$94.8K</div>
+          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">Buy wall detected</div>
         </div>
 
-        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--yellow);">
-          <div style="color: var(--yellow); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">FVG ANALYSIS</div>
-          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Fair Value Gap detected. Expect retest at $95.2k zone.</div>
+        <div style="padding: 10px 0; border-right: 1px solid #222;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">FVG ZONE</div>
+          <div style="color: #fff; font-size: 0.85em; font-weight: 600;">$95.2K</div>
+          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">Retest expected</div>
         </div>
 
-        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--red);">
-          <div style="color: var(--red); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">RISK WARNING</div>
-          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Resistance at $97.4k strong. Watch for rejection.</div>
+        <div style="padding: 10px 0;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">RESISTANCE</div>
+          <div style="color: #fff; font-size: 0.85em; font-weight: 600;">$97.4K</div>
+          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">Watch for rejection</div>
         </div>
       </div>
 
-      <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
-        <span style="color: var(--gray); font-size: 0.75em;">AI Confidence: <span style="color: #ffffff; font-weight: 700;">87%</span></span>
-        <span style="color: var(--gray); font-size: 0.75em;">Last update: <span id="aiLastUpdate" style="color: var(--cyan);">now</span></span>
+      <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #222; display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: #666; font-size: 0.7em;">Confidence: <span style="color: #888;">87%</span></span>
+        <span style="color: #666; font-size: 0.7em;">Last: <span id="aiLastUpdate" style="color: #888;">now</span></span>
       </div>
     </div>
   </div>
@@ -4074,6 +4106,17 @@
       }
 
       latestGeniusCommentary = commentary;
+      
+      // Update live commentary text (new section under BTC)
+      const liveCommentaryEl = document.getElementById('liveCommentaryText');
+      if (liveCommentaryEl) {
+        liveCommentaryEl.textContent = commentary;
+      }
+      const commentaryUpdateEl = document.getElementById('commentaryLastUpdate');
+      if (commentaryUpdateEl) {
+        const now = new Date();
+        commentaryUpdateEl.textContent = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+      }
 
       const signal = (payload.signal || 'NEUTRAL').toUpperCase();
       const strength = formatStrengthLabel(payload.strength);
@@ -5378,6 +5421,47 @@
       geniusAudioBtn.addEventListener('click', () => {
         const lang = geniusAudioLang ? geniusAudioLang.value : 'pl';
         playGeniusAudio(lang);
+      });
+    }
+
+    // ===== PLAY COMMENTARY AUDIO (new button under BTC) =====
+    const playCommentaryBtn = document.getElementById('playCommentaryBtn');
+    const voiceSelect = document.getElementById('voiceSelect');
+    const audioStatusEl = document.getElementById('audioStatus');
+    
+    if (playCommentaryBtn) {
+      playCommentaryBtn.addEventListener('click', () => {
+        const text = document.getElementById('liveCommentaryText')?.textContent || '';
+        if (!text || text.includes('Ładowanie')) {
+          if (audioStatusEl) audioStatusEl.textContent = 'No commentary';
+          return;
+        }
+        
+        const lang = voiceSelect?.value || 'pl-PL';
+        if ('speechSynthesis' in window) {
+          window.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(text);
+          utterance.lang = lang;
+          utterance.rate = 0.9;
+          utterance.pitch = 1;
+          
+          utterance.onstart = () => {
+            if (audioStatusEl) audioStatusEl.textContent = 'Playing...';
+            playCommentaryBtn.innerHTML = '<span>⏸</span> STOP';
+          };
+          utterance.onend = () => {
+            if (audioStatusEl) audioStatusEl.textContent = 'Ready';
+            playCommentaryBtn.innerHTML = '<span>▶</span> PLAY';
+          };
+          utterance.onerror = () => {
+            if (audioStatusEl) audioStatusEl.textContent = 'Error';
+            playCommentaryBtn.innerHTML = '<span>▶</span> PLAY';
+          };
+          
+          window.speechSynthesis.speak(utterance);
+        } else {
+          if (audioStatusEl) audioStatusEl.textContent = 'Not supported';
+        }
       });
     }
 
