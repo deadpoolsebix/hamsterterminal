@@ -1297,29 +1297,40 @@
       display: flex;
       gap: 8px;
       align-items: center;
-      padding: 10px 24px;
+      padding: 10px 16px;
       background: #0d0d0d;
       border-bottom: 1px solid var(--border);
     }
 
-    /* HAMBURGER MENU BUTTON */
+    /* HAMBURGER MENU BUTTON - LARGER FOR MOBILE */
     .hamburger-menu {
       display: flex;
       flex-direction: column;
-      gap: 5px;
+      gap: 6px;
       background: transparent;
-      border: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
       cursor: pointer;
-      padding: 6px;
-      width: 40px;
-      height: 40px;
+      padding: 10px;
+      min-width: 48px;
+      min-height: 48px;
       align-items: center;
       justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .hamburger-menu:hover {
+      border-color: var(--orange);
+      background: rgba(255, 140, 0, 0.1);
+    }
+    
+    .hamburger-menu:active {
+      background: rgba(255, 140, 0, 0.2);
     }
 
     .hamburger-menu .bar {
-      width: 24px;
-      height: 2.5px;
+      width: 26px;
+      height: 3px;
       background: #ffffff;
       transition: all 0.3s ease;
       display: block;
@@ -2116,13 +2127,11 @@
   <div class="nav-wrapper" id="navWrapper">
     <!-- HAMBURGER + ANALYTICS BUTTONS CONTAINER -->
     <div class="hamburger-container">
-      <button class="hamburger-menu" id="hamburgerMenu" title="Toggle Menu">
-        <div class="bar"></div>
-        <div class="bar"></div>
-        <div class="bar"></div>
-      </button>
-      <button class="analytics-btn" id="analyticsBtn" title="Toggle Radar Panel (Bottom)">
-        <span>RADAR</span>
+      <!-- HAMBURGER MENU (left, next to logo) -->
+      <button class="hamburger-menu" id="hamburgerMenu" title="TOOLS Menu" style="width: 48px; height: 48px; padding: 10px; margin-right: 8px;">
+        <div class="bar" style="width: 28px; height: 3px;"></div>
+        <div class="bar" style="width: 28px; height: 3px;"></div>
+        <div class="bar" style="width: 28px; height: 3px;"></div>
       </button>
       <!-- HAMSTER TERMINAL LABEL -->
       <div class="hamster-header" style="margin: 0 8px; width: auto; height: auto; background: none; border: none; padding: 0 12px;">
@@ -2136,9 +2145,15 @@
           <span>Hamster Terminal</span>
         </span>
       </div>
-      <button class="analytics-btn" id="drawerBtn" style="margin-left: 4px;" title="Advanced Analytics (Side)">
-        <span>ADVANCED</span>
-      </button>
+      <!-- BUTTONS on the right -->
+      <div style="margin-left: auto; display: flex; gap: 8px;">
+        <button class="analytics-btn" id="analyticsBtn" title="Toggle Radar Panel (Bottom)">
+          <span>RADAR</span>
+        </button>
+        <button class="analytics-btn" id="drawerBtn" title="Advanced Analytics (Side)">
+          <span>ADVANCED</span>
+        </button>
+      </div>
     </div>
 
     <!-- BLOOMBERG NEWS TICKER (TOP) -->
