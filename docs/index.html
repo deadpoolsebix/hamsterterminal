@@ -1149,21 +1149,22 @@
     /* When drawer is open, move handle to the right edge of drawer */
     .tools-drawer.open + .tools-handle,
     .tools-handle.drawer-open {
-      left: 320px;
+      left: 350px;
       background: rgba(255, 140, 0, 0.4);
       border-color: var(--orange);
+      z-index: 10001;
     }
     .tools-drawer {
       position: fixed;
       left: 0;
       top: 0;
       height: 100vh;
-      width: 320px;
+      width: 350px;
       background: linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 100%);
       border-right: 3px solid var(--orange);
       transform: translateX(-100%);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 100;
+      z-index: 10000;
       padding: 16px;
       overflow-y: auto;
       box-shadow: 4px 0 20px rgba(255, 165, 0, 0.2);
@@ -1171,6 +1172,22 @@
     .tools-drawer.open {
       transform: translateX(0);
       box-shadow: 8px 0 40px rgba(255, 165, 0, 0.3);
+    }
+    .tools-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 9999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .tools-backdrop.visible {
+      opacity: 1;
+      visibility: visible;
     }
     .tools-header {
       color: var(--orange);
@@ -1728,6 +1745,9 @@
 </head>
 <body>
 
+  <!-- TOOLS BACKDROP (dark overlay) -->
+  <div class="tools-backdrop" id="toolsBackdrop"></div>
+
   <!-- LEFT TOOLS DRAWER HANDLE -->
   <div class="tools-handle" id="toolsHandle">
     <span class="tools-handle-icon">🛠</span>
@@ -1737,28 +1757,9 @@
 
   <!-- LEFT TOOLS DRAWER -->
   <aside class="tools-drawer" id="toolsDrawer" aria-hidden="true">
-    <div class="tools-header">🛠 TRADING TOOLS</div>
-    
-    <!-- LIQUIDATION LEVELS -->
-    <div class="tools-section">
-      <div class="tools-title">💥 Najbliższe Likwidacje</div>
-      <div id="toolsLiquidations" style="font-size: 0.85em; line-height: 1.6;">
-        <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #222;">
-          <span style="color: var(--red);">▼ LONG LIQ</span>
-          <span style="color: #fff;">$93,450</span>
-          <span style="color: var(--gray);">$245M</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #222;">
-          <span style="color: var(--green);">▲ SHORT LIQ</span>
-          <span style="color: #fff;">$97,800</span>
-          <span style="color: var(--gray);">$180M</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 4px 0;">
-          <span style="color: var(--orange);">MEGA LIQ</span>
-          <span style="color: #fff;">$91,200</span>
-          <span style="color: var(--gray);">$520M</span>
-        </div>
-      </div>
+    <div class="tools-header" style="display: flex; justify-content: space-between; align-items: center;">
+      <span>🛠 TRADING TOOLS</span>
+      <button id="closeToolsBtn" style="background: transparent; border: 2px solid var(--orange); color: var(--orange); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center;">✕</button>
     </div>
     
     <!-- MARKET CORRELATIONS -->
@@ -5628,14 +5629,19 @@
     // ===== LEFT TOOLS DRAWER INTERACTIONS =====
     const toolsDrawer = document.getElementById('toolsDrawer');
     const toolsHandle = document.getElementById('toolsHandle');
-    const drawerWidth = 320; // must match CSS width
+    const drawerWidth = 350; // must match CSS width
     let dragging = false;
     let startX = 0;
+
+    const toolsBackdrop = document.getElementById('toolsBackdrop');
+    const closeToolsBtn = document.getElementById('closeToolsBtn');
 
     function openToolsDrawer() {
       toolsDrawer?.classList.add('open');
       toolsDrawer?.setAttribute('aria-hidden', 'false');
       toolsHandle?.classList.add('drawer-open');
+      toolsBackdrop?.classList.add('visible');
+      document.body.style.overflow = 'hidden';
       const icon = document.getElementById('toolsHandleIcon');
       if (icon) icon.textContent = '◀';
     }
@@ -5646,6 +5652,8 @@
         toolsDrawer.style.transform = '';
       }
       toolsHandle?.classList.remove('drawer-open');
+      toolsBackdrop?.classList.remove('visible');
+      document.body.style.overflow = '';
       const icon = document.getElementById('toolsHandleIcon');
       if (icon) icon.textContent = '▶';
     }
@@ -5660,6 +5668,12 @@
 
     // Click on handle toggles
     toolsHandle?.addEventListener('click', toggleToolsDrawer);
+    
+    // Click on backdrop closes drawer
+    toolsBackdrop?.addEventListener('click', closeToolsDrawer);
+    
+    // Click on close button closes drawer
+    closeToolsBtn?.addEventListener('click', closeToolsDrawer);
 
     // Mouse drag from handle
     toolsHandle?.addEventListener('mousedown', (e) => {
