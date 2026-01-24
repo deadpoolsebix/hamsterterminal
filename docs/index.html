@@ -4679,9 +4679,11 @@
       toolsDrawer?.setAttribute('aria-hidden', 'false');
     }
     function closeToolsDrawer() {
-      toolsDrawer?.classList.remove('open');
-      toolsDrawer?.setAttribute('aria-hidden', 'true');
-      toolsDrawer?.style.transform = '';
+      if (toolsDrawer) {
+        toolsDrawer.classList.remove('open');
+        toolsDrawer.setAttribute('aria-hidden', 'true');
+        toolsDrawer.style.transform = '';
+      }
     }
     function toggleToolsDrawer() {
       if (!toolsDrawer) return;
