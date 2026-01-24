@@ -101,6 +101,18 @@ cache = {
     'doge_change': 4.5,
     'avax_price': 38.50,
     'avax_change': 2.8,
+    'dot_price': 7.50,
+    'dot_change': 1.8,
+    'matic_price': 0.52,
+    'matic_change': 2.4,
+    'link_price': 15.80,
+    'link_change': 1.2,
+    'uni_price': 8.45,
+    'uni_change': 0.9,
+    'atom_price': 9.20,
+    'atom_change': 1.5,
+    'ltc_price': 105.50,
+    'ltc_change': 0.7,
     'fear_greed': 62,
     'volume_24h': 24500000000,
     'funding_rate': 0.0082,
@@ -339,7 +351,7 @@ def fetch_newsapi_headlines(category='business', limit=5):
 
 
 def fetch_crypto_prices():
-    """Fetch BTC and ETH prices from Twelve Data (Pro plan)"""
+    """Fetch BTC, ETH and altcoins from Twelve Data (Pro plan)"""
     try:
         # BTC/USD from Twelve Data
         btc_data = fetch_twelve_data_crypto('BTC/USD')
@@ -358,8 +370,30 @@ def fetch_crypto_prices():
             cache['eth_change'] = eth_data['change']
         else:
             logger.warning("⚠️ Twelve Data ETH returned zero, keeping cached value")
+        
+        # Fetch additional altcoins
+        altcoins = [
+            ('SOL/USD', 'sol_price', 'sol_change'),
+            ('XRP/USD', 'xrp_price', 'xrp_change'),
+            ('BNB/USD', 'bnb_price', 'bnb_change'),
+            ('ADA/USD', 'ada_price', 'ada_change'),
+            ('DOGE/USD', 'doge_price', 'doge_change'),
+            ('AVAX/USD', 'avax_price', 'avax_change'),
+            ('DOT/USD', 'dot_price', 'dot_change'),
+            ('MATIC/USD', 'matic_price', 'matic_change'),
+            ('LINK/USD', 'link_price', 'link_change'),
+            ('UNI/USD', 'uni_price', 'uni_change'),
+            ('ATOM/USD', 'atom_price', 'atom_change'),
+            ('LTC/USD', 'ltc_price', 'ltc_change'),
+        ]
+        
+        for symbol, price_key, change_key in altcoins:
+            data = fetch_twelve_data_crypto(symbol)
+            if data and data.get('price', 0) > 0:
+                cache[price_key] = data['price']
+                cache[change_key] = data['change']
             
-        logger.info(f"✅ Crypto (Twelve Data): BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
+        logger.info(f"✅ Crypto (Twelve Data): BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%) | SOL ${cache['sol_price']:.2f}")
         return True
         
     except Exception as e:
@@ -963,7 +997,13 @@ def get_crypto_summary():
             'BNB': round(cache['bnb_price'], 2),
             'ADA': round(cache['ada_price'], 4),
             'DOGE': round(cache['doge_price'], 5),
-            'AVAX': round(cache['avax_price'], 2)
+            'AVAX': round(cache['avax_price'], 2),
+            'DOT': round(cache['dot_price'], 2),
+            'MATIC': round(cache['matic_price'], 4),
+            'LINK': round(cache['link_price'], 2),
+            'UNI': round(cache['uni_price'], 2),
+            'ATOM': round(cache['atom_price'], 2),
+            'LTC': round(cache['ltc_price'], 2)
         },
         'cryptosChange': {
             'SOL': round(cache['sol_change'], 2),
@@ -971,7 +1011,13 @@ def get_crypto_summary():
             'BNB': round(cache['bnb_change'], 2),
             'ADA': round(cache['ada_change'], 2),
             'DOGE': round(cache['doge_change'], 2),
-            'AVAX': round(cache['avax_change'], 2)
+            'AVAX': round(cache['avax_change'], 2),
+            'DOT': round(cache['dot_change'], 2),
+            'MATIC': round(cache['matic_change'], 2),
+            'LINK': round(cache['link_change'], 2),
+            'UNI': round(cache['uni_change'], 2),
+            'ATOM': round(cache['atom_change'], 2),
+            'LTC': round(cache['ltc_change'], 2)
         },
         'lastUpdate': cache['last_update'],
         'source': 'Twelve Data Pro',
