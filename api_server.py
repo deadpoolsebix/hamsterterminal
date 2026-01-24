@@ -403,7 +403,12 @@ def update_news_cache():
             
             # Convert to our format
             for idx, item in enumerate(news_items[:5], start=1):
-                age_minutes = int((now - item.published_at).total_seconds() / 60)
+                # Fix for offset-naive vs offset-aware datetime
+                pub_date = item.published_at
+                if pub_date.tzinfo is not None:
+                    pub_date = pub_date.replace(tzinfo=None)
+                
+                age_minutes = int((now - pub_date).total_seconds() / 60)
                 
                 # Determine sentiment
                 sentiment = 'neutral'
