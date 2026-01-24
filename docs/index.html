@@ -1108,38 +1108,33 @@
     .tools-handle {
       position: fixed;
       left: 0;
-      top: 120px;
-      width: 50px;
-      height: 180px;
-      background: linear-gradient(180deg, #00d4ff, #0099cc);
-      color: #000;
+      top: 140px;
+      width: 28px;
+      height: 100px;
+      background: rgba(255, 140, 0, 0.15);
+      backdrop-filter: blur(8px);
+      color: var(--orange);
       display: flex;
       align-items: center;
       justify-content: center;
-      border-right: 4px solid #00ffff;
-      border-bottom: 3px solid #00ffff;
-      border-top: 3px solid #00ffff;
+      border: 1px solid rgba(255, 140, 0, 0.4);
+      border-left: none;
+      border-radius: 0 6px 6px 0;
       z-index: 101;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 4px 6px 20px rgba(0, 212, 255, 0.5);
-      animation: tools-pulse 2s infinite;
-    }
-    @keyframes tools-pulse {
-      0%, 100% { box-shadow: 4px 6px 20px rgba(0, 212, 255, 0.5); }
-      50% { box-shadow: 6px 8px 30px rgba(0, 212, 255, 0.8); }
     }
     .tools-handle:hover {
-      width: 60px;
-      box-shadow: 6px 10px 30px rgba(0, 255, 255, 0.8);
-      background: linear-gradient(180deg, #00ffff, #00d4ff);
+      width: 36px;
+      background: rgba(255, 140, 0, 0.25);
+      border-color: rgba(255, 140, 0, 0.6);
     }
     .tools-handle span {
       writing-mode: vertical-rl;
-      font-weight: 900;
-      letter-spacing: 3px;
-      font-size: 1.1em;
-      text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+      font-weight: 700;
+      letter-spacing: 2px;
+      font-size: 0.75em;
+      opacity: 0.9;
     }
     .tools-drawer {
       position: fixed;
@@ -1717,7 +1712,7 @@
 <body>
 
   <!-- LEFT TOOLS DRAWER HANDLE -->
-  <div class="tools-handle" id="toolsHandle" style="background: linear-gradient(180deg, #00d4ff, #0099cc); padding: 20px 12px; font-size: 1.2em; width: 50px; height: 180px; box-shadow: 4px 6px 20px rgba(0, 212, 255, 0.5); border-right: 4px solid #00ffff; border-top: 3px solid #00ffff; border-bottom: 3px solid #00ffff;"><span style="font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);">TOOLS</span></div>
+  <div class="tools-handle" id="toolsHandle"><span>🛠</span></div>
 
   <!-- LEFT TOOLS DRAWER -->
   <aside class="tools-drawer" id="toolsDrawer" aria-hidden="true">
