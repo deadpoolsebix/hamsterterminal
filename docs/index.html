@@ -3470,99 +3470,91 @@
     </div>
     </div>
     
-    <!-- LARGE TRANSFERS (LIVE) -->
-    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 3px solid rgba(255, 140, 0, 0.6); padding: 12px; box-shadow: inset 3px 0 8px rgba(255, 140, 0, 0.15);">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <div style="color: #ffffff; font-weight: 700; font-size: 1.05em; letter-spacing: 0.5px;">💸 LARGE TRANSFERS <span style="color: var(--green); font-size: 0.7em;">LIVE</span></div>
-        <div style="color: var(--gray); font-size: 0.75em;" id="transfersLastUpdate">Aktualizacja: --</div>
+    <!-- LARGE TRANSFERS (LIVE) - Bloomberg Style -->
+    <div style="background: #000; border: 1px solid #222; padding: 16px;">
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #222;">
+        <div style="color: #888; font-weight: 700; font-size: 0.85em; letter-spacing: 1px;">LARGE TRANSFERS</div>
+        <div style="color: #666; font-size: 0.75em;" id="transfersLastUpdate">Updated: --</div>
       </div>
       
-      <div id="largeTransfersList">
-        <div class="transfer-row" style="padding: 10px 0; border-bottom: 1px solid #1a1a1a;">
-          <div>
-            <div style="color: #ffffff; font-weight: 600; font-size: 0.9em;">Ładowanie...</div>
-            <div style="color: var(--gray); font-size: 0.75em; margin-top: 2px;">Pobieranie danych</div>
-          </div>
-        </div>
+      <div id="largeTransfersList" style="font-size: 0.85em;">
+        <div style="display: flex; justify-content: space-between; padding: 6px 0; color: #888;">Loading data...</div>
       </div>
       
       <!-- ICEBERG ORDERS SECTION -->
-      <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #333;">
-        <div style="color: #00d4ff; font-weight: 700; font-size: 0.9em; margin-bottom: 10px;">🧊 ICEBERG ORDERS DETECTED</div>
-        <div id="icebergOrdersList">
-          <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 0.85em;">
-            <div style="background: rgba(0, 212, 255, 0.08); padding: 8px; border-left: 2px solid var(--cyan);">
-              <div style="color: #fff; font-weight: 600;">BUY ICEBERG</div>
-              <div style="color: var(--green);">$94,800 - $95,200</div>
-              <div style="color: var(--gray); font-size: 0.8em;">~3,200 BTC</div>
-            </div>
-            <div style="background: rgba(255, 0, 51, 0.08); padding: 8px; border-left: 2px solid var(--red);">
-              <div style="color: #fff; font-weight: 600;">SELL ICEBERG</div>
-              <div style="color: var(--red);">$97,400 - $97,800</div>
-              <div style="color: var(--gray); font-size: 0.8em;">~2,100 BTC</div>
-            </div>
-            <div style="background: rgba(255, 165, 0, 0.08); padding: 8px; border-left: 2px solid var(--orange);">
-              <div style="color: #fff; font-weight: 600;">HIDDEN</div>
-              <div style="color: var(--orange);">$96,000 - $96,500</div>
-              <div style="color: var(--gray); font-size: 0.8em;">~1,800 BTC</div>
-            </div>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222;">
+        <div style="color: #666; font-weight: 700; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 10px;">ICEBERG ORDERS DETECTED</div>
+        <div id="icebergOrdersList" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 0.85em;">
+          <div style="padding: 8px 0; border-left: 2px solid #444; padding-left: 10px;">
+            <div style="color: #fff; font-weight: 600; font-size: 0.8em;">BUY ICEBERG</div>
+            <div style="color: #fff; margin: 4px 0;">$94,800 - $95,200</div>
+            <div style="color: #666; font-size: 0.8em;">~3,200 BTC</div>
+          </div>
+          <div style="padding: 8px 0; border-left: 2px solid #444; padding-left: 10px;">
+            <div style="color: #fff; font-weight: 600; font-size: 0.8em;">SELL ICEBERG</div>
+            <div style="color: #fff; margin: 4px 0;">$97,400 - $97,800</div>
+            <div style="color: #666; font-size: 0.8em;">~2,100 BTC</div>
+          </div>
+          <div style="padding: 8px 0; border-left: 2px solid #444; padding-left: 10px;">
+            <div style="color: #fff; font-weight: 600; font-size: 0.8em;">HIDDEN</div>
+            <div style="color: #fff; margin: 4px 0;">$96,000 - $96,500</div>
+            <div style="color: #666; font-size: 0.8em;">~1,800 BTC</div>
           </div>
         </div>
       </div>
       
       <!-- SESSION COUNTDOWN TIMER -->
-      <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(157, 78, 221, 0.12)); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.3);">
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <div style="color: #666; font-weight: 700; font-size: 0.75em; letter-spacing: 1px;">SESSION COUNTDOWN (CET)</div>
+          <div style="color: #666; font-size: 0.75em;" id="frontSessionName">Active session...</div>
+        </div>
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="display: flex; align-items: center; gap: 10px;">
-            <div style="font-size: 1.4em;">⏱️</div>
-            <div>
-              <div style="color: var(--cyan); font-weight: 700; font-size: 0.9em;">SESSION COUNTDOWN <span style="font-size: 0.75em; color: var(--gray);">(CET)</span></div>
-              <div style="color: var(--gray); font-size: 0.75em;" id="frontSessionName">Aktywna sesja...</div>
-            </div>
-          </div>
-          <div style="text-align: right;">
-            <div style="color: #fff; font-size: 1.8em; font-weight: 800; font-family: 'Courier New', monospace;" id="frontSessionTimer">--:--:--</div>
-            <div style="color: var(--gray); font-size: 0.7em;" id="frontSessionEndTime">Koniec o --:--</div>
+          <div style="color: #fff; font-size: 1.6em; font-weight: 700; font-family: 'Courier New', monospace; letter-spacing: 2px;" id="frontSessionTimer">--:--:--</div>
+          <div style="text-align: right; font-size: 0.8em;">
+            <div style="color: #666;">Ends: <span id="frontSessionEndTime" style="color: #888;">--:--</span></div>
+            <div style="color: #666; margin-top: 4px;">Next: <span id="nextSessionInfo" style="color: #888;">--</span></div>
           </div>
         </div>
-        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75em;">
-          <div style="color: var(--gray);">Następna: <span id="nextSessionInfo" style="color: var(--orange);">--</span></div>
-          <div style="color: var(--gray);">Czas EU: <span id="currentEUTime" style="color: var(--cyan);">--:--</span></div>
-        </div>
-        <div style="margin-top: 8px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
-          <div id="sessionProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--green)); transition: width 1s ease;"></div>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.75em; color: #666;">
+          <span>EU Time: <span id="currentEUTime" style="color: #888;">--:--</span></span>
+          <div style="width: 60%; height: 3px; background: #222; border-radius: 2px; overflow: hidden; align-self: center;">
+            <div id="sessionProgressBar" style="width: 0%; height: 100%; background: #fff; transition: width 1s ease;"></div>
+          </div>
         </div>
       </div>
       
-      <!-- LIQUIDATION LEVELS - MAIN PAGE -->
-      <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #333;">
-        <div style="color: #ff6b35; font-weight: 700; font-size: 0.9em; margin-bottom: 10px;">💥 NEAREST LIQUIDATION LEVELS</div>
-        <div id="mainLiquidations" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 0.85em;">
-          <div style="background: rgba(255, 0, 51, 0.1); padding: 10px; border-radius: 6px; border-left: 3px solid var(--red);">
-            <div style="color: var(--red); font-weight: 700; font-size: 0.85em;">▼ LONG LIQ</div>
+      <!-- LIQUIDATION LEVELS -->
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222;">
+        <div style="color: #666; font-weight: 700; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 10px;">NEAREST LIQUIDATION LEVELS</div>
+        <div id="mainLiquidations" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; font-size: 0.85em;">
+          <div style="padding: 8px 0; border-left: 2px solid #444; padding-left: 10px;">
+            <div style="color: #888; font-weight: 600; font-size: 0.8em;">LONG LIQ</div>
             <div style="color: #fff; font-size: 1.1em; font-weight: 600; margin: 4px 0;" id="longLiqPrice">$93,450</div>
-            <div style="color: var(--gray); font-size: 0.8em;" id="longLiqVolume">$245M</div>
+            <div style="color: #666; font-size: 0.8em;" id="longLiqVolume">$245M</div>
           </div>
-          <div style="background: rgba(0, 255, 136, 0.1); padding: 10px; border-radius: 6px; border-left: 3px solid var(--green);">
-            <div style="color: var(--green); font-weight: 700; font-size: 0.85em;">▲ SHORT LIQ</div>
+          <div style="padding: 8px 0; border-left: 2px solid #444; padding-left: 10px;">
+            <div style="color: #888; font-weight: 600; font-size: 0.8em;">SHORT LIQ</div>
             <div style="color: #fff; font-size: 1.1em; font-weight: 600; margin: 4px 0;" id="shortLiqPrice">$97,800</div>
-            <div style="color: var(--gray); font-size: 0.8em;" id="shortLiqVolume">$180M</div>
+            <div style="color: #666; font-size: 0.8em;" id="shortLiqVolume">$180M</div>
           </div>
-          <div style="background: rgba(255, 165, 0, 0.12); padding: 10px; border-radius: 6px; border-left: 3px solid var(--orange);">
-            <div style="color: var(--orange); font-weight: 700; font-size: 0.85em;">⚠️ MEGA LIQ</div>
+          <div style="padding: 8px 0; border-left: 2px solid #444; padding-left: 10px;">
+            <div style="color: #888; font-weight: 600; font-size: 0.8em;">MEGA LIQ</div>
             <div style="color: #fff; font-size: 1.1em; font-weight: 600; margin: 4px 0;" id="megaLiqPrice">$91,200</div>
-            <div style="color: var(--gray); font-size: 0.8em;" id="megaLiqVolume">$520M</div>
+            <div style="color: #666; font-size: 0.8em;" id="megaLiqVolume">$520M</div>
           </div>
         </div>
-        <div style="margin-top: 8px; display: flex; justify-content: space-between; font-size: 0.75em;">
-          <div style="color: var(--gray);">Aktualizacja: <span id="liqUpdateTime" style="color: var(--cyan);">--</span></div>
-          <div style="color: var(--gray);">Bliskość: <span id="liqProximity" style="color: var(--orange);">--</span></div>
+        <div style="margin-top: 10px; display: flex; justify-content: space-between; font-size: 0.75em;">
+          <div style="color: #666;">Updated: <span id="liqUpdateTime" style="color: #888;">--</span></div>
+          <div style="color: #666;">Proximity: <span id="liqProximity" style="color: #888;">--</span></div>
         </div>
       </div>
       
-      <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between;">
-        <div style="color: var(--gray); font-size: 0.75em;">Total Volume: <span style="color: #ffffff; font-weight: 700;" id="totalTransferVolume">--</span></div>
-        <div style="color: var(--gray); font-size: 0.75em;">Net Flow: <span id="netFlowIndicator" style="font-weight: 700;">--</span></div>
+      <!-- Footer Stats -->
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222; display: flex; justify-content: space-between; font-size: 0.75em;">
+        <div style="color: #666;">Total Volume: <span style="color: #fff; font-weight: 700;" id="totalTransferVolume">--</span></div>
+        <div style="color: #666;">Net Flow: <span id="netFlowIndicator" style="color: #888; font-weight: 700;">--</span></div>
       </div>
     </div>
   </div>
