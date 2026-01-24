@@ -1160,7 +1160,15 @@ def serve_static(filename):
 
 @app.route('/', methods=['GET'])
 def serve_dashboard():
-    return send_from_directory('docs', 'index.html')
+    # Ensure correct static folder path (absolute path for Render compatibility)
+    static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
+    return send_from_directory(static_folder, 'index.html')
+
+@app.route('/<path:filename>')
+def serve_static(filename):
+    static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
+    return send_from_directory(static_folder, filename)
+
 
 def root_moved():
     """Root endpoint info"""
