@@ -623,13 +623,6 @@
       margin-bottom: 8px;
       font-size: 1.3em;
       line-height: 1.3;
-      position: relative;
-    }
-    .ticker.crypto-ticker {
-      border-left: 3px solid #f7931a;
-    }
-    .ticker.stocks-ticker {
-      border-left: 3px solid #00d4ff;
     }
     .ticker-track {
       display: inline-flex;
@@ -638,12 +631,10 @@
       animation: ticker-scroll 80s linear infinite;
     }
     .ticker-label {
-      color: #ffffff;
+      color: #888;
       font-weight: 700;
       margin-right: 8px;
     }
-    .ticker-label.crypto { color: #f7931a; }
-    .ticker-label.stocks { color: #00d4ff; }
     .ticker-symbol { color: #888; margin-right: 4px; }
     .ticker-price { color: #fff; font-weight: 600; }
     .ticker-change { margin-left: 6px; font-size: 0.85em; }
@@ -2542,9 +2533,9 @@
 
     <!-- CRYPTO TICKER -->
     <div class="ticker-wrapper">
-      <div class="ticker crypto-ticker">
+      <div class="ticker">
         <div class="ticker-track" id="cryptoTickerTrack">
-          <span class="ticker-label crypto">₿ CRYPTO</span>
+          <span class="ticker-label">CRYPTO</span>
           <span>BTC <span class="ticker-price">--</span></span>
           <span class="ticker-sep">•</span>
           <span>ETH <span class="ticker-price">--</span></span>
@@ -2556,9 +2547,9 @@
 
     <!-- STOCKS & INDICES TICKER -->
     <div class="ticker-wrapper">
-      <div class="ticker stocks-ticker">
+      <div class="ticker">
         <div class="ticker-track" id="stocksTickerTrack">
-          <span class="ticker-label stocks">📈 STOCKS</span>
+          <span class="ticker-label">MARKETS</span>
           <span>NASDAQ <span class="ticker-price">--</span></span>
           <span class="ticker-sep">•</span>
           <span>S&P 500 <span class="ticker-price">--</span></span>
@@ -4343,7 +4334,7 @@
         });
         
         if (cryptoItems.length > 0) {
-          const content = `<span class="ticker-label crypto">₿ CRYPTO</span> ${cryptoItems.join(' <span class="ticker-sep">•</span> ')}`;
+          const content = `<span class="ticker-label">CRYPTO</span> ${cryptoItems.join(' <span class="ticker-sep">•</span> ')}`;
           cryptoTrack.innerHTML = content + ' <span class="ticker-sep">•</span> ' + content;
         }
       }
@@ -4394,7 +4385,7 @@
         }
         
         if (stockItems.length > 0) {
-          const content = `<span class="ticker-label stocks">📈 MARKETS</span> ${stockItems.join(' <span class="ticker-sep">•</span> ')}`;
+          const content = `<span class="ticker-label">MARKETS</span> ${stockItems.join(' <span class="ticker-sep">•</span> ')}`;
           stocksTrack.innerHTML = content + ' <span class="ticker-sep">•</span> ' + content;
         }
       }
