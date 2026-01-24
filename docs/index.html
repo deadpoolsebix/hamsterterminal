@@ -3226,7 +3226,7 @@
           <div style="display: flex; align-items: center; gap: 10px;">
             <div style="font-size: 1.4em;">⏱️</div>
             <div>
-              <div style="color: var(--cyan); font-weight: 700; font-size: 0.9em;">SESSION COUNTDOWN</div>
+              <div style="color: var(--cyan); font-weight: 700; font-size: 0.9em;">SESSION COUNTDOWN <span style="font-size: 0.75em; color: var(--gray);">(CET)</span></div>
               <div style="color: var(--gray); font-size: 0.75em;" id="frontSessionName">Aktywna sesja...</div>
             </div>
           </div>
@@ -3235,7 +3235,11 @@
             <div style="color: var(--gray); font-size: 0.7em;" id="frontSessionEndTime">Koniec o --:--</div>
           </div>
         </div>
-        <div style="margin-top: 10px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+        <div style="margin-top: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.75em;">
+          <div style="color: var(--gray);">Następna: <span id="nextSessionInfo" style="color: var(--orange);">--</span></div>
+          <div style="color: var(--gray);">Czas EU: <span id="currentEUTime" style="color: var(--cyan);">--:--</span></div>
+        </div>
+        <div style="margin-top: 8px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
           <div id="sessionProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--green)); transition: width 1s ease;"></div>
         </div>
       </div>
@@ -5084,66 +5088,122 @@
       }
     }
 
-    // ===== SESSION COUNTDOWN - LOCAL CALCULATION =====
+    // ===== SESSION COUNTDOWN - EUROPEAN TIME (CET/CEST) =====
+    // Sessions defined in CET (Central European Time)
     const KILLZONE_SESSIONS = [
-      { name: 'Asia Session', label: 'Asia', startHour: 0, endHour: 6, color: '#9d4edd' },
-      { name: 'Frankfurt Open', label: 'Frankfurt', startHour: 7, endHour: 8, color: '#ff9500' },
-      { name: 'London Session', label: 'London', startHour: 8, endHour: 12, color: '#00d4ff' },
-      { name: 'NY AM Session', label: 'NY Open', startHour: 13, endHour: 16, color: '#00ff88' },
-      { name: 'NY PM Session', label: 'NY Close', startHour: 16, endHour: 21, color: '#ff6b35' }
+      { name: 'Asia Session', label: 'Asia', startHour: 1, endHour: 7, color: '#9d4edd' },
+      { name: 'Frankfurt Open', label: 'Frankfurt', startHour: 8, endHour: 9, color: '#ff9500' },
+      { name: 'London Session', label: 'London', startHour: 9, endHour: 13, color: '#00d4ff' },
+      { name: 'NY AM Session', label: 'NY Open', startHour: 14, endHour: 17, color: '#00ff88' },
+      { name: 'NY PM Session', label: 'NY Close', startHour: 17, endHour: 22, color: '#ff6b35' }
     ];
 
-    function getCurrentSessionInfo() {
+    // Get CET/CEST time (Europe/Warsaw timezone)
+    function getEuropeanTime() {
       const now = new Date();
-      const utcHour = now.getUTCHours();
-      const utcMinute = now.getUTCMinutes();
-      const utcSecond = now.getUTCSeconds();
+      // Use Europe/Warsaw timezone (CET/CEST)
+      const options = { timeZone: 'Europe/Warsaw', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
+      const euTimeStr = now.toLocaleString('pl-PL', options);
+      const [hours, minutes, seconds] = euTimeStr.split(':').map(Number);
+      return { hours, minutes, seconds, now };
+    }
+
+    function getCurrentSessionInfo() {
+      const eu = getEuropeanTime();
+      const euHour = eu.hours;
+      const euMinute = eu.minutes;
+      const euSecond = eu.seconds;
+      const now = eu.now;
       
       let currentSession = null;
       let nextSession = null;
+      let nextSessionIndex = -1;
       
-      for (const session of KILLZONE_SESSIONS) {
-        if (utcHour >= session.startHour && utcHour < session.endHour) {
-          currentSession = { ...session, utcHour, utcMinute, utcSecond };
+      // Find current session
+      for (let i = 0; i < KILLZONE_SESSIONS.length; i++) {
+        const session = KILLZONE_SESSIONS[i];
+        if (euHour >= session.startHour && euHour < session.endHour) {
+          currentSession = { ...session, euHour, euMinute, euSecond };
+          nextSessionIndex = (i + 1) % KILLZONE_SESSIONS.length;
           break;
         }
       }
       
-      // Find next session
-      for (const session of KILLZONE_SESSIONS) {
-        if (session.startHour > utcHour) {
-          nextSession = session;
-          break;
+      // Find next session if not in any
+      if (!currentSession) {
+        for (let i = 0; i < KILLZONE_SESSIONS.length; i++) {
+          if (KILLZONE_SESSIONS[i].startHour > euHour) {
+            nextSession = KILLZONE_SESSIONS[i];
+            nextSessionIndex = i;
+            break;
+          }
         }
+        if (!nextSession) {
+          nextSession = KILLZONE_SESSIONS[0]; // Tomorrow's Asia
+          nextSessionIndex = 0;
+        }
+      } else {
+        nextSession = KILLZONE_SESSIONS[nextSessionIndex];
       }
-      if (!nextSession) nextSession = KILLZONE_SESSIONS[0]; // Tomorrow's Asia
       
       // Calculate time remaining
       let timeRemaining = 0;
       let endTime = '';
       let progress = 0;
+      let timeToNextSession = 0;
       
       if (currentSession) {
-        const sessionEnd = new Date(now);
-        sessionEnd.setUTCHours(currentSession.endHour, 0, 0, 0);
-        timeRemaining = Math.max(0, sessionEnd - now);
-        endTime = `${String(currentSession.endHour).padStart(2,'0')}:00 UTC`;
+        // Time until current session ends
+        const msInHour = 3600000;
+        const msInMinute = 60000;
+        const msInSecond = 1000;
         
-        const sessionDuration = (currentSession.endHour - currentSession.startHour) * 3600000;
-        const elapsed = now - new Date(now).setUTCHours(currentSession.startHour, 0, 0, 0);
-        progress = Math.min(100, (elapsed / sessionDuration) * 100);
+        const endHourMs = currentSession.endHour * msInHour;
+        const currentMs = euHour * msInHour + euMinute * msInMinute + euSecond * msInSecond;
+        timeRemaining = Math.max(0, endHourMs - currentMs);
+        endTime = `${String(currentSession.endHour).padStart(2,'0')}:00 CET`;
+        
+        const sessionDuration = (currentSession.endHour - currentSession.startHour) * msInHour;
+        const startMs = currentSession.startHour * msInHour;
+        const elapsed = currentMs - startMs;
+        progress = Math.min(100, Math.max(0, (elapsed / sessionDuration) * 100));
+        
+        // Time to next session after current ends
+        if (nextSession.startHour > currentSession.endHour) {
+          timeToNextSession = (nextSession.startHour - currentSession.endHour) * msInHour;
+        } else {
+          // Next session is tomorrow
+          timeToNextSession = (24 - currentSession.endHour + nextSession.startHour) * msInHour;
+        }
       } else {
         // Between sessions - count to next
-        const nextStart = new Date(now);
-        if (nextSession.startHour <= utcHour) {
-          nextStart.setUTCDate(nextStart.getUTCDate() + 1);
+        const msInHour = 3600000;
+        const msInMinute = 60000;
+        const msInSecond = 1000;
+        
+        const currentMs = euHour * msInHour + euMinute * msInMinute + euSecond * msInSecond;
+        let nextStartMs = nextSession.startHour * msInHour;
+        
+        if (nextStartMs <= currentMs) {
+          // Next session is tomorrow
+          nextStartMs += 24 * msInHour;
         }
-        nextStart.setUTCHours(nextSession.startHour, 0, 0, 0);
-        timeRemaining = Math.max(0, nextStart - now);
-        endTime = `${String(nextSession.startHour).padStart(2,'0')}:00 UTC`;
+        
+        timeRemaining = nextStartMs - currentMs;
+        timeToNextSession = timeRemaining;
+        endTime = `${String(nextSession.startHour).padStart(2,'0')}:00 CET`;
       }
       
-      return { currentSession, nextSession, timeRemaining, endTime, progress };
+      return { 
+        currentSession, 
+        nextSession, 
+        timeRemaining, 
+        endTime, 
+        progress, 
+        timeToNextSession,
+        euHour,
+        euMinute 
+      };
     }
 
     function formatTimeRemaining(ms) {
@@ -5154,6 +5214,16 @@
       return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
     }
 
+    function formatTimeShort(ms) {
+      const totalMinutes = Math.floor(ms / 60000);
+      const hours = Math.floor(totalMinutes / 60);
+      const minutes = totalMinutes % 60;
+      if (hours > 0) {
+        return `${hours}h ${minutes}min`;
+      }
+      return `${minutes}min`;
+    }
+
     function updateSessionCountdownLocal() {
       const info = getCurrentSessionInfo();
       
@@ -5161,6 +5231,8 @@
       const frontName = document.getElementById('frontSessionName');
       const frontEnd = document.getElementById('frontSessionEndTime');
       const progressBar = document.getElementById('sessionProgressBar');
+      const nextSessionInfo = document.getElementById('nextSessionInfo');
+      const currentEUTime = document.getElementById('currentEUTime');
       
       if (frontTimer) {
         frontTimer.textContent = formatTimeRemaining(info.timeRemaining);
@@ -5180,10 +5252,25 @@
         frontEnd.textContent = info.currentSession ? `Koniec o ${info.endTime}` : `Start o ${info.endTime}`;
       }
       
+      if (nextSessionInfo) {
+        if (info.currentSession) {
+          nextSessionInfo.textContent = `${info.nextSession.label} za ${formatTimeShort(info.timeRemaining + info.timeToNextSession)}`;
+        } else {
+          nextSessionInfo.textContent = `${info.nextSession.label} za ${formatTimeShort(info.timeRemaining)}`;
+        }
+        nextSessionInfo.style.color = info.nextSession.color;
+      }
+      
+      if (currentEUTime) {
+        currentEUTime.textContent = `${String(info.euHour).padStart(2,'0')}:${String(info.euMinute).padStart(2,'0')}`;
+      }
+      
       if (progressBar) {
         progressBar.style.width = `${info.progress}%`;
         if (info.currentSession) {
           progressBar.style.background = `linear-gradient(90deg, ${info.currentSession.color}, var(--green))`;
+        } else {
+          progressBar.style.width = '0%';
         }
       }
       
