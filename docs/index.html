@@ -2840,51 +2840,74 @@
       <h3>SENTYMENT & STATS</h3>
       <div class="sentiment-stat">
         <span>Fear & Greed</span>
-        <span>62 (Greed)</span>
+        <span id="sentimentFearGreed">62 (Greed)</span>
       </div>
       <div class="sentiment-stat">
         <span>Funding Rate</span>
-        <span>+0.0082%</span>
+        <span id="sentimentFunding">+0.0082%</span>
       </div>
       <div class="sentiment-stat">
         <span>Open Interest</span>
-        <span>$12.4B</span>
+        <span id="sentimentOI">$12.4B</span>
       </div>
       <div class="sentiment-stat">
         <span>Dominacja BTC</span>
-        <span>51.3%</span>
+        <span id="sentimentDominance">51.3%</span>
       </div>
       <div class="sentiment-stat">
         <span>Liquidations 24h</span>
-        <span>$84M</span>
+        <span id="sentimentLiq">$84M</span>
+      </div>
+      <div class="sentiment-stat" style="border-top: 1px solid #333; padding-top: 8px; margin-top: 4px;">
+        <span>24H Volume</span>
+        <span id="sentimentVolume" style="color: var(--cyan);">$24.5B</span>
+      </div>
+      <div class="sentiment-stat">
+        <span>Market Cap</span>
+        <span id="sentimentMarketCap" style="color: var(--green);">$1.86T</span>
       </div>
     </div>
   </div>
 
-  <!-- METRICS GRID (4 boxes) -->
-  <div class="metrics-grid">
-    <div class="metric-box">
-      <div class="metric-label">CURRENT PRICE</div>
-      <div class="metric-value" id="metricPrice">$--</div>
-      <div class="metric-change" id="metricPriceChange">▲ --</div>
+  <!-- CURRENT PRICE + GENIUS AI ANALYSIS (SIDE BY SIDE) -->
+  <div style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
+    <!-- CURRENT PRICE BOX -->
+    <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+      <div class="metric-label" style="font-size: 0.85em; margin-bottom: 8px;">CURRENT PRICE</div>
+      <div class="metric-value" id="metricPrice" style="font-size: 2.2em;">$--</div>
+      <div class="metric-change" id="metricPriceChange" style="font-size: 1.1em; margin-top: 6px;">▲ --</div>
     </div>
 
-    <div class="metric-box">
-      <div class="metric-label">24H VOLUME</div>
-      <div class="metric-value" id="metricVolume">$--</div>
-      <div class="metric-change" id="metricVolumeChange">--</div>
-    </div>
+    <!-- GENIUS AI ANALYSIS -->
+    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 3px solid rgba(255, 140, 0, 0.6); padding: 15px; box-shadow: inset 3px 0 8px rgba(255, 140, 0, 0.15);">
+      <div style="color: #ffffff; font-weight: 700; margin-bottom: 12px; font-size: 1em; letter-spacing: 0.5px; text-transform: uppercase;">🧠 GENIUS AI ANALYSIS</div>
 
-    <div class="metric-box">
-      <div class="metric-label">MARKET CAP</div>
-      <div class="metric-value" id="metricMarketCap">$--</div>
-      <div class="metric-change" id="metricMarketCapChange">--</div>
-    </div>
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px;">
+        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--green);">
+          <div style="color: var(--green); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">BUY SIGNAL</div>
+          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Strong momentum + RSI bounce from 48. Target: $97.4k</div>
+        </div>
 
-    <div class="metric-box">
-      <div class="metric-label">FEAR & GREED</div>
-      <div class="metric-value" id="metricFearGreed">--</div>
-      <div class="metric-change" id="metricFearGreedLabel">Loading...</div>
+        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--cyan);">
+          <div style="color: var(--cyan); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">LIQUIDITY ALERT</div>
+          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Major buy wall detected at $94.8k. Support confirmed.</div>
+        </div>
+
+        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--yellow);">
+          <div style="color: var(--yellow); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">FVG ANALYSIS</div>
+          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Fair Value Gap detected. Expect retest at $95.2k zone.</div>
+        </div>
+
+        <div style="background: #0d0d0d; padding: 10px; border-left: 2px solid var(--red);">
+          <div style="color: var(--red); font-weight: 700; font-size: 0.8em; margin-bottom: 4px; text-transform: uppercase;">RISK WARNING</div>
+          <div style="color: var(--gray); font-size: 0.8em; line-height: 1.4;">Resistance at $97.4k strong. Watch for rejection.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: var(--gray); font-size: 0.75em;">AI Confidence: <span style="color: #ffffff; font-weight: 700;">87%</span></span>
+        <span style="color: var(--gray); font-size: 0.75em;">Last update: <span id="aiLastUpdate" style="color: var(--cyan);">now</span></span>
+      </div>
     </div>
   </div>
 
@@ -2924,41 +2947,6 @@
     </div>
     <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 40px; background: linear-gradient(90deg, transparent 0%, #0a0a0a 100%); z-index: 2;"></div>
   </div>
-
-  <!-- GENIUS AI (ABOVE CHART) -->
-  <div style="padding: 0 24px 15px 24px;">
-    <div style="background: var(--panel); border: 1px solid var(--border); border-left: 2px solid #1a1a1a; padding: 15px;">
-      <div style="color: #ffffff; font-weight: 700; margin-bottom: 15px; font-size: 1.1em; letter-spacing: 0.5px; text-transform: uppercase;">GENIUS AI ANALYSIS</div>
-
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px;">
-        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">BUY SIGNAL</div>
-          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Strong momentum + RSI bounce from 48. Target: $97.4k</div>
-        </div>
-
-        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">LIQUIDITY ALERT</div>
-          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Major buy wall detected at $94.8k. Support confirmed.</div>
-        </div>
-
-        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">FVG ANALYSIS</div>
-          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Fair Value Gap detected. Expect retest at $95.2k zone.</div>
-        </div>
-
-        <div style="background: #0d0d0d; padding: 13px; border-left: 2px solid #333;">
-          <div style="color: #ffffff; font-weight: 700; font-size: 0.89em; margin-bottom: 6px; text-transform: uppercase;">RISK WARNING</div>
-          <div style="color: var(--gray); font-size: 0.89em; line-height: 1.5;">Resistance at $97.4k strong. Watch for rejection signals.</div>
-        </div>
-      </div>
-
-      <div style="margin-top: 13px; padding-top: 13px; border-top: 1px solid #1a1a1a; text-align: right;">
-        <span style="color: var(--gray); font-size: 0.84em;">AI Confidence: </span>
-        <span style="color: #ffffff; font-weight: 700; font-size: 0.89em;">87%</span>
-      </div>
-    </div>
-  </div>
-
 
   <!-- CHART + TRANSFERS -->
   <div style="display: grid; grid-template-columns: 1.7fr 1fr; gap: 14px; padding: 14px 24px;">
@@ -4582,44 +4570,34 @@
             priceChangeEl.textContent = `${sign} ${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
           }
           
-          // 24H VOLUME
-          const volEl = document.getElementById('metricVolume');
-          const volChangeEl = document.getElementById('metricVolumeChange');
-          if (volEl) {
+          // Update SENTYMENT & STATS panel
+          const sentimentVolume = document.getElementById('sentimentVolume');
+          if (sentimentVolume) {
             const vol = data.btcVolume24h || 0;
             const volB = (vol / 1e9).toFixed(2);
-            volEl.textContent = `$${volB}B`;
-          }
-          if (volChangeEl) {
-            volChangeEl.textContent = 'Live';
-            volChangeEl.style.color = 'var(--cyan)';
+            sentimentVolume.textContent = `$${volB}B`;
           }
           
-          // MARKET CAP (estimated)
-          const mcEl = document.getElementById('metricMarketCap');
-          const mcChangeEl = document.getElementById('metricMarketCapChange');
-          if (mcEl) {
-            const mc = (data.btcPrice * 19500000) / 1e12; // ~19.5M BTC supply
-            mcEl.textContent = `$${mc.toFixed(2)}T`;
-          }
-          if (mcChangeEl) {
-            const change = data.btcChange24h || 0;
-            mcChangeEl.textContent = `${change >= 0 ? '▲' : '▼'} ${change >= 0 ? '+' : ''}${change.toFixed(2)}%`;
-            mcChangeEl.style.color = change >= 0 ? 'var(--green)' : 'var(--red)';
+          const sentimentMarketCap = document.getElementById('sentimentMarketCap');
+          if (sentimentMarketCap) {
+            const mc = (data.btcPrice * 19500000) / 1e12;
+            sentimentMarketCap.textContent = `$${mc.toFixed(2)}T`;
           }
           
-          // FEAR & GREED
-          const fgEl = document.getElementById('metricFearGreed');
-          const fgLabelEl = document.getElementById('metricFearGreedLabel');
-          if (fgEl && data.fearGreed !== undefined) {
-            fgEl.textContent = data.fearGreed;
-            const fg = data.fearGreed;
-            fgEl.style.color = fg > 70 ? 'var(--green)' : fg < 30 ? 'var(--red)' : 'var(--yellow)';
-          }
-          if (fgLabelEl && data.fearGreed !== undefined) {
+          // FEAR & GREED in sentiment panel
+          const sentimentFG = document.getElementById('sentimentFearGreed');
+          if (sentimentFG && data.fearGreed !== undefined) {
             const fg = data.fearGreed;
             const label = fg > 75 ? 'Extreme Greed' : fg > 55 ? 'Greed' : fg > 45 ? 'Neutral' : fg > 25 ? 'Fear' : 'Extreme Fear';
-            fgLabelEl.textContent = label;
+            sentimentFG.textContent = `${fg} (${label})`;
+            sentimentFG.style.color = fg > 70 ? 'var(--green)' : fg < 30 ? 'var(--red)' : 'var(--yellow)';
+          }
+          
+          // AI last update timestamp
+          const aiUpdate = document.getElementById('aiLastUpdate');
+          if (aiUpdate) {
+            const now = new Date();
+            aiUpdate.textContent = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
           }
         }
       } catch (err) {
