@@ -865,17 +865,17 @@ def update_data_loop():
 update_thread = threading.Thread(target=update_data_loop, daemon=True)
 update_thread.start()
 
-# Initial data fetch
-logger.info("📡 Fetching initial data...")
-fetch_crypto_prices()
-fetch_stock_prices()
-fetch_forex_prices()
-fetch_market_data()
-fetch_fear_greed()
-update_news_cache()
-build_genius_payload()
-build_analytics_snapshot()
-update_killzone_snapshot()
+# Initial data fetch - DISABLED to prevent Gunicorn timeout
+logger.info("📡 Initial fetch handled by background thread...")
+# fetch_crypto_prices()
+# fetch_stock_prices()
+# fetch_forex_prices()
+# fetch_market_data()
+# fetch_fear_greed()
+# update_news_cache()
+# build_genius_payload()
+# build_analytics_snapshot()
+# update_killzone_snapshot()
 
 # ============ API ENDPOINTS ============
 
@@ -1640,6 +1640,9 @@ def portfolio_health():
         return jsonify({'ok': False, 'error': str(e)}), 500
 
 
+# Start WebSocket stream (ensures it runs in Gunicorn)
+start_websocket_stream()
+
 if __name__ == '__main__':
     print("=" * 80)
     print("🚀 HAMSTER TERMINAL API SERVER v4.0 - PROFESSIONAL QUANT EDITION")
@@ -1698,7 +1701,7 @@ if __name__ == '__main__':
     print("=" * 80)
     
     # Start WebSocket stream
-    start_websocket_stream()
+    # start_websocket_stream() - Moved to module level for Gunicorn support
     
     port = int(os.environ.get("PORT", 5000))
     socketio.run(app, host='0.0.0.0', port=port, debug=False)
