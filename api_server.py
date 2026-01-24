@@ -7,7 +7,7 @@ Endpoints dla dashboarda (localhost:5000)
 Enhanced with AI Sentiment Analysis & LLM Integration
 """
 
-from flask import Flask, jsonify, request, render_template_string
+from flask import Flask, jsonify, request, render_template_string, send_from_directory, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import requests
@@ -1152,8 +1152,17 @@ def health():
     return jsonify({'status': 'ok', 'service': 'api-server'}), 200
 
 
+@app.route('/<path:filename>')
+def serve_static(filename):
+    if filename.startswith('api/'):
+        return jsonify({'error': 'Not found'}), 404
+    return send_from_directory('docs', filename)
+
 @app.route('/', methods=['GET'])
-def root():
+def serve_dashboard():
+    return send_from_directory('docs', 'index.html')
+
+def root_moved():
     """Root endpoint info"""
     return jsonify({
         'name': '🚀 Hamster Terminal API Server',
