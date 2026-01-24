@@ -1800,6 +1800,14 @@
       0%, 100% { opacity: 1; }
       50% { opacity: 0.4; }
     }
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+    #typewriterCursor {
+      color: #ff6b00;
+      font-weight: bold;
+    }
   </style>
   <!-- Socket.IO Client Library -->
   <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
@@ -2928,9 +2936,10 @@
     </div>
   </div>
 
-  <!-- CURRENT PRICE -->
-  <div style="padding: 14px 24px;">
-    <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; max-width: 320px;">
+  <!-- CURRENT PRICE + GENIUS COMMENTARY -->
+  <div style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
+    <!-- CURRENT PRICE BOX -->
+    <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
         <div class="metric-label" style="font-size: 0.85em;">CURRENT PRICE</div>
         <div class="ws-status" id="wsStatus">
@@ -2941,75 +2950,80 @@
       <div class="metric-value" id="metricPrice" style="font-size: 2.2em;">$--</div>
       <div class="metric-change" id="metricPriceChange" style="font-size: 1.1em; margin-top: 6px;">▲ --</div>
     </div>
-  </div>
 
-  <!-- GENIUS AI ANALYSIS (BLOOMBERG STYLE) -->
-  <div style="padding: 0 24px 14px 24px;">
+    <!-- GENIUS COMMENTARY -->
     <div style="background: var(--panel); border: 1px solid var(--border); padding: 15px;">
-      <div style="color: #888; font-weight: 700; margin-bottom: 12px; font-size: 0.8em; letter-spacing: 0.5px; text-transform: uppercase; border-bottom: 1px solid #222; padding-bottom: 8px;">ANALYSIS</div>
-
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
-        <div style="padding: 10px 0; border-right: 1px solid #222;">
-          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">SIGNAL</div>
-          <div id="analysisSignal" style="color: #fff; font-size: 0.85em; font-weight: 600;">BUY</div>
-          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">RSI bounce from 48</div>
-        </div>
-
-        <div style="padding: 10px 0; border-right: 1px solid #222;">
-          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">LIQUIDITY</div>
-          <div style="color: #fff; font-size: 0.85em; font-weight: 600;">$94.8K</div>
-          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">Buy wall detected</div>
-        </div>
-
-        <div style="padding: 10px 0; border-right: 1px solid #222;">
-          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">FVG ZONE</div>
-          <div style="color: #fff; font-size: 0.85em; font-weight: 600;">$95.2K</div>
-          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">Retest expected</div>
-        </div>
-
-        <div style="padding: 10px 0;">
-          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">RESISTANCE</div>
-          <div style="color: #fff; font-size: 0.85em; font-weight: 600;">$97.4K</div>
-          <div style="color: #666; font-size: 0.7em; margin-top: 4px;">Watch for rejection</div>
-        </div>
+      <div style="color: #888; font-weight: 700; margin-bottom: 10px; font-size: 0.8em; letter-spacing: 0.5px; text-transform: uppercase;">GENIUS COMMENTARY</div>
+      <div id="geniusCommentaryText" style="color: #ccc; font-size: 0.9em; line-height: 1.6; min-height: 60px;">
+        Analyzing market conditions...
       </div>
-
-      <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #222; display: flex; justify-content: space-between; align-items: center;">
-        <span style="color: #666; font-size: 0.7em;">Confidence: <span style="color: #888;">87%</span></span>
-        <span style="color: #666; font-size: 0.7em;">Last: <span id="aiLastUpdate" style="color: #888;">now</span></span>
+      <div style="margin-top: 10px; color: #555; font-size: 0.7em;">
+        <span>Signal: <span id="geniusSignalBadge" style="color: #888;">--</span></span>
+        <span style="margin-left: 12px;">Confidence: <span id="geniusConfidence" style="color: #888;">--</span></span>
       </div>
     </div>
   </div>
 
-  <!-- LIVE COMMENTARY + BREAKING NEWS SIDE BY SIDE -->
-  <div class="news-breaking-wrapper">
-    <!-- LIVE COMMENTARY + AUDIO -->
-    <div class="news" style="background: var(--panel); border: 1px solid var(--border);">
-      <h4 style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
-        <span>🎙️ LIVE COMMENTARY</span>
-        <div style="display: flex; align-items: center; gap: 8px;">
+  <!-- LIVE ANALYSIS PANEL -->
+  <div style="padding: 0 24px 14px 24px;">
+    <div style="background: var(--panel); border: 1px solid var(--border); padding: 15px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid #222; padding-bottom: 8px;">
+        <div style="color: #888; font-weight: 700; font-size: 0.8em; letter-spacing: 0.5px; text-transform: uppercase;">LIVE ANALYSIS</div>
+        <div style="display: flex; align-items: center; gap: 10px;">
           <select id="voiceSelect" style="background: #0a0a0a; color: #888; border: 1px solid #333; padding: 3px 6px; font-size: 0.7em; cursor: pointer;">
             <option value="pl-PL">PL</option>
             <option value="en-US">EN</option>
             <option value="de-DE">DE</option>
           </select>
-          <button id="playCommentaryBtn" style="background: #1a1a1a; border: 1px solid #333; color: #888; padding: 3px 10px; font-size: 0.7em; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-            <span>🔊</span> PLAY
+          <button id="playCommentaryBtn" style="background: #1a1a1a; border: 1px solid #333; color: #888; padding: 3px 10px; font-size: 0.7em; cursor: pointer;">
+            PLAY
           </button>
+          <span id="audioStatus" style="color: #555; font-size: 0.7em;">Ready</span>
         </div>
-      </h4>
-      <div id="liveCommentaryText" style="color: #ccc; font-size: 0.85em; line-height: 1.5; min-height: 80px; padding: 10px; background: #0a0a0a; border-left: 2px solid #ff6b00; margin-bottom: 8px;">
-        🐹 Ładowanie komentarza AI...
       </div>
-      <div style="color: #555; font-size: 0.7em; display: flex; justify-content: space-between;">
-        <span>Update: <span id="commentaryLastUpdate">--</span></span>
-        <span id="audioStatus" style="color: #666;">Ready</span>
+
+      <!-- ANALYSIS GRID -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px;">
+        <div style="padding: 10px 0; border-right: 1px solid #222;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">SIGNAL</div>
+          <div id="analysisSignal" style="color: #fff; font-size: 0.85em; font-weight: 600;">BUY</div>
+          <div id="analysisSignalNote" style="color: #666; font-size: 0.7em; margin-top: 4px;">RSI bounce from 48</div>
+        </div>
+        <div style="padding: 10px 0; border-right: 1px solid #222;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">LIQUIDITY</div>
+          <div id="analysisLiquidity" style="color: #fff; font-size: 0.85em; font-weight: 600;">$94.8K</div>
+          <div id="analysisLiquidityNote" style="color: #666; font-size: 0.7em; margin-top: 4px;">Buy wall detected</div>
+        </div>
+        <div style="padding: 10px 0; border-right: 1px solid #222;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">FVG ZONE</div>
+          <div id="analysisFVG" style="color: #fff; font-size: 0.85em; font-weight: 600;">$95.2K</div>
+          <div id="analysisFVGNote" style="color: #666; font-size: 0.7em; margin-top: 4px;">Retest expected</div>
+        </div>
+        <div style="padding: 10px 0;">
+          <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">RESISTANCE</div>
+          <div id="analysisResistance" style="color: #fff; font-size: 0.85em; font-weight: 600;">$97.4K</div>
+          <div id="analysisResistanceNote" style="color: #666; font-size: 0.7em; margin-top: 4px;">Watch for rejection</div>
+        </div>
+      </div>
+
+      <!-- LIVE TYPEWRITER COMMENTARY -->
+      <div style="background: #0a0a0a; border-left: 2px solid #ff6b00; padding: 12px;">
+        <div id="liveCommentaryText" style="color: #ccc; font-size: 0.85em; line-height: 1.5; min-height: 40px; font-family: 'Courier New', monospace;">
+          <span id="typewriterText"></span><span id="typewriterCursor" style="animation: blink 1s infinite;">|</span>
+        </div>
+      </div>
+      
+      <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+        <span style="color: #555; font-size: 0.7em;">Update: <span id="commentaryLastUpdate">--</span></span>
+        <span style="color: #666; font-size: 0.7em;">Confidence: <span style="color: #888;">87%</span></span>
       </div>
     </div>
+  </div>
 
-    <!-- BREAKING NEWS -->
-    <div class="breaking-news">
-      <h4>🔴 BREAKING NEWS</h4>
+  <!-- BREAKING NEWS -->
+  <div style="padding: 0 24px 14px 24px;">
+    <div class="breaking-news" style="background: var(--panel); border: 1px solid var(--border); padding: 12px;">
+      <h4 style="color: #888; font-weight: 700; margin-bottom: 10px; font-size: 0.8em; letter-spacing: 0.5px; text-transform: uppercase;">BREAKING NEWS</h4>
       <div id="breakingNewsList">
         <div class="breaking-item">
           <div class="breaking-status breaking-red">LOADING</div>
@@ -3018,6 +3032,11 @@
             <div class="breaking-headline">Pobieranie nagłówków...</div>
             <div class="breaking-source">API</div>
           </div>
+          <div class="breaking-time">--</div>
+        </div>
+      </div>
+    </div>
+  </div>
           <div class="breaking-time">--</div>
         </div>
       </div>
@@ -4146,11 +4165,17 @@
 
       latestGeniusCommentary = commentary;
       
-      // Update live commentary text (new section under BTC)
-      const liveCommentaryEl = document.getElementById('liveCommentaryText');
-      if (liveCommentaryEl) {
-        liveCommentaryEl.textContent = commentary;
+      // Update genius commentary next to price
+      const geniusTextEl = document.getElementById('geniusCommentaryText');
+      if (geniusTextEl) {
+        geniusTextEl.textContent = commentary;
       }
+      
+      // Update live commentary with typewriter effect
+      if (typeof updateLiveCommentary === 'function') {
+        updateLiveCommentary(commentary);
+      }
+      
       const commentaryUpdateEl = document.getElementById('commentaryLastUpdate');
       if (commentaryUpdateEl) {
         const now = new Date();
@@ -4162,6 +4187,17 @@
       const strengthScore = typeof payload.strength_score === 'number' && Number.isFinite(payload.strength_score)
         ? ` (${Math.round(payload.strength_score * 100)}%)`
         : '';
+      
+      // Update genius signal badge
+      const geniusSignalEl = document.getElementById('geniusSignalBadge');
+      if (geniusSignalEl) {
+        geniusSignalEl.textContent = signal;
+        geniusSignalEl.style.color = signal === 'BUY' ? '#00ff88' : signal === 'SELL' ? '#ff4466' : '#888';
+      }
+      const geniusConfEl = document.getElementById('geniusConfidence');
+      if (geniusConfEl && typeof payload.strength_score === 'number') {
+        geniusConfEl.textContent = Math.round(payload.strength_score * 100) + '%';
+      }
 
       const signalEl = document.getElementById('signalStatus');
       if (signalEl) {
@@ -6253,6 +6289,76 @@
     document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendGeniusMessage();
     });
+
+    // ============ TYPEWRITER EFFECT FOR LIVE COMMENTARY ============
+    let typewriterQueue = [];
+    let isTyping = false;
+    
+    function typewriterEffect(text, elementId = 'typewriterText', speed = 30) {
+      const element = document.getElementById(elementId);
+      if (!element) return;
+      
+      // Add to queue
+      typewriterQueue.push({ text, element, speed });
+      
+      // Start typing if not already
+      if (!isTyping) {
+        processTypewriterQueue();
+      }
+    }
+    
+    function processTypewriterQueue() {
+      if (typewriterQueue.length === 0) {
+        isTyping = false;
+        return;
+      }
+      
+      isTyping = true;
+      const { text, element, speed } = typewriterQueue.shift();
+      element.textContent = '';
+      
+      let i = 0;
+      function type() {
+        if (i < text.length) {
+          element.textContent += text.charAt(i);
+          i++;
+          setTimeout(type, speed);
+        } else {
+          // Finished this text, process next in queue
+          setTimeout(processTypewriterQueue, 1000);
+        }
+      }
+      type();
+    }
+    
+    // Update live commentary with typewriter
+    function updateLiveCommentary(text) {
+      typewriterEffect(text, 'typewriterText', 25);
+      
+      // Update timestamp
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+      const updateEl = document.getElementById('commentaryLastUpdate');
+      if (updateEl) updateEl.textContent = timeStr;
+    }
+    
+    // Update Genius commentary (next to price)
+    function updateGeniusCommentary(data) {
+      const textEl = document.getElementById('geniusCommentaryText');
+      const signalEl = document.getElementById('geniusSignalBadge');
+      const confEl = document.getElementById('geniusConfidence');
+      
+      if (textEl && data.commentary) {
+        textEl.textContent = data.commentary;
+      }
+      if (signalEl && data.signal) {
+        signalEl.textContent = data.signal;
+        signalEl.style.color = data.signal === 'BUY' ? '#00ff88' : data.signal === 'SELL' ? '#ff4466' : '#888';
+      }
+      if (confEl && data.confidence) {
+        confEl.textContent = data.confidence + '%';
+      }
+    }
 
     // ============ WEBSOCKET REAL-TIME PRICE UPDATES ============
     let socket = null;
