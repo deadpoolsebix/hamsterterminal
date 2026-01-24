@@ -3088,6 +3088,52 @@
         </div>
       </div>
       
+      <!-- SESSION COUNTDOWN TIMER -->
+      <div style="margin-top: 15px; padding: 12px; background: linear-gradient(135deg, rgba(0, 212, 255, 0.12), rgba(157, 78, 221, 0.12)); border-radius: 8px; border: 1px solid rgba(0, 212, 255, 0.3);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <div style="font-size: 1.4em;">⏱️</div>
+            <div>
+              <div style="color: var(--cyan); font-weight: 700; font-size: 0.9em;">SESSION COUNTDOWN</div>
+              <div style="color: var(--gray); font-size: 0.75em;" id="frontSessionName">Aktywna sesja...</div>
+            </div>
+          </div>
+          <div style="text-align: right;">
+            <div style="color: #fff; font-size: 1.8em; font-weight: 800; font-family: 'Courier New', monospace;" id="frontSessionTimer">--:--:--</div>
+            <div style="color: var(--gray); font-size: 0.7em;" id="frontSessionEndTime">Koniec o --:--</div>
+          </div>
+        </div>
+        <div style="margin-top: 10px; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; overflow: hidden;">
+          <div id="sessionProgressBar" style="width: 0%; height: 100%; background: linear-gradient(90deg, var(--cyan), var(--green)); transition: width 1s ease;"></div>
+        </div>
+      </div>
+      
+      <!-- LIQUIDATION LEVELS - MAIN PAGE -->
+      <div style="margin-top: 15px; padding-top: 12px; border-top: 1px solid #333;">
+        <div style="color: #ff6b35; font-weight: 700; font-size: 0.9em; margin-bottom: 10px;">💥 NEAREST LIQUIDATION LEVELS</div>
+        <div id="mainLiquidations" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; font-size: 0.85em;">
+          <div style="background: rgba(255, 0, 51, 0.1); padding: 10px; border-radius: 6px; border-left: 3px solid var(--red);">
+            <div style="color: var(--red); font-weight: 700; font-size: 0.85em;">▼ LONG LIQ</div>
+            <div style="color: #fff; font-size: 1.1em; font-weight: 600; margin: 4px 0;" id="longLiqPrice">$93,450</div>
+            <div style="color: var(--gray); font-size: 0.8em;" id="longLiqVolume">$245M</div>
+          </div>
+          <div style="background: rgba(0, 255, 136, 0.1); padding: 10px; border-radius: 6px; border-left: 3px solid var(--green);">
+            <div style="color: var(--green); font-weight: 700; font-size: 0.85em;">▲ SHORT LIQ</div>
+            <div style="color: #fff; font-size: 1.1em; font-weight: 600; margin: 4px 0;" id="shortLiqPrice">$97,800</div>
+            <div style="color: var(--gray); font-size: 0.8em;" id="shortLiqVolume">$180M</div>
+          </div>
+          <div style="background: rgba(255, 165, 0, 0.12); padding: 10px; border-radius: 6px; border-left: 3px solid var(--orange);">
+            <div style="color: var(--orange); font-weight: 700; font-size: 0.85em;">⚠️ MEGA LIQ</div>
+            <div style="color: #fff; font-size: 1.1em; font-weight: 600; margin: 4px 0;" id="megaLiqPrice">$91,200</div>
+            <div style="color: var(--gray); font-size: 0.8em;" id="megaLiqVolume">$520M</div>
+          </div>
+        </div>
+        <div style="margin-top: 8px; display: flex; justify-content: space-between; font-size: 0.75em;">
+          <div style="color: var(--gray);">Aktualizacja: <span id="liqUpdateTime" style="color: var(--cyan);">--</span></div>
+          <div style="color: var(--gray);">Bliskość: <span id="liqProximity" style="color: var(--orange);">--</span></div>
+        </div>
+      </div>
+      
       <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between;">
         <div style="color: var(--gray); font-size: 0.75em;">Total Volume: <span style="color: #ffffff; font-weight: 700;" id="totalTransferVolume">--</span></div>
         <div style="color: var(--gray); font-size: 0.75em;">Net Flow: <span id="netFlowIndicator" style="font-weight: 700;">--</span></div>
@@ -4911,8 +4957,180 @@
 
       } catch (err) {
         console.log('Killzone API offline, tryb statyczny');
+        // Fallback - calculate session locally
+        updateSessionCountdownLocal();
       }
     }
+
+    // ===== SESSION COUNTDOWN - LOCAL CALCULATION =====
+    const KILLZONE_SESSIONS = [
+      { name: 'Asia Session', label: 'Asia', startHour: 0, endHour: 6, color: '#9d4edd' },
+      { name: 'Frankfurt Open', label: 'Frankfurt', startHour: 7, endHour: 8, color: '#ff9500' },
+      { name: 'London Session', label: 'London', startHour: 8, endHour: 12, color: '#00d4ff' },
+      { name: 'NY AM Session', label: 'NY Open', startHour: 13, endHour: 16, color: '#00ff88' },
+      { name: 'NY PM Session', label: 'NY Close', startHour: 16, endHour: 21, color: '#ff6b35' }
+    ];
+
+    function getCurrentSessionInfo() {
+      const now = new Date();
+      const utcHour = now.getUTCHours();
+      const utcMinute = now.getUTCMinutes();
+      const utcSecond = now.getUTCSeconds();
+      
+      let currentSession = null;
+      let nextSession = null;
+      
+      for (const session of KILLZONE_SESSIONS) {
+        if (utcHour >= session.startHour && utcHour < session.endHour) {
+          currentSession = { ...session, utcHour, utcMinute, utcSecond };
+          break;
+        }
+      }
+      
+      // Find next session
+      for (const session of KILLZONE_SESSIONS) {
+        if (session.startHour > utcHour) {
+          nextSession = session;
+          break;
+        }
+      }
+      if (!nextSession) nextSession = KILLZONE_SESSIONS[0]; // Tomorrow's Asia
+      
+      // Calculate time remaining
+      let timeRemaining = 0;
+      let endTime = '';
+      let progress = 0;
+      
+      if (currentSession) {
+        const sessionEnd = new Date(now);
+        sessionEnd.setUTCHours(currentSession.endHour, 0, 0, 0);
+        timeRemaining = Math.max(0, sessionEnd - now);
+        endTime = `${String(currentSession.endHour).padStart(2,'0')}:00 UTC`;
+        
+        const sessionDuration = (currentSession.endHour - currentSession.startHour) * 3600000;
+        const elapsed = now - new Date(now).setUTCHours(currentSession.startHour, 0, 0, 0);
+        progress = Math.min(100, (elapsed / sessionDuration) * 100);
+      } else {
+        // Between sessions - count to next
+        const nextStart = new Date(now);
+        if (nextSession.startHour <= utcHour) {
+          nextStart.setUTCDate(nextStart.getUTCDate() + 1);
+        }
+        nextStart.setUTCHours(nextSession.startHour, 0, 0, 0);
+        timeRemaining = Math.max(0, nextStart - now);
+        endTime = `${String(nextSession.startHour).padStart(2,'0')}:00 UTC`;
+      }
+      
+      return { currentSession, nextSession, timeRemaining, endTime, progress };
+    }
+
+    function formatTimeRemaining(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(hours).padStart(2,'0')}:${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
+    }
+
+    function updateSessionCountdownLocal() {
+      const info = getCurrentSessionInfo();
+      
+      const frontTimer = document.getElementById('frontSessionTimer');
+      const frontName = document.getElementById('frontSessionName');
+      const frontEnd = document.getElementById('frontSessionEndTime');
+      const progressBar = document.getElementById('sessionProgressBar');
+      
+      if (frontTimer) {
+        frontTimer.textContent = formatTimeRemaining(info.timeRemaining);
+      }
+      
+      if (frontName) {
+        if (info.currentSession) {
+          frontName.textContent = `🟢 ${info.currentSession.label} aktywna`;
+          frontName.style.color = info.currentSession.color;
+        } else {
+          frontName.textContent = `⏸️ Przerwa → ${info.nextSession.label}`;
+          frontName.style.color = '#888';
+        }
+      }
+      
+      if (frontEnd) {
+        frontEnd.textContent = info.currentSession ? `Koniec o ${info.endTime}` : `Start o ${info.endTime}`;
+      }
+      
+      if (progressBar) {
+        progressBar.style.width = `${info.progress}%`;
+        if (info.currentSession) {
+          progressBar.style.background = `linear-gradient(90deg, ${info.currentSession.color}, var(--green))`;
+        }
+      }
+      
+      // Also update killzone overlay elements
+      const sessionTimer = document.getElementById('sessionTimer');
+      if (sessionTimer) {
+        const shortTimer = formatTimeRemaining(info.timeRemaining).substring(0, 5);
+        sessionTimer.textContent = `Świeca zamyka się za ${shortTimer}`;
+      }
+      
+      const sessionTitle = document.getElementById('sessionTitle');
+      if (sessionTitle) {
+        sessionTitle.textContent = info.currentSession ? `Nakładka Killzone • ${info.currentSession.label}` : `Nakładka Killzone • Przerwa`;
+      }
+      
+      // Update killzone blocks active state
+      const killzoneBlocks = document.querySelectorAll('.killzone-block');
+      killzoneBlocks.forEach(block => {
+        const zoneName = block.getAttribute('data-zone');
+        block.classList.remove('killzone-active', 'killzone-upcoming');
+        
+        if (info.currentSession && zoneName && zoneName.toLowerCase().includes(info.currentSession.label.toLowerCase().split(' ')[0])) {
+          block.classList.add('killzone-active');
+        }
+        if (info.nextSession && zoneName && zoneName.toLowerCase().includes(info.nextSession.label.toLowerCase().split(' ')[0])) {
+          block.classList.add('killzone-upcoming');
+        }
+      });
+    }
+
+    // Update liquidation data
+    function updateLiquidationData() {
+      // Simulate realistic liquidation data based on BTC price
+      const btcPrice = parseFloat(document.getElementById('kpiPrice')?.textContent?.replace(/[^0-9.]/g, '')) || 96500;
+      
+      const longLiqPrice = Math.round(btcPrice * 0.968);
+      const shortLiqPrice = Math.round(btcPrice * 1.015);
+      const megaLiqPrice = Math.round(btcPrice * 0.945);
+      
+      const longVol = Math.round(200 + Math.random() * 100);
+      const shortVol = Math.round(150 + Math.random() * 80);
+      const megaVol = Math.round(450 + Math.random() * 150);
+      
+      const el = (id) => document.getElementById(id);
+      if (el('longLiqPrice')) el('longLiqPrice').textContent = `$${longLiqPrice.toLocaleString()}`;
+      if (el('shortLiqPrice')) el('shortLiqPrice').textContent = `$${shortLiqPrice.toLocaleString()}`;
+      if (el('megaLiqPrice')) el('megaLiqPrice').textContent = `$${megaLiqPrice.toLocaleString()}`;
+      if (el('longLiqVolume')) el('longLiqVolume').textContent = `$${longVol}M`;
+      if (el('shortLiqVolume')) el('shortLiqVolume').textContent = `$${shortVol}M`;
+      if (el('megaLiqVolume')) el('megaLiqVolume').textContent = `$${megaVol}M`;
+      
+      const now = new Date();
+      if (el('liqUpdateTime')) el('liqUpdateTime').textContent = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+      
+      const proximity = Math.min(Math.abs(btcPrice - longLiqPrice), Math.abs(btcPrice - shortLiqPrice));
+      const proxPct = ((proximity / btcPrice) * 100).toFixed(1);
+      if (el('liqProximity')) {
+        el('liqProximity').textContent = `${proxPct}% od najbliższej`;
+        el('liqProximity').style.color = proxPct < 2 ? 'var(--red)' : proxPct < 3 ? 'var(--orange)' : 'var(--green)';
+      }
+    }
+
+    // Start countdown timer - updates every second
+    setInterval(updateSessionCountdownLocal, 1000);
+    updateSessionCountdownLocal();
+
+    // Update liquidations every 30 seconds
+    setInterval(updateLiquidationData, 30000);
+    updateLiquidationData();
 
     const geniusAudioBtn = document.getElementById('geniusAudioPlay');
     const geniusAudioLang = document.getElementById('geniusAudioLang');
