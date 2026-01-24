@@ -1154,6 +1154,29 @@ def genius_commentary():
         return jsonify({'ok': False, 'error': str(e)}), 500
 
 
+@app.route('/api/genius/audio', methods=['GET'])
+def genius_audio():
+    """Return TTS audio for Genius commentary (placeholder - requires TTS service)"""
+    try:
+        lang = request.args.get('lang', 'en')
+        # Get current commentary
+        payload = build_genius_payload()
+        commentary = payload.get('commentary', 'Market analysis in progress.')
+        
+        # For now return a placeholder response
+        # In production, integrate with TTS service like Google Cloud TTS, ElevenLabs, etc.
+        return jsonify({
+            'ok': False,
+            'error': 'TTS service not configured. Audio feature coming soon!',
+            'text': commentary,
+            'language': lang,
+            'note': 'Configure ELEVENLABS_API_KEY or GOOGLE_TTS_KEY for audio'
+        })
+    except Exception as e:
+        logger.error(f"❌ Genius audio error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
 @app.route('/api/analytics', methods=['GET'])
 def analytics():
     """Return analytics snapshot"""
