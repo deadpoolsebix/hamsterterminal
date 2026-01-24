@@ -2,11 +2,13 @@ services:
   - type: web
     name: hamster-api
     runtime: python
-    plan: free
+    plan: pro
     buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
-    startCommand: "gunicorn --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 --bind 0.0.0.0:$PORT api_server:app"
+    startCommand: "gunicorn --worker-class geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 4 --threads 2 --timeout 120 --bind 0.0.0.0:$PORT api_server:app"
     envVars:
       - key: PYTHON_VERSION
         value: "3.11.9"
       - key: TWELVE_DATA_API_KEY
         sync: false
+    # Custom domain - dodaj w Render Dashboard:
+    # hamsterterminal.com
