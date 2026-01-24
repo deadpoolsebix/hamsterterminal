@@ -1109,32 +1109,38 @@
       position: fixed;
       left: 0;
       top: 140px;
-      width: 28px;
-      height: 100px;
-      background: rgba(255, 140, 0, 0.15);
+      width: 36px;
+      height: 120px;
+      background: rgba(255, 140, 0, 0.2);
       backdrop-filter: blur(8px);
       color: var(--orange);
       display: flex;
       align-items: center;
       justify-content: center;
-      border: 1px solid rgba(255, 140, 0, 0.4);
+      border: 2px solid rgba(255, 140, 0, 0.5);
       border-left: none;
-      border-radius: 0 6px 6px 0;
-      z-index: 101;
+      border-radius: 0 8px 8px 0;
+      z-index: 102;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     .tools-handle:hover {
-      width: 36px;
-      background: rgba(255, 140, 0, 0.25);
-      border-color: rgba(255, 140, 0, 0.6);
+      width: 44px;
+      background: rgba(255, 140, 0, 0.35);
+      border-color: var(--orange);
     }
     .tools-handle span {
       writing-mode: vertical-rl;
       font-weight: 700;
       letter-spacing: 2px;
-      font-size: 0.75em;
-      opacity: 0.9;
+      font-size: 0.85em;
+    }
+    /* When drawer is open, move handle to the right edge of drawer */
+    .tools-drawer.open + .tools-handle,
+    .tools-handle.drawer-open {
+      left: 320px;
+      background: rgba(255, 140, 0, 0.4);
+      border-color: var(--orange);
     }
     .tools-drawer {
       position: fixed;
@@ -1712,7 +1718,7 @@
 <body>
 
   <!-- LEFT TOOLS DRAWER HANDLE -->
-  <div class="tools-handle" id="toolsHandle"><span>🛠</span></div>
+  <div class="tools-handle" id="toolsHandle"><span id="toolsHandleIcon">▶</span></div>
 
   <!-- LEFT TOOLS DRAWER -->
   <aside class="tools-drawer" id="toolsDrawer" aria-hidden="true">
@@ -5193,6 +5199,9 @@
     function openToolsDrawer() {
       toolsDrawer?.classList.add('open');
       toolsDrawer?.setAttribute('aria-hidden', 'false');
+      toolsHandle?.classList.add('drawer-open');
+      const icon = document.getElementById('toolsHandleIcon');
+      if (icon) icon.textContent = '◀';
     }
     function closeToolsDrawer() {
       if (toolsDrawer) {
@@ -5200,6 +5209,9 @@
         toolsDrawer.setAttribute('aria-hidden', 'true');
         toolsDrawer.style.transform = '';
       }
+      toolsHandle?.classList.remove('drawer-open');
+      const icon = document.getElementById('toolsHandleIcon');
+      if (icon) icon.textContent = '▶';
     }
     function toggleToolsDrawer() {
       if (!toolsDrawer) return;
