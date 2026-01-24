@@ -5089,22 +5089,31 @@
     }
 
     // ===== SESSION COUNTDOWN - EUROPEAN TIME (CET/CEST) =====
-    // Sessions defined in CET (Central European Time)
+    // Sessions defined in CET (Central European Time) - non-overlapping
+    // Real trading killzones based on market hours
     const KILLZONE_SESSIONS = [
-      { name: 'Asia Session', label: 'Asia', startHour: 1, endHour: 7, color: '#9d4edd' },
+      { name: 'Asia Session', label: 'Asia', startHour: 2, endHour: 8, color: '#9d4edd' },
       { name: 'Frankfurt Open', label: 'Frankfurt', startHour: 8, endHour: 9, color: '#ff9500' },
-      { name: 'London Session', label: 'London', startHour: 9, endHour: 13, color: '#00d4ff' },
-      { name: 'NY AM Session', label: 'NY Open', startHour: 14, endHour: 17, color: '#00ff88' },
-      { name: 'NY PM Session', label: 'NY Close', startHour: 17, endHour: 22, color: '#ff6b35' }
+      { name: 'London Session', label: 'London', startHour: 9, endHour: 14, color: '#00d4ff' },
+      { name: 'NY Session', label: 'NY Open', startHour: 14, endHour: 18, color: '#00ff88' },
+      { name: 'NY PM Session', label: 'NY Close', startHour: 18, endHour: 22, color: '#ff6b35' }
     ];
 
     // Get CET/CEST time (Europe/Warsaw timezone)
     function getEuropeanTime() {
       const now = new Date();
-      // Use Europe/Warsaw timezone (CET/CEST)
-      const options = { timeZone: 'Europe/Warsaw', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false };
-      const euTimeStr = now.toLocaleString('pl-PL', options);
-      const [hours, minutes, seconds] = euTimeStr.split(':').map(Number);
+      // Use Intl.DateTimeFormat for reliable timezone conversion
+      const formatter = new Intl.DateTimeFormat('en-GB', {
+        timeZone: 'Europe/Warsaw',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false
+      });
+      const parts = formatter.formatToParts(now);
+      const hours = parseInt(parts.find(p => p.type === 'hour').value, 10);
+      const minutes = parseInt(parts.find(p => p.type === 'minute').value, 10);
+      const seconds = parseInt(parts.find(p => p.type === 'second').value, 10);
       return { hours, minutes, seconds, now };
     }
 
