@@ -52,11 +52,19 @@ except ImportError as e:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# ============ TWELVE DATA API CONFIG ============
-TWELVE_DATA_API_KEY = os.getenv('TWELVE_DATA_API_KEY', 'demo')  # Replace with your key from https://twelvedata.com
+# ============ API CONFIG ============
+# Twelve Data - stocks, crypto, forex (Pro plan)
+TWELVE_DATA_API_KEY = os.getenv('TWELVE_DATA_API_KEY', 'demo')
 TWELVE_DATA_BASE_URL = 'https://api.twelvedata.com'
 TWELVE_DATA_WS_URL = 'wss://ws.twelvedata.com/v1/quotes/price'
-COINGECKO_BASE_URL = 'https://api.coingecko.com/api/v3'
+
+# CryptoPanic - free crypto news
+CRYPTOPANIC_API_URL = 'https://cryptopanic.com/api/v1/posts/'
+CRYPTOPANIC_AUTH_TOKEN = os.getenv('CRYPTOPANIC_TOKEN', 'free')  # 'free' works for basic access
+
+# NewsAPI - general market news
+NEWSAPI_KEY = os.getenv('NEWSAPI_KEY', '')
+NEWSAPI_BASE_URL = 'https://newsapi.org/v2'
 
 app = Flask(__name__)
 CORS(app)  # Enable CORS for all endpoints
@@ -196,87 +204,132 @@ def fetch_twelve_data_forex(pair='EUR/USD'):
     return None
 
 
-def fetch_coingecko_crypto(asset_ids=None):
-    """Fallback crypto prices from CoinGecko when Twelve Data returns zeros."""
-    asset_ids = asset_ids or ['bitcoin', 'ethereum']
+# ============ CRYPTOPANIC NEWS (Free Crypto News) ============
+
+def fetch_cryptopanic_news(limit=10):
+    """Fetch crypto news from CryptoPanic (free API)"""
     try:
         params = {
-            'ids': ','.join(asset_ids),
-            'vs_currencies': 'usd',
-            'include_24hr_change': 'true',
-            'include_24hr_vol': 'true'
+            'auth_token': CRYPTOPANIC_AUTH_TOKEN,
+            'public': 'true',
+            'kind': 'news',
+            'filter': 'hot',  # hot, rising, bullish, bearish, important
         }
         response = requests.get(
-            f"{COINGECKO_BASE_URL}/simple/price",
+            CRYPTOPANIC_API_URL,
             params=params,
-            timeout=5
+            timeout=10
         )
         if response.status_code == 200:
             data = response.json()
-            result = {}
-            for asset in asset_ids:
-                entry = data.get(asset)
-                if not entry:
-                    continue
-                result[asset] = {
-                    'price': float(entry.get('usd', 0)),
-                    'change': float(entry.get('usd_24h_change', 0)),
-                    'volume': float(entry.get('usd_24h_vol', 0))
-                }
-            return result
+            news_items = []
+            for item in data.get('results', [])[:limit]:
+                # Parse published date
+                pub_date = item.get('published_at', '')
+                try:
+                    dt = datetime.fromisoformat(pub_date.replace('Z', '+00:00'))
+                    age_minutes = int((datetime.now(dt.tzinfo) - dt).total_seconds() / 60)
+                except:
+                    age_minutes = 0
+                
+                # Determine sentiment from votes
+                votes = item.get('votes', {})
+                positive = votes.get('positive', 0) + votes.get('liked', 0)
+                negative = votes.get('negative', 0) + votes.get('disliked', 0)
+                if positive > negative + 2:
+                    sentiment = 'bullish'
+                elif negative > positive + 2:
+                    sentiment = 'bearish'
+                else:
+                    sentiment = 'neutral'
+                
+                news_items.append({
+                    'id': item.get('id'),
+                    'category': 'KRYPTO',
+                    'headline': item.get('title', '')[:120],
+                    'timeAgo': f"{age_minutes} min temu" if age_minutes < 60 else f"{age_minutes // 60}h temu",
+                    'ageMinutes': age_minutes,
+                    'sentiment': sentiment,
+                    'timestamp': pub_date,
+                    'url': item.get('url', ''),
+                    'source': item.get('source', {}).get('title', 'CryptoPanic')
+                })
+            
+            logger.info(f"✅ Fetched {len(news_items)} news from CryptoPanic")
+            return news_items
     except Exception as e:
-        logger.error(f"❌ CoinGecko fallback error: {e}")
-    return {}
+        logger.error(f"❌ CryptoPanic error: {e}")
+    return []
+
+
+def fetch_newsapi_headlines(category='business', limit=5):
+    """Fetch general market news from NewsAPI"""
+    if not NEWSAPI_KEY:
+        return []
+    try:
+        params = {
+            'apiKey': NEWSAPI_KEY,
+            'category': category,
+            'language': 'en',
+            'pageSize': limit
+        }
+        response = requests.get(
+            f'{NEWSAPI_BASE_URL}/top-headlines',
+            params=params,
+            timeout=10
+        )
+        if response.status_code == 200:
+            data = response.json()
+            news_items = []
+            for idx, item in enumerate(data.get('articles', [])[:limit], start=100):
+                pub_date = item.get('publishedAt', '')
+                try:
+                    dt = datetime.fromisoformat(pub_date.replace('Z', '+00:00'))
+                    age_minutes = int((datetime.now(dt.tzinfo) - dt).total_seconds() / 60)
+                except:
+                    age_minutes = 0
+                
+                news_items.append({
+                    'id': idx,
+                    'category': 'MAKRO',
+                    'headline': item.get('title', '')[:120],
+                    'timeAgo': f"{age_minutes} min temu" if age_minutes < 60 else f"{age_minutes // 60}h temu",
+                    'ageMinutes': age_minutes,
+                    'sentiment': 'neutral',
+                    'timestamp': pub_date,
+                    'url': item.get('url', ''),
+                    'source': item.get('source', {}).get('name', 'NewsAPI')
+                })
+            
+            logger.info(f"✅ Fetched {len(news_items)} news from NewsAPI")
+            return news_items
+    except Exception as e:
+        logger.error(f"❌ NewsAPI error: {e}")
+    return []
 
 
 def fetch_crypto_prices():
-    """Fetch BTC and ETH prices from Twelve Data"""
+    """Fetch BTC and ETH prices from Twelve Data (Pro plan)"""
     try:
-        fallback_data = {}
-        btc_from_fallback = False
-        eth_from_fallback = False
+        # BTC/USD from Twelve Data
+        btc_data = fetch_twelve_data_crypto('BTC/USD')
+        # ETH/USD from Twelve Data
+        eth_data = fetch_twelve_data_crypto('ETH/USD')
 
-        # BTC/USDT
-        btc_data = fetch_twelve_data_crypto('BTCUSDT')
-        # ETH/USDT
-        eth_data = fetch_twelve_data_crypto('ETHUSDT')
-
-        needs_fallback = (
-            not btc_data or btc_data.get('price', 0) <= 0 or
-            not eth_data or eth_data.get('price', 0) <= 0
-        )
-
-        if needs_fallback:
-            fallback_data = fetch_coingecko_crypto(['bitcoin', 'ethereum'])
-
-        if (not btc_data) or btc_data.get('price', 0) <= 0:
-            cg_btc = fallback_data.get('bitcoin') if fallback_data else None
-            if cg_btc:
-                btc_data = cg_btc
-                btc_from_fallback = True
-                logger.info("↩️ Using CoinGecko fallback for BTC price")
-
-        if (not eth_data) or eth_data.get('price', 0) <= 0:
-            cg_eth = fallback_data.get('ethereum') if fallback_data else None
-            if cg_eth:
-                eth_data = cg_eth
-                eth_from_fallback = True
-                logger.info("↩️ Using CoinGecko fallback for ETH price")
-
-        if btc_data:
+        if btc_data and btc_data.get('price', 0) > 0:
             cache['btc_price'] = btc_data['price']
             cache['btc_change'] = btc_data['change']
-            if btc_from_fallback:
-                # CoinGecko volume is already in notional USD
-                cache['volume_24h'] = btc_data.get('volume', 0)
-            else:
-                cache['volume_24h'] = btc_data.get('volume', 0) * btc_data['price']
+            cache['volume_24h'] = btc_data.get('volume', 0) * btc_data['price']
+        else:
+            logger.warning("⚠️ Twelve Data BTC returned zero, keeping cached value")
             
-        if eth_data:
+        if eth_data and eth_data.get('price', 0) > 0:
             cache['eth_price'] = eth_data['price']
             cache['eth_change'] = eth_data['change']
+        else:
+            logger.warning("⚠️ Twelve Data ETH returned zero, keeping cached value")
             
-        logger.info(f"✅ Crypto: BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
+        logger.info(f"✅ Crypto (Twelve Data): BTC ${cache['btc_price']:,.2f} ({cache['btc_change']:+.2f}%) | ETH ${cache['eth_price']:,.2f} ({cache['eth_change']:+.2f}%)")
         return True
         
     except Exception as e:
@@ -395,46 +448,15 @@ def update_news_cache():
     now = datetime.utcnow()
     headlines = []
     
-    # Try to fetch real news using AI modules
-    if AI_MODULES_AVAILABLE and news_processor:
-        try:
-            symbols = ['BTC', 'ETH', 'CRYPTO']
-            news_items = news_processor.fetch_all_news(symbols, days_back=1)
-            
-            # Convert to our format
-            for idx, item in enumerate(news_items[:5], start=1):
-                # Fix for offset-naive vs offset-aware datetime
-                pub_date = item.published_at
-                if pub_date.tzinfo is not None:
-                    pub_date = pub_date.replace(tzinfo=None)
-                
-                age_minutes = int((now - pub_date).total_seconds() / 60)
-                
-                # Determine sentiment
-                sentiment = 'neutral'
-                if item.sentiment > 0.2:
-                    sentiment = 'bullish'
-                elif item.sentiment < -0.2:
-                    sentiment = 'bearish'
-                
-                headlines.append({
-                    'id': idx,
-                    'category': 'KRYPTO' if item.symbol in ['BTC', 'ETH'] else 'MAKRO',
-                    'headline': item.title[:100],
-                    'timeAgo': f"{age_minutes} min temu" if age_minutes < 60 else f"{age_minutes // 60}h temu",
-                    'ageMinutes': age_minutes,
-                    'sentiment': sentiment,
-                    'timestamp': item.published_at.isoformat(),
-                    'url': item.url,
-                    'source': item.source
-                })
-            
-            if headlines:
-                logger.info(f"✅ Fetched {len(headlines)} AI-powered news items")
-        except Exception as e:
-            logger.error(f"❌ AI news fetch failed: {e}")
+    # 1. Fetch crypto news from CryptoPanic (free)
+    crypto_news = fetch_cryptopanic_news(limit=7)
+    headlines.extend(crypto_news)
     
-    # Fallback to template news if no AI news
+    # 2. Fetch general market news from NewsAPI
+    market_news = fetch_newsapi_headlines(category='business', limit=3)
+    headlines.extend(market_news)
+    
+    # 3. Fallback to template news if no external news
     if not headlines:
         btc_price = cache.get('btc_price', 0)
         btc_change = cache.get('btc_change', 0)
@@ -454,12 +476,16 @@ def update_news_cache():
                 'timeAgo': f"{age_min} min temu",
                 'ageMinutes': age_min,
                 'sentiment': sentiment,
-                'timestamp': (now - timedelta(minutes=age_min)).isoformat()
+                'timestamp': (now - timedelta(minutes=age_min)).isoformat(),
+                'source': 'Fallback News',
+                'url': f'https://example.com/news/{idx-1}'
             })
     
-    random.shuffle(headlines)
+    # Sort by age (newest first)
+    headlines.sort(key=lambda x: x.get('ageMinutes', 999))
     cache['news_headlines'] = headlines
     cache['last_news_update'] = now.isoformat()
+    logger.info(f"📰 News cache updated: {len(headlines)} items (CryptoPanic + NewsAPI)")
     return headlines
 
 
@@ -885,18 +911,29 @@ logger.info("📡 Initial fetch handled by background thread...")
 
 # ============ API ENDPOINTS ============
 
-@app.route('/api/binance/summary', methods=['GET'])
-def binance_summary():
-    """Get BTC/ETH prices and basic data (via Twelve Data)"""
-    return jsonify({
+def get_crypto_summary():
+    """Internal: Get BTC/ETH prices from Twelve Data"""
+    return {
         'ok': True,
         'btcPrice': round(cache['btc_price'], 2),
         'btcChange24h': round(cache['btc_change'], 2),
         'btcVolume24h': int(cache['volume_24h']),
         'ethPrice': round(cache['eth_price'], 2),
         'ethChange24h': round(cache['eth_change'], 2),
-        'lastUpdate': cache['last_update']
-    })
+        'lastUpdate': cache['last_update'],
+        'source': 'Twelve Data Pro'
+    }
+
+@app.route('/api/crypto/summary', methods=['GET'])
+def crypto_summary():
+    """Get BTC/ETH prices (via Twelve Data Pro)"""
+    return jsonify(get_crypto_summary())
+
+# Backward compatibility - keep /api/binance/summary working
+@app.route('/api/binance/summary', methods=['GET'])
+def binance_summary():
+    """Legacy endpoint - redirects to Twelve Data"""
+    return jsonify(get_crypto_summary())
 
 
 @app.route('/api/stocks', methods=['GET'])
