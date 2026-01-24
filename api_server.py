@@ -1209,7 +1209,254 @@ def markets():
     })
 
 
-@app.route('/api/news/headlines', methods=['GET'])
+# ============ NEW TWELVE DATA ENDPOINTS ============
+
+@app.route('/api/market-movers', methods=['GET'])
+def market_movers():
+    """Get top gainers/losers for crypto and stocks from Twelve Data"""
+    market = request.args.get('market', 'crypto')  # 'crypto', 'stocks', 'etf', 'forex'
+    direction = request.args.get('direction', 'gainers')  # 'gainers' or 'losers'
+    
+    try:
+        params = {
+            'direction': direction,
+            'outputsize': 10,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/market_movers/{market}',
+            params=params,
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            movers = data.get('values', [])
+            
+            return jsonify({
+                'ok': True,
+                'market': market,
+                'direction': direction,
+                'count': len(movers),
+                'movers': movers,
+                'source': 'Twelve Data Pro'
+            })
+        else:
+            return jsonify({'ok': False, 'error': 'Failed to fetch market movers'}), 500
+            
+    except Exception as e:
+        logger.error(f"Market movers error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/market-state', methods=['GET'])
+def market_state():
+    """Get market open/close status for exchanges from Twelve Data"""
+    try:
+        params = {
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/market_state',
+            params=params,
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            # Filter for major US exchanges
+            us_exchanges = ['NYSE', 'NASDAQ']
+            states = {}
+            
+            for market in data if isinstance(data, list) else []:
+                if market.get('name') in us_exchanges:
+                    states[market.get('name')] = {
+                        'is_open': market.get('is_market_open', False),
+                        'time_after_open': market.get('time_after_open', ''),
+                        'time_to_open': market.get('time_to_open', ''),
+                        'time_to_close': market.get('time_to_close', '')
+                    }
+            
+            return jsonify({
+                'ok': True,
+                'markets': states,
+                'crypto_always_open': True,
+                'source': 'Twelve Data'
+            })
+        else:
+            return jsonify({'ok': False, 'error': 'Failed to fetch market state'}), 500
+            
+    except Exception as e:
+        logger.error(f"Market state error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/insider-transactions', methods=['GET'])
+def insider_transactions():
+    """Get insider transactions for a stock from Twelve Data"""
+    symbol = request.args.get('symbol', 'AAPL')
+    
+    try:
+        params = {
+            'symbol': symbol,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/insider_transactions',
+            params=params,
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            transactions = data.get('insider_transactions', [])[:20]  # Limit to 20 most recent
+            
+            return jsonify({
+                'ok': True,
+                'symbol': symbol,
+                'count': len(transactions),
+                'transactions': transactions,
+                'meta': data.get('meta', {}),
+                'source': 'Twelve Data Pro'
+            })
+        else:
+            return jsonify({'ok': False, 'error': 'Failed to fetch insider transactions'}), 500
+            
+    except Exception as e:
+        logger.error(f"Insider transactions error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/technical-indicators', methods=['GET'])
+def technical_indicators():
+    """Get technical indicators (RSI, MACD, Bollinger Bands) from Twelve Data"""
+    symbol = request.args.get('symbol', 'BTC/USD')
+    interval = request.args.get('interval', '1day')
+    
+    try:
+        indicators = {}
+        
+        # RSI
+        rsi_params = {
+            'symbol': symbol,
+            'interval': interval,
+            'time_period': 14,
+            'outputsize': 1,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        rsi_resp = requests.get(f'{TWELVE_DATA_BASE_URL}/rsi', params=rsi_params, timeout=10)
+        if rsi_resp.status_code == 200:
+            rsi_data = rsi_resp.json()
+            if rsi_data.get('values'):
+                indicators['rsi'] = float(rsi_data['values'][0].get('rsi', 0))
+        
+        # MACD
+        macd_params = {
+            'symbol': symbol,
+            'interval': interval,
+            'outputsize': 1,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        macd_resp = requests.get(f'{TWELVE_DATA_BASE_URL}/macd', params=macd_params, timeout=10)
+        if macd_resp.status_code == 200:
+            macd_data = macd_resp.json()
+            if macd_data.get('values'):
+                indicators['macd'] = {
+                    'macd': float(macd_data['values'][0].get('macd', 0)),
+                    'signal': float(macd_data['values'][0].get('macd_signal', 0)),
+                    'histogram': float(macd_data['values'][0].get('macd_hist', 0))
+                }
+        
+        # Bollinger Bands
+        bb_params = {
+            'symbol': symbol,
+            'interval': interval,
+            'time_period': 20,
+            'outputsize': 1,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        bb_resp = requests.get(f'{TWELVE_DATA_BASE_URL}/bbands', params=bb_params, timeout=10)
+        if bb_resp.status_code == 200:
+            bb_data = bb_resp.json()
+            if bb_data.get('values'):
+                indicators['bollinger'] = {
+                    'upper': float(bb_data['values'][0].get('upper_band', 0)),
+                    'middle': float(bb_data['values'][0].get('middle_band', 0)),
+                    'lower': float(bb_data['values'][0].get('lower_band', 0))
+                }
+        
+        # EMA (Exponential Moving Average)
+        ema_params = {
+            'symbol': symbol,
+            'interval': interval,
+            'time_period': 21,
+            'outputsize': 1,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        ema_resp = requests.get(f'{TWELVE_DATA_BASE_URL}/ema', params=ema_params, timeout=10)
+        if ema_resp.status_code == 200:
+            ema_data = ema_resp.json()
+            if ema_data.get('values'):
+                indicators['ema21'] = float(ema_data['values'][0].get('ema', 0))
+        
+        return jsonify({
+            'ok': True,
+            'symbol': symbol,
+            'interval': interval,
+            'indicators': indicators,
+            'source': 'Twelve Data Pro'
+        })
+        
+    except Exception as e:
+        logger.error(f"Technical indicators error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/quote', methods=['GET'])
+def get_quote():
+    """Get detailed quote for any symbol from Twelve Data"""
+    symbol = request.args.get('symbol', 'AAPL')
+    
+    try:
+        params = {
+            'symbol': symbol,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        
+        response = requests.get(
+            f'{TWELVE_DATA_BASE_URL}/quote',
+            params=params,
+            timeout=10
+        )
+        
+        if response.status_code == 200:
+            data = response.json()
+            
+            return jsonify({
+                'ok': True,
+                'symbol': data.get('symbol', symbol),
+                'name': data.get('name', ''),
+                'exchange': data.get('exchange', ''),
+                'price': float(data.get('close', 0)),
+                'open': float(data.get('open', 0)),
+                'high': float(data.get('high', 0)),
+                'low': float(data.get('low', 0)),
+                'volume': int(data.get('volume', 0) or 0),
+                'change': float(data.get('change', 0)),
+                'percent_change': float(data.get('percent_change', 0)),
+                'previous_close': float(data.get('previous_close', 0)),
+                'source': 'Twelve Data Pro'
+            })
+        else:
+            return jsonify({'ok': False, 'error': 'Failed to fetch quote'}), 500
+            
+    except Exception as e:
+        logger.error(f"Quote error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
 def news_headlines():
     """Return curated news headlines"""
     try:

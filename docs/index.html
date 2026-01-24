@@ -616,11 +616,13 @@
       padding: 0 24px 8px 24px;
     }
     .ticker {
-      background: var(--panel);
-      border: 1px solid var(--border);
+      background: #000;
+      border: none;
+      border-top: 1px solid #222;
+      border-bottom: 1px solid #222;
       padding: 12px 14px;
       overflow: hidden;
-      margin-bottom: 8px;
+      margin-bottom: 0;
       font-size: 1.3em;
       line-height: 1.3;
     }
@@ -631,15 +633,17 @@
       animation: ticker-scroll 80s linear infinite;
     }
     .ticker-label {
-      color: #888;
+      color: #666;
       font-weight: 700;
-      margin-right: 8px;
+      margin-right: 12px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
-    .ticker-symbol { color: #888; margin-right: 4px; }
+    .ticker-symbol { color: #888; margin-right: 4px; font-weight: 600; }
     .ticker-price { color: #fff; font-weight: 600; }
-    .ticker-change { margin-left: 6px; font-size: 0.85em; }
-    .ticker-change.up { color: #00ff88; }
-    .ticker-change.down { color: #ff4466; }
+    .ticker-change { margin-left: 6px; font-size: 0.85em; color: #666; }
+    .ticker-change.up { color: #888; }
+    .ticker-change.down { color: #666; }
     .ticker-sep { color: #333; margin: 0 8px; }
     @keyframes ticker-scroll {
       0% { transform: translateX(0); }
@@ -2193,7 +2197,7 @@
       </button>
       <!-- HAMSTER TERMINAL LABEL -->
       <div class="hamster-header" style="margin: 0 8px; width: auto; height: auto; background: none; border: none; padding: 0 12px;">
-        <span class="hamster-header-icon" aria-hidden="true">🐹</span>
+        <span class="hamster-header-icon" aria-hidden="true">◆</span>
         <span class="hamster-header-text">
           <span class="hamster-header-market">
             <span>BTC USD</span>
@@ -2571,7 +2575,7 @@
     <div class="hamburger-extra">
       <div class="pill-row">
         <span class="pill pill-hot">Sniper Shot: 95.2k → 97.4k</span>
-        <span class="pill pill-cool">Live Commentary: ON</span>
+        <span class="pill pill-cool">Live Genius: ON</span>
         <span class="pill pill-neutral">Tactic: Liquidity Sweep</span>
       </div>
       <div class="live-comment">Komentarz live: świeca 5m domyka nad 95.8k, wolumen przyspiesza +18%. Utrzymaj long, podnieś SL pod 95.1k.</div>
@@ -2698,7 +2702,7 @@
     <div class="menu-panel" id="panel-hamster-genius">
       <div class="panel-grid">
         <div class="panel-card" style="grid-column: span 2;">
-          <div class="panel-title">LIVE COMMENTARY OVERLAY</div>
+          <div class="panel-title">LIVE GENIUS OVERLAY</div>
           <div class="panel-text panel-text-strong">Overlay na wykresie: "Buy wall trzyma 95.2k, brak podaży na ask; przenieś SL pod 95.1k". Update co 30s; plan push-notyfikacji na mobile.</div>
         </div>
         <div class="panel-card">
@@ -3281,7 +3285,7 @@
     </div>
 
     <div class="genius-commentary">
-      <div class="genius-commentary-title">🐹 Komentarz Genius AI</div>
+      <div class="genius-commentary-title">◆ Komentarz Genius AI</div>
       <div class="genius-commentary-text" id="geniusCommentaryMain">Ładowanie komentarza z API...</div>
     </div>
     </div>
@@ -3379,6 +3383,50 @@
       <div style="margin-top: 12px; padding-top: 10px; border-top: 1px solid #1a1a1a; display: flex; justify-content: space-between;">
         <div style="color: var(--gray); font-size: 0.75em;">Total Volume: <span style="color: #ffffff; font-weight: 700;" id="totalTransferVolume">--</span></div>
         <div style="color: var(--gray); font-size: 0.75em;">Net Flow: <span id="netFlowIndicator" style="font-weight: 700;">--</span></div>
+      </div>
+    </div>
+    
+    <!-- MARKET STATE & MOVERS PANEL -->
+    <div style="background: #000; border: 1px solid #222; padding: 16px; margin-top: 12px;">
+      <!-- Market State -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #222;">
+        <div style="color: #888; font-weight: 700; font-size: 0.85em; letter-spacing: 1px;">MARKET STATUS</div>
+        <div id="marketStateDisplay" style="display: flex; gap: 16px; font-size: 0.85em;">
+          <span style="color: #666;">NYSE: <span id="nyseStatus" style="color: #888;">--</span></span>
+          <span style="color: #666;">NASDAQ: <span id="nasdaqStatus" style="color: #888;">--</span></span>
+          <span style="color: #666;">CRYPTO: <span style="color: #fff;">24/7</span></span>
+        </div>
+      </div>
+      
+      <!-- Top Movers Grid -->
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+        <!-- Crypto Gainers -->
+        <div>
+          <div style="color: #666; font-weight: 700; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 10px;">TOP CRYPTO GAINERS</div>
+          <div id="cryptoGainersList" style="font-size: 0.85em;">
+            <div style="display: flex; justify-content: space-between; padding: 4px 0; color: #888;">Loading...</div>
+          </div>
+        </div>
+        
+        <!-- Crypto Losers -->
+        <div>
+          <div style="color: #666; font-weight: 700; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 10px;">TOP CRYPTO LOSERS</div>
+          <div id="cryptoLosersList" style="font-size: 0.85em;">
+            <div style="display: flex; justify-content: space-between; padding: 4px 0; color: #888;">Loading...</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Technical Indicators -->
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222;">
+        <div style="color: #666; font-weight: 700; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 10px;">BTC TECHNICAL INDICATORS</div>
+        <div id="technicalIndicatorsDisplay" style="display: flex; gap: 20px; font-size: 0.85em; flex-wrap: wrap;">
+          <span style="color: #666;">RSI(14): <span id="btcRSI" style="color: #fff;">--</span></span>
+          <span style="color: #666;">MACD: <span id="btcMACD" style="color: #fff;">--</span></span>
+          <span style="color: #666;">EMA21: <span id="btcEMA21" style="color: #fff;">--</span></span>
+          <span style="color: #666;">BB Upper: <span id="btcBBUpper" style="color: #fff;">--</span></span>
+          <span style="color: #666;">BB Lower: <span id="btcBBLower" style="color: #fff;">--</span></span>
+        </div>
       </div>
     </div>
   </div>
@@ -3919,7 +3967,7 @@
 
     <!-- HAMSTER GENIUS TAB (podgląd sygnałów) -->
     <div id="hamster-genius" class="tab-content active">
-      <h2 style="margin-bottom: 12px;">Hamster Genius • sygnały + live commentary</h2>
+      <h2 style="margin-bottom: 12px;">Hamster Genius • sygnały + live genius</h2>
       <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 16px;">
         <div style="background: var(--panel); border: 1px solid var(--border); padding: 12px;">
           <div class="sparkline" style="margin-bottom: 10px;">
@@ -4375,12 +4423,12 @@
         }
       }
       
-      // STOCKS TICKER - commodities, stocks, indices
+      // STOCKS/MARKETS TICKER - Wall Street order: Commodities first, then by market cap
       const stocksTrack = document.getElementById('stocksTickerTrack');
       if (stocksTrack) {
         const stockItems = [];
         
-        // Commodities first (Gold, Silver)
+        // 1. COMMODITIES first (Gold, Silver)
         const commodities = data.commodities || {};
         const commoditiesChange = data.commoditiesChange || {};
         if (typeof commodities.GOLD === 'number') {
@@ -4390,32 +4438,33 @@
           stockItems.push(formatTickerItem('SILVER', commodities.SILVER, commoditiesChange.SILVER, 2));
         }
         
-        // Indices
+        // 2. MAJOR INDICES (S&P500, DOW, NASDAQ)
         const indices = data.indices || {};
         const indicesChange = data.indicesChange || {};
-        if (typeof indices.NASDAQ === 'number') {
-          stockItems.push(formatTickerItem('NASDAQ', indices.NASDAQ, indicesChange.NASDAQ, 0, ''));
-        }
         if (typeof indices.SP500 === 'number') {
-          stockItems.push(formatTickerItem('S&P500', indices.SP500, indicesChange.SP500, 0, ''));
+          stockItems.push(formatTickerItem('SPX', indices.SP500, indicesChange.SP500, 0, ''));
         }
         if (typeof indices.DOW === 'number') {
-          stockItems.push(formatTickerItem('DOW', indices.DOW, indicesChange.DOW, 0, ''));
+          stockItems.push(formatTickerItem('DJI', indices.DOW, indicesChange.DOW, 0, ''));
+        }
+        if (typeof indices.NASDAQ === 'number') {
+          stockItems.push(formatTickerItem('NDX', indices.NASDAQ, indicesChange.NASDAQ, 0, ''));
         }
         if (typeof indices.DAX === 'number') {
           stockItems.push(formatTickerItem('DAX', indices.DAX, indicesChange.DAX, 0, ''));
         }
         
-        // Stocks
+        // 3. MEGA-CAP STOCKS by market cap (Apple, Microsoft, Nvidia, Amazon, Google, Meta, Tesla)
         const stocks = data.stocks || {};
         const stocksChange = data.stocksChange || {};
-        ['AAPL', 'MSFT', 'NVDA', 'TSLA', 'AMZN', 'GOOGL', 'META', 'SPY'].forEach(symbol => {
+        // Order by market cap (Jan 2026 approx): AAPL > MSFT > NVDA > AMZN > GOOGL > META > TSLA > SPY
+        ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'GOOGL', 'META', 'TSLA'].forEach(symbol => {
           if (typeof stocks[symbol] === 'number') {
             stockItems.push(formatTickerItem(symbol, stocks[symbol], stocksChange[symbol], 2));
           }
         });
         
-        // Sentiment at the end
+        // 4. Fear & Greed at the end
         if (typeof data.fearGreed === 'number') {
           stockItems.push(`<span class="ticker-symbol">F&G</span> <span class="ticker-price">${data.fearGreed}</span>`);
         }
@@ -4431,9 +4480,9 @@
       const priceStr = prefix + formatNumber(price, decimals);
       let changeHtml = '';
       if (typeof change === 'number') {
-        const changeClass = change >= 0 ? 'up' : 'down';
-        const arrow = change >= 0 ? '▲' : '▼';
-        changeHtml = ` <span class="ticker-change ${changeClass}">${arrow}${Math.abs(change).toFixed(2)}%</span>`;
+        // Bloomberg style: no colors, just +/- sign
+        const sign = change >= 0 ? '+' : '';
+        changeHtml = ` <span class="ticker-change">${sign}${change.toFixed(2)}%</span>`;
       }
       return `<span class="ticker-symbol">${symbol}</span> <span class="ticker-price">${priceStr}</span>${changeHtml}`;
     }
@@ -4840,6 +4889,118 @@
     }
     setInterval(updateLargeTransfers, 30000);
     updateLargeTransfers();
+
+    // ===== UPDATE MARKET MOVERS (TOP GAINERS/LOSERS) =====
+    async function updateMarketMovers() {
+      try {
+        // Fetch crypto gainers
+        const gainersResp = await fetch(`${API_BASE}/api/market-movers?market=crypto&direction=gainers`);
+        if (gainersResp.ok) {
+          const data = await gainersResp.json();
+          const gainersList = document.getElementById('cryptoGainersList');
+          if (gainersList && data.movers && data.movers.length > 0) {
+            gainersList.innerHTML = data.movers.slice(0, 5).map(m => `
+              <div style="display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #111;">
+                <span style="color: #888;">${m.symbol || '--'}</span>
+                <span style="color: #888;">+${(m.percent_change || 0).toFixed(2)}%</span>
+              </div>
+            `).join('');
+          }
+        }
+        
+        // Fetch crypto losers
+        const losersResp = await fetch(`${API_BASE}/api/market-movers?market=crypto&direction=losers`);
+        if (losersResp.ok) {
+          const data = await losersResp.json();
+          const losersList = document.getElementById('cryptoLosersList');
+          if (losersList && data.movers && data.movers.length > 0) {
+            losersList.innerHTML = data.movers.slice(0, 5).map(m => `
+              <div style="display: flex; justify-content: space-between; padding: 3px 0; border-bottom: 1px solid #111;">
+                <span style="color: #888;">${m.symbol || '--'}</span>
+                <span style="color: #666;">${(m.percent_change || 0).toFixed(2)}%</span>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (e) {
+        console.log('Market movers update error:', e);
+      }
+    }
+    setInterval(updateMarketMovers, 60000);
+    updateMarketMovers();
+
+    // ===== UPDATE MARKET STATE (NYSE/NASDAQ STATUS) =====
+    async function updateMarketState() {
+      try {
+        const resp = await fetch(`${API_BASE}/api/market-state`);
+        if (resp.ok) {
+          const data = await resp.json();
+          
+          // Update NYSE status
+          const nyseEl = document.getElementById('nyseStatus');
+          if (nyseEl && data.markets && data.markets.NYSE) {
+            nyseEl.textContent = data.markets.NYSE.is_open ? 'OPEN' : 'CLOSED';
+            nyseEl.style.color = data.markets.NYSE.is_open ? '#888' : '#555';
+          }
+          
+          // Update NASDAQ status
+          const nasdaqEl = document.getElementById('nasdaqStatus');
+          if (nasdaqEl && data.markets && data.markets.NASDAQ) {
+            nasdaqEl.textContent = data.markets.NASDAQ.is_open ? 'OPEN' : 'CLOSED';
+            nasdaqEl.style.color = data.markets.NASDAQ.is_open ? '#888' : '#555';
+          }
+        }
+      } catch (e) {
+        console.log('Market state update error:', e);
+      }
+    }
+    setInterval(updateMarketState, 60000);
+    updateMarketState();
+
+    // ===== UPDATE TECHNICAL INDICATORS (RSI, MACD, BB) =====
+    async function updateTechnicalIndicators() {
+      try {
+        const resp = await fetch(`${API_BASE}/api/technical-indicators?symbol=BTC/USD&interval=1day`);
+        if (resp.ok) {
+          const data = await resp.json();
+          const ind = data.indicators || {};
+          
+          // RSI
+          const rsiEl = document.getElementById('btcRSI');
+          if (rsiEl && ind.rsi) {
+            rsiEl.textContent = ind.rsi.toFixed(1);
+          }
+          
+          // MACD
+          const macdEl = document.getElementById('btcMACD');
+          if (macdEl && ind.macd) {
+            const sign = ind.macd.histogram >= 0 ? '+' : '';
+            macdEl.textContent = `${sign}${ind.macd.histogram.toFixed(0)}`;
+          }
+          
+          // EMA21
+          const emaEl = document.getElementById('btcEMA21');
+          if (emaEl && ind.ema21) {
+            emaEl.textContent = `$${(ind.ema21/1000).toFixed(1)}k`;
+          }
+          
+          // Bollinger Bands
+          const bbUpperEl = document.getElementById('btcBBUpper');
+          if (bbUpperEl && ind.bollinger) {
+            bbUpperEl.textContent = `$${(ind.bollinger.upper/1000).toFixed(1)}k`;
+          }
+          
+          const bbLowerEl = document.getElementById('btcBBLower');
+          if (bbLowerEl && ind.bollinger) {
+            bbLowerEl.textContent = `$${(ind.bollinger.lower/1000).toFixed(1)}k`;
+          }
+        }
+      } catch (e) {
+        console.log('Technical indicators update error:', e);
+      }
+    }
+    setInterval(updateTechnicalIndicators, 60000);
+    updateTechnicalIndicators();
 
     // ===== UPDATE SNIPER SHOT (DYNAMIC LEVELS) =====
     async function updateSniperShot() {
