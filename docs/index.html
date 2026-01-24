@@ -412,17 +412,69 @@
       100% { transform: translateX(-50%); }
     }
 
-    /* DROP-DOWN PANELS UNDER MENU */
-    .menu-panels { padding: 0 24px 10px 24px; }
+    /* DROP-DOWN PANELS UNDER MENU - SLIDE DOWN FROM TOP */
+    .menu-panels { 
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 999;
+      padding: 0;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-out, padding 0.3s ease;
+      background: #0a0a0a;
+      border-bottom: 2px solid var(--border);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+    }
+    .menu-panels.open {
+      max-height: 80vh;
+      padding: 10px 24px 20px 24px;
+      overflow-y: auto;
+    }
     .menu-panel {
       display: none;
       background: var(--panel);
       border: 1px solid var(--border);
-      border-left: 2px solid #1a1a1a;
+      border-left: 3px solid var(--orange);
       padding: 14px;
       color: #ffffff;
+      animation: slideDown 0.3s ease-out;
+    }
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
     .menu-panel.active { display: block; }
+    .menu-panels-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+    .menu-panels-title {
+      color: var(--orange);
+      font-weight: 700;
+      font-size: 1.1em;
+      letter-spacing: 1px;
+    }
+    .menu-panels-close {
+      background: none;
+      border: 1px solid var(--red);
+      color: var(--red);
+      width: 36px;
+      height: 36px;
+      font-size: 1.4em;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .menu-panels-close:hover {
+      background: var(--red);
+      color: #000;
+    }
     .panel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
     .panel-card { background: #0d0d0d; border: 1px solid var(--border); padding: 12px; }
     .panel-title { font-weight: 700; margin-bottom: 6px; letter-spacing: 0.5px; font-size: 0.95em; }
@@ -1977,7 +2029,7 @@
       <button class="menu-item" data-tab="trend-analysis">Trend Analysis</button>
       <button class="menu-item" data-tab="kpi-correlation">KPI Correlation</button>
       <button class="menu-item" data-tab="multi-tf-analysis">IMEFRAME ZONE • MULTI-TF ANALYSIS</button>
-      <button class="menu-item active" data-tab="hamster-genius">Hamster Genius</button>
+      <button class="menu-item" data-tab="hamster-genius">Hamster Genius</button>
       
       <!-- GENIUS AI HAMBURGER (inside burgundy bar) -->
       <button class="genius-hamburger-btn" id="geniusHamburger" style="margin-left: 8px; display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: rgba(255, 140, 0, 0.15); border: 1px solid var(--orange); border-radius: 4px; color: var(--orange); font-weight: 700; font-size: 0.85em; cursor: pointer;">
@@ -2314,8 +2366,12 @@
       <div class="tactic-note">Nietypowa taktyka: "Ghost Ladder" — rozstaw ukryte limit buy w FVG 95.0k–95.4k, TP kaskadowo 97.0k / 97.4k, alert na spike delta.</div>
     </div>
 
-    <!-- DROPDOWN PANELS UNDER MENU (extra data on click) -->
-    <div class="menu-panels">
+    <!-- SLIDE-DOWN PANELS FROM TOP (opens when menu item clicked) -->
+    <div class="menu-panels" id="menuPanelsContainer">
+      <div class="menu-panels-header">
+        <div class="menu-panels-title" id="menuPanelsTitle">📊 PANEL</div>
+        <button class="menu-panels-close" id="closeMenuPanels" title="Zamknij panel (ESC)">✕</button>
+      </div>
     <div class="menu-panel" id="panel-dashboard">
       <div class="panel-grid">
         <div class="panel-card">
@@ -2374,9 +2430,38 @@
           <div class="panel-title">ETF/INFLOWS</div>
           <div class="panel-text">Napływy ETF +$220M → wspiera trend wzrostowy. Watch: jeśli dzienny dopływ < +$50M, zdejmij dźwignię.</div>
         </div>
-        <div class="panel-card">
-          <div class="panel-title">POMYSŁ</div>
-          <div class="panel-text">Dodaj heatmapę cross-asset (BTC vs SPX vs Gold) + auto-highlight gdy korelacja zmienia znak.</div>
+        <div class="panel-card" style="grid-column: span 2;">
+          <div class="panel-title">📊 CROSS-ASSET CORRELATION HEATMAP <span style="color: var(--cyan); font-size: 0.7em;">LIVE</span></div>
+          <div id="crossAssetHeatmap" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px;">
+            <!-- Header row -->
+            <div style="color: var(--gray); font-weight: 700; text-align: center; padding: 8px;">ASSET</div>
+            <div style="color: #ff9500; font-weight: 700; text-align: center; padding: 8px;">BTC</div>
+            <div style="color: #4CAF50; font-weight: 700; text-align: center; padding: 8px;">SPX</div>
+            <div style="color: #FFD700; font-weight: 700; text-align: center; padding: 8px;">GOLD</div>
+            <!-- BTC row -->
+            <div style="color: #ff9500; font-weight: 700; padding: 8px;">BTC</div>
+            <div id="corr-btc-btc" style="background: rgba(0, 255, 65, 0.6); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700;">1.00</div>
+            <div id="corr-btc-spx" style="background: rgba(0, 255, 65, 0.3); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700; transition: all 0.3s;">0.42</div>
+            <div id="corr-btc-gold" style="background: rgba(255, 165, 0, 0.3); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700; transition: all 0.3s;">0.28</div>
+            <!-- SPX row -->
+            <div style="color: #4CAF50; font-weight: 700; padding: 8px;">SPX</div>
+            <div id="corr-spx-btc" style="background: rgba(0, 255, 65, 0.3); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700; transition: all 0.3s;">0.42</div>
+            <div id="corr-spx-spx" style="background: rgba(0, 255, 65, 0.6); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700;">1.00</div>
+            <div id="corr-spx-gold" style="background: rgba(255, 165, 0, 0.2); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700; transition: all 0.3s;">0.15</div>
+            <!-- GOLD row -->
+            <div style="color: #FFD700; font-weight: 700; padding: 8px;">GOLD</div>
+            <div id="corr-gold-btc" style="background: rgba(255, 165, 0, 0.3); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700; transition: all 0.3s;">0.28</div>
+            <div id="corr-gold-spx" style="background: rgba(255, 165, 0, 0.2); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700; transition: all 0.3s;">0.15</div>
+            <div id="corr-gold-gold" style="background: rgba(0, 255, 65, 0.6); color: #fff; text-align: center; padding: 8px; border-radius: 4px; font-weight: 700;">1.00</div>
+          </div>
+          <div style="margin-top: 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="font-size: 0.8em; color: var(--gray);">
+              <span style="display: inline-block; width: 12px; height: 12px; background: rgba(0, 255, 65, 0.5); border-radius: 2px; margin-right: 4px;"></span>Pozytywna
+              <span style="display: inline-block; width: 12px; height: 12px; background: rgba(255, 0, 51, 0.5); border-radius: 2px; margin-left: 12px; margin-right: 4px;"></span>Negatywna
+              <span style="display: inline-block; width: 12px; height: 12px; background: rgba(255, 255, 0, 0.8); border-radius: 2px; margin-left: 12px; margin-right: 4px;"></span>Zmiana znaku!
+            </div>
+            <div id="corrLastUpdate" style="font-size: 0.75em; color: var(--gray);">Update: --</div>
+          </div>
         </div>
       </div>
     </div>
@@ -2398,7 +2483,7 @@
       </div>
     </div>
 
-    <div class="menu-panel active" id="panel-hamster-genius">
+    <div class="menu-panel" id="panel-hamster-genius">
       <div class="panel-grid">
         <div class="panel-card" style="grid-column: span 2;">
           <div class="panel-title">LIVE COMMENTARY OVERLAY</div>
@@ -4124,6 +4209,70 @@
     setInterval(updateGeniusCommentary, 10000);
     updateGeniusCommentary(); // Initial call
 
+    // ===== CROSS-ASSET CORRELATION HEATMAP =====
+    let previousCorrelations = {};
+    
+    function updateCorrelationHeatmap() {
+      // Simulate live correlation data (would come from API in production)
+      const baseCorrelations = {
+        'btc-spx': 0.42 + (Math.random() - 0.5) * 0.15,
+        'btc-gold': 0.28 + (Math.random() - 0.5) * 0.12,
+        'spx-gold': 0.15 + (Math.random() - 0.5) * 0.10
+      };
+      
+      Object.keys(baseCorrelations).forEach(key => {
+        const value = Math.max(-1, Math.min(1, baseCorrelations[key]));
+        const roundedValue = value.toFixed(2);
+        const [asset1, asset2] = key.split('-');
+        
+        // Update both cells (symmetric)
+        const cell1 = document.getElementById(`corr-${asset1}-${asset2}`);
+        const cell2 = document.getElementById(`corr-${asset2}-${asset1}`);
+        
+        if (cell1) updateCorrCell(cell1, value, roundedValue, key);
+        if (cell2) updateCorrCell(cell2, value, roundedValue, key);
+      });
+      
+      // Update timestamp
+      const tsEl = document.getElementById('corrLastUpdate');
+      if (tsEl) tsEl.textContent = `Update: ${new Date().toLocaleTimeString('pl-PL')}`;
+    }
+    
+    function updateCorrCell(cell, value, displayValue, key) {
+      const prevValue = previousCorrelations[key] || 0;
+      const signChanged = (prevValue > 0 && value < 0) || (prevValue < 0 && value > 0);
+      
+      cell.textContent = displayValue;
+      
+      // Determine background color
+      let bgColor;
+      if (signChanged) {
+        // Flash yellow for sign change
+        bgColor = 'rgba(255, 255, 0, 0.8)';
+        cell.style.animation = 'pulse 0.5s ease-in-out 3';
+        setTimeout(() => { cell.style.animation = ''; }, 1500);
+      } else if (value > 0.6) {
+        bgColor = 'rgba(0, 255, 65, 0.6)';
+      } else if (value > 0.3) {
+        bgColor = 'rgba(0, 255, 65, 0.3)';
+      } else if (value > 0) {
+        bgColor = 'rgba(0, 255, 65, 0.15)';
+      } else if (value > -0.3) {
+        bgColor = 'rgba(255, 0, 51, 0.15)';
+      } else if (value > -0.6) {
+        bgColor = 'rgba(255, 0, 51, 0.3)';
+      } else {
+        bgColor = 'rgba(255, 0, 51, 0.6)';
+      }
+      
+      cell.style.background = bgColor;
+      previousCorrelations[key] = value;
+    }
+    
+    // Update correlation heatmap every 15 seconds
+    setInterval(updateCorrelationHeatmap, 15000);
+    updateCorrelationHeatmap();
+
     // TICKER BAR - Update live market data
     async function updateTickerBar() {
       try {
@@ -4961,36 +5110,62 @@
       initialActive.classList.add('active');
     }
 
-    // TAB FUNCTIONALITY (toggle open/close + scroll to top)
+    // TAB FUNCTIONALITY (toggle open/close slide-down panels)
     let currentTab = null;
+    const menuPanelsContainer = document.querySelector('.menu-panels');
+    
     function hideAllTabs() {
       document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
       document.querySelectorAll('.menu-item').forEach(item => item.classList.remove('active'));
       document.querySelectorAll('.menu-panel').forEach(panel => panel.classList.remove('active'));
     }
+    
+    function closeMenuPanels() {
+      menuPanelsContainer?.classList.remove('open');
+      hideAllTabs();
+      currentTab = null;
+    }
+    
+    function openMenuPanels() {
+      menuPanelsContainer?.classList.add('open');
+    }
 
     function showTab(tabName, clickedBtn) {
-      const selectedTab = document.getElementById(tabName);
-      const isAlreadyActive = selectedTab?.classList.contains('active');
+      const menuPanel = document.getElementById(`panel-${tabName}`);
+      const isAlreadyActive = menuPanel?.classList.contains('active');
 
       if (isAlreadyActive) {
-        hideAllTabs();
-        currentTab = null;
+        // Close panel if clicking same tab
+        closeMenuPanels();
         return;
       }
 
+      // Hide all tabs first
       hideAllTabs();
-      if (selectedTab) selectedTab.classList.add('active');
-      if (clickedBtn) clickedBtn.classList.add('active');
-      const menuPanel = document.getElementById(`panel-${tabName}`);
-      if (menuPanel) menuPanel.classList.add('active');
-      currentTab = tabName;
       
-      // Scroll to very top
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      // Force scroll after short delay
-      setTimeout(() => window.scrollTo(0, 0), 100);
+      // Open the panels container and show selected panel
+      openMenuPanels();
+      if (clickedBtn) clickedBtn.classList.add('active');
+      if (menuPanel) menuPanel.classList.add('active');
+      
+      // Update panel title
+      const panelTitle = document.getElementById('menuPanelsTitle');
+      if (panelTitle && clickedBtn) {
+        panelTitle.textContent = clickedBtn.textContent.trim().toUpperCase();
+      }
+      
+      currentTab = tabName;
     }
+    
+    // Close button handler
+    document.getElementById('closeMenuPanels')?.addEventListener('click', closeMenuPanels);
+    
+    // Close on ESC key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && menuPanelsContainer?.classList.contains('open')) {
+        closeMenuPanels();
+      }
+    });
 
     // Attach click handlers to menu items with data-tab attribute
     document.querySelectorAll('[data-tab]').forEach(btn => {
@@ -5001,11 +5176,8 @@
       });
     });
 
-    // Init default panel
-    const defaultBtn = document.querySelector('.menu-item.active');
-    if (defaultBtn) {
-      showTab(defaultBtn.getAttribute('data-tab'), defaultBtn);
-    }
+    // Don't auto-open panel on load - start with all closed
+    // (Remove the auto-init of default panel)
 
     // Correlation timeframe buttons
     document.querySelectorAll('.corr-btn').forEach(btn => {
