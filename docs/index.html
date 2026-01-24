@@ -4430,8 +4430,10 @@
     if (localStorage.getItem('hamsterApiBase_v4')) {
       localStorage.removeItem('hamsterApiBase_v4');
     }
-    // Gdy jesteśmy na hamsterterminal.com (Render custom domain), używamy origin
-    const DEFAULT_PRODUCTION_API = (isRender || isHamsterTerminal) ? window.location.origin : 'https://hamsterterminal-1.onrender.com';
+    // GitHub Pages hostuje frontend, Render hostuje API
+    // Zawsze używamy Render API dla produkcji
+    const RENDER_API_URL = 'https://hamsterterminal-1.onrender.com';
+    const DEFAULT_PRODUCTION_API = RENDER_API_URL;
     const params = new URLSearchParams(window.location.search);
     const queryApiBase = params.get('apiBase');
     const globalOverride = typeof window.HAMSTER_API_BASE === 'string' ? window.HAMSTER_API_BASE.trim() : '';
