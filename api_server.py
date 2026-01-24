@@ -84,10 +84,10 @@ else:
 
 # ============ CACHE SYSTEM ============
 cache = {
-    'btc_price': 95501.20,
-    'btc_change': 2.45,
-    'eth_price': 2845.32,
-    'eth_change': 1.80,
+    'btc_price': 89237.00,
+    'btc_change': -0.38,
+    'eth_price': 3145.32,
+    'eth_change': -0.50,
     # Additional cryptos
     'sol_price': 185.50,
     'sol_change': 3.2,
@@ -186,12 +186,18 @@ def fetch_twelve_data_crypto(symbol='BTCUSDT'):
         )
         if response.status_code == 200:
             data = response.json()
-            if 'error' not in data:
+            if 'error' not in data and 'code' not in data:
+                # API returns 'close' for current price
+                price = float(data.get('close', 0) or data.get('last_price', 0) or 0)
+                change = float(data.get('percent_change', 0) or 0)
+                volume = float(data.get('volume', 0) or 0)
                 return {
-                    'price': float(data.get('last_price', 0)),
-                    'change': float(data.get('percent_change', 0)),
-                    'volume': float(data.get('volume', 0))
+                    'price': price,
+                    'change': change,
+                    'volume': volume
                 }
+            else:
+                logger.warning(f"⚠️ Twelve Data API error for {symbol}: {data}")
     except Exception as e:
         logger.error(f"❌ Twelve Data crypto error ({symbol}): {e}")
     return None
@@ -211,12 +217,18 @@ def fetch_twelve_data_stock(symbol='AAPL'):
         )
         if response.status_code == 200:
             data = response.json()
-            if 'error' not in data:
+            if 'error' not in data and 'code' not in data:
+                # API returns 'close' for current price
+                price = float(data.get('close', 0) or data.get('last_price', 0) or 0)
+                change = float(data.get('percent_change', 0) or 0)
+                volume = float(data.get('volume', 0) or 0)
                 return {
-                    'price': float(data.get('last_price', 0)),
-                    'change': float(data.get('percent_change', 0)),
-                    'volume': float(data.get('volume', 0))
+                    'price': price,
+                    'change': change,
+                    'volume': volume
                 }
+            else:
+                logger.warning(f"⚠️ Twelve Data API error for {symbol}: {data}")
     except Exception as e:
         logger.error(f"❌ Twelve Data stock error ({symbol}): {e}")
     return None
@@ -236,11 +248,15 @@ def fetch_twelve_data_forex(pair='EUR/USD'):
         )
         if response.status_code == 200:
             data = response.json()
-            if 'error' not in data:
+            if 'error' not in data and 'code' not in data:
+                price = float(data.get('close', 0) or data.get('last_price', 0) or 0)
+                change = float(data.get('percent_change', 0) or 0)
                 return {
-                    'price': float(data.get('last_price', 0)),
-                    'change': float(data.get('percent_change', 0))
+                    'price': price,
+                    'change': change
                 }
+            else:
+                logger.warning(f"⚠️ Twelve Data API error for {pair}: {data}")
     except Exception as e:
         logger.error(f"❌ Twelve Data forex error ({pair}): {e}")
     return None
