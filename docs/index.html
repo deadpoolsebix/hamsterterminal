@@ -3120,6 +3120,62 @@
     </div>
   </div>
 
+  <!-- GENIUS AI LIVE SIGNAL PANEL -->
+  <div style="padding: 0 24px;">
+    <div style="background: #000; border: 1px solid #222; padding: 16px;">
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #222;">
+        <div style="color: #888; font-weight: 700; font-size: 0.85em; letter-spacing: 1px;">GENIUS AI SIGNAL</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <span id="geniusSignalType" style="color: #fff; font-weight: 700; font-size: 1.1em; letter-spacing: 1px;">--</span>
+          <span style="color: #666; font-size: 0.75em;">Confidence: <span id="geniusConfidenceValue" style="color: #fff;">--%</span></span>
+        </div>
+      </div>
+      
+      <!-- Signal Details Grid -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 16px;">
+        <div style="border-left: 2px solid #333; padding-left: 12px;">
+          <div style="color: #666; font-size: 0.7em; letter-spacing: 1px; margin-bottom: 4px;">ENTRY ZONE</div>
+          <div id="geniusEntryZone" style="color: #fff; font-size: 0.95em; font-weight: 600;">--</div>
+        </div>
+        <div style="border-left: 2px solid #333; padding-left: 12px;">
+          <div style="color: #666; font-size: 0.7em; letter-spacing: 1px; margin-bottom: 4px;">STOP LOSS</div>
+          <div id="geniusStopLoss" style="color: #fff; font-size: 0.95em; font-weight: 600;">--</div>
+        </div>
+        <div style="border-left: 2px solid #333; padding-left: 12px;">
+          <div style="color: #666; font-size: 0.7em; letter-spacing: 1px; margin-bottom: 4px;">TAKE PROFIT</div>
+          <div id="geniusTakeProfit" style="color: #fff; font-size: 0.95em; font-weight: 600;">--</div>
+        </div>
+        <div style="border-left: 2px solid #333; padding-left: 12px;">
+          <div style="color: #666; font-size: 0.7em; letter-spacing: 1px; margin-bottom: 4px;">RISK:REWARD</div>
+          <div id="geniusRiskReward" style="color: #fff; font-size: 0.95em; font-weight: 600;">--</div>
+        </div>
+      </div>
+      
+      <!-- Reasoning Section -->
+      <div style="margin-bottom: 16px; padding: 12px; background: #0a0a0a; border-left: 2px solid #444;">
+        <div style="color: #666; font-size: 0.7em; letter-spacing: 1px; margin-bottom: 8px;">ANALYSIS REASONING</div>
+        <div id="geniusReasoning" style="color: #999; font-size: 0.85em; line-height: 1.6;">
+          Loading analysis...
+        </div>
+      </div>
+      
+      <!-- Tactics Section -->
+      <div style="padding: 12px; background: #0a0a0a; border-left: 2px solid #444;">
+        <div style="color: #666; font-size: 0.7em; letter-spacing: 1px; margin-bottom: 8px;">TRADING TACTICS</div>
+        <div id="geniusTactics" style="color: #ccc; font-size: 0.85em; line-height: 1.6;">
+          Loading tactics...
+        </div>
+      </div>
+      
+      <!-- Footer -->
+      <div style="margin-top: 12px; display: flex; justify-content: space-between; font-size: 0.7em; color: #555;">
+        <span>Source: Genius Trading Engine v2.0</span>
+        <span>Updated: <span id="geniusUpdateTime">--</span></span>
+      </div>
+    </div>
+  </div>
+
   <!-- CURRENT PRICE + GENIUS COMMENTARY -->
   <div style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
     <!-- CURRENT PRICE BOX -->
@@ -5129,6 +5185,86 @@
     }
     setInterval(updateTechnicalIndicators, 60000);
     updateTechnicalIndicators();
+
+    // ===== UPDATE GENIUS AI LIVE SIGNAL =====
+    async function updateGeniusSignal() {
+      try {
+        const resp = await fetch(`${API_BASE}/api/genius/signal?symbol=BTC/USD`);
+        if (resp.ok) {
+          const data = await resp.json();
+          if (data.ok && data.signal) {
+            const sig = data.signal;
+            
+            // Signal Type
+            const typeEl = document.getElementById('geniusSignalType');
+            if (typeEl) {
+              typeEl.textContent = sig.signal;
+              // Color based on signal
+              if (sig.signal.includes('BUY')) {
+                typeEl.style.color = '#fff';
+              } else if (sig.signal.includes('SELL')) {
+                typeEl.style.color = '#fff';
+              } else {
+                typeEl.style.color = '#888';
+              }
+            }
+            
+            // Confidence
+            const confEl = document.getElementById('geniusConfidenceValue');
+            if (confEl) {
+              confEl.textContent = `${sig.confidence.toFixed(0)}%`;
+            }
+            
+            // Entry Zone
+            const entryEl = document.getElementById('geniusEntryZone');
+            if (entryEl && sig.entry_zone) {
+              entryEl.textContent = `$${(sig.entry_zone[0]/1000).toFixed(2)}k - $${(sig.entry_zone[1]/1000).toFixed(2)}k`;
+            }
+            
+            // Stop Loss
+            const slEl = document.getElementById('geniusStopLoss');
+            if (slEl) {
+              slEl.textContent = `$${(sig.stop_loss/1000).toFixed(2)}k`;
+            }
+            
+            // Take Profit
+            const tpEl = document.getElementById('geniusTakeProfit');
+            if (tpEl) {
+              tpEl.textContent = `$${(sig.take_profit_1/1000).toFixed(2)}k / $${(sig.take_profit_2/1000).toFixed(2)}k`;
+            }
+            
+            // Risk:Reward
+            const rrEl = document.getElementById('geniusRiskReward');
+            if (rrEl) {
+              rrEl.textContent = `1:${sig.risk_reward.toFixed(1)}`;
+            }
+            
+            // Reasoning
+            const reasonEl = document.getElementById('geniusReasoning');
+            if (reasonEl && sig.reasoning) {
+              reasonEl.innerHTML = sig.reasoning.map(r => `• ${r}`).join('<br>');
+            }
+            
+            // Tactics
+            const tacticsEl = document.getElementById('geniusTactics');
+            if (tacticsEl && sig.tactics) {
+              tacticsEl.innerHTML = sig.tactics.map(t => `• ${t}`).join('<br>');
+            }
+            
+            // Update time
+            const timeEl = document.getElementById('geniusUpdateTime');
+            if (timeEl) {
+              const now = new Date();
+              timeEl.textContent = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+            }
+          }
+        }
+      } catch (e) {
+        console.log('Genius signal update error:', e);
+      }
+    }
+    setInterval(updateGeniusSignal, 30000); // Update every 30 seconds
+    updateGeniusSignal();
 
     // ===== UPDATE SNIPER SHOT (DYNAMIC LEVELS) =====
     async function updateSniperShot() {

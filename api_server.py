@@ -1457,6 +1457,114 @@ def get_quote():
     except Exception as e:
         logger.error(f"Quote error: {e}")
         return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+# ============ GENIUS TRADING ENGINE API ============
+
+@app.route('/api/genius/signal', methods=['GET'])
+def genius_live_signal():
+    """Get live trading signal from Genius AI Engine"""
+    symbol = request.args.get('symbol', 'BTC/USD')
+    
+    try:
+        from genius_trading_engine import genius_engine
+        signal = genius_engine.generate_live_signal(symbol)
+        return jsonify({
+            'ok': True,
+            'signal': signal.to_dict(),
+            'source': 'Genius Trading Engine v2.0'
+        })
+    except ImportError:
+        return jsonify({
+            'ok': False,
+            'error': 'Genius Trading Engine not available'
+        }), 500
+    except Exception as e:
+        logger.error(f"Genius signal error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/genius/analysis', methods=['GET'])
+def genius_full_analysis():
+    """Get comprehensive market analysis from Genius AI"""
+    symbol = request.args.get('symbol', 'BTC/USD')
+    
+    try:
+        from genius_trading_engine import genius_engine
+        
+        # Fetch all data
+        quote = genius_engine.fetch_quote(symbol)
+        indicators = genius_engine.fetch_technical_indicators(symbol, '1h')
+        df = genius_engine.fetch_time_series(symbol, '1h', 100)
+        liquidity = genius_engine.detect_liquidity_zones(df) if df is not None else {}
+        
+        # Generate signal
+        signal = genius_engine.generate_live_signal(symbol)
+        
+        return jsonify({
+            'ok': True,
+            'symbol': symbol,
+            'price': quote.get('price', 0),
+            'change_24h': quote.get('change', 0),
+            'signal': signal.to_dict(),
+            'indicators': {
+                'rsi': indicators.get('rsi', [None])[0] if indicators.get('rsi') else None,
+                'macd': indicators.get('macd', [{}])[0] if indicators.get('macd') else None,
+                'ema21': indicators.get('ema21'),
+                'ema50': indicators.get('ema50'),
+                'ema200': indicators.get('ema200'),
+                'bollinger': indicators.get('bollinger'),
+                'atr': indicators.get('atr'),
+                'adx': indicators.get('adx'),
+                'stoch': indicators.get('stoch')
+            },
+            'liquidity': {
+                'support_levels': liquidity.get('support_levels', []),
+                'resistance_levels': liquidity.get('resistance_levels', []),
+                'fvg_count': len(liquidity.get('fvg_zones', [])),
+                'liquidity_grabs': len(liquidity.get('liquidity_grabs', [])),
+                'equal_highs': len(liquidity.get('equal_highs', [])),
+                'equal_lows': len(liquidity.get('equal_lows', []))
+            },
+            'source': 'Genius Trading Engine v2.0'
+        })
+    except ImportError as e:
+        logger.error(f"Import error: {e}")
+        return jsonify({
+            'ok': False,
+            'error': 'Genius Trading Engine not available'
+        }), 500
+    except Exception as e:
+        logger.error(f"Genius analysis error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/genius/tactics', methods=['GET'])
+def genius_tactics():
+    """Get trading tactics for current market conditions"""
+    symbol = request.args.get('symbol', 'BTC/USD')
+    
+    try:
+        from genius_trading_engine import genius_engine
+        signal = genius_engine.generate_live_signal(symbol)
+        
+        return jsonify({
+            'ok': True,
+            'symbol': symbol,
+            'signal_type': signal.signal.value,
+            'confidence': signal.confidence,
+            'entry_zone': signal.entry_zone,
+            'stop_loss': signal.stop_loss,
+            'take_profits': [signal.take_profit_1, signal.take_profit_2, signal.take_profit_3],
+            'risk_reward': signal.risk_reward,
+            'tactics': signal.tactics,
+            'reasoning': signal.reasoning
+        })
+    except Exception as e:
+        logger.error(f"Genius tactics error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
 def news_headlines():
     """Return curated news headlines"""
     try:
