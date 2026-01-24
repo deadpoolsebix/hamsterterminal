@@ -1109,31 +1109,42 @@
       position: fixed;
       left: 0;
       top: 140px;
-      width: 36px;
-      height: 120px;
+      width: 42px;
+      height: 180px;
       background: rgba(255, 140, 0, 0.2);
       backdrop-filter: blur(8px);
       color: var(--orange);
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
+      gap: 4px;
       border: 2px solid rgba(255, 140, 0, 0.5);
       border-left: none;
-      border-radius: 0 8px 8px 0;
+      border-radius: 0 12px 12px 0;
       z-index: 102;
       cursor: pointer;
       transition: all 0.3s ease;
     }
     .tools-handle:hover {
-      width: 44px;
+      width: 50px;
       background: rgba(255, 140, 0, 0.35);
       border-color: var(--orange);
     }
-    .tools-handle span {
+    .tools-handle-icon {
+      font-size: 1.2em;
+      margin-bottom: 2px;
+    }
+    .tools-handle-text {
       writing-mode: vertical-rl;
-      font-weight: 700;
-      letter-spacing: 2px;
-      font-size: 0.85em;
+      font-weight: 800;
+      letter-spacing: 3px;
+      font-size: 0.7em;
+      text-transform: uppercase;
+    }
+    .tools-handle-arrow {
+      font-size: 0.9em;
+      margin-top: 2px;
     }
     /* When drawer is open, move handle to the right edge of drawer */
     .tools-drawer.open + .tools-handle,
@@ -1718,7 +1729,11 @@
 <body>
 
   <!-- LEFT TOOLS DRAWER HANDLE -->
-  <div class="tools-handle" id="toolsHandle"><span id="toolsHandleIcon">▶</span></div>
+  <div class="tools-handle" id="toolsHandle">
+    <span class="tools-handle-icon">🛠</span>
+    <span class="tools-handle-text">TRADING TOOLS</span>
+    <span class="tools-handle-arrow" id="toolsHandleIcon">▶</span>
+  </div>
 
   <!-- LEFT TOOLS DRAWER -->
   <aside class="tools-drawer" id="toolsDrawer" aria-hidden="true">
@@ -1801,7 +1816,136 @@
       <div class="tools-note" id="calcResult">Position: -- | Qty: --</div>
     </div>
     
-    <div class="tools-footer">Swipe lub kliknij TOOLS</div>
+    <!-- FUNDING RATE CALCULATOR -->
+    <div class="tools-section">
+      <div class="tools-title">💰 Funding Rate Calculator</div>
+      <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
+        <label>Giełda
+          <select id="fundingExchange" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
+            <option value="binance">Binance</option>
+            <option value="bybit">Bybit</option>
+            <option value="okx">OKX</option>
+            <option value="bitget">Bitget</option>
+            <option value="deribit">Deribit</option>
+          </select>
+        </label>
+        <label>Symbol
+          <select id="fundingSymbol" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
+            <option value="BTCUSDT">BTC/USDT</option>
+            <option value="ETHUSDT">ETH/USDT</option>
+            <option value="SOLUSDT">SOL/USDT</option>
+            <option value="XRPUSDT">XRP/USDT</option>
+          </select>
+        </label>
+        <label>Pozycja ($)<input type="number" id="fundingPosition" value="10000" step="100"></label>
+        <label>Dźwignia<input type="number" id="fundingLeverage" value="10" step="1" min="1" max="125"></label>
+        <label>Dni<input type="number" id="fundingDays" value="30" step="1" min="1"></label>
+        <label>Rate (%)<input type="number" id="fundingRate" value="0.01" step="0.001"></label>
+      </div>
+      <button id="fundingCalcRun" class="tools-btn" style="width: 100%; padding: 10px; margin-top: 8px;">OBLICZ FUNDING</button>
+      <div id="fundingResult" style="margin-top: 10px; padding: 10px; background: rgba(0,212,255,0.1); border-radius: 6px; font-size: 0.85em;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: var(--gray);">Dzienny koszt:</span>
+          <span id="fundingDaily" style="color: var(--cyan);">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: var(--gray);">Koszt za okres:</span>
+          <span id="fundingTotal" style="color: var(--orange);">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--gray);">APR (roczny):</span>
+          <span id="fundingAPR" style="color: var(--yellow);">--</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- MT5 PIP VALUE CALCULATOR -->
+    <div class="tools-section">
+      <div class="tools-title">📊 MT5 - Kalkulator PIP</div>
+      <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
+        <label>Instrument
+          <select id="mt5Instrument" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
+            <option value="XAUUSD">XAUUSD (Złoto)</option>
+            <option value="EURUSD">EURUSD</option>
+            <option value="GBPUSD">GBPUSD</option>
+            <option value="USDJPY">USDJPY</option>
+            <option value="US30">US30 (Dow Jones)</option>
+            <option value="NAS100">NAS100 (Nasdaq)</option>
+            <option value="BTCUSD">BTCUSD</option>
+          </select>
+        </label>
+        <label>Lot Size<input type="number" id="mt5LotSize" value="0.1" step="0.01" min="0.01"></label>
+      </div>
+      <div id="mt5PipResult" style="margin-top: 10px; padding: 10px; background: rgba(157,78,221,0.15); border-radius: 6px; font-size: 0.85em; border-left: 3px solid var(--purple);">
+        <div style="color: var(--purple); font-weight: 700; margin-bottom: 8px;">Wartość PIP:</div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
+          <div><span style="color: var(--gray);">0.1 pip:</span> <span id="pip01" style="color: #fff;">--</span></div>
+          <div><span style="color: var(--gray);">0.5 pip:</span> <span id="pip05" style="color: #fff;">--</span></div>
+          <div><span style="color: var(--gray);">1 pip:</span> <span id="pip1" style="color: var(--green);">--</span></div>
+          <div><span style="color: var(--gray);">10 pips:</span> <span id="pip10" style="color: var(--cyan);">--</span></div>
+        </div>
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #333;">
+          <span style="color: var(--gray);">Spread typowy:</span> <span id="mt5Spread" style="color: var(--orange);">--</span>
+        </div>
+      </div>
+    </div>
+    
+    <!-- MT5 LIQUIDATION CALCULATOR -->
+    <div class="tools-section">
+      <div class="tools-title">⚠️ MT5 - Likwidacja & Koszty</div>
+      <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
+        <label>Depozyt ($)<input type="number" id="mt5Balance" value="1000" step="100"></label>
+        <label>Dźwignia<input type="number" id="mt5Leverage" value="100" step="10" min="1" max="500"></label>
+        <label>Entry Price<input type="number" id="mt5Entry" value="2650" step="1"></label>
+        <label>Lot Size<input type="number" id="mt5LotLiq" value="0.1" step="0.01"></label>
+        <label>Kierunek
+          <select id="mt5Direction" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
+            <option value="long">LONG (Buy)</option>
+            <option value="short">SHORT (Sell)</option>
+          </select>
+        </label>
+        <label>Instrument
+          <select id="mt5InstrumentLiq" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
+            <option value="XAUUSD">XAUUSD</option>
+            <option value="EURUSD">EURUSD</option>
+            <option value="BTCUSD">BTCUSD</option>
+            <option value="US30">US30</option>
+          </select>
+        </label>
+      </div>
+      <button id="mt5LiqCalcRun" class="tools-btn" style="width: 100%; padding: 10px; margin-top: 8px;">OBLICZ LIKWIDACJĘ</button>
+      <div id="mt5LiqResult" style="margin-top: 10px; padding: 10px; background: rgba(255,0,51,0.1); border-radius: 6px; font-size: 0.85em; border-left: 3px solid var(--red);">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: var(--gray);">Margin wymagany:</span>
+          <span id="mt5Margin" style="color: var(--cyan);">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: var(--gray);">Margin Level:</span>
+          <span id="mt5MarginLevel" style="color: var(--green);">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: var(--red); font-weight: 700;">Cena likwidacji:</span>
+          <span id="mt5LiqPrice" style="color: var(--red); font-weight: 700;">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+          <span style="color: var(--gray);">Odległość od LIQ:</span>
+          <span id="mt5LiqDistance" style="color: var(--orange);">--</span>
+        </div>
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #333;">
+          <div style="color: var(--gray); margin-bottom: 4px;">Koszty (szacunkowe):</div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--gray);">Swap/noc:</span>
+            <span id="mt5Swap" style="color: var(--orange);">--</span>
+          </div>
+          <div style="display: flex; justify-content: space-between;">
+            <span style="color: var(--gray);">Komisja RT:</span>
+            <span id="mt5Commission" style="color: var(--yellow);">--</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="tools-footer">🛠 Swipe lub kliknij TRADING TOOLS</div>
   </aside>
 
   <!-- GENIUS AI SLIDE-OUT PANELS -->
@@ -5493,6 +5637,117 @@
       const qty = perUnitRisk > 0 ? (riskAmt / perUnitRisk) : 0;
       document.getElementById('calcResult').textContent = `Position: ${riskAmt.toFixed(2)} | Qty: ${qty.toFixed(6)}`;
     });
+
+    // ===== FUNDING RATE CALCULATOR =====
+    const fundingCalcRun = document.getElementById('fundingCalcRun');
+    fundingCalcRun?.addEventListener('click', () => {
+      const position = parseFloat(document.getElementById('fundingPosition').value) || 10000;
+      const leverage = parseFloat(document.getElementById('fundingLeverage').value) || 10;
+      const days = parseFloat(document.getElementById('fundingDays').value) || 30;
+      const rate = parseFloat(document.getElementById('fundingRate').value) || 0.01;
+      
+      // Funding is typically paid 3x per day (every 8h)
+      const fundingsPerDay = 3;
+      const dailyCost = position * (rate / 100) * fundingsPerDay;
+      const totalCost = dailyCost * days;
+      const apr = (rate / 100) * fundingsPerDay * 365 * 100;
+      
+      document.getElementById('fundingDaily').textContent = `$${dailyCost.toFixed(2)}`;
+      document.getElementById('fundingTotal').textContent = `$${totalCost.toFixed(2)}`;
+      document.getElementById('fundingAPR').textContent = `${apr.toFixed(1)}%`;
+    });
+
+    // Auto-update funding on input change
+    ['fundingPosition', 'fundingLeverage', 'fundingDays', 'fundingRate'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        fundingCalcRun?.click();
+      });
+    });
+
+    // ===== MT5 PIP VALUE CALCULATOR =====
+    const pipValues = {
+      'XAUUSD': { pip: 0.1, value: 1, spread: '15-25 pips', contractSize: 100 },
+      'EURUSD': { pip: 0.0001, value: 10, spread: '0.5-1.5 pips', contractSize: 100000 },
+      'GBPUSD': { pip: 0.0001, value: 10, spread: '0.8-2 pips', contractSize: 100000 },
+      'USDJPY': { pip: 0.01, value: 9.2, spread: '0.8-2 pips', contractSize: 100000 },
+      'US30': { pip: 1, value: 1, spread: '2-5 pips', contractSize: 1 },
+      'NAS100': { pip: 1, value: 1, spread: '1-3 pips', contractSize: 1 },
+      'BTCUSD': { pip: 1, value: 1, spread: '20-50 pips', contractSize: 1 }
+    };
+
+    function updateMT5PipCalc() {
+      const instrument = document.getElementById('mt5Instrument').value;
+      const lotSize = parseFloat(document.getElementById('mt5LotSize').value) || 0.1;
+      const info = pipValues[instrument] || pipValues['XAUUSD'];
+      
+      const basePipValue = info.value * lotSize;
+      
+      document.getElementById('pip01').textContent = `$${(basePipValue * 0.1).toFixed(2)}`;
+      document.getElementById('pip05').textContent = `$${(basePipValue * 0.5).toFixed(2)}`;
+      document.getElementById('pip1').textContent = `$${basePipValue.toFixed(2)}`;
+      document.getElementById('pip10').textContent = `$${(basePipValue * 10).toFixed(2)}`;
+      document.getElementById('mt5Spread').textContent = info.spread;
+    }
+
+    document.getElementById('mt5Instrument')?.addEventListener('change', updateMT5PipCalc);
+    document.getElementById('mt5LotSize')?.addEventListener('input', updateMT5PipCalc);
+    updateMT5PipCalc(); // Initial calc
+
+    // ===== MT5 LIQUIDATION CALCULATOR =====
+    const mt5LiqCalcRun = document.getElementById('mt5LiqCalcRun');
+    mt5LiqCalcRun?.addEventListener('click', () => {
+      const balance = parseFloat(document.getElementById('mt5Balance').value) || 1000;
+      const leverage = parseFloat(document.getElementById('mt5Leverage').value) || 100;
+      const entry = parseFloat(document.getElementById('mt5Entry').value) || 2650;
+      const lotSize = parseFloat(document.getElementById('mt5LotLiq').value) || 0.1;
+      const direction = document.getElementById('mt5Direction').value;
+      const instrument = document.getElementById('mt5InstrumentLiq').value;
+      
+      const info = pipValues[instrument] || pipValues['XAUUSD'];
+      const contractValue = entry * (info.contractSize || 100) * lotSize;
+      const marginRequired = contractValue / leverage;
+      const marginLevel = (balance / marginRequired) * 100;
+      
+      // Stop-out level is typically 50% for MT5
+      const stopOutLevel = 50;
+      const availableLoss = balance - (marginRequired * (stopOutLevel / 100));
+      const pipValuePerLot = info.value * lotSize;
+      const pipsToLiq = pipValuePerLot > 0 ? (availableLoss / pipValuePerLot) : 0;
+      
+      let liqPrice;
+      if (direction === 'long') {
+        liqPrice = entry - (pipsToLiq * info.pip);
+      } else {
+        liqPrice = entry + (pipsToLiq * info.pip);
+      }
+      
+      const distancePercent = ((Math.abs(entry - liqPrice) / entry) * 100).toFixed(2);
+      
+      // Swap estimates (typical values)
+      const swapLong = lotSize * -3.5; // Typical negative swap for gold long
+      const swapShort = lotSize * 1.2;  // Often positive for short
+      const swap = direction === 'long' ? swapLong : swapShort;
+      
+      // Commission (typical ECN)
+      const commission = lotSize * 7; // $7 per lot round trip
+      
+      document.getElementById('mt5Margin').textContent = `$${marginRequired.toFixed(2)}`;
+      document.getElementById('mt5MarginLevel').textContent = `${marginLevel.toFixed(0)}%`;
+      document.getElementById('mt5LiqPrice').textContent = liqPrice > 0 ? `$${liqPrice.toFixed(2)}` : 'N/A';
+      document.getElementById('mt5LiqDistance').textContent = `${distancePercent}%`;
+      document.getElementById('mt5Swap').textContent = `$${swap.toFixed(2)}/noc`;
+      document.getElementById('mt5Commission').textContent = `$${commission.toFixed(2)}`;
+    });
+
+    // Auto-update MT5 on input change
+    ['mt5Balance', 'mt5Leverage', 'mt5Entry', 'mt5LotLiq'].forEach(id => {
+      document.getElementById(id)?.addEventListener('input', () => {
+        mt5LiqCalcRun?.click();
+      });
+    });
+    document.getElementById('mt5Direction')?.addEventListener('change', () => mt5LiqCalcRun?.click());
+    document.getElementById('mt5InstrumentLiq')?.addEventListener('change', () => mt5LiqCalcRun?.click());
+    mt5LiqCalcRun?.click(); // Initial calc
 
     // ===== GENIUS AI PANEL FUNCTIONS =====
     
