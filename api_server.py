@@ -48,6 +48,23 @@ except ImportError as e:
     logger = logging.getLogger(__name__)
     logger.warning(f"⚠️ Quant Modules not available: {e}")
 
+# JP Morgan Quant Methods (Twelve Data Pro)
+try:
+    from jpmorgan_quant_methods import (
+        twelve_data, live_analyzer, options_pricer, volatility_analyzer,
+        credit_analyzer, financial_ratios, risk_metrics, crypto_risk,
+        TwelveDataClient, LiveMarketAnalyzer, OptionsPricer, CryptoRiskAnalyzer
+    )
+    JPMORGAN_MODULES_AVAILABLE = True
+    logger = logging.getLogger(__name__)
+    logger.info("✅ JP Morgan Quant Methods loaded (Options, Volatility, Z-Score, Risk)!")
+except ImportError as e:
+    JPMORGAN_MODULES_AVAILABLE = False
+    twelve_data = None
+    live_analyzer = None
+    logger = logging.getLogger(__name__)
+    logger.warning(f"⚠️ JP Morgan Quant Methods not available: {e}")
+
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -1459,26 +1476,55 @@ def get_quote():
         return jsonify({'ok': False, 'error': str(e)}), 500
 
 
-# ============ GENIUS TRADING ENGINE API ============
+# ============ GENIUS TRADING ENGINE API v3.0 RIGOROUS ============
 
 @app.route('/api/genius/signal', methods=['GET'])
 def genius_live_signal():
-    """Get live trading signal from Genius AI Engine"""
+    """
+    Get RIGOROUS trading signal from Genius AI Engine v3.0
+    Features:
+    - STRICT liquidity grab detection (wick ratio, volume confirmation)
+    - FVG zones with gap fill analysis
+    - Multi-timeframe confluence (minimum 2 TF alignment required)
+    - Insider/whale flow data
+    - On-chain blockchain metrics
+    - News sentiment integration
+    - Minimum 70% confluence required for signal
+    """
     symbol = request.args.get('symbol', 'BTC/USD')
     
     try:
-        from genius_trading_engine import genius_engine
-        signal = genius_engine.generate_live_signal(symbol)
+        # Try v3 RIGOROUS engine first
+        from genius_trading_engine_v3 import get_rigorous_signal
+        signal = get_rigorous_signal(symbol)
         return jsonify({
             'ok': True,
-            'signal': signal.to_dict(),
-            'source': 'Genius Trading Engine v2.0'
+            'signal': signal,
+            'source': 'Genius Trading Engine v3.0 RIGOROUS',
+            'features': [
+                'Strict liquidity grab detection',
+                'FVG zone analysis',
+                'Multi-timeframe confluence',
+                'Whale/insider flow',
+                'Blockchain metrics',
+                'News sentiment'
+            ]
         })
     except ImportError:
-        return jsonify({
-            'ok': False,
-            'error': 'Genius Trading Engine not available'
-        }), 500
+        # Fallback to v2
+        try:
+            from genius_trading_engine import genius_engine
+            signal = genius_engine.generate_live_signal(symbol)
+            return jsonify({
+                'ok': True,
+                'signal': signal.to_dict(),
+                'source': 'Genius Trading Engine v2.0 (fallback)'
+            })
+        except ImportError:
+            return jsonify({
+                'ok': False,
+                'error': 'Genius Trading Engine not available'
+            }), 500
     except Exception as e:
         logger.error(f"Genius signal error: {e}")
         return jsonify({'ok': False, 'error': str(e)}), 500
@@ -2225,12 +2271,344 @@ def portfolio_health():
         return jsonify({'ok': False, 'error': str(e)}), 500
 
 
+# ============ JP MORGAN QUANT METHODS (TWELVE DATA PRO) ============
+
+@app.route('/api/jpmorgan/quote', methods=['GET'])
+def jpmorgan_quote():
+    """Get real-time quote from Twelve Data Pro"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        quote = twelve_data.get_quote(symbol)
+        
+        if quote:
+            return jsonify({'ok': True, **quote})
+        return jsonify({'ok': False, 'error': f'No data for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan quote error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/multi-quote', methods=['GET'])
+def jpmorgan_multi_quote():
+    """Get quotes for multiple symbols"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbols = request.args.get('symbols', 'BTC/USD,ETH/USD,AAPL,SPY')
+        symbol_list = [s.strip() for s in symbols.split(',')]
+        quotes = twelve_data.get_multiple_quotes(symbol_list)
+        
+        return jsonify({
+            'ok': True,
+            'quotes': quotes,
+            'count': len(quotes)
+        })
+        
+    except Exception as e:
+        logger.error(f"JP Morgan multi-quote error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/volatility', methods=['GET'])
+def jpmorgan_volatility():
+    """Get live volatility analysis"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        days = int(request.args.get('days', 30))
+        
+        analysis = live_analyzer.get_live_volatility_analysis(symbol, days)
+        
+        if analysis:
+            return jsonify({'ok': True, **analysis})
+        return jsonify({'ok': False, 'error': f'Insufficient data for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan volatility error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/risk-metrics', methods=['GET'])
+def jpmorgan_risk_metrics():
+    """Get VaR, Sharpe, Sortino, Max Drawdown"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'SPY')
+        days = int(request.args.get('days', 100))
+        
+        analysis = live_analyzer.get_live_risk_metrics(symbol, days)
+        
+        if analysis:
+            return jsonify({'ok': True, **analysis})
+        return jsonify({'ok': False, 'error': f'Insufficient data for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan risk metrics error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/straddle', methods=['GET'])
+def jpmorgan_straddle():
+    """Calculate straddle pricing and expected move"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        days = int(request.args.get('days', 30))
+        implied_vol = request.args.get('implied_vol')
+        
+        if implied_vol:
+            implied_vol = float(implied_vol)
+        
+        analysis = live_analyzer.get_live_straddle_analysis(symbol, implied_vol, days)
+        
+        if analysis:
+            return jsonify({'ok': True, **analysis})
+        return jsonify({'ok': False, 'error': f'Could not calculate straddle for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan straddle error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/z-score', methods=['GET'])
+def jpmorgan_z_score():
+    """Calculate Altman Z-Score for credit risk"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'AAPL')
+        
+        analysis = live_analyzer.get_live_z_score(symbol)
+        
+        if analysis:
+            return jsonify({'ok': True, **analysis})
+        return jsonify({'ok': False, 'error': f'Insufficient financial data for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan Z-Score error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/technical', methods=['GET'])
+def jpmorgan_technical():
+    """Get technical analysis snapshot (RSI, MACD, Bollinger, ATR)"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        
+        analysis = live_analyzer.get_technical_snapshot(symbol)
+        
+        if analysis:
+            return jsonify({'ok': True, **analysis})
+        return jsonify({'ok': False, 'error': f'Could not get technical data for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan technical error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/multi-asset', methods=['GET'])
+def jpmorgan_multi_asset():
+    """Get snapshot of all major asset classes"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        snapshot = live_analyzer.get_multi_asset_snapshot()
+        return jsonify({'ok': True, **snapshot})
+        
+    except Exception as e:
+        logger.error(f"JP Morgan multi-asset error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/position-size', methods=['POST'])
+def jpmorgan_position_size():
+    """Calculate volatility-adjusted position size"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        data = request.json or {}
+        account_size = float(data.get('account_size', 100000))
+        risk_pct = float(data.get('risk_pct', 0.02))
+        stop_loss_pct = float(data.get('stop_loss_pct', 0.03))
+        symbol = data.get('symbol', 'BTC/USD')
+        
+        # Get live volatility
+        vol_analysis = live_analyzer.get_live_volatility_analysis(symbol, 30)
+        volatility = vol_analysis['volatility_annual'] if vol_analysis else 0.5
+        
+        # Calculate position size
+        sizing = crypto_risk.position_size_by_volatility(
+            account_size=account_size,
+            risk_pct=risk_pct,
+            stop_loss_pct=stop_loss_pct,
+            volatility=volatility
+        )
+        
+        return jsonify({
+            'ok': True,
+            'symbol': symbol,
+            'current_volatility': volatility,
+            **sizing
+        })
+        
+    except Exception as e:
+        logger.error(f"JP Morgan position size error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/options-price', methods=['POST'])
+def jpmorgan_options_price():
+    """Calculate Black-Scholes options prices"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        data = request.json or {}
+        S = float(data.get('spot_price', 100))
+        K = float(data.get('strike_price', 100))
+        T = float(data.get('time_to_expiry', 0.25))  # years
+        r = float(data.get('risk_free_rate', 0.05))
+        sigma = float(data.get('volatility', 0.2))
+        
+        call_price = options_pricer.black_scholes_call(S, K, T, r, sigma)
+        put_price = options_pricer.black_scholes_put(S, K, T, r, sigma)
+        straddle_cf = options_pricer.straddle_price_closed_form(vol=sigma, time=T, forward=S)
+        
+        return jsonify({
+            'ok': True,
+            'inputs': {
+                'spot_price': S,
+                'strike_price': K,
+                'time_to_expiry': T,
+                'risk_free_rate': r,
+                'volatility': sigma
+            },
+            'call_price': round(call_price, 4),
+            'put_price': round(put_price, 4),
+            'straddle_approximation': round(straddle_cf, 4),
+            'straddle_usd': round(straddle_cf * S, 2)
+        })
+        
+    except Exception as e:
+        logger.error(f"JP Morgan options price error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/time-series', methods=['GET'])
+def jpmorgan_time_series():
+    """Get historical OHLCV data"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        interval = request.args.get('interval', '1day')
+        outputsize = int(request.args.get('outputsize', 100))
+        
+        df = twelve_data.get_time_series(symbol, interval, outputsize)
+        
+        if df is not None and len(df) > 0:
+            return jsonify({
+                'ok': True,
+                'symbol': symbol,
+                'interval': interval,
+                'count': len(df),
+                'data': df.to_dict(orient='records')
+            })
+        return jsonify({'ok': False, 'error': f'No data for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan time-series error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/indicator/<indicator>', methods=['GET'])
+def jpmorgan_indicator(indicator):
+    """Get technical indicator (rsi, macd, bbands, atr, sma, ema, etc.)"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        interval = request.args.get('interval', '1day')
+        time_period = int(request.args.get('time_period', 14))
+        
+        df = twelve_data.get_technical_indicator(
+            symbol, indicator, interval, time_period=time_period
+        )
+        
+        if df is not None and len(df) > 0:
+            return jsonify({
+                'ok': True,
+                'symbol': symbol,
+                'indicator': indicator,
+                'interval': interval,
+                'count': len(df),
+                'latest': df.iloc[-1].to_dict(),
+                'data': df.tail(50).to_dict(orient='records')
+            })
+        return jsonify({'ok': False, 'error': f'No {indicator} data for {symbol}'}), 404
+        
+    except Exception as e:
+        logger.error(f"JP Morgan indicator error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
+@app.route('/api/jpmorgan/full-analysis', methods=['GET'])
+def jpmorgan_full_analysis():
+    """Complete analysis for a symbol (volatility, risk, technical, straddle)"""
+    if not JPMORGAN_MODULES_AVAILABLE:
+        return jsonify({'ok': False, 'error': 'JP Morgan modules not available'}), 500
+    
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        
+        # Gather all analyses
+        quote = twelve_data.get_quote(symbol)
+        volatility = live_analyzer.get_live_volatility_analysis(symbol, 30)
+        risk = live_analyzer.get_live_risk_metrics(symbol, 100)
+        technical = live_analyzer.get_technical_snapshot(symbol)
+        straddle = live_analyzer.get_live_straddle_analysis(symbol, days_to_expiry=30)
+        
+        return jsonify({
+            'ok': True,
+            'symbol': symbol,
+            'timestamp': datetime.now().isoformat(),
+            'quote': quote,
+            'volatility_analysis': volatility,
+            'risk_metrics': risk,
+            'technical_analysis': technical,
+            'straddle_analysis': straddle
+        })
+        
+    except Exception as e:
+        logger.error(f"JP Morgan full analysis error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
 # Start WebSocket stream (ensures it runs in Gunicorn)
 start_websocket_stream()
 
 if __name__ == '__main__':
     print("=" * 80)
-    print("🚀 HAMSTER TERMINAL API SERVER v4.0 - PROFESSIONAL QUANT EDITION")
+    print("🚀 HAMSTER TERMINAL API SERVER v5.0 - JP MORGAN QUANT EDITION")
     print("=" * 80)
     print("Server starting on http://0.0.0.0:5000")
     print("")
@@ -2254,9 +2632,25 @@ if __name__ == '__main__':
         print("  ⚠️  Quant modules not loaded")
     
     print("")
+    print("🏦 JP Morgan Quant Methods (NEW!):")
+    if JPMORGAN_MODULES_AVAILABLE:
+        print("  ✅ Twelve Data Pro API - Real-time market data")
+        print("  ✅ Options Pricing (Black-Scholes, Monte Carlo, Straddle)")
+        print("  ✅ Volatility Analysis (5d/10d/21d, Regime Detection)")
+        print("  ✅ Risk Metrics (VaR, Expected Shortfall, Sharpe, Sortino)")
+        print("  ✅ Credit Analysis (Altman Z-Score, Credit Ratings)")
+        print("  ✅ Technical Indicators (RSI, MACD, Bollinger, ATR)")
+        print("  ✅ Position Sizing (Volatility-adjusted)")
+    else:
+        print("  ⚠️  JP Morgan modules not loaded")
+    
+    print("")
     print("📡 Real-time data sources:")
-    print("  🔴 WebSocket (PRIMARY) - Twelve Data real-time prices")
-    print("     Symbols: BTC/USD, AAPL, MSFT, NVDA, SPY, EUR/USD, GBP/USD")
+    print("  🔴 Twelve Data Pro (PRIMARY) - Real-time prices")
+    print("     Crypto: BTC/USD, ETH/USD, SOL/USD, XRP/USD")
+    print("     Stocks: AAPL, MSFT, NVDA, TSLA, SPY, QQQ")
+    print("     Forex: EUR/USD, GBP/USD, USD/JPY")
+    print("     Commodities: XAU/USD (Gold), XAG/USD (Silver)")
     print("  📊 REST API (BACKUP) - Every 30 seconds")
     print("  😨 Alternative.me - Fear & Greed Index")
     print("")
@@ -2267,21 +2661,24 @@ if __name__ == '__main__':
     else:
         print("✅ Twelve Data API Key configured")
     print("")
+    print("🎯 JP Morgan Quant Endpoints (NEW!):")
+    print("  GET  /api/jpmorgan/quote?symbol=BTC/USD")
+    print("  GET  /api/jpmorgan/multi-quote?symbols=BTC/USD,AAPL,SPY")
+    print("  GET  /api/jpmorgan/volatility?symbol=BTC/USD&days=30")
+    print("  GET  /api/jpmorgan/risk-metrics?symbol=SPY&days=100")
+    print("  GET  /api/jpmorgan/straddle?symbol=BTC/USD&days=30")
+    print("  GET  /api/jpmorgan/z-score?symbol=AAPL")
+    print("  GET  /api/jpmorgan/technical?symbol=BTC/USD")
+    print("  GET  /api/jpmorgan/multi-asset")
+    print("  GET  /api/jpmorgan/time-series?symbol=BTC/USD&interval=1day")
+    print("  GET  /api/jpmorgan/indicator/rsi?symbol=BTC/USD")
+    print("  GET  /api/jpmorgan/full-analysis?symbol=BTC/USD")
+    print("  POST /api/jpmorgan/position-size")
+    print("  POST /api/jpmorgan/options-price")
+    print("")
     print("🌐 WebSocket Connection:")
     print("  Client: ws://localhost:5000/socket.io/?transport=websocket")
     print("  Events: connect, subscribe, price_update, disconnect")
-    print("")
-    print("🎯 New Advanced Endpoints:")
-    print("  POST /api/portfolio/optimize - Portfolio optimization")
-    print("  GET  /api/lstm/predict - LSTM price prediction")
-    print("  GET  /api/exchanges/prices - Multi-exchange prices")
-    print("  GET  /api/exchanges/arbitrage - Arbitrage finder")
-    print("  POST /api/backtest/run - Strategy backtesting")
-    print("  POST /api/performance/metrics - Performance analysis")
-    print("  POST /api/genius/chat - Live AI chat with Genius")
-    print("  GET  /api/onchain/trending - Trending coins")
-    print("  GET  /api/onchain/global - Global crypto metrics")
-    print("  GET  /api/onchain/defi - DeFi metrics")
     print("")
     print("=" * 80)
     
