@@ -2467,10 +2467,10 @@
     </div>
 
     <!-- MARKET TICKER BAR - CRYPTO -->
-    <div class="ticker-wrapper" style="padding-bottom: 8px;">
-      <div class="ticker" style="background: linear-gradient(90deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%); border-color: #ff6600;">
+    <div class="ticker-wrapper" style="padding-bottom: 4px;">
+      <div class="ticker" style="background: #0a0a0a; border: none; padding: 10px 14px;">
         <div class="ticker-track" id="cryptoTickerTrack">
-          <span class="ticker-label" style="color: #ff6600;">🪙 CRYPTO</span>
+          <span class="ticker-label" style="color: #888;">CRYPTO</span>
           <span class="ticker-item">BTC <span id="ticker-btc">$--</span></span>
           <span class="ticker-item">ETH <span id="ticker-eth">$--</span></span>
           <span class="ticker-item">SOL <span id="ticker-sol">$--</span></span>
@@ -2481,10 +2481,10 @@
     </div>
 
     <!-- MARKET TICKER BAR - STOCKS & INDICES -->
-    <div class="ticker-wrapper">
-      <div class="ticker" style="background: linear-gradient(90deg, #0d0d0d 0%, #111a11 50%, #0d0d0d 100%); border-color: #00ff88;">
+    <div class="ticker-wrapper" style="padding-top: 0;">
+      <div class="ticker" style="background: #0a0a0a; border: none; padding: 10px 14px;">
         <div class="ticker-track" id="stocksTickerTrack">
-          <span class="ticker-label" style="color: #00ff88;">📈 STOCKS</span>
+          <span class="ticker-label" style="color: #888;">STOCKS</span>
           <span class="ticker-item">NASDAQ <span id="ticker-nasdaq">--</span></span>
           <span class="ticker-item">S&amp;P500 <span id="ticker-sp500">--</span></span>
           <span class="ticker-item">DAX <span id="ticker-dax">--</span></span>
@@ -4217,17 +4217,17 @@
         // BTC
         if (typeof data.btcPrice === 'number') {
           const btcChange = data.btcChange24h || 0;
-          const btcColor = btcChange >= 0 ? '#00ff88' : '#ff4444';
-          const btcArrow = btcChange >= 0 ? '▲' : '▼';
-          cryptoItems.push(`<span class="ticker-item">BTC <span style="color:#ff6600;font-weight:700;">$${data.btcPrice.toLocaleString()}</span> <span style="color:${btcColor}">${btcArrow}${Math.abs(btcChange).toFixed(2)}%</span></span>`);
+          const changeColor = btcChange >= 0 ? '#4ade80' : '#f87171';
+          const arrow = btcChange >= 0 ? '▲' : '▼';
+          cryptoItems.push(`BTC $${data.btcPrice.toLocaleString()} <span style="color:${changeColor}">${arrow}${Math.abs(btcChange).toFixed(2)}%</span>`);
         }
         
         // ETH
         if (typeof data.ethPrice === 'number') {
           const ethChange = data.ethChange24h || 0;
-          const ethColor = ethChange >= 0 ? '#00ff88' : '#ff4444';
-          const ethArrow = ethChange >= 0 ? '▲' : '▼';
-          cryptoItems.push(`<span class="ticker-item">ETH <span style="color:#ff6600;font-weight:700;">$${data.ethPrice.toLocaleString()}</span> <span style="color:${ethColor}">${ethArrow}${Math.abs(ethChange).toFixed(2)}%</span></span>`);
+          const changeColor = ethChange >= 0 ? '#4ade80' : '#f87171';
+          const arrow = ethChange >= 0 ? '▲' : '▼';
+          cryptoItems.push(`ETH $${data.ethPrice.toLocaleString()} <span style="color:${changeColor}">${arrow}${Math.abs(ethChange).toFixed(2)}%</span>`);
         }
         
         // Other cryptos
@@ -4236,23 +4236,22 @@
         ['SOL', 'XRP', 'BNB', 'ADA', 'DOGE', 'AVAX'].forEach(symbol => {
           if (typeof cryptos[symbol] === 'number') {
             const change = cryptosChange[symbol] || 0;
-            const color = change >= 0 ? '#00ff88' : '#ff4444';
+            const changeColor = change >= 0 ? '#4ade80' : '#f87171';
             const arrow = change >= 0 ? '▲' : '▼';
             const decimals = symbol === 'DOGE' ? 5 : (symbol === 'XRP' || symbol === 'ADA' ? 4 : 2);
-            cryptoItems.push(`<span class="ticker-item">${symbol} <span style="color:#ff6600;font-weight:700;">$${cryptos[symbol].toFixed(decimals)}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+            cryptoItems.push(`${symbol} $${cryptos[symbol].toFixed(decimals)} <span style="color:${changeColor}">${arrow}${Math.abs(change).toFixed(2)}%</span>`);
           }
         });
         
         // Fear & Greed
         if (typeof data.fearGreed === 'number') {
           const fg = data.fearGreed;
-          const fgColor = fg > 70 ? '#ff4444' : (fg < 30 ? '#00ff88' : '#ffaa00');
-          const fgEmoji = fg > 70 ? '😱' : (fg < 30 ? '😨' : '😐');
-          cryptoItems.push(`<span class="ticker-item">Fear&Greed <span style="color:${fgColor};font-weight:700;">${fg} ${fgEmoji}</span></span>`);
+          const fgColor = fg > 70 ? '#f87171' : (fg < 30 ? '#4ade80' : '#fbbf24');
+          cryptoItems.push(`F&G <span style="color:${fgColor}">${fg}</span>`);
         }
         
         if (cryptoItems.length > 0) {
-          const content = `<span class="ticker-label" style="color:#ff6600;">🪙 CRYPTO</span> ${cryptoItems.join(' • ')}`;
+          const content = `<span class="ticker-label" style="color:#666;">CRYPTO</span> ${cryptoItems.join(' • ')}`;
           cryptoTrack.innerHTML = `${content} ${content}`;
           restartAnimation(cryptoTrack);
         }
@@ -4269,30 +4268,30 @@
         
         if (typeof indices.NASDAQ === 'number') {
           const change = indicesChange.NASDAQ || 0;
-          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const changeColor = change >= 0 ? '#4ade80' : '#f87171';
           const arrow = change >= 0 ? '▲' : '▼';
-          stockItems.push(`<span class="ticker-item">NASDAQ <span style="color:#00ff88;font-weight:700;">${indices.NASDAQ.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+          stockItems.push(`NASDAQ ${indices.NASDAQ.toLocaleString()} <span style="color:${changeColor}">${arrow}${Math.abs(change).toFixed(2)}%</span>`);
         }
         
         if (typeof indices.SP500 === 'number') {
           const change = indicesChange.SP500 || 0;
-          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const changeColor = change >= 0 ? '#4ade80' : '#f87171';
           const arrow = change >= 0 ? '▲' : '▼';
-          stockItems.push(`<span class="ticker-item">S&P500 <span style="color:#00ff88;font-weight:700;">${indices.SP500.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+          stockItems.push(`S&P500 ${indices.SP500.toLocaleString()} <span style="color:${changeColor}">${arrow}${Math.abs(change).toFixed(2)}%</span>`);
         }
         
         if (typeof indices.DAX === 'number') {
           const change = indicesChange.DAX || 0;
-          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const changeColor = change >= 0 ? '#4ade80' : '#f87171';
           const arrow = change >= 0 ? '▲' : '▼';
-          stockItems.push(`<span class="ticker-item">DAX <span style="color:#00ff88;font-weight:700;">${indices.DAX.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+          stockItems.push(`DAX ${indices.DAX.toLocaleString()} <span style="color:${changeColor}">${arrow}${Math.abs(change).toFixed(2)}%</span>`);
         }
         
         if (typeof indices.DOW === 'number') {
           const change = indicesChange.DOW || 0;
-          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const changeColor = change >= 0 ? '#4ade80' : '#f87171';
           const arrow = change >= 0 ? '▲' : '▼';
-          stockItems.push(`<span class="ticker-item">DOW <span style="color:#00ff88;font-weight:700;">${indices.DOW.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+          stockItems.push(`DOW ${indices.DOW.toLocaleString()} <span style="color:${changeColor}">${arrow}${Math.abs(change).toFixed(2)}%</span>`);
         }
         
         // Individual stocks
@@ -4301,14 +4300,14 @@
         ['NVDA', 'TSLA', 'AAPL', 'MSFT', 'GOOGL', 'META', 'AMZN'].forEach(symbol => {
           if (typeof stocks[symbol] === 'number') {
             const change = stocksChange[symbol] || 0;
-            const color = change >= 0 ? '#00ff88' : '#ff4444';
+            const changeColor = change >= 0 ? '#4ade80' : '#f87171';
             const arrow = change >= 0 ? '▲' : '▼';
-            stockItems.push(`<span class="ticker-item">${symbol} <span style="color:#00ff88;font-weight:700;">$${stocks[symbol].toFixed(2)}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+            stockItems.push(`${symbol} $${stocks[symbol].toFixed(2)} <span style="color:${changeColor}">${arrow}${Math.abs(change).toFixed(2)}%</span>`);
           }
         });
         
         if (stockItems.length > 0) {
-          const content = `<span class="ticker-label" style="color:#00ff88;">📈 STOCKS</span> ${stockItems.join(' • ')}`;
+          const content = `<span class="ticker-label" style="color:#666;">STOCKS</span> ${stockItems.join(' • ')}`;
           stocksTrack.innerHTML = `${content} ${content}`;
           restartAnimation(stocksTrack);
         }
