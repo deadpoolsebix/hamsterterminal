@@ -1752,7 +1752,50 @@
       color: var(--yellow);
       font-weight: 700;
     }
+    
+    /* WebSocket Live Price Animation */
+    .price-flash-up {
+      animation: flashGreen 0.5s ease-out;
+    }
+    .price-flash-down {
+      animation: flashRed 0.5s ease-out;
+    }
+    @keyframes flashGreen {
+      0% { color: #00ff00; text-shadow: 0 0 10px #00ff00; }
+      100% { color: inherit; text-shadow: none; }
+    }
+    @keyframes flashRed {
+      0% { color: #ff4444; text-shadow: 0 0 10px #ff4444; }
+      100% { color: inherit; text-shadow: none; }
+    }
+    .ws-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7em;
+      color: #666;
+    }
+    .ws-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #444;
+    }
+    .ws-dot.connected {
+      background: #00ff00;
+      box-shadow: 0 0 6px #00ff00;
+    }
+    .ws-dot.connecting {
+      background: #ffaa00;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
   </style>
+  <!-- Socket.IO Client Library -->
+  <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 </head>
 <body>
 
@@ -2889,7 +2932,13 @@
   <div style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
     <!-- CURRENT PRICE BOX -->
     <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
-      <div class="metric-label" style="font-size: 0.85em; margin-bottom: 8px;">CURRENT PRICE</div>
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+        <div class="metric-label" style="font-size: 0.85em;">CURRENT PRICE</div>
+        <div class="ws-status" id="wsStatus">
+          <div class="ws-dot" id="wsDot"></div>
+          <span id="wsLabel">OFFLINE</span>
+        </div>
+      </div>
       <div class="metric-value" id="metricPrice" style="font-size: 2.2em;">$--</div>
       <div class="metric-change" id="metricPriceChange" style="font-size: 1.1em; margin-top: 6px;">▲ --</div>
     </div>
@@ -6204,6 +6253,146 @@
     // Enter key support for chat
     document.getElementById('chatInput')?.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') sendGeniusMessage();
+    });
+
+    // ============ WEBSOCKET REAL-TIME PRICE UPDATES ============
+    let socket = null;
+    let lastBtcPrice = 0;
+    let wsReconnectAttempts = 0;
+    const MAX_WS_RECONNECT = 5;
+
+    function initWebSocket() {
+      const wsDot = document.getElementById('wsDot');
+      const wsLabel = document.getElementById('wsLabel');
+      
+      if (wsDot) {
+        wsDot.className = 'ws-dot connecting';
+        if (wsLabel) wsLabel.textContent = 'CONNECTING...';
+      }
+
+      try {
+        // Connect to Socket.IO server
+        socket = io(API_BASE, {
+          transports: ['websocket', 'polling'],
+          reconnection: true,
+          reconnectionAttempts: MAX_WS_RECONNECT,
+          reconnectionDelay: 2000,
+          timeout: 10000
+        });
+
+        socket.on('connect', () => {
+          console.log('✅ WebSocket connected');
+          wsReconnectAttempts = 0;
+          if (wsDot) {
+            wsDot.className = 'ws-dot connected';
+            if (wsLabel) wsLabel.textContent = 'LIVE';
+          }
+          // Subscribe to BTC prices
+          socket.emit('subscribe', { symbols: ['BTC/USD', 'ETH/USD', 'AAPL', 'NVDA'] });
+        });
+
+        socket.on('disconnect', () => {
+          console.log('❌ WebSocket disconnected');
+          if (wsDot) {
+            wsDot.className = 'ws-dot';
+            if (wsLabel) wsLabel.textContent = 'OFFLINE';
+          }
+        });
+
+        socket.on('connect_error', (err) => {
+          console.log('⚠️ WebSocket connection error:', err.message);
+          wsReconnectAttempts++;
+          if (wsDot) {
+            wsDot.className = 'ws-dot connecting';
+            if (wsLabel) wsLabel.textContent = `RETRY ${wsReconnectAttempts}/${MAX_WS_RECONNECT}`;
+          }
+        });
+
+        socket.on('status', (data) => {
+          console.log('📡 Server status:', data);
+        });
+
+        socket.on('subscription', (data) => {
+          console.log('📡 Subscribed to:', data.symbols);
+        });
+
+        socket.on('price_update', (data) => {
+          console.log('💰 Price update:', data);
+          handlePriceUpdate(data);
+        });
+
+      } catch (err) {
+        console.error('❌ WebSocket init error:', err);
+        if (wsDot) {
+          wsDot.className = 'ws-dot';
+          if (wsLabel) wsLabel.textContent = 'ERROR';
+        }
+      }
+    }
+
+    function handlePriceUpdate(data) {
+      const { symbol, price, change, timestamp } = data;
+      
+      if (symbol === 'BTC/USD') {
+        const priceEl = document.getElementById('metricPrice');
+        const changeEl = document.getElementById('metricPriceChange');
+        
+        if (priceEl) {
+          const oldPrice = lastBtcPrice;
+          lastBtcPrice = price;
+          
+          // Update price with formatting
+          priceEl.textContent = `$${price.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+          
+          // Flash animation
+          priceEl.classList.remove('price-flash-up', 'price-flash-down');
+          void priceEl.offsetWidth; // Force reflow
+          if (price > oldPrice) {
+            priceEl.classList.add('price-flash-up');
+          } else if (price < oldPrice) {
+            priceEl.classList.add('price-flash-down');
+          }
+        }
+        
+        if (changeEl && typeof change === 'number') {
+          const arrow = change >= 0 ? '▲' : '▼';
+          changeEl.textContent = `${arrow} ${Math.abs(change).toFixed(2)}%`;
+          changeEl.className = 'metric-change ' + (change >= 0 ? 'up' : 'down');
+        }
+        
+        // Update ticker if visible
+        updateTickerPrice('BTC', price, change);
+      }
+    }
+
+    function updateTickerPrice(symbol, price, change) {
+      // Update price in ticker track
+      const track = document.getElementById('sniperTickerTrack');
+      if (!track) return;
+      
+      const tickerItems = track.querySelectorAll('.ticker-item');
+      tickerItems.forEach(item => {
+        if (item.textContent.includes(symbol)) {
+          // Found the BTC item, update it (this is complex due to ticker structure)
+          // For now, let the regular fetch update the ticker
+        }
+      });
+    }
+
+    // Initialize WebSocket after page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      // Small delay to ensure API_BASE is set
+      setTimeout(() => {
+        if (typeof io !== 'undefined') {
+          initWebSocket();
+        } else {
+          console.log('⚠️ Socket.IO not loaded, using polling only');
+          const wsDot = document.getElementById('wsDot');
+          const wsLabel = document.getElementById('wsLabel');
+          if (wsDot) wsDot.className = 'ws-dot';
+          if (wsLabel) wsLabel.textContent = 'POLLING';
+        }
+      }, 1000);
     });
 
   </script>
