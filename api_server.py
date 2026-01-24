@@ -7,7 +7,7 @@ Endpoints dla dashboarda (localhost:5000)
 Enhanced with AI Sentiment Analysis & LLM Integration
 """
 
-from flask import Flask, jsonify, request, render_template_string, send_from_directory, send_from_directory
+from flask import Flask, jsonify, request, render_template_string, send_from_directory
 from flask_cors import CORS
 from flask_socketio import SocketIO, emit, join_room, leave_room
 import requests
@@ -1163,12 +1163,17 @@ def serve_dashboard():
     static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
     return send_from_directory(static_folder, 'index.html')
 
-@app.route('/<path:filename>')
+
 def serve_static(filename):
     if filename.startswith('api/'):
         return jsonify({'error': 'Not found'}), 404
     static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
     return send_from_directory(static_folder, filename)
+
+
+# Avoid duplicate endpoint registration when the module is imported multiple times
+if 'serve_static' not in app.view_functions:
+    app.add_url_rule('/<path:filename>', view_func=serve_static)
 
 
 def root_moved():
