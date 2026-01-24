@@ -2893,8 +2893,8 @@
     </div>
 
     <div class="genius-commentary">
-      <div class="genius-commentary-title">Komentarz Genius AI</div>
-      <div class="genius-commentary-text">Killzony ustawione automatycznie; okno NY pokrywa się z longiem Sniper, więc bias pozostaje wzrostowy, a RSI schładza się. Utrzymaj schodkowe TP na 96.4k i 97.4k, alert push już wysłany.</div>
+      <div class="genius-commentary-title">🐹 Komentarz Genius AI</div>
+      <div class="genius-commentary-text" id="geniusCommentaryMain">Ładowanie komentarza z API...</div>
     </div>
     </div>
     
@@ -3724,6 +3724,12 @@
       const commentEl = document.getElementById('liveCommentary');
       if (commentEl) {
         commentEl.innerHTML = `<p style="margin: 0;">${commentary}</p>`;
+      }
+      
+      // Also update main genius commentary section
+      const mainCommentEl = document.getElementById('geniusCommentaryMain');
+      if (mainCommentEl) {
+        mainCommentEl.textContent = commentary;
       }
 
       latestGeniusCommentary = commentary;
