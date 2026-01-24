@@ -3552,18 +3552,18 @@
     const isLocalhost = LOCAL_HOSTS.has(hostname);
     const isRender = window.location.hostname.includes('onrender.com');
     const isHamsterTerminal = window.location.hostname.includes('hamsterterminal.com');
+    // Wyczyść stare cache przy każdym ładowaniu (v5 reset)
+    if (localStorage.getItem('hamsterApiBase_v4')) {
+      localStorage.removeItem('hamsterApiBase_v4');
+    }
     // Gdy jesteśmy na hamsterterminal.com (Render custom domain), używamy origin
-    const DEFAULT_PRODUCTION_API = (isRender || isHamsterTerminal) ? window.location.origin : 'https://hamster-api.onrender.com';
+    const DEFAULT_PRODUCTION_API = (isRender || isHamsterTerminal) ? window.location.origin : 'https://hamsterterminal-1.onrender.com';
     const params = new URLSearchParams(window.location.search);
     const queryApiBase = params.get('apiBase');
     const globalOverride = typeof window.HAMSTER_API_BASE === 'string' ? window.HAMSTER_API_BASE.trim() : '';
-    const storedOverride = localStorage.getItem('hamsterApiBase_v4') || '';
-    const chosenProductionApi = (queryApiBase && queryApiBase.trim()) || globalOverride || storedOverride || DEFAULT_PRODUCTION_API;
-    if (queryApiBase && queryApiBase.trim()) {
-      localStorage.setItem('hamsterApiBase_v4', queryApiBase.trim());
-    }
+    const chosenProductionApi = (queryApiBase && queryApiBase.trim()) || globalOverride || DEFAULT_PRODUCTION_API;
     const API_BASE = isLocalhost ? 'http://localhost:5000' : chosenProductionApi;
-    console.log(`🔌 API mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | base=${API_BASE}`);
+    console.log(`🔌 API mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | base=${API_BASE} | hostname=${hostname}`);
 
     const killzoneClassMap = {
       london_open: 'killzone-london',
