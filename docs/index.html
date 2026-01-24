@@ -3897,6 +3897,19 @@
       if (typeof data.ethPrice === 'number') {
         cryptoEntries.push({ symbol: 'ETH', price: data.ethPrice, change: data.ethChange24h });
       }
+      // Add more cryptos from cryptos object
+      const cryptos = data.cryptos || {};
+      const cryptosChange = data.cryptosChange || {};
+      ['SOL', 'XRP', 'BNB', 'ADA', 'DOGE', 'AVAX'].forEach(symbol => {
+        if (typeof cryptos[symbol] === 'number') {
+          cryptoEntries.push({
+            symbol,
+            price: cryptos[symbol],
+            change: cryptosChange[symbol],
+            decimals: symbol === 'DOGE' ? 5 : (symbol === 'XRP' || symbol === 'ADA' ? 4 : 2)
+          });
+        }
+      });
       if (cryptoEntries.length) {
         segments.push({ label: 'CRYPTO', entries: cryptoEntries });
       }
@@ -3946,6 +3959,17 @@
           symbol: 'DAX',
           price: indices.DAX,
           change: indicesChange.DAX,
+          decimals: 0,
+          currencySymbol: '',
+          suffix: ' pkt',
+          changeDecimals: 2
+        });
+      }
+      if (typeof indices.DOW === 'number') {
+        indexEntries.push({
+          symbol: 'DOW',
+          price: indices.DOW,
+          change: indicesChange.DOW,
           decimals: 0,
           currencySymbol: '',
           suffix: ' pkt',

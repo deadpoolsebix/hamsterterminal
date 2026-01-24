@@ -88,6 +88,19 @@ cache = {
     'btc_change': 2.45,
     'eth_price': 2845.32,
     'eth_change': 1.80,
+    # Additional cryptos
+    'sol_price': 185.50,
+    'sol_change': 3.2,
+    'xrp_price': 2.45,
+    'xrp_change': 1.5,
+    'bnb_price': 685.00,
+    'bnb_change': 0.8,
+    'ada_price': 0.92,
+    'ada_change': 2.1,
+    'doge_price': 0.385,
+    'doge_change': 4.5,
+    'avax_price': 38.50,
+    'avax_change': 2.8,
     'fear_greed': 62,
     'volume_24h': 24500000000,
     'funding_rate': 0.0082,
@@ -103,6 +116,21 @@ cache = {
     'msft_change': 0.3,
     'nvda_price': 145.20,
     'nvda_change': 1.2,
+    'tsla_price': 248.50,
+    'tsla_change': 1.8,
+    'amzn_price': 185.20,
+    'amzn_change': 0.6,
+    'googl_price': 175.80,
+    'googl_change': 0.4,
+    'meta_price': 485.30,
+    'meta_change': 1.1,
+    # Indices
+    'nasdaq_price': 17850.00,
+    'nasdaq_change': 0.9,
+    'dax_price': 19420.00,
+    'dax_change': 0.5,
+    'dow_price': 38650.00,
+    'dow_change': 0.3,
     # Forex data
     'eurusd_price': 1.0850,
     'eurusd_change': 0.2,
@@ -912,7 +940,7 @@ logger.info("📡 Initial fetch handled by background thread...")
 # ============ API ENDPOINTS ============
 
 def get_crypto_summary():
-    """Internal: Get BTC/ETH prices from Twelve Data"""
+    """Internal: Get crypto/stocks/indices from Twelve Data"""
     return {
         'ok': True,
         'btcPrice': round(cache['btc_price'], 2),
@@ -920,19 +948,56 @@ def get_crypto_summary():
         'btcVolume24h': int(cache['volume_24h']),
         'ethPrice': round(cache['eth_price'], 2),
         'ethChange24h': round(cache['eth_change'], 2),
+        # Additional cryptos
+        'cryptos': {
+            'SOL': round(cache['sol_price'], 2),
+            'XRP': round(cache['xrp_price'], 4),
+            'BNB': round(cache['bnb_price'], 2),
+            'ADA': round(cache['ada_price'], 4),
+            'DOGE': round(cache['doge_price'], 5),
+            'AVAX': round(cache['avax_price'], 2)
+        },
+        'cryptosChange': {
+            'SOL': round(cache['sol_change'], 2),
+            'XRP': round(cache['xrp_change'], 2),
+            'BNB': round(cache['bnb_change'], 2),
+            'ADA': round(cache['ada_change'], 2),
+            'DOGE': round(cache['doge_change'], 2),
+            'AVAX': round(cache['avax_change'], 2)
+        },
         'lastUpdate': cache['last_update'],
         'source': 'Twelve Data Pro',
         'stocks': {
             'SPY': round(cache['spy_price'], 2),
             'AAPL': round(cache['aapl_price'], 2),
             'MSFT': round(cache['msft_price'], 2),
-            'NVDA': round(cache['nvda_price'], 2)
+            'NVDA': round(cache['nvda_price'], 2),
+            'TSLA': round(cache['tsla_price'], 2),
+            'AMZN': round(cache['amzn_price'], 2),
+            'GOOGL': round(cache['googl_price'], 2),
+            'META': round(cache['meta_price'], 2)
         },
         'stocksChange': {
             'SPY': round(cache['spy_change'], 2),
             'AAPL': round(cache['aapl_change'], 2),
             'MSFT': round(cache['msft_change'], 2),
-            'NVDA': round(cache['nvda_change'], 2)
+            'NVDA': round(cache['nvda_change'], 2),
+            'TSLA': round(cache['tsla_change'], 2),
+            'AMZN': round(cache['amzn_change'], 2),
+            'GOOGL': round(cache['googl_change'], 2),
+            'META': round(cache['meta_change'], 2)
+        },
+        'indices': {
+            'NASDAQ': round(cache['nasdaq_price'], 0),
+            'SP500': round(cache['spy_price'], 2),
+            'DAX': round(cache['dax_price'], 0),
+            'DOW': round(cache['dow_price'], 0)
+        },
+        'indicesChange': {
+            'NASDAQ': round(cache['nasdaq_change'], 2),
+            'SP500': round(cache['spy_change'], 2),
+            'DAX': round(cache['dax_change'], 2),
+            'DOW': round(cache['dow_change'], 2)
         },
         'fearGreed': cache['fear_greed']
     }
