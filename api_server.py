@@ -921,7 +921,20 @@ def get_crypto_summary():
         'ethPrice': round(cache['eth_price'], 2),
         'ethChange24h': round(cache['eth_change'], 2),
         'lastUpdate': cache['last_update'],
-        'source': 'Twelve Data Pro'
+        'source': 'Twelve Data Pro',
+        'stocks': {
+            'SPY': round(cache['spy_price'], 2),
+            'AAPL': round(cache['aapl_price'], 2),
+            'MSFT': round(cache['msft_price'], 2),
+            'NVDA': round(cache['nvda_price'], 2)
+        },
+        'stocksChange': {
+            'SPY': round(cache['spy_change'], 2),
+            'AAPL': round(cache['aapl_change'], 2),
+            'MSFT': round(cache['msft_change'], 2),
+            'NVDA': round(cache['nvda_change'], 2)
+        },
+        'fearGreed': cache['fear_greed']
     }
 
 @app.route('/api/crypto/summary', methods=['GET'])
