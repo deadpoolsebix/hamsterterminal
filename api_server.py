@@ -765,7 +765,8 @@ async def websocket_stream():
         symbols = "BTC/USD,AAPL,MSFT,NVDA,SPY,EUR/USD,GBP/USD"
         ws_url = f"{TWELVE_DATA_WS_URL}?apikey={TWELVE_DATA_API_KEY}"
         
-        async with websockets.connect(ws_url) as websocket:
+        # Use ping_interval=None to avoid connection drops with Twelve Data
+        async with websockets.connect(ws_url, ping_interval=None) as websocket:
             logger.info("✅ Connected to Twelve Data WebSocket")
             
             # Subscribe to symbols
