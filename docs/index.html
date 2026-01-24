@@ -2928,10 +2928,9 @@
     </div>
   </div>
 
-  <!-- CURRENT PRICE + LIVE COMMENTARY -->
-  <div style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
-    <!-- CURRENT PRICE BOX -->
-    <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
+  <!-- CURRENT PRICE -->
+  <div style="padding: 14px 24px;">
+    <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; max-width: 320px;">
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
         <div class="metric-label" style="font-size: 0.85em;">CURRENT PRICE</div>
         <div class="ws-status" id="wsStatus">
@@ -2941,32 +2940,6 @@
       </div>
       <div class="metric-value" id="metricPrice" style="font-size: 2.2em;">$--</div>
       <div class="metric-change" id="metricPriceChange" style="font-size: 1.1em; margin-top: 6px;">▲ --</div>
-    </div>
-
-    <!-- LIVE COMMENTARY + AUDIO -->
-    <div style="background: var(--panel); border: 1px solid var(--border); padding: 15px;">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-        <div style="color: #ffffff; font-weight: 700; font-size: 0.9em; letter-spacing: 0.5px; text-transform: uppercase;">LIVE COMMENTARY</div>
-        <div style="display: flex; align-items: center; gap: 10px;">
-          <select id="voiceSelect" style="background: #0a0a0a; color: #888; border: 1px solid #333; padding: 4px 8px; font-size: 0.75em; cursor: pointer;">
-            <option value="pl-PL">PL</option>
-            <option value="en-US">EN</option>
-            <option value="de-DE">DE</option>
-          </select>
-          <button id="playCommentaryBtn" style="background: #1a1a1a; border: 1px solid #333; color: #888; padding: 4px 12px; font-size: 0.75em; cursor: pointer; display: flex; align-items: center; gap: 4px;">
-            <span>▶</span> PLAY
-          </button>
-        </div>
-      </div>
-      
-      <div id="liveCommentaryText" style="color: #ccc; font-size: 0.9em; line-height: 1.6; min-height: 60px; padding: 12px; background: #0a0a0a; border-left: 2px solid #333;">
-        Ładowanie komentarza z API...
-      </div>
-      
-      <div style="margin-top: 12px; color: #666; font-size: 0.7em; display: flex; justify-content: space-between;">
-        <span>Update: <span id="commentaryLastUpdate">--</span></span>
-        <span id="audioStatus" style="color: #444;">Ready</span>
-      </div>
     </div>
   </div>
 
@@ -3008,12 +2981,29 @@
     </div>
   </div>
 
-  <!-- LIVE NEWS + BREAKING NEWS SIDE BY SIDE -->
+  <!-- LIVE COMMENTARY + BREAKING NEWS SIDE BY SIDE -->
   <div class="news-breaking-wrapper">
-    <div class="news">
-      <h4>📰 LIVE NEWS <span style="font-size: 0.7em; color: var(--gray);">(auto-refresh)</span></h4>
-      <div id="liveNewsList">
-        <div class="news-item">Ładowanie wiadomości...</div>
+    <!-- LIVE COMMENTARY + AUDIO -->
+    <div class="news" style="background: var(--panel); border: 1px solid var(--border);">
+      <h4 style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <span>🎙️ LIVE COMMENTARY</span>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <select id="voiceSelect" style="background: #0a0a0a; color: #888; border: 1px solid #333; padding: 3px 6px; font-size: 0.7em; cursor: pointer;">
+            <option value="pl-PL">PL</option>
+            <option value="en-US">EN</option>
+            <option value="de-DE">DE</option>
+          </select>
+          <button id="playCommentaryBtn" style="background: #1a1a1a; border: 1px solid #333; color: #888; padding: 3px 10px; font-size: 0.7em; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span>🔊</span> PLAY
+          </button>
+        </div>
+      </h4>
+      <div id="liveCommentaryText" style="color: #ccc; font-size: 0.85em; line-height: 1.5; min-height: 80px; padding: 10px; background: #0a0a0a; border-left: 2px solid #ff6b00; margin-bottom: 8px;">
+        🐹 Ładowanie komentarza AI...
+      </div>
+      <div style="color: #555; font-size: 0.7em; display: flex; justify-content: space-between;">
+        <span>Update: <span id="commentaryLastUpdate">--</span></span>
+        <span id="audioStatus" style="color: #666;">Ready</span>
       </div>
     </div>
 
@@ -4736,25 +4726,17 @@
     setInterval(updateMetricsBoxes, 10000);
     updateMetricsBoxes();
 
-    // ===== UPDATE LIVE NEWS & BREAKING NEWS =====
-    async function updateLiveNews() {
+    // ===== UPDATE BREAKING NEWS =====
+    async function updateBreakingNews() {
       try {
         const response = await fetch(`${API_BASE}/api/news/headlines`);
         if (!response.ok) return;
         const data = await response.json();
         if (data.ok && data.headlines) {
-          // LIVE NEWS
-          const liveNewsList = document.getElementById('liveNewsList');
-          if (liveNewsList) {
-            liveNewsList.innerHTML = data.headlines.slice(0, 5).map(h => 
-              `<div class="news-item">${h.headline}</div>`
-            ).join('');
-          }
-          
           // BREAKING NEWS
           const breakingList = document.getElementById('breakingNewsList');
           if (breakingList) {
-            breakingList.innerHTML = data.headlines.slice(0, 3).map(h => {
+            breakingList.innerHTML = data.headlines.slice(0, 4).map(h => {
               const statusClass = h.sentiment === 'bullish' ? 'breaking-green' : h.sentiment === 'bearish' ? 'breaking-red' : 'breaking-yellow';
               const statusText = h.sentiment === 'bullish' ? 'GREEN' : h.sentiment === 'bearish' ? 'RED' : 'NEUTRAL';
               return `
@@ -4772,11 +4754,11 @@
           }
         }
       } catch (err) {
-        console.log('Live news update error:', err);
+        console.log('Breaking news update error:', err);
       }
     }
-    setInterval(updateLiveNews, 30000);
-    updateLiveNews();
+    setInterval(updateBreakingNews, 30000);
+    updateBreakingNews();
 
     // ===== UPDATE CRYPTOPANIC TICKER =====
     async function updateCryptoPanicTicker() {
@@ -5490,44 +5472,100 @@
       });
     }
 
-    // ===== PLAY COMMENTARY AUDIO (new button under BTC) =====
+    // ===== PLAY COMMENTARY AUDIO (improved with voice detection) =====
     const playCommentaryBtn = document.getElementById('playCommentaryBtn');
     const voiceSelect = document.getElementById('voiceSelect');
     const audioStatusEl = document.getElementById('audioStatus');
+    let availableVoices = [];
+    
+    // Load available voices
+    function loadVoices() {
+      availableVoices = window.speechSynthesis?.getVoices() || [];
+      console.log('Available voices:', availableVoices.length);
+    }
+    
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+    
+    function findVoice(lang) {
+      // Try to find exact match
+      let voice = availableVoices.find(v => v.lang === lang);
+      if (voice) return voice;
+      
+      // Try partial match (pl-PL -> pl)
+      const shortLang = lang.split('-')[0];
+      voice = availableVoices.find(v => v.lang.startsWith(shortLang));
+      if (voice) return voice;
+      
+      // Fallback to English or first available
+      voice = availableVoices.find(v => v.lang.startsWith('en'));
+      return voice || availableVoices[0];
+    }
     
     if (playCommentaryBtn) {
       playCommentaryBtn.addEventListener('click', () => {
-        const text = document.getElementById('liveCommentaryText')?.textContent || '';
-        if (!text || text.includes('Ładowanie')) {
-          if (audioStatusEl) audioStatusEl.textContent = 'No commentary';
+        const textEl = document.getElementById('liveCommentaryText');
+        let text = textEl?.textContent || '';
+        
+        // Clean up text - remove emojis for better speech
+        text = text.replace(/[🐹🚀📈📉⚠️🔥💰]/g, '').trim();
+        
+        if (!text || text.includes('Ładowanie') || text.length < 10) {
+          if (audioStatusEl) audioStatusEl.textContent = 'No content';
           return;
         }
         
-        const lang = voiceSelect?.value || 'pl-PL';
-        if ('speechSynthesis' in window) {
-          window.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = lang;
-          utterance.rate = 0.9;
-          utterance.pitch = 1;
-          
-          utterance.onstart = () => {
-            if (audioStatusEl) audioStatusEl.textContent = 'Playing...';
-            playCommentaryBtn.innerHTML = '<span>⏸</span> STOP';
-          };
-          utterance.onend = () => {
-            if (audioStatusEl) audioStatusEl.textContent = 'Ready';
-            playCommentaryBtn.innerHTML = '<span>▶</span> PLAY';
-          };
-          utterance.onerror = () => {
-            if (audioStatusEl) audioStatusEl.textContent = 'Error';
-            playCommentaryBtn.innerHTML = '<span>▶</span> PLAY';
-          };
-          
-          window.speechSynthesis.speak(utterance);
-        } else {
+        if (!('speechSynthesis' in window)) {
           if (audioStatusEl) audioStatusEl.textContent = 'Not supported';
+          return;
         }
+        
+        // If already speaking, stop
+        if (window.speechSynthesis.speaking) {
+          window.speechSynthesis.cancel();
+          if (audioStatusEl) audioStatusEl.textContent = 'Stopped';
+          playCommentaryBtn.innerHTML = '<span>🔊</span> PLAY';
+          return;
+        }
+        
+        const lang = voiceSelect?.value || 'en-US';
+        const utterance = new SpeechSynthesisUtterance(text);
+        
+        // Find best voice for language
+        const voice = findVoice(lang);
+        if (voice) {
+          utterance.voice = voice;
+          utterance.lang = voice.lang;
+        } else {
+          utterance.lang = lang;
+        }
+        
+        utterance.rate = 0.95;
+        utterance.pitch = 1.0;
+        utterance.volume = 1.0;
+        
+        utterance.onstart = () => {
+          if (audioStatusEl) audioStatusEl.textContent = '🔊 Playing...';
+          playCommentaryBtn.innerHTML = '<span>⏹</span> STOP';
+        };
+        
+        utterance.onend = () => {
+          if (audioStatusEl) audioStatusEl.textContent = 'Ready';
+          playCommentaryBtn.innerHTML = '<span>🔊</span> PLAY';
+        };
+        
+        utterance.onerror = (e) => {
+          console.error('Speech error:', e);
+          if (audioStatusEl) audioStatusEl.textContent = 'Error: ' + (e.error || 'unknown');
+          playCommentaryBtn.innerHTML = '<span>🔊</span> PLAY';
+        };
+        
+        // Small delay helps with some browsers
+        setTimeout(() => {
+          window.speechSynthesis.speak(utterance);
+        }, 100);
       });
     }
 
