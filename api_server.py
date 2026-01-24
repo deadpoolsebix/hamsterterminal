@@ -1162,16 +1162,6 @@ def health():
 def serve_static(filename):
     if filename.startswith('api/'):
         return jsonify({'error': 'Not found'}), 404
-    return send_from_directory('docs', filename)
-
-@app.route('/', methods=['GET'])
-def serve_dashboard():
-    # Ensure correct static folder path (absolute path for Render compatibility)
-    static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
-    return send_from_directory(static_folder, 'index.html')
-
-@app.route('/<path:filename>')
-def serve_static(filename):
     static_folder = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'docs')
     return send_from_directory(static_folder, filename)
 
