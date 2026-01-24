@@ -2466,37 +2466,31 @@
       </div>
     </div>
 
-    <!-- MARKET TICKER BAR (SNIPER SECTION) -->
+    <!-- MARKET TICKER BAR - CRYPTO -->
+    <div class="ticker-wrapper" style="padding-bottom: 8px;">
+      <div class="ticker" style="background: linear-gradient(90deg, #0d0d0d 0%, #1a1a1a 50%, #0d0d0d 100%); border-color: #ff6600;">
+        <div class="ticker-track" id="cryptoTickerTrack">
+          <span class="ticker-label" style="color: #ff6600;">🪙 CRYPTO</span>
+          <span class="ticker-item">BTC <span id="ticker-btc">$--</span></span>
+          <span class="ticker-item">ETH <span id="ticker-eth">$--</span></span>
+          <span class="ticker-item">SOL <span id="ticker-sol">$--</span></span>
+          <span class="ticker-item">XRP <span id="ticker-xrp">$--</span></span>
+          <span class="ticker-item">BNB <span id="ticker-bnb">$--</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MARKET TICKER BAR - STOCKS & INDICES -->
     <div class="ticker-wrapper">
-      <div class="ticker">
-        <div class="ticker-track" id="sniperTickerTrack">
-          <span class="ticker-label">CRYPTO</span>
-          <span class="ticker-item">
-            <span class="ticker-symbol">BTC</span>
-            <span class="ticker-price" id="ticker-btc">--</span>
-            <span class="ticker-change" id="ticker-btc-change">--</span>
-          </span>
-          <span class="ticker-item">
-            <span class="ticker-symbol">ETH</span>
-            <span class="ticker-price" id="ticker-eth">--</span>
-            <span class="ticker-change" id="ticker-eth-change">--</span>
-          </span>
-          <span class="ticker-label">INDEKSY</span>
-          <span class="ticker-item">
-            <span class="ticker-symbol">NASDAQ</span>
-            <span class="ticker-price" id="ticker-nasdaq">--</span>
-            <span class="ticker-change" id="ticker-nasdaq-change">--</span>
-          </span>
-          <span class="ticker-item">
-            <span class="ticker-symbol">S&amp;P 500</span>
-            <span class="ticker-price" id="ticker-sp500">--</span>
-            <span class="ticker-change" id="ticker-sp500-change">--</span>
-          </span>
-          <span class="ticker-item">
-            <span class="ticker-symbol">DAX</span>
-            <span class="ticker-price" id="ticker-dax">--</span>
-            <span class="ticker-change" id="ticker-dax-change">--</span>
-          </span>
+      <div class="ticker" style="background: linear-gradient(90deg, #0d0d0d 0%, #111a11 50%, #0d0d0d 100%); border-color: #00ff88;">
+        <div class="ticker-track" id="stocksTickerTrack">
+          <span class="ticker-label" style="color: #00ff88;">📈 STOCKS</span>
+          <span class="ticker-item">NASDAQ <span id="ticker-nasdaq">--</span></span>
+          <span class="ticker-item">S&amp;P500 <span id="ticker-sp500">--</span></span>
+          <span class="ticker-item">DAX <span id="ticker-dax">--</span></span>
+          <span class="ticker-item">NVDA <span id="ticker-nvda">$--</span></span>
+          <span class="ticker-item">TSLA <span id="ticker-tsla">$--</span></span>
+          <span class="ticker-item">AAPL <span id="ticker-aapl">$--</span></span>
         </div>
       </div>
     </div>
@@ -4211,120 +4205,119 @@
       return `<span class="ticker-label">${segment.label}</span> ${items.join(' • ')}`;
     }
 
-    function renderSniperTicker(data) {
-      const track = document.getElementById('sniperTickerTrack');
-      if (!track) return;
-
-      const segments = [];
-      const cryptoEntries = [];
-      if (typeof data.btcPrice === 'number') {
-        cryptoEntries.push({ symbol: 'BTC', price: data.btcPrice, change: data.btcChange24h });
-      }
-      if (typeof data.ethPrice === 'number') {
-        cryptoEntries.push({ symbol: 'ETH', price: data.ethPrice, change: data.ethChange24h });
-      }
-      // Add more cryptos from cryptos object
-      const cryptos = data.cryptos || {};
-      const cryptosChange = data.cryptosChange || {};
-      ['SOL', 'XRP', 'BNB', 'ADA', 'DOGE', 'AVAX'].forEach(symbol => {
-        if (typeof cryptos[symbol] === 'number') {
-          cryptoEntries.push({
-            symbol,
-            price: cryptos[symbol],
-            change: cryptosChange[symbol],
-            decimals: symbol === 'DOGE' ? 5 : (symbol === 'XRP' || symbol === 'ADA' ? 4 : 2)
-          });
+    // RENDER DUAL TICKERS - Crypto + Stocks (Twelve Data API)
+    function renderDualTickers(data) {
+      console.log('📊 Rendering dual tickers with Twelve Data:', data);
+      
+      // === CRYPTO TICKER ===
+      const cryptoTrack = document.getElementById('cryptoTickerTrack');
+      if (cryptoTrack) {
+        const cryptoItems = [];
+        
+        // BTC
+        if (typeof data.btcPrice === 'number') {
+          const btcChange = data.btcChange24h || 0;
+          const btcColor = btcChange >= 0 ? '#00ff88' : '#ff4444';
+          const btcArrow = btcChange >= 0 ? '▲' : '▼';
+          cryptoItems.push(`<span class="ticker-item">BTC <span style="color:#ff6600;font-weight:700;">$${data.btcPrice.toLocaleString()}</span> <span style="color:${btcColor}">${btcArrow}${Math.abs(btcChange).toFixed(2)}%</span></span>`);
         }
-      });
-      if (cryptoEntries.length) {
-        segments.push({ label: 'CRYPTO', entries: cryptoEntries });
-      }
-
-      const stockEntries = [];
-      const stocks = data.stocks || {};
-      const stocksChange = data.stocksChange || {};
-      Object.keys(stocks).forEach(symbol => {
-        stockEntries.push({
-          symbol,
-          price: stocks[symbol],
-          change: stocksChange[symbol],
-          decimals: 2
+        
+        // ETH
+        if (typeof data.ethPrice === 'number') {
+          const ethChange = data.ethChange24h || 0;
+          const ethColor = ethChange >= 0 ? '#00ff88' : '#ff4444';
+          const ethArrow = ethChange >= 0 ? '▲' : '▼';
+          cryptoItems.push(`<span class="ticker-item">ETH <span style="color:#ff6600;font-weight:700;">$${data.ethPrice.toLocaleString()}</span> <span style="color:${ethColor}">${ethArrow}${Math.abs(ethChange).toFixed(2)}%</span></span>`);
+        }
+        
+        // Other cryptos
+        const cryptos = data.cryptos || {};
+        const cryptosChange = data.cryptosChange || {};
+        ['SOL', 'XRP', 'BNB', 'ADA', 'DOGE', 'AVAX'].forEach(symbol => {
+          if (typeof cryptos[symbol] === 'number') {
+            const change = cryptosChange[symbol] || 0;
+            const color = change >= 0 ? '#00ff88' : '#ff4444';
+            const arrow = change >= 0 ? '▲' : '▼';
+            const decimals = symbol === 'DOGE' ? 5 : (symbol === 'XRP' || symbol === 'ADA' ? 4 : 2);
+            cryptoItems.push(`<span class="ticker-item">${symbol} <span style="color:#ff6600;font-weight:700;">$${cryptos[symbol].toFixed(decimals)}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+          }
         });
-      });
-      if (stockEntries.length) {
-        segments.push({ label: 'AKCJE', entries: stockEntries });
+        
+        // Fear & Greed
+        if (typeof data.fearGreed === 'number') {
+          const fg = data.fearGreed;
+          const fgColor = fg > 70 ? '#ff4444' : (fg < 30 ? '#00ff88' : '#ffaa00');
+          const fgEmoji = fg > 70 ? '😱' : (fg < 30 ? '😨' : '😐');
+          cryptoItems.push(`<span class="ticker-item">Fear&Greed <span style="color:${fgColor};font-weight:700;">${fg} ${fgEmoji}</span></span>`);
+        }
+        
+        if (cryptoItems.length > 0) {
+          const content = `<span class="ticker-label" style="color:#ff6600;">🪙 CRYPTO</span> ${cryptoItems.join(' • ')}`;
+          cryptoTrack.innerHTML = `${content} ${content}`;
+          restartAnimation(cryptoTrack);
+        }
       }
-
-      const indexEntries = [];
-      const indices = data.indices || {};
-      const indicesChange = data.indicesChange || {};
-      if (typeof indices.NASDAQ === 'number') {
-        indexEntries.push({
-          symbol: 'NASDAQ',
-          price: indices.NASDAQ,
-          change: indicesChange.NASDAQ,
-          decimals: 0,
-          currencySymbol: '',
-          suffix: ' pkt',
-          changeDecimals: 2
+      
+      // === STOCKS TICKER ===
+      const stocksTrack = document.getElementById('stocksTickerTrack');
+      if (stocksTrack) {
+        const stockItems = [];
+        
+        // Indices
+        const indices = data.indices || {};
+        const indicesChange = data.indicesChange || {};
+        
+        if (typeof indices.NASDAQ === 'number') {
+          const change = indicesChange.NASDAQ || 0;
+          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const arrow = change >= 0 ? '▲' : '▼';
+          stockItems.push(`<span class="ticker-item">NASDAQ <span style="color:#00ff88;font-weight:700;">${indices.NASDAQ.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+        }
+        
+        if (typeof indices.SP500 === 'number') {
+          const change = indicesChange.SP500 || 0;
+          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const arrow = change >= 0 ? '▲' : '▼';
+          stockItems.push(`<span class="ticker-item">S&P500 <span style="color:#00ff88;font-weight:700;">${indices.SP500.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+        }
+        
+        if (typeof indices.DAX === 'number') {
+          const change = indicesChange.DAX || 0;
+          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const arrow = change >= 0 ? '▲' : '▼';
+          stockItems.push(`<span class="ticker-item">DAX <span style="color:#00ff88;font-weight:700;">${indices.DAX.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+        }
+        
+        if (typeof indices.DOW === 'number') {
+          const change = indicesChange.DOW || 0;
+          const color = change >= 0 ? '#00ff88' : '#ff4444';
+          const arrow = change >= 0 ? '▲' : '▼';
+          stockItems.push(`<span class="ticker-item">DOW <span style="color:#00ff88;font-weight:700;">${indices.DOW.toLocaleString()}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+        }
+        
+        // Individual stocks
+        const stocks = data.stocks || {};
+        const stocksChange = data.stocksChange || {};
+        ['NVDA', 'TSLA', 'AAPL', 'MSFT', 'GOOGL', 'META', 'AMZN'].forEach(symbol => {
+          if (typeof stocks[symbol] === 'number') {
+            const change = stocksChange[symbol] || 0;
+            const color = change >= 0 ? '#00ff88' : '#ff4444';
+            const arrow = change >= 0 ? '▲' : '▼';
+            stockItems.push(`<span class="ticker-item">${symbol} <span style="color:#00ff88;font-weight:700;">$${stocks[symbol].toFixed(2)}</span> <span style="color:${color}">${arrow}${Math.abs(change).toFixed(2)}%</span></span>`);
+          }
         });
+        
+        if (stockItems.length > 0) {
+          const content = `<span class="ticker-label" style="color:#00ff88;">📈 STOCKS</span> ${stockItems.join(' • ')}`;
+          stocksTrack.innerHTML = `${content} ${content}`;
+          restartAnimation(stocksTrack);
+        }
       }
-      if (typeof indices.SP500 === 'number') {
-        indexEntries.push({
-          symbol: 'S&P 500',
-          price: indices.SP500,
-          change: indicesChange.SP500,
-          decimals: 0,
-          currencySymbol: '',
-          suffix: ' pkt',
-          changeDecimals: 2
-        });
-      }
-      if (typeof indices.DAX === 'number') {
-        indexEntries.push({
-          symbol: 'DAX',
-          price: indices.DAX,
-          change: indicesChange.DAX,
-          decimals: 0,
-          currencySymbol: '',
-          suffix: ' pkt',
-          changeDecimals: 2
-        });
-      }
-      if (typeof indices.DOW === 'number') {
-        indexEntries.push({
-          symbol: 'DOW',
-          price: indices.DOW,
-          change: indicesChange.DOW,
-          decimals: 0,
-          currencySymbol: '',
-          suffix: ' pkt',
-          changeDecimals: 2
-        });
-      }
-      if (indexEntries.length) {
-        segments.push({ label: 'INDEKSY', entries: indexEntries });
-      }
+    }
 
-      const sentimentEntries = [];
-      if (typeof data.fearGreed === 'number') {
-        sentimentEntries.push({ text: `Fear&Greed ${data.fearGreed}` });
-      }
-      if (typeof data.btcVolume === 'number' && data.btcVolume > 0) {
-        const billions = data.btcVolume / 1e9;
-        sentimentEntries.push({ text: `Wolumen $${billions.toFixed(2)}B` });
-      }
-      if (sentimentEntries.length) {
-        segments.push({ label: 'SENTYMENT', entries: sentimentEntries });
-      }
-
-      const combined = segments
-        .map(segment => buildTickerSegment(segment))
-        .filter(Boolean)
-        .join(' ');
-
-      track.innerHTML = combined ? `${combined} ${combined}` : '<span class="ticker-label">INFO</span> Brak danych z API';
-      restartAnimation(track);
+    // Legacy function for backward compatibility
+    function renderSniperTicker(data) {
+      renderDualTickers(data);
     }
 
     function renderNewsTicker(headlines) {
@@ -4460,20 +4453,41 @@
     // TICKER BAR - Update live market data
     async function updateTickerBar() {
       try {
+        console.log(`🎯 Ticker fetching from: ${API_BASE}/api/binance/summary`);
         const response = await fetch(`${API_BASE}/api/binance/summary`);
-        if (!response.ok) return;
+        if (!response.ok) {
+          console.warn(`⚠️ Ticker API response not ok: ${response.status}`);
+          return;
+        }
         const data = await response.json();
+        console.log('📊 Twelve Data ticker received:', data);
         if (data.ok) {
-          renderSniperTicker(data);
+          renderDualTickers(data);
+          console.log('✅ Dual tickers rendered (Crypto + Stocks)');
+        } else {
+          console.warn('⚠️ API returned ok=false');
+          showTickerError('API nie zwróciło danych');
         }
       } catch (err) {
-        console.log('Ticker API not ready yet. Using static values.');
+        console.log('❌ Ticker API error:', err.message);
+        showTickerError('Łączenie z Twelve Data API...');
+      }
+    }
+    
+    function showTickerError(message) {
+      const cryptoTrack = document.getElementById('cryptoTickerTrack');
+      const stocksTrack = document.getElementById('stocksTickerTrack');
+      if (cryptoTrack) {
+        cryptoTrack.innerHTML = `<span class="ticker-label" style="color:#ff6600;">🪙 CRYPTO</span> <span style="color:#888;">${message}</span>`;
+      }
+      if (stocksTrack) {
+        stocksTrack.innerHTML = `<span class="ticker-label" style="color:#00ff88;">📈 STOCKS</span> <span style="color:#888;">${message}</span>`;
       }
     }
 
     // Update ticker every 5 seconds
     setInterval(updateTickerBar, 5000);
-    updateTickerBar(); // Initial call
+    setTimeout(updateTickerBar, 500); // Initial call with small delay
 
     // Update news ticker every 45 seconds
     setInterval(updateNewsTicker, 45000);
