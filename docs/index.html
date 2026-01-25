@@ -18,14 +18,95 @@
       --yellow: #ffff00;
       --cyan: #00d4ff;
       --gray: #bdbdbd;
+      /* Theme colors */
+      --bg-primary: #000000;
+      --bg-secondary: #0a0a0a;
+      --bg-tertiary: #111111;
+      --text-primary: #ffffff;
+      --text-secondary: #cccccc;
+      --text-muted: #888888;
+      --border-color: #1a1a1a;
+    }
+    
+    /* Light Theme */
+    body.light-theme {
+      --bg-primary: #f5f5f5;
+      --bg-secondary: #ffffff;
+      --bg-tertiary: #e8e8e8;
+      --text-primary: #000000;
+      --text-secondary: #333333;
+      --text-muted: #666666;
+      --border-color: #dddddd;
+      --panel: #ffffff;
+      --border: #dddddd;
+      --gray: #555555;
+    }
+    body.light-theme .header {
+      background: var(--orange);
+      color: #000000;
+    }
+    body.light-theme .menu-bar {
+      background: #800020;
+    }
+    body.light-theme .ticker,
+    body.light-theme .ticker-bar,
+    body.light-theme .news-ticker-bar,
+    body.light-theme .twitter-ticker-bar,
+    body.light-theme .cryptopanic-ticker {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+    }
+    body.light-theme .ticker-price,
+    body.light-theme .ticker-symbol {
+      color: var(--text-primary);
+    }
+    body.light-theme .chart-container,
+    body.light-theme .news,
+    body.light-theme .breaking-news {
+      background: var(--bg-secondary);
+      border-color: var(--border-color);
+    }
+    body.light-theme svg rect[fill="#000"],
+    body.light-theme svg rect[fill="#000000"] {
+      fill: #f5f5f5 !important;
+    }
+    body.light-theme svg text {
+      fill: var(--text-primary);
+    }
+    body.light-theme .genius-panel {
+      background: var(--bg-secondary);
+      border-color: var(--border-color);
+    }
+    
+    /* Theme Toggle Button */
+    .theme-toggle {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 6px 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85em;
+      font-weight: 600;
+      color: #000;
+      transition: all 0.3s ease;
+    }
+    .theme-toggle:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    .theme-toggle .icon {
+      font-size: 1.1em;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Roboto Mono', monospace;
-      background: var(--black);
-      color: #ffffff;
+      background: var(--bg-primary);
+      color: var(--text-primary);
       line-height: 1.4;
       padding-bottom: 40px;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* BLOOMBERG HEADER */
@@ -559,6 +640,16 @@
     @keyframes ticker-scroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
+    }
+    /* Ensure seamless ticker animation */
+    .ticker-track,
+    .news-ticker-content,
+    .ticker-content,
+    #cryptoPanicTicker,
+    #twitterTickerContent {
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
     }
 
     /* DROP-DOWN PANELS UNDER MENU - SLIDE DOWN FROM TOP */
@@ -2772,7 +2863,11 @@
       </div>
       
       <!-- BUTTONS on the right -->
-      <div style="margin-left: auto; display: flex; gap: 8px;">
+      <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
+        <button class="theme-toggle" id="themeToggle" title="Przełącz motyw Dark/Light">
+          <span class="icon" id="themeIcon">🌙</span>
+          <span id="themeLabel">DARK</span>
+        </button>
         <button class="analytics-btn" id="analyticsBtn" title="Toggle Radar Panel (Bottom)">
           <span>RADAR</span>
         </button>
@@ -5302,7 +5397,8 @@
         
         if (cryptoItems.length > 0) {
           const content = `<span class="ticker-label">CRYPTO</span> ${cryptoItems.join(' <span class="ticker-sep">•</span> ')}`;
-          cryptoTrack.innerHTML = content + ' <span class="ticker-sep">•</span> ' + content;
+          // Preserve animation by updating without restarting
+          updateTickerSeamlessly(cryptoTrack, content + ' <span class="ticker-sep">•</span> ' + content);
         }
       }
       
@@ -5364,9 +5460,31 @@
         
         if (stockItems.length > 0) {
           const content = `<span class="ticker-label">MARKETS</span> ${stockItems.join(' <span class="ticker-sep">•</span> ')}`;
-          stocksTrack.innerHTML = content + ' <span class="ticker-sep">•</span> ' + content;
+          // Preserve animation by updating without restarting
+          updateTickerSeamlessly(stocksTrack, content + ' <span class="ticker-sep">•</span> ' + content);
         }
       }
+    }
+    
+    // ===== SEAMLESS TICKER UPDATE (prevents animation restart) =====
+    function updateTickerSeamlessly(trackElement, newContent) {
+      if (!trackElement) return;
+      
+      // Get computed animation state
+      const computedStyle = window.getComputedStyle(trackElement);
+      const animationName = computedStyle.animationName;
+      const animationDuration = computedStyle.animationDuration;
+      const animationTimingFunction = computedStyle.animationTimingFunction;
+      
+      // Pause animation, update content, resume
+      trackElement.style.animation = 'none';
+      trackElement.innerHTML = newContent;
+      
+      // Force reflow
+      void trackElement.offsetWidth;
+      
+      // Resume animation
+      trackElement.style.animation = `${animationName} ${animationDuration} ${animationTimingFunction} infinite`;
     }
     
     function formatTickerItem(symbol, price, change, decimals = 2, prefix = '$') {
@@ -7019,89 +7137,35 @@
         if (supportLabel) supportLabel.textContent = `SUPPORT ${formatPrice(support)}`;
         if (resistanceLabel) resistanceLabel.textContent = `RESISTANCE ${formatPrice(resistance)}`;
         
-        // Update Buy/Sell signals position based on price data
-        updateBuySellSignals(points, minPrice, maxPrice, chartLeft, chartRight, chartTop, chartBottom);
+        // Update price glow line
+        const priceLineGlow = document.getElementById('priceLineGlow');
+        if (priceLineGlow) priceLineGlow.setAttribute('points', pointsStr);
+        
+        // Update Live Analysis Panel for new timeframe
+        updateLiveAnalysisPanel(currentPrice, support, resistance, points);
+        
+        // Update live price indicator position
+        const currentPriceY = priceToY(currentPrice);
+        const livePriceDot = document.getElementById('livePriceDot');
+        const livePriceLine = document.getElementById('livePriceLine');
+        const livePriceBox = document.getElementById('livePriceBox');
+        const livePriceText = document.getElementById('livePriceText');
+        
+        if (livePriceDot) livePriceDot.setAttribute('cy', currentPriceY);
+        if (livePriceLine) {
+          livePriceLine.setAttribute('y1', currentPriceY);
+          livePriceLine.setAttribute('y2', currentPriceY);
+        }
+        if (livePriceBox) livePriceBox.setAttribute('y', currentPriceY - 12);
+        if (livePriceText) {
+          livePriceText.setAttribute('y', currentPriceY + 5);
+          livePriceText.textContent = `$${currentPrice.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+        }
         
         console.log(`📊 Chart ${timeframe} updated: BTC ${formatPrice(currentPrice)} (${points.length} points)`);
         
       } catch (e) {
         console.log('Chart timeframe update error:', e);
-      }
-    }
-
-    // ===== UPDATE BUY/SELL SIGNALS ON CHART =====
-    function updateBuySellSignals(points, minPrice, maxPrice, chartLeft, chartRight, chartTop, chartBottom) {
-      const chartWidth = chartRight - chartLeft;
-      const chartHeight = chartBottom - chartTop;
-      
-      const priceToY = (price) => {
-        const ratio = (price - minPrice) / (maxPrice - minPrice);
-        return chartBottom - (ratio * chartHeight);
-      };
-      
-      // Find local min/max for buy/sell signals
-      let localMinIdx = 0, localMaxIdx = 0;
-      let localMin = Infinity, localMax = -Infinity;
-      
-      points.forEach((p, i) => {
-        if (p.low < localMin) { localMin = p.low; localMinIdx = i; }
-        if (p.high > localMax) { localMax = p.high; localMaxIdx = i; }
-      });
-      
-      // Calculate positions
-      const buyX = chartLeft + (localMinIdx / (points.length - 1)) * chartWidth;
-      const buyY = priceToY(localMin);
-      const sellX = chartLeft + (localMaxIdx / (points.length - 1)) * chartWidth;
-      const sellY = priceToY(localMax);
-      
-      // Update BUY signal
-      const buyCircle = document.getElementById('buySignalCircle');
-      const buyText = document.getElementById('buySignalText');
-      const buyLine = document.getElementById('buySignalLine');
-      const buyLiq = document.getElementById('buySignalLiq');
-      
-      if (buyCircle) {
-        buyCircle.setAttribute('cx', buyX.toFixed(0));
-        buyCircle.setAttribute('cy', buyY.toFixed(0));
-      }
-      if (buyText) {
-        buyText.setAttribute('x', buyX.toFixed(0));
-        buyText.setAttribute('y', (buyY - 15).toFixed(0));
-      }
-      if (buyLine) {
-        buyLine.setAttribute('x1', buyX.toFixed(0));
-        buyLine.setAttribute('x2', buyX.toFixed(0));
-        buyLine.setAttribute('y1', (buyY + 5).toFixed(0));
-      }
-      if (buyLiq) {
-        buyLiq.setAttribute('x', (buyX - 5).toFixed(0));
-        const liqAmount = Math.floor(Math.random() * 50 + 30);
-        buyLiq.textContent = `$${liqAmount}M Liq`;
-      }
-      
-      // Update SELL signal
-      const sellCircle = document.getElementById('sellSignalCircle');
-      const sellText = document.getElementById('sellSignalText');
-      const sellLine = document.getElementById('sellSignalLine');
-      const sellLiq = document.getElementById('sellSignalLiq');
-      
-      if (sellCircle) {
-        sellCircle.setAttribute('cx', sellX.toFixed(0));
-        sellCircle.setAttribute('cy', sellY.toFixed(0));
-      }
-      if (sellText) {
-        sellText.setAttribute('x', sellX.toFixed(0));
-        sellText.setAttribute('y', (sellY - 15).toFixed(0));
-      }
-      if (sellLine) {
-        sellLine.setAttribute('x1', sellX.toFixed(0));
-        sellLine.setAttribute('x2', sellX.toFixed(0));
-        sellLine.setAttribute('y1', (sellY + 5).toFixed(0));
-      }
-      if (sellLiq) {
-        sellLiq.setAttribute('x', (sellX - 5).toFixed(0));
-        const liqAmount = Math.floor(Math.random() * 60 + 40);
-        sellLiq.textContent = `$${liqAmount}M Liq`;
       }
     }
 
@@ -9541,6 +9605,37 @@
         }
       }, 1000);
     });
+
+    // ============ THEME TOGGLE (DARK/LIGHT) ============
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    
+    // Load saved theme from localStorage
+    const savedTheme = localStorage.getItem('hamsterTheme') || 'dark';
+    if (savedTheme === 'light') {
+      document.body.classList.add('light-theme');
+      if (themeIcon) themeIcon.textContent = '☀️';
+      if (themeLabel) themeLabel.textContent = 'LIGHT';
+    }
+    
+    if (themeToggle) {
+      themeToggle.addEventListener('click', () => {
+        const isLight = document.body.classList.toggle('light-theme');
+        
+        if (isLight) {
+          themeIcon.textContent = '☀️';
+          themeLabel.textContent = 'LIGHT';
+          localStorage.setItem('hamsterTheme', 'light');
+        } else {
+          themeIcon.textContent = '🌙';
+          themeLabel.textContent = 'DARK';
+          localStorage.setItem('hamsterTheme', 'dark');
+        }
+        
+        console.log(`🎨 Theme switched to: ${isLight ? 'LIGHT' : 'DARK'}`);
+      });
+    }
 
   </script>
 </body>
