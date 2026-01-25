@@ -1250,6 +1250,73 @@ def fear_greed_index():
     })
 
 
+@app.route('/api/chart-data', methods=['GET'])
+def chart_data():
+    """Get chart data for SVG charts - uses Twelve Data time series"""
+    try:
+        symbol = request.args.get('symbol', 'BTC/USD')
+        interval = request.args.get('interval', '1h')
+        outputsize = int(request.args.get('outputsize', 24))
+        
+        # Fetch time series from Twelve Data
+        params = {
+            'symbol': symbol,
+            'interval': interval,
+            'outputsize': outputsize,
+            'apikey': TWELVE_DATA_API_KEY
+        }
+        response = requests.get(f'{TWELVE_DATA_BASE_URL}/time_series', params=params, timeout=15)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if 'values' in data:
+                values = data['values']
+                # Calculate price range for chart scaling
+                prices = [float(v['close']) for v in values if v.get('close')]
+                if prices:
+                    min_price = min(prices)
+                    max_price = max(prices)
+                    current_price = prices[0]  # Most recent
+                    
+                    # Calculate support/resistance levels
+                    price_range = max_price - min_price
+                    support = min_price - (price_range * 0.02)
+                    resistance = max_price + (price_range * 0.02)
+                    
+                    # Format for chart
+                    chart_points = []
+                    for i, v in enumerate(reversed(values)):  # Oldest to newest
+                        chart_points.append({
+                            'x': i,
+                            'close': float(v.get('close', 0)),
+                            'high': float(v.get('high', 0)),
+                            'low': float(v.get('low', 0)),
+                            'open': float(v.get('open', 0)),
+                            'datetime': v.get('datetime', '')
+                        })
+                    
+                    return jsonify({
+                        'ok': True,
+                        'symbol': symbol,
+                        'interval': interval,
+                        'current_price': current_price,
+                        'min_price': min_price,
+                        'max_price': max_price,
+                        'support': round(support, 2),
+                        'resistance': round(resistance, 2),
+                        'points': chart_points,
+                        'count': len(chart_points)
+                    })
+            
+            return jsonify({'ok': False, 'error': 'No chart data available'}), 404
+        
+        return jsonify({'ok': False, 'error': f'Twelve Data error: {response.status_code}'}), 500
+        
+    except Exception as e:
+        logger.error(f"Chart data error: {e}")
+        return jsonify({'ok': False, 'error': str(e)}), 500
+
+
 @app.route('/api/coingecko/simple', methods=['GET'])
 def coingecko_simple():
     """Get crypto prices from Twelve Data cache"""
