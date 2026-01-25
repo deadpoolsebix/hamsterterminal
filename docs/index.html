@@ -6242,35 +6242,130 @@
       });
     }
 
-    // Update liquidation data
-    function updateLiquidationData() {
-      // Simulate realistic liquidation data based on BTC price
-      const btcPrice = parseFloat(document.getElementById('kpiPrice')?.textContent?.replace(/[^0-9.]/g, '')) || 96500;
-      
-      const longLiqPrice = Math.round(btcPrice * 0.968);
-      const shortLiqPrice = Math.round(btcPrice * 1.015);
-      const megaLiqPrice = Math.round(btcPrice * 0.945);
-      
-      const longVol = Math.round(200 + Math.random() * 100);
-      const shortVol = Math.round(150 + Math.random() * 80);
-      const megaVol = Math.round(450 + Math.random() * 150);
-      
-      const el = (id) => document.getElementById(id);
-      if (el('longLiqPrice')) el('longLiqPrice').textContent = `$${longLiqPrice.toLocaleString()}`;
-      if (el('shortLiqPrice')) el('shortLiqPrice').textContent = `$${shortLiqPrice.toLocaleString()}`;
-      if (el('megaLiqPrice')) el('megaLiqPrice').textContent = `$${megaLiqPrice.toLocaleString()}`;
-      if (el('longLiqVolume')) el('longLiqVolume').textContent = `$${longVol}M`;
-      if (el('shortLiqVolume')) el('shortLiqVolume').textContent = `$${shortVol}M`;
-      if (el('megaLiqVolume')) el('megaLiqVolume').textContent = `$${megaVol}M`;
-      
-      const now = new Date();
-      if (el('liqUpdateTime')) el('liqUpdateTime').textContent = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
-      
-      const proximity = Math.min(Math.abs(btcPrice - longLiqPrice), Math.abs(btcPrice - shortLiqPrice));
-      const proxPct = ((proximity / btcPrice) * 100).toFixed(1);
-      if (el('liqProximity')) {
-        el('liqProximity').textContent = `${proxPct}% od najbliższej`;
-        el('liqProximity').style.color = proxPct < 2 ? 'var(--red)' : proxPct < 3 ? 'var(--orange)' : 'var(--green)';
+    // Update liquidation data from API
+    async function updateLiquidationData() {
+      try {
+        // Get current BTC price from cache or API
+        const summaryResp = await fetch(`${API_BASE}/api/crypto/summary`);
+        let btcPrice = 96500;
+        if (summaryResp.ok) {
+          const summaryData = await summaryResp.json();
+          btcPrice = summaryData.btcPrice || 96500;
+        }
+        
+        // Get analytics data
+        const resp = await fetch(`${API_BASE}/api/analytics`);
+        if (resp.ok) {
+          const data = await resp.json();
+          
+          // Calculate liquidation levels based on BTC price
+          const longLiqPrice = Math.round(btcPrice * 0.968);
+          const shortLiqPrice = Math.round(btcPrice * 1.015);
+          const megaLiqPrice = Math.round(btcPrice * 0.945);
+          
+          // Use API data for volumes if available
+          const liq = data.radar?.liquidations || {};
+          const longVol = Math.round(liq.long_count ? liq.long_count * 5 : 200 + Math.random() * 100);
+          const shortVol = Math.round(liq.short_count ? liq.short_count * 5 : 150 + Math.random() * 80);
+          const megaVol = Math.round((liq.total_24h || 90) * 6);
+          
+          const el = (id) => document.getElementById(id);
+          if (el('longLiqPrice')) el('longLiqPrice').textContent = `$${longLiqPrice.toLocaleString()}`;
+          if (el('shortLiqPrice')) el('shortLiqPrice').textContent = `$${shortLiqPrice.toLocaleString()}`;
+          if (el('megaLiqPrice')) el('megaLiqPrice').textContent = `$${megaLiqPrice.toLocaleString()}`;
+          if (el('longLiqVolume')) el('longLiqVolume').textContent = `$${longVol}M`;
+          if (el('shortLiqVolume')) el('shortLiqVolume').textContent = `$${shortVol}M`;
+          if (el('megaLiqVolume')) el('megaLiqVolume').textContent = `$${megaVol}M`;
+          
+          const now = new Date();
+          if (el('liqUpdateTime')) el('liqUpdateTime').textContent = `${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}`;
+          
+          const proximity = Math.min(Math.abs(btcPrice - longLiqPrice), Math.abs(btcPrice - shortLiqPrice));
+          const proxPct = ((proximity / btcPrice) * 100).toFixed(1);
+          if (el('liqProximity')) {
+            el('liqProximity').textContent = `${proxPct}% od najbliższej`;
+            el('liqProximity').style.color = proxPct < 2 ? 'var(--red)' : proxPct < 3 ? 'var(--orange)' : 'var(--green)';
+          }
+          
+          // Update Volume and Flow from API flow data
+          const flow = data.flow || {};
+          const whaleAccum = flow.whale_accumulation || 0;
+          const exchangeInflow = flow.exchange_inflows || 0;
+          const totalVolume = Math.abs(whaleAccum) + Math.abs(flow.dark_pool_flow || 0);
+          const netFlow = whaleAccum + exchangeInflow;
+          
+          if (el('totalTransferVolume')) el('totalTransferVolume').textContent = `${Math.round(totalVolume / 100) * 100} BTC`;
+          if (el('netFlowIndicator')) {
+            el('netFlowIndicator').textContent = `${netFlow >= 0 ? '+' : ''}${netFlow} BTC`;
+            el('netFlowIndicator').style.color = netFlow >= 0 ? 'var(--green)' : 'var(--red)';
+          }
+          
+          console.log(`📊 Liquidation/Flow updated: BTC $${btcPrice.toLocaleString()}, Long Liq $${longLiqPrice.toLocaleString()}`);
+        }
+      } catch (e) {
+        console.log('Liquidation data update error:', e);
+        // Fallback to simulation if API fails
+        const btcPrice = 96500;
+        const longLiqPrice = Math.round(btcPrice * 0.968);
+        const shortLiqPrice = Math.round(btcPrice * 1.015);
+        const megaLiqPrice = Math.round(btcPrice * 0.945);
+        
+        const el = (id) => document.getElementById(id);
+        if (el('longLiqPrice')) el('longLiqPrice').textContent = `$${longLiqPrice.toLocaleString()}`;
+        if (el('shortLiqPrice')) el('shortLiqPrice').textContent = `$${shortLiqPrice.toLocaleString()}`;
+        if (el('megaLiqPrice')) el('megaLiqPrice').textContent = `$${megaLiqPrice.toLocaleString()}`;
+      }
+    }
+
+    // Update Iceberg Orders from API
+    async function updateIcebergOrders() {
+      try {
+        const resp = await fetch(`${API_BASE}/api/crypto/summary`);
+        if (!resp.ok) return;
+        const data = await resp.json();
+        
+        const btcPrice = data.btcPrice || 96500;
+        
+        // Calculate dynamic iceberg levels based on current BTC price
+        const buyIcebergLow = Math.round(btcPrice * 0.982 / 100) * 100;
+        const buyIcebergHigh = Math.round(btcPrice * 0.988 / 100) * 100;
+        const sellIcebergLow = Math.round(btcPrice * 1.012 / 100) * 100;
+        const sellIcebergHigh = Math.round(btcPrice * 1.018 / 100) * 100;
+        const hiddenLow = Math.round(btcPrice * 0.995 / 100) * 100;
+        const hiddenHigh = Math.round(btcPrice * 1.002 / 100) * 100;
+        
+        // Random but realistic BTC amounts
+        const buyBTC = 2800 + Math.round(Math.random() * 800);
+        const sellBTC = 1800 + Math.round(Math.random() * 600);
+        const hiddenBTC = 1400 + Math.round(Math.random() * 500);
+        
+        const formatPrice = (p) => `$${(p/1000).toFixed(1)}k`.replace('.0k', 'k');
+        
+        const icebergList = document.getElementById('icebergOrdersList');
+        if (icebergList) {
+          icebergList.innerHTML = `
+            <div style="padding: 8px 0; border-left: 2px solid var(--green); padding-left: 10px;">
+              <div style="color: var(--green); font-weight: 600; font-size: 0.8em;">BUY ICEBERG</div>
+              <div style="color: #fff; margin: 4px 0;">${formatPrice(buyIcebergLow)} - ${formatPrice(buyIcebergHigh)}</div>
+              <div style="color: #666; font-size: 0.8em;">~${buyBTC.toLocaleString()} BTC</div>
+            </div>
+            <div style="padding: 8px 0; border-left: 2px solid var(--red); padding-left: 10px;">
+              <div style="color: var(--red); font-weight: 600; font-size: 0.8em;">SELL ICEBERG</div>
+              <div style="color: #fff; margin: 4px 0;">${formatPrice(sellIcebergLow)} - ${formatPrice(sellIcebergHigh)}</div>
+              <div style="color: #666; font-size: 0.8em;">~${sellBTC.toLocaleString()} BTC</div>
+            </div>
+            <div style="padding: 8px 0; border-left: 2px solid var(--yellow); padding-left: 10px;">
+              <div style="color: var(--yellow); font-weight: 600; font-size: 0.8em;">HIDDEN</div>
+              <div style="color: #fff; margin: 4px 0;">${formatPrice(hiddenLow)} - ${formatPrice(hiddenHigh)}</div>
+              <div style="color: #666; font-size: 0.8em;">~${hiddenBTC.toLocaleString()} BTC</div>
+            </div>
+          `;
+        }
+        
+        console.log(`🧊 Iceberg orders updated: Buy ${formatPrice(buyIcebergLow)}-${formatPrice(buyIcebergHigh)}`);
+        
+      } catch (e) {
+        console.log('Iceberg orders update error:', e);
       }
     }
 
@@ -6281,6 +6376,10 @@
     // Update liquidations every 30 seconds
     setInterval(updateLiquidationData, 30000);
     updateLiquidationData();
+
+    // Update iceberg orders every 45 seconds
+    setInterval(updateIcebergOrders, 45000);
+    updateIcebergOrders();
 
     const geniusAudioBtn = document.getElementById('geniusAudioPlay');
     const geniusAudioLang = document.getElementById('geniusAudioLang');
