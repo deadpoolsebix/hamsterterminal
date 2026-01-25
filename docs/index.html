@@ -3598,26 +3598,26 @@
       </svg>
     </div>
 
-    <!-- OPEN INTEREST CHART -->
-    <div style="background: #131722; border: 1px solid #2a2e39; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+    <!-- OPEN INTEREST CHART - Dark theme matching chart -->
+    <div style="background: #0d0d0d; border: 1px solid #1a1a1a; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
       <!-- Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #2a2e39;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #1a1a1a;">
         <div>
-          <div style="color: #d1d4dc; font-weight: 700; font-size: 1.1em;">OPEN INTEREST</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">BTC Perpetual Futures</div>
+          <div style="color: #ffffff; font-weight: 700; font-size: 1.1em; letter-spacing: 1px;">OPEN INTEREST</div>
+          <div style="color: #666666; font-size: 0.8em; margin-top: 2px;">BTC Perpetual Futures</div>
         </div>
         <div style="text-align: right;">
-          <div id="totalOI" style="color: #d1d4dc; font-size: 1.4em; font-weight: 700;">$12.45B</div>
+          <div id="totalOI" style="color: #ffffff; font-size: 1.4em; font-weight: 700;">$12.45B</div>
           <div id="oiChange24h" style="color: #089981; font-size: 0.9em;">+2.8% (24h)</div>
         </div>
       </div>
 
       <!-- OI Chart SVG -->
-      <svg id="oiChart" viewBox="0 0 800 120" style="width: 100%; height: 120px; background: #0d1117; border-radius: 4px;">
+      <svg id="oiChart" viewBox="0 0 800 120" style="width: 100%; height: 120px; background: #000000; border-radius: 4px;">
         <!-- Grid lines -->
-        <line x1="50" y1="20" x2="780" y2="20" stroke="#1e222d" stroke-width="1"/>
-        <line x1="50" y1="60" x2="780" y2="60" stroke="#1e222d" stroke-width="1"/>
-        <line x1="50" y1="100" x2="780" y2="100" stroke="#1e222d" stroke-width="1"/>
+        <line x1="50" y1="20" x2="780" y2="20" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="50" y1="60" x2="780" y2="60" stroke="#1a1a1a" stroke-width="1"/>
+        <line x1="50" y1="100" x2="780" y2="100" stroke="#1a1a1a" stroke-width="1"/>
         
         <!-- OI Area Fill -->
         <defs>
@@ -3647,52 +3647,52 @@
 
       <!-- Exchange Breakdown -->
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px;">
-        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #f0b90b;">
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #f0b90b;">
           <div style="color: #f0b90b; font-weight: 600; font-size: 0.85em;">BINANCE</div>
-          <div id="oiBinance" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$5.12B</div>
+          <div id="oiBinance" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$5.12B</div>
           <div id="oiBinanceChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+3.2%</div>
         </div>
-        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #ff9800;">
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #ff9800;">
           <div style="color: #ff9800; font-weight: 600; font-size: 0.85em;">BYBIT</div>
-          <div id="oiBybit" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$3.85B</div>
+          <div id="oiBybit" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$3.85B</div>
           <div id="oiBybitChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+2.1%</div>
         </div>
-        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #2962ff;">
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #2962ff;">
           <div style="color: #2962ff; font-weight: 600; font-size: 0.85em;">OKX</div>
-          <div id="oiOkx" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$2.28B</div>
+          <div id="oiOkx" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$2.28B</div>
           <div id="oiOkxChange" style="color: #f23645; font-size: 0.8em; margin-top: 4px;">-0.8%</div>
         </div>
-        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #089981;">
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #089981;">
           <div style="color: #089981; font-weight: 600; font-size: 0.85em;">OTHERS</div>
-          <div id="oiOthers" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$1.20B</div>
+          <div id="oiOthers" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$1.20B</div>
           <div id="oiOthersChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+1.5%</div>
         </div>
       </div>
 
       <!-- OI Analysis -->
-      <div style="background: #1e222d; border-radius: 6px; padding: 16px; margin-top: 16px; border-left: 3px solid #2962ff;">
-        <div style="color: #787b86; font-size: 0.85em; margin-bottom: 10px;">OI ANALYSIS</div>
-        <div id="oiAnalysisText" style="color: #d1d4dc; font-size: 0.95em; line-height: 1.6;">
+      <div style="background: #0a0a0a; border-radius: 6px; padding: 16px; margin-top: 16px; border-left: 3px solid #2962ff;">
+        <div style="color: #666666; font-size: 0.85em; margin-bottom: 10px;">OI ANALYSIS</div>
+        <div id="oiAnalysisText" style="color: #cccccc; font-size: 0.95em; line-height: 1.6;">
           <strong style="color: #089981;">OI rosnące przy wzroście ceny</strong> - nowe pozycje long wchodzą na rynek. Sygnał kontynuacji trendu. Uważaj na nagły spadek OI przy wysokich cenach - może oznaczać realizację zysków i potencjalny pullback.
         </div>
       </div>
 
       <!-- OI Metrics -->
       <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px;">
-        <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
-          <div style="color: #787b86; font-size: 0.8em;">LONG/SHORT RATIO</div>
+        <div style="text-align: center; padding: 12px; background: #0a0a0a; border-radius: 4px;">
+          <div style="color: #666666; font-size: 0.8em;">LONG/SHORT RATIO</div>
           <div id="longShortRatio" style="color: #089981; font-size: 1.2em; font-weight: 700; margin-top: 4px;">1.24</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">Longs dominant</div>
+          <div style="color: #666666; font-size: 0.8em; margin-top: 2px;">Longs dominant</div>
         </div>
-        <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
-          <div style="color: #787b86; font-size: 0.8em;">24H LIQUIDATIONS</div>
+        <div style="text-align: center; padding: 12px; background: #0a0a0a; border-radius: 4px;">
+          <div style="color: #666666; font-size: 0.8em;">24H LIQUIDATIONS</div>
           <div id="liquidations24h" style="color: #f23645; font-size: 1.2em; font-weight: 700; margin-top: 4px;">$85.2M</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">Shorts: 62%</div>
+          <div style="color: #666666; font-size: 0.8em; margin-top: 2px;">Shorts: 62%</div>
         </div>
-        <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
-          <div style="color: #787b86; font-size: 0.8em;">FUNDING RATE</div>
+        <div style="text-align: center; padding: 12px; background: #0a0a0a; border-radius: 4px;">
+          <div style="color: #666666; font-size: 0.8em;">FUNDING RATE</div>
           <div id="fundingRateOI" style="color: #089981; font-size: 1.2em; font-weight: 700; margin-top: 4px;">+0.008%</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">Neutral-bullish</div>
+          <div style="color: #666666; font-size: 0.8em; margin-top: 2px;">Neutral-bullish</div>
         </div>
       </div>
     </div>
@@ -3703,97 +3703,92 @@
     </div>
     </div>
     
-    <!-- SIDE PANEL - Ticker Style (matching top stock ticker) -->
-    <div style="background: #000000; border: 1px solid #333333; padding: 0; font-weight: 700; letter-spacing: 1px;">
+    <!-- SIDE PANEL - Flat Ticker Style (like DJI 38,650.00 +0.30% • DAX) -->
+    <div style="background: #000000; border: 1px solid #333333; padding: 0; font-weight: 700; letter-spacing: 0.5px;">
       
-      <!-- WHALE TRANSFERS -->
-      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
-        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-          <span style="color: #ffffff; font-size: 2.2em;">WHALE</span>
-          <span style="color: #cccccc; font-size: 1em;">TRANSFERS</span>
-          <span style="color: #999999; font-size: 0.85em;" id="transfersLastUpdate">--:--:--</span>
-        </div>
-        <div id="largeTransfersList" style="font-size: 0.9em;">
-          <div style="color: #666666;">Loading...</div>
-        </div>
+      <!-- WHALE TRANSFERS - Flat ticker row -->
+      <div style="padding: 14px 16px; border-bottom: 1px solid #333333; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <span style="color: #ffffff; font-size: 1.8em;">WHALE</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #cccccc; font-size: 0.95em;">TRANSFERS</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999; font-size: 0.9em;" id="transfersLastUpdate">--:--:--</span>
+      </div>
+      <div id="largeTransfersList" style="padding: 8px 16px; font-size: 0.9em;">
+        <div style="color: #666666;">Loading...</div>
       </div>
       
-      <!-- ICEBERG ORDERS -->
-      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
-        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-          <span style="color: #ffffff; font-size: 2.2em;">ICEBERG</span>
-          <span style="color: #cccccc; font-size: 1em;">HIDDEN ORDERS</span>
-        </div>
-        <div style="font-size: 0.9em;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
-            <span style="color: #ffffff; font-size: 1.1em; min-width: 50px;">BUY</span>
-            <span style="color: #cccccc; min-width: 140px;">$94,800 - $95,200</span>
-            <span style="color: #999999;">~3,200 BTC</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
-            <span style="color: #cccccc; font-size: 1.1em; min-width: 50px;">SELL</span>
-            <span style="color: #cccccc; min-width: 140px;">$97,400 - $97,800</span>
-            <span style="color: #999999;">~2,100 BTC</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0;">
-            <span style="color: #999999; font-size: 1.1em; min-width: 50px;">HIDE</span>
-            <span style="color: #cccccc; min-width: 140px;">$96,000 - $96,500</span>
-            <span style="color: #999999;">~1,800 BTC</span>
-          </div>
-        </div>
+      <!-- ICEBERG - Flat ticker rows -->
+      <div style="padding: 14px 16px; border-top: 1px solid #333333; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 8px;">
+        <span style="color: #ffffff; font-size: 1.8em;">ICEBERG</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #cccccc; font-size: 0.95em;">HIDDEN ORDERS</span>
+      </div>
+      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
+        <span style="color: #ffffff; font-size: 1.1em;">BUY</span>
+        <span style="color: #cccccc;">$94,800 - $95,200</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999;">~3,200 BTC</span>
+      </div>
+      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
+        <span style="color: #ffffff; font-size: 1.1em;">SELL</span>
+        <span style="color: #cccccc;">$97,400 - $97,800</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999;">~2,100 BTC</span>
+      </div>
+      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333333;">
+        <span style="color: #ffffff; font-size: 1.1em;">HIDE</span>
+        <span style="color: #cccccc;">$96,000 - $96,500</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999;">~1,800 BTC</span>
       </div>
       
-      <!-- SESSION -->
-      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
-        <div style="display: flex; align-items: center; gap: 16px;">
-          <span style="color: #ffffff; font-size: 2.2em;">SESSION</span>
-          <span style="color: #cccccc; font-size: 1.4em;" id="frontSessionTimer">--:--:--</span>
-          <span style="color: #999999; font-size: 0.9em;" id="frontSessionName">--</span>
-        </div>
-        <div style="margin-top: 8px; font-size: 0.85em; color: #999999;">
-          Next: <span id="nextSessionInfo" style="color: #cccccc;">--</span>
-        </div>
+      <!-- SESSION - Flat ticker row -->
+      <div style="padding: 14px 16px; border-bottom: 1px solid #333333; display: flex; align-items: center; gap: 10px;">
+        <span style="color: #ffffff; font-size: 1.8em;">SESSION</span>
+        <span style="color: #cccccc; font-size: 1.2em;" id="frontSessionTimer">--:--:--</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999; font-size: 0.95em;" id="frontSessionName">--</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #666666; font-size: 0.9em;">Next:</span>
+        <span style="color: #cccccc; font-size: 0.9em;" id="nextSessionInfo">--</span>
       </div>
       
-      <!-- LIQUIDATION LEVELS -->
-      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
-        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
-          <span style="color: #ffffff; font-size: 2.2em;">LIQUIDATION</span>
-          <span style="color: #cccccc; font-size: 1em;">LEVELS</span>
-        </div>
-        <div style="font-size: 0.9em;">
-          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
-            <span style="color: #ffffff; font-size: 1.1em; min-width: 60px;">LONG</span>
-            <span style="color: #cccccc; min-width: 100px;" id="longLiqPrice">$93,450</span>
-            <span style="color: #999999;" id="longLiqVolume">$245M</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
-            <span style="color: #cccccc; font-size: 1.1em; min-width: 60px;">SHORT</span>
-            <span style="color: #cccccc; min-width: 100px;" id="shortLiqPrice">$97,800</span>
-            <span style="color: #999999;" id="shortLiqVolume">$180M</span>
-          </div>
-          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0;">
-            <span style="color: #999999; font-size: 1.1em; min-width: 60px;">MEGA</span>
-            <span style="color: #cccccc; min-width: 100px;" id="megaLiqPrice">$91,200</span>
-            <span style="color: #999999;" id="megaLiqVolume">$520M</span>
-          </div>
-        </div>
+      <!-- LIQUIDATION - Flat ticker rows -->
+      <div style="padding: 14px 16px; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 8px;">
+        <span style="color: #ffffff; font-size: 1.8em;">LIQUIDATION</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #cccccc; font-size: 0.95em;">LEVELS</span>
+      </div>
+      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
+        <span style="color: #ffffff; font-size: 1.1em;">LONG</span>
+        <span style="color: #cccccc;" id="longLiqPrice">$93,450</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999;" id="longLiqVolume">$245M</span>
+      </div>
+      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
+        <span style="color: #ffffff; font-size: 1.1em;">SHORT</span>
+        <span style="color: #cccccc;" id="shortLiqPrice">$97,800</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999;" id="shortLiqVolume">$180M</span>
+      </div>
+      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333333;">
+        <span style="color: #ffffff; font-size: 1.1em;">MEGA</span>
+        <span style="color: #cccccc;" id="megaLiqPrice">$91,200</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #999999;" id="megaLiqVolume">$520M</span>
       </div>
       
-      <!-- FOOTER STATS - Ticker Style -->
-      <div style="padding: 12px 20px; display: flex; align-items: center; gap: 24px; font-size: 0.85em;">
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: #ffffff;">VOL</span>
-          <span style="color: #cccccc;" id="totalTransferVolume">--</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: #ffffff;">NET</span>
-          <span id="netFlowIndicator" style="color: #cccccc;">--</span>
-        </div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <span style="color: #ffffff;">PROX</span>
-          <span id="liqProximity" style="color: #cccccc;">--</span>
-        </div>
+      <!-- FOOTER STATS - Flat ticker row -->
+      <div style="padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 0.9em;">
+        <span style="color: #ffffff;">VOL</span>
+        <span style="color: #cccccc;" id="totalTransferVolume">--</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #ffffff;">NET</span>
+        <span id="netFlowIndicator" style="color: #cccccc;">--</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #ffffff;">PROX</span>
+        <span id="liqProximity" style="color: #cccccc;">--</span>
       </div>
     </div>
   </div>
@@ -5708,15 +5703,17 @@
     function renderTransfer(t) {
       const timeAgo = getTimeAgo(t.timestamp);
       
-      // Ticker style: TYPE in white, values in #ccc, secondary in #999
+      // Flat ticker style: TYPE • amount • value • time (like DJI 38,650.00 +0.30% • DAX)
       return `
         <div class="transfer-row ${t.isNew ? 'transfer-row-new' : ''}" 
              data-id="${t.id}"
-             style="padding: 8px 0; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: 1px;">
-          <span style="color: #ffffff; font-size: 1em; min-width: 45px;">${t.type}</span>
-          <span style="color: #cccccc; font-size: 0.9em; min-width: 90px;">${t.amount.toLocaleString()} BTC</span>
-          <span style="color: #cccccc; font-size: 0.9em; min-width: 65px;">$${(t.valueUSD / 1000000).toFixed(1)}M</span>
-          <span style="color: #999999; font-size: 0.8em; flex: 1; text-align: right;">${timeAgo}</span>
+             style="padding: 6px 0; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.5px;">
+          <span style="color: #ffffff; font-size: 1em;">${t.type}</span>
+          <span style="color: #cccccc; font-size: 0.95em;">${t.amount.toLocaleString()} BTC</span>
+          <span style="color: #666666;">•</span>
+          <span style="color: #cccccc; font-size: 0.95em;">$${(t.valueUSD / 1000000).toFixed(1)}M</span>
+          <span style="color: #666666;">•</span>
+          <span style="color: #999999; font-size: 0.9em;">${timeAgo}</span>
         </div>
       `;
     }
