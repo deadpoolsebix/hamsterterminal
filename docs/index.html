@@ -2053,6 +2053,360 @@
       color: #ff6b00;
       font-weight: bold;
     }
+
+    /* ============================================
+       MOBILE RESPONSIVE STYLES - PHONE OPTIMIZED
+       ============================================ */
+    
+    /* Mobile-specific helper classes */
+    .mobile-grid-stack {
+      display: grid;
+    }
+    .mobile-grid-2col {
+      display: grid;
+    }
+    
+    @media (max-width: 768px) {
+      /* Stack grids on mobile */
+      .mobile-grid-stack {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+        padding: 10px 12px !important;
+      }
+      .mobile-grid-2col {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+      
+      /* Genius inline box - Larger text */
+      .genius-inline-box {
+        padding: 10px 12px !important;
+      }
+      .genius-inline-box #geniusInlineCommentary {
+        font-size: 1em !important;
+        line-height: 1.6 !important;
+      }
+      
+      /* RSI section - More compact */
+      .rsi-section {
+        height: 110px !important;
+        padding: 8px 10px !important;
+      }
+      
+      /* OI section - Readable */
+      .oi-section {
+        padding: 10px !important;
+      }
+      .oi-section svg {
+        height: 120px !important;
+      }
+      
+      /* Side panel unified - Mobile friendly */
+      .side-panel-unified {
+        margin-top: 0 !important;
+      }
+      .side-panel-unified > div {
+        padding: 8px 12px !important;
+      }
+      
+      /* Iceberg rows - Stack on mobile */
+      .iceberg-row {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 4px !important;
+        padding: 10px 12px !important;
+      }
+      
+      /* Liquidation grid - 1 column on mobile */
+      .liq-grid {
+        grid-template-columns: 1fr !important;
+        gap: 6px !important;
+        padding: 10px 12px !important;
+      }
+      
+      /* Footer stats - Wrap nicely */
+      .footer-stats {
+        justify-content: center !important;
+        gap: 6px !important;
+        font-size: 0.85em !important;
+      }
+      
+      /* Chart container - Reduce padding */
+      .chart-container {
+        padding: 8px 10px !important;
+      }
+      
+      /* Timeframe row - Stack elements on mobile */
+      .timeframe-row {
+        gap: 8px !important;
+      }
+      .timeframe-row .session-sep,
+      .timeframe-row .next-session-info,
+      .timeframe-row .session-progress {
+        display: none !important;
+      }
+      
+      /* Base font size increase for readability */
+      body {
+        font-size: 16px !important;
+      }
+      
+      /* Remove excessive padding on mobile */
+      div[style*="padding: 14px 24px"] {
+        padding: 10px 12px !important;
+      }
+      
+      /* HEADER - Compact */
+      .hamster-header {
+        padding: 0 8px !important;
+        font-size: 0.85em !important;
+      }
+      .hamster-header-icon {
+        font-size: 1.2em !important;
+      }
+      
+      /* TIMEFRAME BUTTONS - Touch friendly */
+      .timeframe-selector {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        justify-content: center !important;
+      }
+      .timeframe-btn {
+        padding: 10px 14px !important;
+        font-size: 0.9em !important;
+        min-width: 44px !important;
+        min-height: 44px !important;
+      }
+      
+      /* SESSION info - Stack on mobile */
+      div[style*="display: flex"][style*="SESSION"] {
+        flex-direction: column !important;
+        gap: 8px !important;
+        align-items: flex-start !important;
+      }
+      
+      /* CHART BOX - Full width, larger */
+      .chart-box {
+        min-height: 280px !important;
+        padding: 8px !important;
+      }
+      .chart-svg {
+        min-height: 250px !important;
+      }
+      
+      /* GENIUS COMMENTARY - Larger text */
+      #geniusInlineCommentary {
+        font-size: 1em !important;
+        line-height: 1.5 !important;
+      }
+      div[style*="geniusInlineCommentary"] {
+        padding: 12px !important;
+      }
+      
+      /* RSI SECTION - Compact */
+      div[style*="height: 160px"][style*="RSI"] {
+        height: 140px !important;
+        padding: 10px !important;
+      }
+      
+      /* OPEN INTEREST - Readable */
+      div[style*="OPEN INTEREST"] {
+        padding: 14px !important;
+      }
+      div[style*="OPEN INTEREST"] .header {
+        flex-direction: column !important;
+        gap: 12px !important;
+      }
+      
+      /* Exchange breakdown - 2 columns on mobile */
+      div[style*="grid-template-columns: repeat(4, 1fr)"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+      }
+      
+      /* OI Metrics - Stack */
+      div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+        gap: 8px !important;
+      }
+      
+      /* WHALE TRANSFERS - Larger fonts */
+      div[style*="WHALE"] span[style*="font-size: 1.8em"] {
+        font-size: 1.4em !important;
+      }
+      #largeTransfersList {
+        font-size: 1em !important;
+        padding: 12px !important;
+      }
+      #largeTransfersList > div {
+        padding: 10px 0 !important;
+        font-size: 1em !important;
+      }
+      
+      /* LIQUIDATION GRID - 1 column */
+      div[style*="LIQUIDATION"] + div[style*="grid-template-columns: repeat(3, 1fr)"] {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Section headers - Larger */
+      .section-header-wrapper {
+        grid-template-columns: 1fr !important;
+        padding: 10px 12px !important;
+      }
+      .section-title {
+        font-size: 1.1em !important;
+      }
+      
+      /* Psychology grid - Stack */
+      .psych-grid {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Metrics boxes - Larger text */
+      .metrics-grid {
+        grid-template-columns: 1fr !important;
+        gap: 10px !important;
+      }
+      .metric-value {
+        font-size: 1.4em !important;
+      }
+      .metric-label {
+        font-size: 0.9em !important;
+      }
+      
+      /* News/Breaking ticker - Readable */
+      .breaking-item-title {
+        font-size: 1em !important;
+        line-height: 1.4 !important;
+      }
+      .breaking-time {
+        font-size: 0.85em !important;
+      }
+      
+      /* Hide session progress bar on very small screens */
+      div[style*="sessionProgressBar"] {
+        display: none !important;
+      }
+      
+      /* Footer stats - Wrap */
+      div[style*="VOL"][style*="NET"][style*="PROX"] {
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 8px !important;
+      }
+      
+      /* Menu items - Touch friendly */
+      .menu-item {
+        padding: 14px 16px !important;
+        font-size: 1em !important;
+      }
+      
+      /* Tools dropdown - Full width */
+      .tools-dropdown {
+        left: 0 !important;
+        right: 0 !important;
+        width: 100vw !important;
+        max-width: 100vw !important;
+      }
+      
+      /* Tab content panels */
+      .tab-content {
+        padding: 12px !important;
+      }
+      .tab-content h2 {
+        font-size: 1.2em !important;
+      }
+      
+      /* Trend cards - Full width */
+      .trend-grid {
+        grid-template-columns: 1fr !important;
+      }
+      .trend-card {
+        padding: 14px !important;
+      }
+      .trend-card h4 {
+        font-size: 1.1em !important;
+      }
+    }
+    
+    /* Extra small phones (< 480px) */
+    @media (max-width: 480px) {
+      body {
+        font-size: 15px !important;
+      }
+      
+      /* Even more compact padding */
+      div[style*="padding: 14px 24px"],
+      div[style*="padding: 14px 16px"] {
+        padding: 8px 10px !important;
+      }
+      
+      /* Analysis grid - 1 column */
+      .mobile-grid-2col {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Timeframe - Smaller but still touch friendly */
+      .timeframe-btn {
+        padding: 8px 10px !important;
+        font-size: 0.85em !important;
+        min-width: 40px !important;
+        min-height: 40px !important;
+      }
+      
+      /* Chart - Maximize height */
+      .chart-box {
+        min-height: 240px !important;
+      }
+      
+      /* Exchange grid - 1 column */
+      div[style*="grid-template-columns: repeat(4, 1fr)"],
+      div[style*="grid-template-columns: repeat(2, 1fr)"] {
+        grid-template-columns: 1fr !important;
+      }
+      
+      /* Titles - Compact */
+      div[style*="font-size: 1.8em"] {
+        font-size: 1.3em !important;
+      }
+      
+      /* OI Value - Readable */
+      #totalOI {
+        font-size: 1.2em !important;
+      }
+      
+      /* Liquidation cards - Compact */
+      div[style*="LONG LIQ"],
+      div[style*="SHORT LIQ"],
+      div[style*="MEGA CLUSTER"] {
+        padding: 10px !important;
+      }
+      
+      /* Hide less important info */
+      div[style*="Next:"] {
+        display: none !important;
+      }
+    }
+
+    /* Landscape phone optimization */
+    @media (max-width: 850px) and (orientation: landscape) {
+      .chart-box {
+        min-height: 200px !important;
+        max-height: 40vh !important;
+      }
+      
+      /* RSI smaller in landscape */
+      div[style*="height: 160px"] {
+        height: 100px !important;
+      }
+      
+      /* 2-column grids work in landscape */
+      .metrics-grid,
+      div[style*="grid-template-columns: repeat(4, 1fr)"] {
+        grid-template-columns: repeat(2, 1fr) !important;
+      }
+    }
   </style>
   <!-- Socket.IO Client Library -->
   <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
@@ -3347,7 +3701,7 @@
   </div>
 
   <!-- CURRENT PRICE + GENIUS COMMENTARY -->
-  <div style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
+  <div class="mobile-grid-stack" style="display: grid; grid-template-columns: 280px 1fr; gap: 14px; padding: 14px 24px;">
     <!-- CURRENT PRICE BOX -->
     <div class="metric-box" style="display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px;">
       <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
@@ -3393,7 +3747,7 @@
       </div>
 
       <!-- ANALYSIS GRID -->
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px;">
+      <div class="mobile-grid-2col" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 14px;">
         <div style="padding: 10px 0; border-right: 1px solid #222;">
           <div style="color: #888; font-size: 0.7em; margin-bottom: 4px; text-transform: uppercase;">SIGNAL</div>
           <div id="analysisSignal" style="color: #fff; font-size: 0.85em; font-weight: 600;">BUY</div>
@@ -3465,10 +3819,10 @@
   </div>
 
   <!-- CHART + TRANSFERS -->
-  <div style="padding: 14px 24px;">
+  <div class="chart-container" style="padding: 10px 16px;">
     <div>
       <!-- TIMEFRAME SELECTOR + SESSION in one row -->
-      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px; flex-wrap: wrap;">
+      <div class="timeframe-row" style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px; flex-wrap: wrap;">
         <div class="timeframe-selector" style="margin-bottom: 0;">
           <button class="timeframe-btn" data-timeframe="1m">1m</button>
           <button class="timeframe-btn" data-timeframe="5m">5m</button>
@@ -3478,13 +3832,13 @@
           <button class="timeframe-btn active" data-timeframe="1d">1D</button>
           <button class="timeframe-btn" data-timeframe="1w">1W</button>
         </div>
-        <span style="color: #333333;">|</span>
+        <span class="session-sep" style="color: #333333;">|</span>
         <span style="color: #888888; font-size: 0.85em;">SESSION</span>
         <span style="color: #cccccc; font-size: 0.9em;" id="frontSessionTimer">--:--:--</span>
         <span style="color: #ff6600; font-size: 0.85em; font-weight: 600;" id="frontSessionName">--</span>
-        <span style="color: #555555; font-size: 0.8em;">Next:</span>
-        <span style="color: #666666; font-size: 0.85em;" id="nextSessionInfo">--</span>
-        <div style="width: 100px; background: #1a1a1a; height: 3px; border-radius: 2px; overflow: hidden;">
+        <span class="next-session-info" style="color: #555555; font-size: 0.8em;">Next:</span>
+        <span class="next-session-info" style="color: #666666; font-size: 0.85em;" id="nextSessionInfo">--</span>
+        <div class="session-progress" style="width: 100px; background: #1a1a1a; height: 3px; border-radius: 2px; overflow: hidden;">
           <div id="sessionProgressBar" style="background: #ffffff; height: 100%; width: 50%; transition: width 1s linear;"></div>
         </div>
       </div>
@@ -3591,19 +3945,19 @@
       </svg>
     </div>
     
-    <!-- GENIUS COMMENTARY - Between chart and RSI -->
-    <div style="background: #0a0a14; border: 1px solid #1a1a2a; border-top: none; padding: 10px 16px; margin-top: -1px;">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <span style="color: #4444ff; font-weight: 700; font-size: 0.8em;">◆ GENIUS</span>
+    <!-- GENIUS COMMENTARY - Between chart and RSI - UNIFIED BLACK -->
+    <div class="genius-inline-box" style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 8px 16px; margin-top: -1px;">
+      <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+        <span style="color: #ff6600; font-weight: 700; font-size: 0.85em;">◆ GENIUS</span>
         <span style="color: #333333;">|</span>
-        <div id="geniusInlineCommentary" style="color: #888888; font-size: 0.85em; flex: 1; line-height: 1.4;">
+        <div id="geniusInlineCommentary" style="color: #999999; font-size: 0.9em; flex: 1; line-height: 1.5; min-width: 200px;">
           Analizuję rynek... Wykryto wzrost OI przy stabilnej cenie - akumulacja instytucjonalna prawdopodobna.
         </div>
       </div>
     </div>
 
-    <!-- RSI INDICATOR - ENLARGED -->
-    <div style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 16px; height: 160px; margin-top: -1px;">
+    <!-- RSI INDICATOR - COMPACT UNIFIED -->
+    <div class="rsi-section" style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 10px 16px; height: 130px; margin-top: -1px;">
       <svg class="chart-svg" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
         <!-- RSI ZONES - Bloomberg Style -->
         <!-- SELL ZONE (70-100) -->
@@ -3650,10 +4004,10 @@
       </svg>
     </div>
 
-    <!-- OPEN INTEREST CHART - Dark theme matching chart -->
-    <div style="background: #0d0d0d; border: 1px solid #1a1a1a; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+    <!-- OPEN INTEREST CHART - ENLARGED -->
+    <div class="oi-section" style="background: #000000; border: 1px solid #1a1a1a; padding: 14px; margin-bottom: 0; margin-top: -1px;">
       <!-- Header -->
-      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #1a1a1a;">
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap; gap: 10px;">
         <div style="flex: 1;">
           <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
             <div>
@@ -3675,8 +4029,8 @@
         </div>
       </div>
 
-      <!-- OI Chart SVG -->
-      <svg id="oiChart" viewBox="0 0 800 120" style="width: 100%; height: 120px; background: #000000; border-radius: 4px;">
+      <!-- OI Chart SVG - ENLARGED -->
+      <svg id="oiChart" viewBox="0 0 800 140" style="width: 100%; height: 140px; background: #000000;">
         <!-- Grid lines -->
         <line x1="50" y1="20" x2="780" y2="20" stroke="#1a1a1a" stroke-width="1"/>
         <line x1="50" y1="60" x2="780" y2="60" stroke="#1a1a1a" stroke-width="1"/>
@@ -3769,99 +4123,99 @@
     </div>
     </div>
     
-    <!-- SIDE PANEL - Flat Ticker Style (like DJI 38,650.00 +0.30% • DAX) -->
-    <div style="background: #000000; border: 1px solid #333333; padding: 0; font-weight: 700; letter-spacing: 0.5px; margin-top: 20px;">
+    <!-- SIDE PANEL - UNIFIED BLACK - Flat Ticker Style -->
+    <div class="side-panel-unified" style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 0; font-weight: 700; letter-spacing: 0.5px; margin-top: -1px;">
       
       <!-- WHALE TRANSFERS - Flat ticker row -->
-      <div style="padding: 14px 16px; border-bottom: 1px solid #333333; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
-        <span style="color: #ffffff; font-size: 1.8em;">WHALE</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #cccccc; font-size: 0.95em;">TRANSFERS</span>
-        <span style="color: #666666;">•</span>
+      <div style="padding: 10px 16px; border-bottom: 1px solid #222222; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
+        <span style="color: #ff6600; font-size: 1.4em; font-weight: 700;">WHALE</span>
+        <span style="color: #444444;">•</span>
+        <span style="color: #888888; font-size: 0.9em;">TRANSFERS</span>
+        <span style="color: #444444;">•</span>
         <span style="display: inline-flex; align-items: center; gap: 4px;">
           <span style="width: 6px; height: 6px; background: #ff3333; border-radius: 50%; animation: livePulse 1.5s infinite;"></span>
           <span style="color: #ff3333; font-size: 0.75em; font-weight: 600;">LIVE</span>
         </span>
       </div>
-      <div id="largeTransfersList" style="padding: 8px 16px; font-size: 0.9em;">
+      <div id="largeTransfersList" style="padding: 8px 16px; font-size: 0.95em;">
         <div style="color: #666666;">Loading...</div>
       </div>
       
       <!-- ICEBERG - Flat ticker rows -->
-      <div style="padding: 14px 16px; border-top: 1px solid #333333; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 8px;">
-        <span style="color: #ffffff; font-size: 1.8em;">ICEBERG</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #cccccc; font-size: 0.95em;">HIDDEN ORDERS</span>
+      <div style="padding: 10px 16px; border-top: 1px solid #222222; border-bottom: 1px solid #1a1a1a; display: flex; align-items: center; gap: 8px;">
+        <span style="color: #00aaff; font-size: 1.4em; font-weight: 700;">ICEBERG</span>
+        <span style="color: #444444;">•</span>
+        <span style="color: #888888; font-size: 0.9em;">HIDDEN ORDERS</span>
       </div>
-      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
-        <span style="color: #ffffff; font-size: 1.1em;">BUY</span>
-        <span style="color: #cccccc;">$94,800 - $95,200</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #999999;">~3,200 BTC</span>
+      <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap;">
+        <span style="color: #00ff88; font-size: 1em; font-weight: 600;">BUY</span>
+        <span style="color: #cccccc; font-size: 0.95em;">$94,800 - $95,200</span>
+        <span style="color: #444444;">•</span>
+        <span style="color: #888888; font-size: 0.9em;">~3,200 BTC</span>
       </div>
-      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
-        <span style="color: #ffffff; font-size: 1.1em;">SELL</span>
-        <span style="color: #cccccc;">$97,400 - $97,800</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #999999;">~2,100 BTC</span>
+      <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap;">
+        <span style="color: #ff4444; font-size: 1em; font-weight: 600;">SELL</span>
+        <span style="color: #cccccc; font-size: 0.95em;">$97,400 - $97,800</span>
+        <span style="color: #444444;">•</span>
+        <span style="color: #888888; font-size: 0.9em;">~2,100 BTC</span>
       </div>
-      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333333;">
-        <span style="color: #ffffff; font-size: 1.1em;">HIDE</span>
-        <span style="color: #cccccc;">$96,000 - $96,500</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #999999;">~1,800 BTC</span>
+      <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222; flex-wrap: wrap;">
+        <span style="color: #ffaa00; font-size: 1em; font-weight: 600;">HIDE</span>
+        <span style="color: #cccccc; font-size: 0.95em;">$96,000 - $96,500</span>
+        <span style="color: #444444;">•</span>
+        <span style="color: #888888; font-size: 0.9em;">~1,800 BTC</span>
       </div>
       
-      <!-- LIQUIDATION LEVELS - Improved readability -->
-      <div style="padding: 14px 16px; border-bottom: 1px solid #333333; display: flex; align-items: center; gap: 8px;">
-        <span style="color: #ffffff; font-size: 1.8em;">LIQUIDATION</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #cccccc; font-size: 0.95em;">LEVELS</span>
+      <!-- LIQUIDATION LEVELS -->
+      <div style="padding: 10px 16px; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 8px;">
+        <span style="color: #ff3366; font-size: 1.4em; font-weight: 700;">LIQUIDATION</span>
+        <span style="color: #444444;">•</span>
+        <span style="color: #888888; font-size: 0.9em;">LEVELS</span>
       </div>
       
       <!-- Liquidation Grid -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px;">
+      <div class="liq-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 12px 16px;">
         <!-- LONG -->
-        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
-          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 6px;">LONG LIQ</div>
-          <div id="longLiqPrice" style="color: #ffffff; font-size: 1.3em; font-weight: 700;">$93,450</div>
-          <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
-            <span style="color: #666666; font-size: 0.8em;">Vol:</span>
-            <span id="longLiqVolume" style="color: #cccccc; font-size: 0.9em;">$245M</span>
+        <div style="background: #0a0a0a; padding: 12px; border-left: 2px solid #333333;">
+          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 4px;">LONG LIQ</div>
+          <div id="longLiqPrice" style="color: #00ff88; font-size: 1.2em; font-weight: 700;">$93,450</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="color: #555555; font-size: 0.8em;">Vol:</span>
+            <span id="longLiqVolume" style="color: #888888; font-size: 0.85em;">$245M</span>
           </div>
         </div>
         
         <!-- SHORT -->
-        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
-          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 6px;">SHORT LIQ</div>
-          <div id="shortLiqPrice" style="color: #ffffff; font-size: 1.3em; font-weight: 700;">$97,800</div>
-          <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
-            <span style="color: #666666; font-size: 0.8em;">Vol:</span>
-            <span id="shortLiqVolume" style="color: #cccccc; font-size: 0.9em;">$180M</span>
+        <div style="background: #0a0a0a; padding: 12px; border-left: 2px solid #333333;">
+          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 4px;">SHORT LIQ</div>
+          <div id="shortLiqPrice" style="color: #ff4444; font-size: 1.2em; font-weight: 700;">$97,800</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="color: #555555; font-size: 0.8em;">Vol:</span>
+            <span id="shortLiqVolume" style="color: #888888; font-size: 0.85em;">$180M</span>
           </div>
         </div>
         
         <!-- MEGA -->
-        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
-          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 6px;">MEGA CLUSTER</div>
-          <div id="megaLiqPrice" style="color: #ffffff; font-size: 1.3em; font-weight: 700;">$91,200</div>
-          <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
-            <span style="color: #666666; font-size: 0.8em;">Vol:</span>
-            <span id="megaLiqVolume" style="color: #cccccc; font-size: 0.9em;">$520M</span>
+        <div style="background: #0a0a0a; padding: 12px; border-left: 2px solid #333333;">
+          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 4px;">MEGA CLUSTER</div>
+          <div id="megaLiqPrice" style="color: #ffaa00; font-size: 1.2em; font-weight: 700;">$91,200</div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px;">
+            <span style="color: #555555; font-size: 0.8em;">Vol:</span>
+            <span id="megaLiqVolume" style="color: #888888; font-size: 0.85em;">$520M</span>
           </div>
         </div>
       </div>
       
-      <!-- FOOTER STATS - Flat ticker row -->
-      <div style="padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 0.9em; border-top: 1px solid #222222;">
-        <span style="color: #ffffff;">VOL</span>
-        <span style="color: #cccccc;" id="totalTransferVolume">--</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #ffffff;">NET</span>
-        <span id="netFlowIndicator" style="color: #cccccc;">--</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #ffffff;">PROX</span>
-        <span id="liqProximity" style="color: #cccccc;">--</span>
+      <!-- FOOTER STATS - Compact -->
+      <div class="footer-stats" style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; font-size: 0.9em; border-top: 1px solid #1a1a1a; flex-wrap: wrap;">
+        <span style="color: #888888;">VOL</span>
+        <span style="color: #ffffff;" id="totalTransferVolume">--</span>
+        <span style="color: #333333;">•</span>
+        <span style="color: #888888;">NET</span>
+        <span id="netFlowIndicator" style="color: #ffffff;">--</span>
+        <span style="color: #333333;">•</span>
+        <span style="color: #888888;">PROX</span>
+        <span id="liqProximity" style="color: #ffffff;">--</span>
       </div>
     </div>
   </div>
