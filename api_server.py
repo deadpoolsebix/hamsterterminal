@@ -198,18 +198,30 @@ def fetch_twelve_data_crypto(symbol='BTCUSDT'):
         response = requests.get(
             f'{TWELVE_DATA_BASE_URL}/quote',
             params=params,
-            timeout=5
+            timeout=10
         )
         if response.status_code == 200:
             data = response.json()
+            logger.debug(f"Twelve Data response for {symbol}: {data}")
             if 'error' not in data and 'code' not in data:
-                # API returns 'close' for current price
-                price = float(data.get('close', 0) or data.get('last_price', 0) or 0)
-                change = float(data.get('percent_change', 0) or 0)
+                # Twelve Data returns: close, open, high, low, previous_close, change, percent_change, volume
+                price = float(data.get('close', 0) or 0)
+                # percent_change may be string like "1.25" or number
+                pct_change_raw = data.get('percent_change', 0)
+                if pct_change_raw is None or pct_change_raw == '':
+                    # Calculate from previous_close if percent_change missing
+                    prev_close = float(data.get('previous_close', 0) or 0)
+                    if prev_close > 0 and price > 0:
+                        pct_change = ((price - prev_close) / prev_close) * 100
+                    else:
+                        pct_change = 0
+                else:
+                    pct_change = float(pct_change_raw)
                 volume = float(data.get('volume', 0) or 0)
+                logger.info(f"📊 {symbol}: ${price:,.2f} ({pct_change:+.2f}%)")
                 return {
                     'price': price,
-                    'change': change,
+                    'change': pct_change,
                     'volume': volume
                 }
             else:
@@ -229,18 +241,25 @@ def fetch_twelve_data_stock(symbol='AAPL'):
         response = requests.get(
             f'{TWELVE_DATA_BASE_URL}/quote',
             params=params,
-            timeout=5
+            timeout=10
         )
         if response.status_code == 200:
             data = response.json()
             if 'error' not in data and 'code' not in data:
-                # API returns 'close' for current price
-                price = float(data.get('close', 0) or data.get('last_price', 0) or 0)
-                change = float(data.get('percent_change', 0) or 0)
+                price = float(data.get('close', 0) or 0)
+                pct_change_raw = data.get('percent_change', 0)
+                if pct_change_raw is None or pct_change_raw == '':
+                    prev_close = float(data.get('previous_close', 0) or 0)
+                    if prev_close > 0 and price > 0:
+                        pct_change = ((price - prev_close) / prev_close) * 100
+                    else:
+                        pct_change = 0
+                else:
+                    pct_change = float(pct_change_raw)
                 volume = float(data.get('volume', 0) or 0)
                 return {
                     'price': price,
-                    'change': change,
+                    'change': pct_change,
                     'volume': volume
                 }
             else:
@@ -251,7 +270,7 @@ def fetch_twelve_data_stock(symbol='AAPL'):
 
 
 def fetch_twelve_data_forex(pair='EUR/USD'):
-    """Fetch forex price from Twelve Data"""
+    """Fetch forex/metals price from Twelve Data"""
     try:
         params = {
             'symbol': pair,
@@ -260,16 +279,24 @@ def fetch_twelve_data_forex(pair='EUR/USD'):
         response = requests.get(
             f'{TWELVE_DATA_BASE_URL}/quote',
             params=params,
-            timeout=5
+            timeout=10
         )
         if response.status_code == 200:
             data = response.json()
             if 'error' not in data and 'code' not in data:
-                price = float(data.get('close', 0) or data.get('last_price', 0) or 0)
-                change = float(data.get('percent_change', 0) or 0)
+                price = float(data.get('close', 0) or 0)
+                pct_change_raw = data.get('percent_change', 0)
+                if pct_change_raw is None or pct_change_raw == '':
+                    prev_close = float(data.get('previous_close', 0) or 0)
+                    if prev_close > 0 and price > 0:
+                        pct_change = ((price - prev_close) / prev_close) * 100
+                    else:
+                        pct_change = 0
+                else:
+                    pct_change = float(pct_change_raw)
                 return {
                     'price': price,
-                    'change': change
+                    'change': pct_change
                 }
             else:
                 logger.warning(f"⚠️ Twelve Data API error for {pair}: {data}")
