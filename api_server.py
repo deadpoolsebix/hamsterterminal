@@ -481,25 +481,43 @@ def fetch_forex_prices():
 def fetch_market_data():
     """Fetch additional market data from Twelve Data"""
     try:
-        # Gold
-        gold_data = fetch_twelve_data_stock('GC=F')
-        if gold_data:
+        # Gold - Twelve Data uses XAU/USD
+        gold_data = fetch_twelve_data_forex('XAU/USD')
+        if gold_data and gold_data.get('price', 0) > 0:
             cache['gold_price'] = gold_data['price']
             cache['gold_change'] = gold_data['change']
         
-        # Silver
-        silver_data = fetch_twelve_data_stock('SI=F')
-        if silver_data:
+        # Silver - Twelve Data uses XAG/USD
+        silver_data = fetch_twelve_data_forex('XAG/USD')
+        if silver_data and silver_data.get('price', 0) > 0:
             cache['silver_price'] = silver_data['price']
             cache['silver_change'] = silver_data['change']
         
-        # Dollar Index
-        dxy_data = fetch_twelve_data_stock('DX-Y.NYB')
-        if dxy_data:
-            cache['dxy_price'] = dxy_data['price']
-            cache['dxy_change'] = dxy_data['change']
+        # Additional stocks for indices
+        extra_stocks = [
+            ('TSLA', 'tsla_price', 'tsla_change'),
+            ('AMZN', 'amzn_price', 'amzn_change'),
+            ('GOOGL', 'googl_price', 'googl_change'),
+            ('META', 'meta_price', 'meta_change'),
+        ]
+        for ticker, price_key, change_key in extra_stocks:
+            data = fetch_twelve_data_stock(ticker)
+            if data and data.get('price', 0) > 0:
+                cache[price_key] = data['price']
+                cache[change_key] = data['change']
         
-        logger.info(f"✅ Markets: GOLD ${cache['gold_price']:,.2f} | SILVER ${cache['silver_price']:.2f} | DXY {cache['dxy_price']:.2f}")
+        # Indices - NASDAQ, DAX, DOW
+        indices = [
+            ('IXIC', 'nasdaq_price', 'nasdaq_change'),  # NASDAQ
+            ('DJI', 'dow_price', 'dow_change'),         # DOW Jones
+        ]
+        for symbol, price_key, change_key in indices:
+            data = fetch_twelve_data_stock(symbol)
+            if data and data.get('price', 0) > 0:
+                cache[price_key] = data['price']
+                cache[change_key] = data['change']
+        
+        logger.info(f"✅ Markets: GOLD ${cache['gold_price']:,.2f} | SILVER ${cache['silver_price']:.2f} | NASDAQ {cache['nasdaq_price']:,.0f}")
         return True
         
     except Exception as e:
