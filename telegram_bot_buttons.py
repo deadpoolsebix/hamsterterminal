@@ -2841,75 +2841,65 @@ Select asset:'''
         await query.edit_message_text(msg, reply_markup=get_main_keyboard())
     
     elif data == 'btc':
+        await query.edit_message_text("⏳ Loading BTC data...")
         quote = get_quote('BTC/USD')
-        if quote and 'close' in quote:
-            msg = format_price_message('BTC/USD', 'BITCOIN', '₿', quote)
+        msg = format_price_message('BTC/USD', 'BITCOIN', '₿', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        # GIF tylko jeśli sukces (brak błędu w wiadomości)
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
-        else:
-            await query.edit_message_text("❌ Błąd pobierania BTC", reply_markup=get_back_button())
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
     
     elif data == 'eth':
         await query.edit_message_text("⏳ Loading ETH data...")
         quote = get_quote('ETH/USD')
-        if quote and 'close' in quote:
-            msg = format_price_message('ETH/USD', 'ETHEREUM', '⟠', quote)
+        msg = format_price_message('ETH/USD', 'ETHEREUM', '⟠', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
-        else:
-            await query.edit_message_text("❌ Błąd pobierania ETH", reply_markup=get_back_button())
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
     
     elif data == 'gold':
         await query.edit_message_text("⏳ Loading GOLD data...")
         quote = get_quote('XAU/USD')
-        if quote and 'close' in quote:
-            msg = format_price_message('XAU/USD', 'ZŁOTO', '💰', quote)
+        msg = format_price_message('XAU/USD', 'ZŁOTO', '💰', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
-        else:
-            await query.edit_message_text("❌ Błąd pobierania GOLD", reply_markup=get_back_button())
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
     
     elif data == 'silver':
         await query.edit_message_text("⏳ Loading SILVER data...")
         quote = get_quote('XAG/USD')
-        if quote and 'close' in quote:
-            msg = format_price_message('XAG/USD', 'SREBRO', '⚪', quote)
+        msg = format_price_message('XAG/USD', 'SREBRO', '⚪', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
-        else:
-            await query.edit_message_text("❌ Błąd pobierania SILVER", reply_markup=get_back_button())
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
     
     # ═══════════════════════════════════════════════════════════════
     # NOWE ASSETY: SOL, OIL, S&P500, NASDAQ
@@ -2918,74 +2908,64 @@ Select asset:'''
     elif data == 'sol':
         await query.edit_message_text("⏳ Loading SOLANA data...")
         quote = get_quote('SOL/USD')
-        if quote and 'close' in quote:
-            msg = format_price_message('SOL/USD', 'SOLANA', '◎', quote)
+        msg = format_price_message('SOL/USD', 'SOLANA', '◎', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
-        else:
-            await query.edit_message_text("❌ Błąd pobierania SOL", reply_markup=get_back_button())
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
     
     elif data == 'oil':
         await query.edit_message_text("⏳ Loading OIL data...")
         quote = get_quote('WTI/USD')
-        if quote and 'close' in quote:
-            msg = format_price_message('WTI/USD', 'ROPA WTI', '🛢️', quote)
+        msg = format_price_message('WTI/USD', 'ROPA WTI', '🛢️', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
         else:
             await query.edit_message_text("❌ Błąd pobierania OIL", reply_markup=get_back_button())
     
     elif data == 'spx':
         await query.edit_message_text("⏳ Loading S&P 500 data...")
         quote = get_quote('SPX')
-        if quote and 'close' in quote:
-            msg = format_price_message('SPX', 'S&P 500', '📊', quote)
+        msg = format_price_message('SPX', 'S&P 500', '📊', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
-        else:
-            await query.edit_message_text("❌ Błąd pobierania S&P500 (zamknięty rynek?)", reply_markup=get_back_button())
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
     
     elif data == 'nasdaq':
         await query.edit_message_text("⏳ Loading NASDAQ data...")
         quote = get_quote('IXIC')
-        if quote and 'close' in quote:
-            msg = format_price_message('IXIC', 'NASDAQ', '💻', quote)
+        msg = format_price_message('IXIC', 'NASDAQ', '💻', quote)
+        await query.edit_message_text(msg, reply_markup=get_back_button())
+        if quote and 'close' in quote and should_show_random_gif():
             change = float(quote.get('percent_change', 0))
-            await query.edit_message_text(msg, reply_markup=get_back_button())
-            if should_show_random_gif():
-                gif = get_random_trading_gif(change)
-                caption = get_gif_caption(change)
-                await context.bot.send_animation(
-                    chat_id=query.message.chat_id,
-                    animation=gif,
-                    caption=caption
-                )
-        else:
-            await query.edit_message_text("❌ Błąd pobierania NASDAQ (zamknięty rynek?)", reply_markup=get_back_button())
+            gif = get_random_trading_gif(change)
+            caption = get_gif_caption(change)
+            await context.bot.send_animation(
+                chat_id=query.message.chat_id,
+                animation=gif,
+                caption=caption
+            )
     
     # ═══════════════════════════════════════════════════════════════
     # PRICE ALERTS - System alertów cenowych
@@ -3001,10 +2981,10 @@ Select asset:'''
         sol_data = get_quote('SOL/USD')
         gold_data = get_quote('XAU/USD')
         
-        btc_price = float(btc_data.get('close', 0)) if btc_data else 0
-        eth_price = float(eth_data.get('close', 0)) if eth_data else 0
-        sol_price = float(sol_data.get('close', 0)) if sol_data else 0
-        gold_price = float(gold_data.get('close', 0)) if gold_data else 0
+        btc_price = float(btc_data.get('close', 0)) if btc_data and 'close' in btc_data else 0
+        eth_price = float(eth_data.get('close', 0)) if eth_data and 'close' in eth_data else 0
+        sol_price = float(sol_data.get('close', 0)) if sol_data and 'close' in sol_data else 0
+        gold_price = float(gold_data.get('close', 0)) if gold_data and 'close' in gold_data else 0
         
         msg = f'''🔔 PRICE ALERTS
 ━━━━━━━━━━━━━━━━━━━━
