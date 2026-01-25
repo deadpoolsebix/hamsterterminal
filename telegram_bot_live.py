@@ -39,13 +39,31 @@ logger = logging.getLogger(__name__)
 def get_quote(symbol):
     """Pobierz cenę z Twelve Data API"""
     try:
-        r = requests.get(
-            f'https://api.twelvedata.com/quote?symbol={symbol}&apikey={TWELVE_DATA_API}',
-            timeout=10
-        )
-        return r.json()
+        url = f'https://api.twelvedata.com/quote?symbol={symbol}&apikey={TWELVE_DATA_API}'
+        logger.info(f"Fetching: {url}")
+        r = requests.get(url, timeout=15)
+        data = r.json()
+        logger.info(f"Response for {symbol}: {data}")
+        
+        # Check for API errors
+        if 'code' in data:
+            logger.error(f"API Error for {symbol}: {data}")
+            return {}
+        
+        # Validate required fields
+        if 'close' not in data or data.get('close') is None:
+            logger.error(f"No 'close' field for {symbol}: {data}")
+            return {}
+            
+        return data
+    except requests.exceptions.Timeout:
+        logger.error(f"Timeout for {symbol}")
+        return {}
+    except requests.exceptions.RequestException as e:
+        logger.error(f"Request error for {symbol}: {e}")
+        return {}
     except Exception as e:
-        logger.error(f"Błąd API: {e}")
+        logger.error(f"Error for {symbol}: {e}")
         return {}
 
 
@@ -145,23 +163,33 @@ TO THE MOON! 🌙'''
 async def btc(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Komenda /btc"""
     await update.message.reply_text("⏳ Pobieram dane BTC...")
-    data = get_quote('BTC/USD')
-    if data and 'close' in data:
-        msg = format_price_message('BTC/USD', 'BITCOIN', '₿', data)
-        await update.message.reply_text(msg)
-    else:
-        await update.message.reply_text("❌ Błąd pobierania danych BTC")
+    try:
+        data = get_quote('BTC/USD')
+        logger.info(f"BTC data received: {data}")
+        if data and 'close' in data and data.get('close'):
+            msg = format_price_message('BTC/USD', 'BITCOIN', '₿', data)
+            await update.message.reply_text(msg)
+        else:
+            await update.message.reply_text(f"❌ Błąd pobierania danych BTC\nDebug: {str(data)[:200]}")
+    except Exception as e:
+        logger.error(f"BTC command error: {e}")
+        await update.message.reply_text(f"❌ Błąd: {str(e)}")
 
 
 async def eth(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Komenda /eth"""
     await update.message.reply_text("⏳ Pobieram dane ETH...")
-    data = get_quote('ETH/USD')
-    if data and 'close' in data:
-        msg = format_price_message('ETH/USD', 'ETHEREUM', '⟠', data)
-        await update.message.reply_text(msg)
-    else:
-        await update.message.reply_text("❌ Błąd pobierania danych ETH")
+    try:
+        data = get_quote('ETH/USD')
+        logger.info(f"ETH data received: {data}")
+        if data and 'close' in data and data.get('close'):
+            msg = format_price_message('ETH/USD', 'ETHEREUM', '⟠', data)
+            await update.message.reply_text(msg)
+        else:
+            await update.message.reply_text(f"❌ Błąd pobierania danych ETH\nDebug: {str(data)[:200]}")
+    except Exception as e:
+        logger.error(f"ETH command error: {e}")
+        await update.message.reply_text(f"❌ Błąd: {str(e)}")
 
 
 async def gold(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -190,23 +218,27 @@ async def all_assets(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Komenda /all - wszystkie aktywa"""
     await update.message.reply_text("⏳ Pobieram wszystkie dane...")
     
-    btc_data = get_quote('BTC/USD')
-    eth_data = get_quote('ETH/USD')
-    gold_data = get_quote('XAU/USD')
-    silver_data = get_quote('XAG/USD')
-    
-    def fmt(d):
-        if d and 'close' in d:
-            p = float(d.get('close', 0))
-            c = float(d.get('percent_change', 0))
-            arr = '▲' if c >= 0 else '▼'
-            sign = '+' if c >= 0 else ''
-            return f"${p:,.2f} {arr}{sign}{c:.2f}%"
-        return "N/A"
-    
-    now = datetime.now().strftime('%H:%M:%S')
-    
-    msg = f'''══════════════════════════════════
+    try:
+        btc_data = get_quote('BTC/USD')
+        eth_data = get_quote('ETH/USD')
+        gold_data = get_quote('XAU/USD')
+        silver_data = get_quote('XAG/USD')
+        
+        def fmt(d):
+            if d and 'close' in d and d.get('close'):
+                try:
+                    p = float(d.get('close', 0))
+                    c = float(d.get('percent_change', 0))
+                    arr = '▲' if c >= 0 else '▼'
+                    sign = '+' if c >= 0 else ''
+                    return f"${p:,.2f} {arr}{sign}{c:.2f}%"
+                except:
+                    return "N/A"
+            return "N/A"
+        
+        now = datetime.now().strftime('%H:%M:%S')
+        
+        msg = f'''══════════════════════════════════
    📊 HAMSTER TERMINAL | PRZEGLĄD
 ══════════════════════════════════
 
@@ -214,7 +246,7 @@ async def all_assets(update: Update, context: ContextTypes.DEFAULT_TYPE):
 ├─ ₿ BTC/USD:  {fmt(btc_data)}
 └─ ⟠ ETH/USD:  {fmt(eth_data)}
 
-� METALE SZLACHETNE
+🥇 METALE SZLACHETNE
 ├─ 🪙 XAU/USD: {fmt(gold_data)}
 └─ 🔘 XAG/USD: {fmt(silver_data)}
 
@@ -225,19 +257,36 @@ async def all_assets(update: Update, context: ContextTypes.DEFAULT_TYPE):
 ⏰ {now} CET
 🔸 Źródło: Twelve Data Pro API
 ══════════════════════════════════'''
-    
-    await update.message.reply_text(msg)
+        
+        await update.message.reply_text(msg)
+    except Exception as e:
+        logger.error(f"All assets error: {e}")
+        await update.message.reply_text(f"❌ Błąd: {str(e)}")
 
 
 async def signals(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """Komenda /signals - aktywne sygnały"""
-    btc_data = get_quote('BTC/USD')
-    eth_data = get_quote('ETH/USD')
-    
-    btc_p = float(btc_data.get('close', 89000))
-    eth_p = float(eth_data.get('close', 2950))
-    
-    msg = f'''══════════════════════════════════
+    try:
+        btc_data = get_quote('BTC/USD')
+        eth_data = get_quote('ETH/USD')
+        
+        # Default prices if API fails
+        btc_p = 89000
+        eth_p = 2950
+        
+        if btc_data and 'close' in btc_data and btc_data.get('close'):
+            try:
+                btc_p = float(btc_data.get('close'))
+            except:
+                pass
+                
+        if eth_data and 'close' in eth_data and eth_data.get('close'):
+            try:
+                eth_p = float(eth_data.get('close'))
+            except:
+                pass
+        
+        msg = f'''══════════════════════════════════
        🎯 AKTYWNE SYGNAŁY
 ══════════════════════════════════
 
@@ -264,8 +313,11 @@ async def signals(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 ⚠️ To nie jest porada inwestycyjna!
 ══════════════════════════════════'''
-    
-    await update.message.reply_text(msg)
+        
+        await update.message.reply_text(msg)
+    except Exception as e:
+        logger.error(f"Signals error: {e}")
+        await update.message.reply_text(f"❌ Błąd: {str(e)}")
 
 
 async def alerts(update: Update, context: ContextTypes.DEFAULT_TYPE):
