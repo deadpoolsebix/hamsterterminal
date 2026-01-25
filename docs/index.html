@@ -425,14 +425,17 @@
     .radar-cool { color: var(--green); font-weight: 700; }
     .radar-neutral { color: var(--cyan); font-weight: 700; }
 
-    /* BURGUNDY MENU BAR */
+    /* BURGUNDY MENU BAR - Hidden by default, shown via hamburger */
     .menu-bar {
-      display: flex;
+      display: none;
       gap: 8px;
       padding: 10px 24px;
       background: var(--burgundy);
       border-bottom: 1px solid var(--border);
       flex-wrap: wrap;
+    }
+    .menu-bar.open {
+      display: flex;
     }
     .menu-item {
       background: transparent;
@@ -7183,7 +7186,7 @@
     if (hamburgerMenu) {
       hamburgerMenu.addEventListener('click', () => {
         hamburgerMenu.classList.toggle('open');
-        if (menuBar) menuBar.style.display = menuBar.style.display === 'none' ? 'flex' : 'none';
+        if (menuBar) menuBar.classList.toggle('open');
       });
     }
 
