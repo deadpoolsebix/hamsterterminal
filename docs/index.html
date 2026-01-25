@@ -5586,63 +5586,83 @@
     `;
     document.head.appendChild(transferAnimStyle);
     
+    // Persistent transfers storage - initialized once
+    let persistentTransfers = [];
+    let transfersInitialized = false;
+    
+    function initializeTransfers() {
+      if (transfersInitialized) return;
+      transfersInitialized = true;
+      
+      const btcPrice = parseFloat(document.getElementById('metricPrice')?.textContent?.replace(/[$,]/g, '')) || 104000;
+      const sources = [
+        'BINANCE > COLD', 'COINBASE > OTC', 'KRAKEN > UNKNOWN', 'WALLET > BINANCE',
+        'OTC > INST', 'COLD > EXCHANGE', 'FUND REBAL', 'MSTR', 'GBTC', 'FIDELITY', 'IBIT'
+      ];
+      const types = ['BUY', 'SELL', 'MOVE'];
+      
+      // Create initial 7 transfers with staggered timestamps
+      for (let i = 0; i < 7; i++) {
+        lastTransferId++;
+        const type = types[Math.floor(Math.random() * types.length)];
+        const amount = Math.floor(Math.random() * 1800) + 200;
+        const source = sources[Math.floor(Math.random() * sources.length)];
+        const price = btcPrice + (Math.random() - 0.5) * 100;
+        const timestamp = new Date(Date.now() - i * 45000); // Stagger by 45 seconds each
+        
+        persistentTransfers.push({
+          id: lastTransferId,
+          type, amount, source, price,
+          valueUSD: amount * price,
+          timestamp: timestamp.toISOString(),
+          isNew: false
+        });
+      }
+    }
+    
+    function addNewTransfer() {
+      const btcPrice = parseFloat(document.getElementById('metricPrice')?.textContent?.replace(/[$,]/g, '')) || 104000;
+      const sources = [
+        'BINANCE > COLD', 'COINBASE > OTC', 'KRAKEN > UNKNOWN', 'WALLET > BINANCE',
+        'OTC > INST', 'COLD > EXCHANGE', 'FUND REBAL', 'MSTR', 'GBTC', 'FIDELITY', 'IBIT', 'CUMBERLAND'
+      ];
+      const types = ['BUY', 'SELL', 'MOVE'];
+      
+      lastTransferId++;
+      const type = types[Math.floor(Math.random() * types.length)];
+      const amount = Math.floor(Math.random() * 2000) + 150;
+      const source = sources[Math.floor(Math.random() * sources.length)];
+      const price = btcPrice + (Math.random() - 0.5) * 80;
+      
+      const newTransfer = {
+        id: lastTransferId,
+        type, amount, source, price,
+        valueUSD: amount * price,
+        timestamp: new Date().toISOString(),
+        isNew: true
+      };
+      
+      // Add to front, remove oldest
+      persistentTransfers.unshift(newTransfer);
+      persistentTransfers = persistentTransfers.slice(0, 7);
+      
+      return newTransfer;
+    }
+    
     async function fetchLargeTransfers() {
       try {
         const response = await fetch(`${API_BASE}/api/whale-alerts`);
         if (response.ok) {
           const data = await response.json();
           if (data.ok && data.transfers && data.transfers.length > 0) {
-            return data.transfers;
+            return { fromAPI: true, transfers: data.transfers };
           }
         }
       } catch (e) {
         // Silent fallback
       }
       
-      // Generate realistic simulated transfers
-      const btcPrice = parseFloat(document.getElementById('metricPrice')?.textContent?.replace(/[$,]/g, '')) || 95000;
-      const types = ['BUY', 'SELL', 'MOVE'];
-      const sources = [
-        'BINANCE > COLD',
-        'COINBASE > OTC', 
-        'KRAKEN > UNKNOWN',
-        'WALLET > BINANCE',
-        'OTC > INST',
-        'COLD > EXCHANGE',
-        'FUND REBAL',
-        'TETHER TREAS',
-        'MSTR',
-        'MINING > EXCH',
-        'GBTC',
-        'FIDELITY',
-        'IBIT',
-        'CUMBERLAND'
-      ];
-      
-      const transfers = [];
-      const numTransfers = Math.floor(Math.random() * 2) + 1;
-      
-      for (let i = 0; i < numTransfers; i++) {
-        lastTransferId++;
-        const type = types[Math.floor(Math.random() * types.length)];
-        const amount = Math.floor(Math.random() * 2500) + 100;
-        const source = sources[Math.floor(Math.random() * sources.length)];
-        const price = btcPrice + (Math.random() - 0.5) * 150;
-        const valueUSD = amount * price;
-        
-        transfers.push({
-          id: lastTransferId,
-          type,
-          amount,
-          source,
-          price,
-          valueUSD,
-          timestamp: new Date().toISOString(),
-          isNew: true
-        });
-      }
-      
-      return transfers;
+      return { fromAPI: false, transfers: null };
     }
     
     function renderTransfer(t) {
@@ -5680,49 +5700,60 @@
     }
     
     async function updateLargeTransfers() {
-      const newTransfers = await fetchLargeTransfers();
+      // Initialize on first call
+      if (!transfersInitialized) {
+        initializeTransfers();
+      }
       
-      newTransfers.forEach(t => {
-        transfersQueue.unshift(t);
-      });
+      // Try to get real API data
+      const apiResult = await fetchLargeTransfers();
       
-      transfersQueue = transfersQueue.slice(0, 7);
+      if (apiResult.fromAPI && apiResult.transfers) {
+        // Use real API data
+        persistentTransfers = apiResult.transfers.slice(0, 7);
+      } else {
+        // 30% chance to add a new simulated transfer (realistic frequency)
+        if (Math.random() < 0.3) {
+          addNewTransfer();
+        }
+      }
       
+      // Update time display for existing transfers
       const listEl = document.getElementById('largeTransfersList');
       if (listEl) {
-        listEl.innerHTML = transfersQueue.map(t => renderTransfer(t)).join('');
+        listEl.innerHTML = persistentTransfers.map(t => renderTransfer(t)).join('');
         
+        // Mark new transfers as seen after animation
         setTimeout(() => {
-          transfersQueue.forEach(t => t.isNew = false);
-        }, 400);
+          persistentTransfers.forEach(t => t.isNew = false);
+        }, 500);
       }
       
       // Update total volume
-      const totalVol = transfersQueue.reduce((sum, t) => sum + t.amount, 0);
+      const totalVol = persistentTransfers.reduce((sum, t) => sum + t.amount, 0);
       const totalVolEl = document.getElementById('totalTransferVolume');
       if (totalVolEl) totalVolEl.textContent = `${totalVol.toLocaleString()} BTC`;
       
       // Update net flow
       const netFlowEl = document.getElementById('netFlowIndicator');
       if (netFlowEl) {
-        const buys = transfersQueue.filter(t => t.type === 'BUY').reduce((s, t) => s + t.amount, 0);
-        const sells = transfersQueue.filter(t => t.type === 'SELL').reduce((s, t) => s + t.amount, 0);
+        const buys = persistentTransfers.filter(t => t.type === 'BUY').reduce((s, t) => s + t.amount, 0);
+        const sells = persistentTransfers.filter(t => t.type === 'SELL').reduce((s, t) => s + t.amount, 0);
         const net = buys - sells;
         netFlowEl.textContent = `${net >= 0 ? '+' : ''}${net.toLocaleString()} BTC`;
-        netFlowEl.style.color = '#fff';
       }
       
-      // Update timestamp - Bloomberg style
+      // Update timestamp
       const tsEl = document.getElementById('transfersLastUpdate');
       if (tsEl) {
         const now = new Date();
-        tsEl.innerHTML = `LIVE ${now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
+        tsEl.innerHTML = `${now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
       }
     }
     
-    // Real-time: Update transfers
-    setInterval(updateLargeTransfers, 8000);
-    setTimeout(updateLargeTransfers, 500); // Fast initial load
+    // Update every 5 seconds - refresh times, occasionally add new transfer
+    setInterval(updateLargeTransfers, 5000);
+    setTimeout(updateLargeTransfers, 300); // Fast initial load
 
     // ===== SESSION STATUS UPDATER =====
     function updateSessionStatus() {
