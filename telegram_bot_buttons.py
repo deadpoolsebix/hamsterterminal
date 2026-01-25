@@ -722,42 +722,10 @@ logger = logging.getLogger(__name__)
 
 def get_quote(symbol):
     """
-    Pobierz cenę - automatyczny wybór źródła:
-    - Crypto (BTC, ETH, SOL) → Binance API (USDT)
-    - Metals/Forex → Twelve Data API (USD)
+    Pobierz cenę z Twelve Data API (Pro Max).
+    Obsługuje: Crypto, Forex, Metale, Akcje, Indeksy.
     """
-    # Mapowanie crypto na Binance symbole
-    CRYPTO_TO_BINANCE = {
-        'BTC/USD': 'BTCUSDT',
-        'ETH/USD': 'ETHUSDT', 
-        'SOL/USD': 'SOLUSDT',
-    }
-    
     try:
-        # Jeśli to crypto - użyj Binance
-        if symbol in CRYPTO_TO_BINANCE:
-            binance_symbol = CRYPTO_TO_BINANCE[symbol]
-            url = f"https://api.binance.com/api/v3/ticker/24hr?symbol={binance_symbol}"
-            r = requests.get(url, timeout=10)
-            if r.status_code != 200:
-                logger.error(f"Binance API error {r.status_code} for {symbol}: {r.text}")
-                return {'error': f'Błąd API Binance ({r.status_code})'}
-            data = r.json()
-            if not data or 'lastPrice' not in data:
-                logger.error(f"Binance API returned no data for {symbol}: {data}")
-                return {'error': 'Brak danych z Binance API'}
-            return {
-                'symbol': symbol,
-                'name': symbol.split('/')[0],
-                'close': data.get('lastPrice', '0'),
-                'open': data.get('openPrice', '0'),
-                'high': data.get('highPrice', '0'),
-                'low': data.get('lowPrice', '0'),
-                'percent_change': data.get('priceChangePercent', '0'),
-                'volume': data.get('volume', '0'),
-                'source': 'Binance'
-            }
-        # Dla metali/forex - użyj Twelve Data
         r = requests.get(
             f'https://api.twelvedata.com/quote?symbol={symbol}&apikey={TWELVE_DATA_API}',
             timeout=10
@@ -766,10 +734,13 @@ def get_quote(symbol):
             logger.error(f"TwelveData API error {r.status_code} for {symbol}: {r.text}")
             return {'error': f'Błąd API TwelveData ({r.status_code})'}
         result = r.json()
+        if 'code' in result and result.get('code') == 400:
+            logger.error(f"TwelveData API error for {symbol}: {result.get('message', 'Unknown error')}")
+            return {'error': f"Błąd API: {result.get('message', 'Nieznany błąd')}"}
         if not result or 'close' not in result:
             logger.error(f"TwelveData API returned no data for {symbol}: {result}")
             return {'error': 'Brak danych z TwelveData API'}
-        result['source'] = 'TwelveData'
+        result['source'] = 'TwelveData Pro Max'
         return result
     except Exception as e:
         logger.error(f"Błąd API dla {symbol}: {e}")
