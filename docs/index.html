@@ -3550,24 +3550,20 @@
         <polyline id="priceLineGlow" points="95,240 160,220 230,185 305,195 380,165 455,145 530,155 605,140 680,150 755,135" 
                   stroke="#d4a856" stroke-width="8" fill="none" opacity="0.08"/>
 
-        <!-- ======= BUY SIGNAL ======= -->
+        <!-- ======= BUY SIGNAL - Simple ======= -->
         <g id="buySignalGroup">
-          <circle cx="305" cy="195" r="10" fill="rgba(74, 157, 91, 0.15)"/>
-          <circle id="buySignalCircle" cx="305" cy="195" r="5" fill="#4a9d5b"/>
-          <polygon points="305,185 301,192 309,192" fill="#4a9d5b"/>
-          <rect x="268" y="162" width="74" height="16" fill="rgba(15,15,15,0.9)" rx="2"/>
-          <text id="buySignalText" x="305" y="173" fill="#4a9d5b" text-anchor="middle" font-size="9" font-weight="600">BUY SIGNAL</text>
-          <line id="buySignalLine" x1="305" y1="205" x2="305" y2="320" stroke="#4a9d5b" stroke-width="1" opacity="0.3"/>
+          <circle id="buySignalCircle" cx="305" cy="195" r="3" fill="#4a9d5b"/>
+          <polygon points="305,188 302,193 308,193" fill="#4a9d5b"/>
+          <text id="buySignalText" x="305" y="182" fill="#4a9d5b" text-anchor="middle" font-size="8" font-weight="600">BUY</text>
+          <line id="buySignalLine" x1="305" y1="198" x2="305" y2="320" stroke="#4a9d5b" stroke-width="1" opacity="0.2"/>
         </g>
 
-        <!-- ======= SELL SIGNAL ======= -->
+        <!-- ======= SELL SIGNAL - Simple ======= -->
         <g id="sellSignalGroup">
-          <circle cx="680" cy="150" r="10" fill="rgba(196, 92, 92, 0.15)"/>
-          <circle id="sellSignalCircle" cx="680" cy="150" r="5" fill="#c45c5c"/>
-          <polygon points="680,160 676,153 684,153" fill="#c45c5c"/>
-          <rect x="642" y="112" width="76" height="16" fill="rgba(15,15,15,0.9)" rx="2"/>
-          <text id="sellSignalText" x="680" y="123" fill="#c45c5c" text-anchor="middle" font-size="9" font-weight="600">SELL SIGNAL</text>
-          <line id="sellSignalLine" x1="680" y1="160" x2="680" y2="320" stroke="#c45c5c" stroke-width="1" opacity="0.3"/>
+          <circle id="sellSignalCircle" cx="680" cy="150" r="3" fill="#c45c5c"/>
+          <polygon points="680,157 677,152 683,152" fill="#c45c5c"/>
+          <text id="sellSignalText" x="680" y="145" fill="#c45c5c" text-anchor="middle" font-size="8" font-weight="600">SELL</text>
+          <line id="sellSignalLine" x1="680" y1="153" x2="680" y2="320" stroke="#c45c5c" stroke-width="1" opacity="0.2"/>
         </g>
 
         <!-- CURRENT PRICE INDICATOR -->
