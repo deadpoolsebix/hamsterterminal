@@ -7085,8 +7085,9 @@
       if (updateEl) updateEl.textContent = timeStr;
     }
     
-    // Update Genius commentary (next to price)
-    function updateGeniusCommentary(data) {
+    // Update Genius commentary UI elements (called from applyGeniusPayload)
+    function updateGeniusCommentaryUI(data) {
+      if (!data) return;
       const textEl = document.getElementById('geniusCommentaryText');
       const signalEl = document.getElementById('geniusSignalBadge');
       const confEl = document.getElementById('geniusConfidence');
