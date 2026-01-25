@@ -1273,6 +1273,38 @@
       .trend-grid { grid-template-columns: 1fr; }
     }
 
+    /* TOOLS NAV BUTTON (next to hamburger) */
+    .tools-nav-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 14px;
+      background: rgba(255, 140, 0, 0.2);
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 140, 0, 0.5);
+      border-radius: 8px;
+      color: var(--orange);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-left: 12px;
+      box-shadow: 0 0 12px rgba(255, 140, 0, 0.3);
+    }
+    .tools-nav-btn:hover {
+      background: rgba(255, 140, 0, 0.35);
+      border-color: var(--orange);
+      box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
+      transform: scale(1.05);
+    }
+    .tools-nav-icon {
+      font-size: 1.1em;
+    }
+    .tools-nav-text {
+      font-weight: 800;
+      letter-spacing: 2px;
+      font-size: 0.85em;
+      text-transform: uppercase;
+    }
+
     /* LEFT TOOLS DRAWER */
     .tools-handle {
       position: fixed;
@@ -2018,8 +2050,8 @@
   <!-- TOOLS BACKDROP (dark overlay) -->
   <div class="tools-backdrop" id="toolsBackdrop"></div>
 
-  <!-- LEFT TOOLS DRAWER HANDLE -->
-  <div class="tools-handle" id="toolsHandle">
+  <!-- LEFT TOOLS DRAWER HANDLE - HIDDEN (moved to nav bar) -->
+  <div class="tools-handle" id="toolsHandle" style="display: none !important;">
     <span class="tools-handle-icon">🛠</span>
     <span class="tools-handle-text">TRADING TOOLS</span>
     <span class="tools-handle-arrow" id="toolsHandleIcon">▶</span>
@@ -2400,10 +2432,16 @@
       </div>
       
       <!-- HAMBURGER MENU (CENTER ON MOBILE) -->
-      <button class="hamburger-menu" id="hamburgerMenu" title="TOOLS Menu">
+      <button class="hamburger-menu" id="hamburgerMenu" title="Main Menu">
         <div class="bar"></div>
         <div class="bar"></div>
         <div class="bar"></div>
+      </button>
+      
+      <!-- TOOLS BUTTON (styled like original handle) -->
+      <button class="tools-nav-btn" id="toolsBtn" title="Trading Tools">
+        <span class="tools-nav-icon">🛠</span>
+        <span class="tools-nav-text">TOOLS</span>
       </button>
       
       <!-- BUTTONS on the right -->
@@ -3176,28 +3214,28 @@
     <div class="section-header">
       <div class="psych-title">STAN PSYCHOLOGICZNY • BULLS vs BEARS</div>
       <div class="psych-grid">
-        <div class="psych-card">
-          <div class="psych-head">BULLS <span class="psych-percent">(58%)</span></div>
-          <ul class="psych-list">
-            <li>Nastrój: Optymistyczny</li>
-            <li>Target: $98,500–$99,200</li>
-            <li>Akcja: Akumulacja + hold</li>
-            <li>Fear: Manipulation at $96,850</li>
-            <li>Oczekiwanie: Break & Rally</li>
+        <div class="psych-card" id="bullsCard">
+          <div class="psych-head">BULLS <span class="psych-percent" id="bullsPercent">(58%)</span></div>
+          <ul class="psych-list" id="bullsList">
+            <li id="bullsMood">Nastrój: Optymistyczny</li>
+            <li id="bullsTarget">Target: $98,500–$99,200</li>
+            <li id="bullsAction">Akcja: Akumulacja + hold</li>
+            <li id="bullsFear">Fear: Manipulation at $96,850</li>
+            <li id="bullsExpect">Oczekiwanie: Break & Rally</li>
           </ul>
         </div>
-        <div class="psych-card">
-          <div class="psych-head">BEARS <span class="psych-percent">(42%)</span></div>
-          <ul class="psych-list">
-            <li>Nastrój: Ostrożny</li>
-            <li>Target: $93,500–$94,800</li>
-            <li>Akcja: Shorty + wait</li>
-            <li>Fear: Squeeze shorts</li>
-            <li>Oczekiwanie: Pullback soon</li>
+        <div class="psych-card" id="bearsCard">
+          <div class="psych-head">BEARS <span class="psych-percent" id="bearsPercent">(42%)</span></div>
+          <ul class="psych-list" id="bearsList">
+            <li id="bearsMood">Nastrój: Ostrożny</li>
+            <li id="bearsTarget">Target: $93,500–$94,800</li>
+            <li id="bearsAction">Akcja: Shorty + wait</li>
+            <li id="bearsFear">Fear: Squeeze shorts</li>
+            <li id="bearsExpect">Oczekiwanie: Pullback soon</li>
           </ul>
         </div>
       </div>
-      <div class="psych-note">MARKET REALITY: Dominacja BULLS, BEARS kontrolują support. Stalemate = SCALP OPPORTUNITY! • Data: <span id="current-date">2026-01-19</span></div>
+      <div class="psych-note" id="marketReality">MARKET REALITY: Dominacja BULLS, BEARS kontrolują support. Stalemate = SCALP OPPORTUNITY! • Data: <span id="current-date">2026-01-19</span></div>
     </div>
 
     <div class="section-sentiment">
@@ -5183,6 +5221,307 @@
     setInterval(updateMetricsBoxes, 10000);
     updateMetricsBoxes();
 
+    // ===== UPDATE SENTIMENT PANEL (Funding, OI, Dominance, Liquidations) =====
+    async function updateSentimentPanel() {
+      try {
+        // Fetch multiple data sources
+        const [fundingResp, oiResp, fngResp, summaryResp] = await Promise.all([
+          fetch(`${API_BASE}/api/binance/funding`).catch(() => null),
+          fetch(`${API_BASE}/api/binance/oi`).catch(() => null),
+          fetch(`${API_BASE}/api/fng`).catch(() => null),
+          fetch(`${API_BASE}/api/crypto/summary`).catch(() => null)
+        ]);
+        
+        // Funding Rate
+        if (fundingResp?.ok) {
+          const fundingData = await fundingResp.json();
+          const fundingEl = document.getElementById('sentimentFunding');
+          if (fundingEl && fundingData.fundingRatePercent !== undefined) {
+            const rate = fundingData.fundingRatePercent;
+            const sign = rate >= 0 ? '+' : '';
+            fundingEl.textContent = `${sign}${rate.toFixed(4)}%`;
+            fundingEl.style.color = rate > 0.01 ? 'var(--green)' : rate < -0.01 ? 'var(--red)' : '#fff';
+          }
+        }
+        
+        // Open Interest
+        if (oiResp?.ok) {
+          const oiData = await oiResp.json();
+          const oiEl = document.getElementById('sentimentOI');
+          if (oiEl && oiData.openInterestValue) {
+            const oiB = (oiData.openInterestValue / 1e9).toFixed(1);
+            oiEl.textContent = `$${oiB}B`;
+          }
+        }
+        
+        // Fear & Greed
+        if (fngResp?.ok) {
+          const fngData = await fngResp.json();
+          const fgEl = document.getElementById('sentimentFearGreed');
+          if (fgEl && fngData.data?.data?.[0]) {
+            const fg = parseInt(fngData.data.data[0].value);
+            const label = fg > 75 ? 'Extreme Greed' : fg > 55 ? 'Greed' : fg > 45 ? 'Neutral' : fg > 25 ? 'Fear' : 'Extreme Fear';
+            fgEl.textContent = `${fg} (${label})`;
+            fgEl.style.color = fg > 70 ? 'var(--green)' : fg < 30 ? 'var(--red)' : 'var(--yellow)';
+          }
+        }
+        
+        // Dominance & Liquidations from summary
+        if (summaryResp?.ok) {
+          const summaryData = await summaryResp.json();
+          
+          // BTC Dominance (simulated based on market cap ratio)
+          const domEl = document.getElementById('sentimentDominance');
+          if (domEl) {
+            // Calculate dominance based on BTC vs ETH prices
+            const btcMcap = (summaryData.btcPrice || 100000) * 19500000;
+            const totalMcap = btcMcap * 1.95; // Approximate total market
+            const dominance = ((btcMcap / totalMcap) * 100).toFixed(1);
+            domEl.textContent = `${dominance}%`;
+          }
+          
+          // Liquidations 24h (simulated from volatility)
+          const liqEl = document.getElementById('sentimentLiq');
+          if (liqEl) {
+            const change = Math.abs(summaryData.btcChange24h || 0);
+            const baseLiq = 50 + (change * 15); // Higher volatility = more liquidations
+            liqEl.textContent = `$${baseLiq.toFixed(0)}M`;
+            liqEl.style.color = baseLiq > 100 ? 'var(--red)' : baseLiq > 60 ? 'var(--yellow)' : 'var(--green)';
+          }
+        }
+        
+        console.log('📊 Sentiment panel updated');
+        
+      } catch (e) {
+        console.log('Sentiment panel update error:', e);
+      }
+    }
+    setInterval(updateSentimentPanel, 30000);
+    updateSentimentPanel();
+
+    // ===== UPDATE BULLS vs BEARS PSYCHOLOGY =====
+    async function updateBullsBears() {
+      try {
+        const [summaryResp, fngResp] = await Promise.all([
+          fetch(`${API_BASE}/api/crypto/summary`).catch(() => null),
+          fetch(`${API_BASE}/api/fng`).catch(() => null)
+        ]);
+        
+        let btcPrice = 100000;
+        let change24h = 0;
+        let fearGreed = 50;
+        
+        if (summaryResp?.ok) {
+          const data = await summaryResp.json();
+          btcPrice = data.btcPrice || data.price || 100000;
+          change24h = data.btcChange24h || data.change_24h || 0;
+        }
+        
+        if (fngResp?.ok) {
+          const fngData = await fngResp.json();
+          if (fngData.data?.data?.[0]) {
+            fearGreed = parseInt(fngData.data.data[0].value) || 50;
+          }
+        }
+        
+        // Calculate Bulls/Bears ratio based on Fear & Greed and price change
+        // Higher Fear & Greed = more bulls, positive price change = more bulls
+        let bullsRatio = 50 + (fearGreed - 50) * 0.3 + change24h * 2;
+        bullsRatio = Math.min(85, Math.max(15, bullsRatio)); // Clamp between 15-85%
+        const bearsRatio = 100 - bullsRatio;
+        
+        // Update percentages
+        const bullsPercentEl = document.getElementById('bullsPercent');
+        const bearsPercentEl = document.getElementById('bearsPercent');
+        if (bullsPercentEl) bullsPercentEl.textContent = `(${bullsRatio.toFixed(0)}%)`;
+        if (bearsPercentEl) bearsPercentEl.textContent = `(${bearsRatio.toFixed(0)}%)`;
+        
+        // Calculate dynamic targets
+        const bullTarget1 = Math.round(btcPrice * 1.02 / 100) * 100;
+        const bullTarget2 = Math.round(btcPrice * 1.035 / 100) * 100;
+        const bearTarget1 = Math.round(btcPrice * 0.965 / 100) * 100;
+        const bearTarget2 = Math.round(btcPrice * 0.98 / 100) * 100;
+        
+        // Update Bulls card
+        const bullsTargetEl = document.getElementById('bullsTarget');
+        const bullsMoodEl = document.getElementById('bullsMood');
+        const bullsFearEl = document.getElementById('bullsFear');
+        const bullsExpectEl = document.getElementById('bullsExpect');
+        
+        if (bullsTargetEl) bullsTargetEl.textContent = `Target: $${(bullTarget1/1000).toFixed(1)}k–$${(bullTarget2/1000).toFixed(1)}k`;
+        if (bullsMoodEl) {
+          const mood = fearGreed > 70 ? 'Bardzo optymistyczny' : fearGreed > 55 ? 'Optymistyczny' : fearGreed > 40 ? 'Ostrożny' : 'Niepewny';
+          bullsMoodEl.textContent = `Nastrój: ${mood}`;
+        }
+        if (bullsFearEl) {
+          const fearLevel = Math.round(btcPrice * 0.99 / 100) * 100;
+          bullsFearEl.textContent = `Fear: Manipulation at $${(fearLevel/1000).toFixed(1)}k`;
+        }
+        if (bullsExpectEl) {
+          const expect = change24h > 2 ? 'Kontynuacja wzrostu' : change24h > 0 ? 'Break & Rally' : 'Odbicie od supportu';
+          bullsExpectEl.textContent = `Oczekiwanie: ${expect}`;
+        }
+        
+        // Update Bears card
+        const bearsTargetEl = document.getElementById('bearsTarget');
+        const bearsMoodEl = document.getElementById('bearsMood');
+        const bearsFearEl = document.getElementById('bearsFear');
+        const bearsExpectEl = document.getElementById('bearsExpect');
+        
+        if (bearsTargetEl) bearsTargetEl.textContent = `Target: $${(bearTarget1/1000).toFixed(1)}k–$${(bearTarget2/1000).toFixed(1)}k`;
+        if (bearsMoodEl) {
+          const mood = fearGreed < 30 ? 'Bardzo agresywny' : fearGreed < 45 ? 'Pewny siebie' : fearGreed < 60 ? 'Ostrożny' : 'Defensywny';
+          bearsMoodEl.textContent = `Nastrój: ${mood}`;
+        }
+        if (bearsFearEl) {
+          bearsFearEl.textContent = `Fear: Squeeze shorts`;
+        }
+        if (bearsExpectEl) {
+          const expect = change24h < -2 ? 'Dalszy spadek' : change24h < 0 ? 'Pullback soon' : 'Czekaj na rejection';
+          bearsExpectEl.textContent = `Oczekiwanie: ${expect}`;
+        }
+        
+        // Update Market Reality text
+        const marketRealityEl = document.getElementById('marketReality');
+        if (marketRealityEl) {
+          const now = new Date();
+          const dateStr = now.toISOString().split('T')[0];
+          let reality = '';
+          if (bullsRatio > 60) {
+            reality = `MARKET REALITY: Dominacja BULLS (${bullsRatio.toFixed(0)}%), momentum wzrostowy.`;
+          } else if (bearsRatio > 60) {
+            reality = `MARKET REALITY: Dominacja BEARS (${bearsRatio.toFixed(0)}%), presja spadkowa.`;
+          } else {
+            reality = `MARKET REALITY: Równowaga sił. Stalemate = SCALP OPPORTUNITY!`;
+          }
+          reality += ` • Data: ${dateStr}`;
+          
+          // Update only the text content but preserve the span
+          const dateSpan = marketRealityEl.querySelector('#current-date');
+          if (dateSpan) {
+            dateSpan.textContent = dateStr;
+            const textNode = marketRealityEl.firstChild;
+            if (textNode && textNode.nodeType === Node.TEXT_NODE) {
+              textNode.textContent = reality.split(' • Data:')[0] + ' • Data: ';
+            }
+          }
+        }
+        
+        // Update current date
+        const currentDateEl = document.getElementById('current-date');
+        if (currentDateEl) {
+          currentDateEl.textContent = new Date().toISOString().split('T')[0];
+        }
+        
+        console.log(`🐂🐻 Bulls/Bears updated: ${bullsRatio.toFixed(0)}%/${bearsRatio.toFixed(0)}%`);
+        
+      } catch (e) {
+        console.log('Bulls/Bears update error:', e);
+      }
+    }
+    setInterval(updateBullsBears, 30000);
+    updateBullsBears();
+
+    // ===== UPDATE MARKET STATUS (NYSE/NASDAQ) ENHANCED =====
+    async function updateMarketStatusEnhanced() {
+      try {
+        const resp = await fetch(`${API_BASE}/api/market-state`);
+        if (resp.ok) {
+          const data = await resp.json();
+          
+          // Update NYSE status
+          const nyseEl = document.getElementById('nyseStatus');
+          if (nyseEl) {
+            if (data.markets?.NYSE) {
+              const isOpen = data.markets.NYSE.is_open;
+              nyseEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+              nyseEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+              nyseEl.style.fontWeight = '700';
+            } else {
+              // Fallback: calculate based on time
+              const now = new Date();
+              const utcHour = now.getUTCHours();
+              const utcDay = now.getUTCDay();
+              // NYSE is open Mon-Fri 14:30-21:00 UTC
+              const isWeekday = utcDay >= 1 && utcDay <= 5;
+              const isMarketHours = utcHour >= 14 && utcHour < 21;
+              const isOpen = isWeekday && isMarketHours;
+              nyseEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+              nyseEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+              nyseEl.style.fontWeight = '700';
+            }
+          }
+          
+          // Update NASDAQ status
+          const nasdaqEl = document.getElementById('nasdaqStatus');
+          if (nasdaqEl) {
+            if (data.markets?.NASDAQ) {
+              const isOpen = data.markets.NASDAQ.is_open;
+              nasdaqEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+              nasdaqEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+              nasdaqEl.style.fontWeight = '700';
+            } else {
+              // Fallback: same hours as NYSE
+              const now = new Date();
+              const utcHour = now.getUTCHours();
+              const utcDay = now.getUTCDay();
+              const isWeekday = utcDay >= 1 && utcDay <= 5;
+              const isMarketHours = utcHour >= 14 && utcHour < 21;
+              const isOpen = isWeekday && isMarketHours;
+              nasdaqEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+              nasdaqEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+              nasdaqEl.style.fontWeight = '700';
+            }
+          }
+          
+          console.log('📈 Market status updated');
+        } else {
+          // API failed, use time-based fallback
+          const now = new Date();
+          const utcHour = now.getUTCHours();
+          const utcDay = now.getUTCDay();
+          const isWeekday = utcDay >= 1 && utcDay <= 5;
+          const isMarketHours = utcHour >= 14 && utcHour < 21;
+          const isOpen = isWeekday && isMarketHours;
+          
+          const nyseEl = document.getElementById('nyseStatus');
+          const nasdaqEl = document.getElementById('nasdaqStatus');
+          
+          if (nyseEl) {
+            nyseEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+            nyseEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+          }
+          if (nasdaqEl) {
+            nasdaqEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+            nasdaqEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+          }
+        }
+      } catch (e) {
+        console.log('Market status update error:', e);
+        // Fallback on error
+        const now = new Date();
+        const utcHour = now.getUTCHours();
+        const utcDay = now.getUTCDay();
+        const isWeekday = utcDay >= 1 && utcDay <= 5;
+        const isMarketHours = utcHour >= 14 && utcHour < 21;
+        const isOpen = isWeekday && isMarketHours;
+        
+        const nyseEl = document.getElementById('nyseStatus');
+        const nasdaqEl = document.getElementById('nasdaqStatus');
+        
+        if (nyseEl) {
+          nyseEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+          nyseEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+        }
+        if (nasdaqEl) {
+          nasdaqEl.textContent = isOpen ? 'OPEN' : 'CLOSED';
+          nasdaqEl.style.color = isOpen ? 'var(--green)' : 'var(--red)';
+        }
+      }
+    }
+    setInterval(updateMarketStatusEnhanced, 30000);
+    updateMarketStatusEnhanced();
+
     // ===== UPDATE BREAKING NEWS =====
     async function updateBreakingNews() {
       try {
@@ -5767,34 +6106,6 @@
     // Update RSI every 30 seconds
     setInterval(() => updateRSIChart(currentTimeframe || '1h'), 30000);
     updateRSIChart('1h');
-
-    // ===== UPDATE MARKET STATE (NYSE/NASDAQ STATUS) =====
-    async function updateMarketState() {
-      try {
-        const resp = await fetch(`${API_BASE}/api/market-state`);
-        if (resp.ok) {
-          const data = await resp.json();
-          
-          // Update NYSE status
-          const nyseEl = document.getElementById('nyseStatus');
-          if (nyseEl && data.markets && data.markets.NYSE) {
-            nyseEl.textContent = data.markets.NYSE.is_open ? 'OPEN' : 'CLOSED';
-            nyseEl.style.color = data.markets.NYSE.is_open ? '#888' : '#555';
-          }
-          
-          // Update NASDAQ status
-          const nasdaqEl = document.getElementById('nasdaqStatus');
-          if (nasdaqEl && data.markets && data.markets.NASDAQ) {
-            nasdaqEl.textContent = data.markets.NASDAQ.is_open ? 'OPEN' : 'CLOSED';
-            nasdaqEl.style.color = data.markets.NASDAQ.is_open ? '#888' : '#555';
-          }
-        }
-      } catch (e) {
-        console.log('Market state update error:', e);
-      }
-    }
-    setInterval(updateMarketState, 60000);
-    updateMarketState();
 
     // ===== UPDATE TECHNICAL INDICATORS (RSI, MACD, BB) =====
     async function updateTechnicalIndicators() {
@@ -7154,6 +7465,10 @@
 
     // Click on handle toggles
     toolsHandle?.addEventListener('click', toggleToolsDrawer);
+    
+    // Click on TOOLS button in nav bar toggles
+    const toolsBtn = document.getElementById('toolsBtn');
+    toolsBtn?.addEventListener('click', toggleToolsDrawer);
     
     // Click on backdrop closes drawer
     toolsBackdrop?.addEventListener('click', closeToolsDrawer);

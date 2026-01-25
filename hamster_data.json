@@ -30,9 +30,9 @@
     ]
   },
   "signal_stats": {
-    "sent": 50,
+    "sent": 56,
     "types": {
-      "DAILY_TREND": 50
+      "DAILY_TREND": 56
     },
     "history": [],
     "accuracy": {
