@@ -3695,6 +3695,22 @@
         </div>
       </div>
 
+      <!-- OI SIGNAL INDICATOR -->
+      <div id="oiSignalBox" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 16px; padding: 16px; background: #0a0a0a; border-radius: 6px; border: 1px solid #222222;">
+        <div id="oiSignalArrow" style="font-size: 2em;">➖</div>
+        <div style="text-align: center;">
+          <div id="oiSignalLabel" style="color: #666666; font-size: 1.4em; font-weight: 700; letter-spacing: 1px;">NEUTRAL</div>
+          <div id="oiSignalDesc" style="color: #555555; font-size: 0.85em; margin-top: 4px;">Czekaj na sygnał</div>
+        </div>
+        <div id="oiSignalStrength" style="text-align: right;">
+          <div style="color: #444444; font-size: 0.75em;">SIGNAL STRENGTH</div>
+          <div id="oiStrengthBar" style="width: 100px; height: 8px; background: #1a1a1a; border-radius: 4px; margin-top: 4px; overflow: hidden;">
+            <div id="oiStrengthFill" style="width: 50%; height: 100%; background: #555555; border-radius: 4px; transition: all 0.3s;"></div>
+          </div>
+          <div id="oiStrengthValue" style="color: #555555; font-size: 0.8em; margin-top: 2px;">50%</div>
+        </div>
+      </div>
+
       <!-- OI Analysis -->
       <div style="background: #0a0a0a; border-radius: 6px; padding: 16px; margin-top: 16px; border-left: 3px solid #333333;">
         <div style="color: #666666; font-size: 0.85em; margin-bottom: 10px;">OI ANALYSIS</div>
@@ -6038,17 +6054,101 @@
       const priceChange = parseFloat(document.getElementById('btcChange')?.textContent) || 0;
       const oiTrend = oiData.change24h > 1 ? 'rosnące' : oiData.change24h < -1 ? 'spadające' : 'stabilne';
       
+      // Get signal elements
+      const signalBox = document.getElementById('oiSignalBox');
+      const signalArrow = document.getElementById('oiSignalArrow');
+      const signalLabel = document.getElementById('oiSignalLabel');
+      const signalDesc = document.getElementById('oiSignalDesc');
+      const strengthFill = document.getElementById('oiStrengthFill');
+      const strengthValue = document.getElementById('oiStrengthValue');
+      
       let text = '';
+      let signal = 'NEUTRAL';
+      let signalColor = '#555555';
+      let arrow = '➖';
+      let strength = 50;
+      let desc = 'Czekaj na sygnał';
+      
+      // Analyze OI + Price for signal
       if (oiData.change24h > 2 && priceChange > 0) {
-        text = `<strong style="color: #089981;">OI rosnące przy wzroście ceny</strong> - nowe pozycje long wchodzą na rynek. Sygnał kontynuacji trendu wzrostowego. Momentum silne.`;
+        // OI rising + Price rising = Strong BUY (new longs entering)
+        signal = 'BUY';
+        signalColor = '#00ff88';
+        arrow = '🟢 ▲';
+        strength = Math.min(95, 70 + Math.abs(oiData.change24h) * 5);
+        desc = 'Nowe LONG pozycje';
+        text = `<strong style="color: #00ff88;">🟢 BUY SIGNAL - OI rosnące przy wzroście ceny</strong> - nowe pozycje long wchodzą na rynek. Sygnał kontynuacji trendu wzrostowego. Momentum silne.`;
       } else if (oiData.change24h > 2 && priceChange < 0) {
-        text = `<strong style="color: #f23645;">OI rosnące przy spadku ceny</strong> - nowe shorty otwierane. Presja sprzedażowa może się nasilić. Uważaj na dalsze spadki.`;
+        // OI rising + Price falling = SELL (new shorts entering)
+        signal = 'SELL';
+        signalColor = '#ff4444';
+        arrow = '🔴 ▼';
+        strength = Math.min(95, 70 + Math.abs(oiData.change24h) * 5);
+        desc = 'Nowe SHORT pozycje';
+        text = `<strong style="color: #ff4444;">🔴 SELL SIGNAL - OI rosnące przy spadku ceny</strong> - nowe shorty otwierane. Presja sprzedażowa może się nasilić. Uważaj na dalsze spadki.`;
       } else if (oiData.change24h < -1 && priceChange > 0) {
-        text = `<strong style="color: #ff9800;">OI spadające przy wzroście ceny</strong> - short squeeze w toku. Zamykanie shortów pompuje cenę. Ruch może być krótkotrwały.`;
+        // OI falling + Price rising = Weak BUY (short squeeze)
+        signal = 'BUY';
+        signalColor = '#88cc88';
+        arrow = '🟡 ▲';
+        strength = Math.min(70, 50 + Math.abs(priceChange) * 2);
+        desc = 'Short Squeeze';
+        text = `<strong style="color: #88cc88;">🟡 WEAK BUY - OI spadające przy wzroście ceny</strong> - short squeeze w toku. Zamykanie shortów pompuje cenę. Ruch może być krótkotrwały.`;
       } else if (oiData.change24h < -1 && priceChange < 0) {
-        text = `<strong style="color: #ff9800;">OI spadające przy spadku ceny</strong> - longi likwidowane. Realizacja strat. Poszukaj wsparcia przed kolejnym wejściem.`;
+        // OI falling + Price falling = Weak SELL (longs liquidated)
+        signal = 'SELL';
+        signalColor = '#cc8888';
+        arrow = '🟡 ▼';
+        strength = Math.min(70, 50 + Math.abs(priceChange) * 2);
+        desc = 'Long Liquidation';
+        text = `<strong style="color: #cc8888;">🟡 WEAK SELL - OI spadające przy spadku ceny</strong> - longi likwidowane. Realizacja strat. Poszukaj wsparcia przed kolejnym wejściem.`;
+      } else if (oiData.longShortRatio > 1.3) {
+        // High long/short ratio - potential reversal down
+        signal = 'CAUTION';
+        signalColor = '#ff9800';
+        arrow = '⚠️';
+        strength = 40;
+        desc = 'Zbyt dużo LONG';
+        text = `<strong style="color: #ff9800;">⚠️ CAUTION - Long/Short ratio wysokie (${oiData.longShortRatio})</strong> - crowded long trade. Ryzyko short squeeze w dół. Rozważ redukcję pozycji.`;
+      } else if (oiData.longShortRatio < 0.8) {
+        // Low long/short ratio - potential reversal up
+        signal = 'CAUTION';
+        signalColor = '#ff9800';
+        arrow = '⚠️';
+        strength = 40;
+        desc = 'Zbyt dużo SHORT';
+        text = `<strong style="color: #ff9800;">⚠️ CAUTION - Long/Short ratio niskie (${oiData.longShortRatio})</strong> - crowded short trade. Ryzyko short squeeze w górę.`;
       } else {
-        text = `<strong style="color: #787b86;">OI ${oiTrend}</strong> - rynek w konsolidacji. Czekaj na wyraźny sygnał kierunku przed zajęciem pozycji. Long/Short ratio: ${oiData.longShortRatio}.`;
+        signal = 'NEUTRAL';
+        signalColor = '#555555';
+        arrow = '➖';
+        strength = 50;
+        desc = 'Brak wyraźnego sygnału';
+        text = `<strong style="color: #787b86;">➖ NEUTRAL - OI ${oiTrend}</strong> - rynek w konsolidacji. Czekaj na wyraźny sygnał kierunku przed zajęciem pozycji. Long/Short ratio: ${oiData.longShortRatio}.`;
+      }
+      
+      // Update signal box
+      if (signalBox) {
+        signalBox.style.borderColor = signalColor;
+      }
+      if (signalArrow) {
+        signalArrow.textContent = arrow;
+      }
+      if (signalLabel) {
+        signalLabel.textContent = signal;
+        signalLabel.style.color = signalColor;
+      }
+      if (signalDesc) {
+        signalDesc.textContent = desc;
+        signalDesc.style.color = signalColor;
+      }
+      if (strengthFill) {
+        strengthFill.style.width = `${strength}%`;
+        strengthFill.style.background = signalColor;
+      }
+      if (strengthValue) {
+        strengthValue.textContent = `${strength}%`;
+        strengthValue.style.color = signalColor;
       }
       
       analysis.innerHTML = text;
