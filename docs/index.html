@@ -548,6 +548,12 @@
     .ticker-change.down {
       color: #888888;
     }
+    /* Fear & Greed Index Colors */
+    .ticker-price.extreme-greed { color: #00ff41; font-weight: 700; }
+    .ticker-price.greed { color: #7fff00; }
+    .ticker-price.neutral { color: #ffcc00; }
+    .ticker-price.fear { color: #ff6600; }
+    .ticker-price.extreme-fear { color: #ff3333; font-weight: 700; }
     @keyframes ticker-scroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
@@ -4873,26 +4879,44 @@
     }
 
     function renderSniperTicker(data) {
-      // CRYPTO TICKER - more coins!
+      // ═══════════════════════════════════════════════════════════════
+      // CRYPTO TICKER - Sorted by Market Cap (Jan 2026)
+      // Order: BTC > ETH > XRP > SOL > BNB > ADA > DOGE > AVAX > DOT > LINK > MATIC > LTC > UNI > ATOM
+      // ═══════════════════════════════════════════════════════════════
       const cryptoTrack = document.getElementById('cryptoTickerTrack');
       if (cryptoTrack) {
         const cryptoItems = [];
         
-        // Main cryptos
+        // 1. BTC - #1 Market Cap
         if (typeof data.btcPrice === 'number') {
           cryptoItems.push(formatTickerItem('BTC', data.btcPrice, data.btcChange24h, 2));
         }
+        // 2. ETH - #2 Market Cap
         if (typeof data.ethPrice === 'number') {
           cryptoItems.push(formatTickerItem('ETH', data.ethPrice, data.ethChange24h, 2));
         }
         
-        // Additional cryptos from API
+        // 3-14. Additional cryptos sorted by market cap
         const cryptos = data.cryptos || {};
         const cryptosChange = data.cryptosChange || {};
-        const cryptoList = ['SOL', 'XRP', 'BNB', 'ADA', 'DOGE', 'AVAX', 'DOT', 'MATIC', 'LINK', 'UNI', 'ATOM', 'LTC'];
-        cryptoList.forEach(symbol => {
+        // Market Cap Order (Jan 2026): XRP > SOL > BNB > ADA > DOGE > AVAX > DOT > LINK > MATIC > LTC > UNI > ATOM
+        const cryptoListByMarketCap = [
+          { symbol: 'XRP', decimals: 4 },    // #3
+          { symbol: 'SOL', decimals: 2 },    // #4
+          { symbol: 'BNB', decimals: 2 },    // #5
+          { symbol: 'ADA', decimals: 4 },    // #6
+          { symbol: 'DOGE', decimals: 4 },   // #7
+          { symbol: 'AVAX', decimals: 2 },   // #8
+          { symbol: 'DOT', decimals: 2 },    // #9
+          { symbol: 'LINK', decimals: 2 },   // #10
+          { symbol: 'MATIC', decimals: 4 },  // #11
+          { symbol: 'LTC', decimals: 2 },    // #12
+          { symbol: 'UNI', decimals: 2 },    // #13
+          { symbol: 'ATOM', decimals: 2 }    // #14
+        ];
+        
+        cryptoListByMarketCap.forEach(({ symbol, decimals }) => {
           if (typeof cryptos[symbol] === 'number') {
-            const decimals = (symbol === 'DOGE' || symbol === 'XRP' || symbol === 'ADA' || symbol === 'MATIC') ? 4 : 2;
             cryptoItems.push(formatTickerItem(symbol, cryptos[symbol], cryptosChange[symbol], decimals));
           }
         });
@@ -4903,12 +4927,18 @@
         }
       }
       
-      // STOCKS/MARKETS TICKER - Wall Street order: Commodities first, then by market cap
+      // ═══════════════════════════════════════════════════════════════
+      // MARKETS TICKER - Wall Street Professional Order
+      // 1. PRECIOUS METALS (Safe Haven)
+      // 2. US INDICES (S&P 500, NASDAQ, DOW)
+      // 3. EUROPEAN INDICES (DAX)
+      // 4. MEGA-CAP STOCKS by Market Cap
+      // ═══════════════════════════════════════════════════════════════
       const stocksTrack = document.getElementById('stocksTickerTrack');
       if (stocksTrack) {
         const stockItems = [];
         
-        // 1. COMMODITIES first (Gold, Silver)
+        // ═══ 1. PRECIOUS METALS (Gold, Silver) - Safe Haven First ═══
         const commodities = data.commodities || {};
         const commoditiesChange = data.commoditiesChange || {};
         if (typeof commodities.GOLD === 'number') {
@@ -4918,35 +4948,39 @@
           stockItems.push(formatTickerItem('SILVER', commodities.SILVER, commoditiesChange.SILVER, 2));
         }
         
-        // 2. MAJOR INDICES (S&P500, DOW, NASDAQ)
+        // ═══ 2. US MAJOR INDICES (S&P500, NASDAQ, DOW) ═══
         const indices = data.indices || {};
         const indicesChange = data.indicesChange || {};
         if (typeof indices.SP500 === 'number') {
-          stockItems.push(formatTickerItem('SPX', indices.SP500, indicesChange.SP500, 0, ''));
-        }
-        if (typeof indices.DOW === 'number') {
-          stockItems.push(formatTickerItem('DJI', indices.DOW, indicesChange.DOW, 0, ''));
+          stockItems.push(formatTickerItem('SPX', indices.SP500, indicesChange.SP500, 2, ''));
         }
         if (typeof indices.NASDAQ === 'number') {
-          stockItems.push(formatTickerItem('NDX', indices.NASDAQ, indicesChange.NASDAQ, 0, ''));
+          stockItems.push(formatTickerItem('NDX', indices.NASDAQ, indicesChange.NASDAQ, 2, ''));
         }
-        if (typeof indices.DAX === 'number') {
-          stockItems.push(formatTickerItem('DAX', indices.DAX, indicesChange.DAX, 0, ''));
+        if (typeof indices.DOW === 'number') {
+          stockItems.push(formatTickerItem('DJI', indices.DOW, indicesChange.DOW, 2, ''));
         }
         
-        // 3. MEGA-CAP STOCKS by market cap (Apple, Microsoft, Nvidia, Amazon, Google, Meta, Tesla)
+        // ═══ 3. EUROPEAN INDICES (DAX) ═══
+        if (typeof indices.DAX === 'number') {
+          stockItems.push(formatTickerItem('DAX', indices.DAX, indicesChange.DAX, 2, ''));
+        }
+        
+        // ═══ 4. MEGA-CAP TECH STOCKS by Market Cap (Jan 2026) ═══
+        // Order: AAPL ($3.5T) > MSFT ($3.2T) > NVDA ($3.0T) > AMZN ($2.3T) > GOOGL ($2.2T) > META ($1.5T) > TSLA ($1.2T)
         const stocks = data.stocks || {};
         const stocksChange = data.stocksChange || {};
-        // Order by market cap (Jan 2026 approx): AAPL > MSFT > NVDA > AMZN > GOOGL > META > TSLA > SPY
-        ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'GOOGL', 'META', 'TSLA'].forEach(symbol => {
+        const megaCapStocks = ['AAPL', 'MSFT', 'NVDA', 'AMZN', 'GOOGL', 'META', 'TSLA'];
+        megaCapStocks.forEach(symbol => {
           if (typeof stocks[symbol] === 'number') {
             stockItems.push(formatTickerItem(symbol, stocks[symbol], stocksChange[symbol], 2));
           }
         });
         
-        // 4. Fear & Greed at the end
+        // ═══ 5. FEAR & GREED INDEX (Sentiment) ═══
         if (typeof data.fearGreed === 'number') {
-          stockItems.push(`<span class="ticker-symbol">F&G</span> <span class="ticker-price">${data.fearGreed}</span>`);
+          const fgClass = data.fearGreed >= 75 ? 'extreme-greed' : data.fearGreed >= 55 ? 'greed' : data.fearGreed >= 45 ? 'neutral' : data.fearGreed >= 25 ? 'fear' : 'extreme-fear';
+          stockItems.push(`<span class="ticker-symbol">F&G</span> <span class="ticker-price ${fgClass}">${data.fearGreed}</span>`);
         }
         
         if (stockItems.length > 0) {
