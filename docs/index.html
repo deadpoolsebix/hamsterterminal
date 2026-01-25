@@ -4946,7 +4946,7 @@
     }
 
     // Update Genius commentary every 10 seconds
-    setInterval(updateGeniusCommentary, 10000);
+    setInterval(updateGeniusCommentary, 30000); // Reduced from 10s to 30s - API limit
     updateGeniusCommentary(); // Initial call
 
     // ===== CROSS-ASSET CORRELATION HEATMAP =====
@@ -5010,7 +5010,7 @@
     }
     
     // Update correlation heatmap every 15 seconds
-    setInterval(updateCorrelationHeatmap, 15000);
+    setInterval(updateCorrelationHeatmap, 45000); // Reduced from 15s to 45s - API limit
     updateCorrelationHeatmap();
 
     // TICKER BAR - Update live market data
@@ -5028,7 +5028,7 @@
     }
 
     // Update ticker every 5 seconds
-    setInterval(updateTickerBar, 3000);
+    setInterval(updateTickerBar, 10000); // Reduced from 3s to 10s - API limit
     updateTickerBar(); // Initial call
 
     // Update news ticker every 45 seconds
@@ -5107,7 +5107,7 @@
     }
 
     // Update sidebar every 15 seconds
-    setInterval(updateSidebar, 15000);
+    setInterval(updateSidebar, 30000); // Reduced from 15s to 30s - API limit
     updateSidebar(); // Initial call
 
     // ===== UPDATE METRICS BOXES (CURRENT PRICE, VOLUME, etc.) =====
@@ -5165,7 +5165,7 @@
         console.log('Metrics update error:', err);
       }
     }
-    setInterval(updateMetricsBoxes, 5000);
+    setInterval(updateMetricsBoxes, 15000); // Reduced from 5s to 15s - API limit
     updateMetricsBoxes();
 
     // ===== UPDATE SENTIMENT PANEL (Funding, OI, Dominance, Liquidations) =====
@@ -5243,7 +5243,7 @@
         console.log('Sentiment panel update error:', e);
       }
     }
-    setInterval(updateSentimentPanel, 15000);
+    setInterval(updateSentimentPanel, 30000); // Reduced from 15s to 30s - API limit
     updateSentimentPanel();
 
     // ===== UPDATE BULLS vs BEARS PSYCHOLOGY =====
@@ -5696,7 +5696,7 @@
     }
     
     // Real-time: Update every 5 seconds for fast reactions
-    setInterval(updateLargeTransfers, 5000);
+    setInterval(updateLargeTransfers, 15000); // Reduced from 5s to 15s - API limit
     updateLargeTransfers();
 
     // ===== UPDATE MARKET MOVERS (TOP GAINERS/LOSERS) =====
@@ -5859,7 +5859,7 @@
       }
     }
     // Update chart every 30 seconds
-    setInterval(updateMainChart, 15000);
+    setInterval(updateMainChart, 30000); // Reduced from 15s to 30s - API limit
     updateMainChart();
 
     // ===== UPDATE MAIN CHART WITH SPECIFIC TIMEFRAME =====
@@ -6353,7 +6353,7 @@
         console.log('Genius signal update error:', e);
       }
     }
-    setInterval(updateGeniusSignal, 10000); // Update every 10 seconds
+    setInterval(updateGeniusSignal, 30000); // Reduced from 10s to 30s - API limit
     updateGeniusSignal();
 
     // ===== UPDATE SNIPER SHOT (DYNAMIC LEVELS) =====
@@ -6399,7 +6399,7 @@
         console.error('Sniper shot update error:', e);
       }
     }
-    setInterval(updateSniperShot, 5000);
+    setInterval(updateSniperShot, 15000); // Reduced from 5s to 15s - API limit
     updateSniperShot();
 
     // ===== UPDATE NIETYPOWE TAKTYKI (AI TACTICS) =====
@@ -6436,7 +6436,7 @@
         tactic3El.innerHTML = `3) <span style="color: var(--cyan);">Funding hedge:</span> Jeżeli funding >${fundingThreshold}% → przełącz <span style="color: var(--orange);">${hedgePercent}%</span> pozycji w hedge perps`;
       }
     }
-    setInterval(updateUnusualTactics, 15000);
+    setInterval(updateUnusualTactics, 45000); // Reduced from 15s to 45s - API limit
     updateUnusualTactics();
 
     // ===== LIVE ANALYTICS DATA UPDATE (EVERY 10 SECONDS) =====
@@ -6502,11 +6502,11 @@
     }
 
     // Update analytics data every 10 seconds
-    setInterval(updateAnalyticsData, 5000);
+    setInterval(updateAnalyticsData, 15000); // Reduced from 5s to 15s - API limit
     updateAnalyticsData(); // Initial call
 
-    // Update killzone overlay every 20 seconds
-    setInterval(updateKillzoneOverlay, 20000);
+    // Update killzone overlay every 45 seconds (reduced for API limit)
+    setInterval(updateKillzoneOverlay, 45000);
     updateKillzoneOverlay();
 
     // ===== TWITTER/X TICKER UPDATE (EVERY 30 SECONDS) =====
@@ -6702,9 +6702,6 @@
       
       console.log('✅ Killzone (local):', currentZone?.name || 'none', '| UTC:', utcHour + ':' + utcMinute.toString().padStart(2,'0'));
     }
-
-    setInterval(updateKillzoneOverlay, 20000);
-    updateKillzoneOverlay();
 
     // ===== SESSION COUNTDOWN - EUROPEAN TIME (CET/CEST) =====
     // Sessions defined in CET (Central European Time)
