@@ -206,11 +206,11 @@ def fetch_twelve_data_crypto(symbol='BTCUSDT'):
             if 'error' not in data and 'code' not in data:
                 # Twelve Data returns: close, open, high, low, previous_close, change, percent_change, volume
                 price = float(data.get('close', 0) or 0)
+                prev_close = float(data.get('previous_close', 0) or 0)
                 # percent_change may be string like "1.25" or number
                 pct_change_raw = data.get('percent_change', 0)
                 if pct_change_raw is None or pct_change_raw == '':
                     # Calculate from previous_close if percent_change missing
-                    prev_close = float(data.get('previous_close', 0) or 0)
                     if prev_close > 0 and price > 0:
                         pct_change = ((price - prev_close) / prev_close) * 100
                     else:
@@ -222,6 +222,7 @@ def fetch_twelve_data_crypto(symbol='BTCUSDT'):
                 return {
                     'price': price,
                     'change': pct_change,
+                    'previous_close': prev_close,
                     'volume': volume
                 }
             else:
@@ -247,9 +248,9 @@ def fetch_twelve_data_stock(symbol='AAPL'):
             data = response.json()
             if 'error' not in data and 'code' not in data:
                 price = float(data.get('close', 0) or 0)
+                prev_close = float(data.get('previous_close', 0) or 0)
                 pct_change_raw = data.get('percent_change', 0)
                 if pct_change_raw is None or pct_change_raw == '':
-                    prev_close = float(data.get('previous_close', 0) or 0)
                     if prev_close > 0 and price > 0:
                         pct_change = ((price - prev_close) / prev_close) * 100
                     else:
@@ -260,6 +261,7 @@ def fetch_twelve_data_stock(symbol='AAPL'):
                 return {
                     'price': price,
                     'change': pct_change,
+                    'previous_close': prev_close,
                     'volume': volume
                 }
             else:
@@ -285,9 +287,9 @@ def fetch_twelve_data_forex(pair='EUR/USD'):
             data = response.json()
             if 'error' not in data and 'code' not in data:
                 price = float(data.get('close', 0) or 0)
+                prev_close = float(data.get('previous_close', 0) or 0)
                 pct_change_raw = data.get('percent_change', 0)
                 if pct_change_raw is None or pct_change_raw == '':
-                    prev_close = float(data.get('previous_close', 0) or 0)
                     if prev_close > 0 and price > 0:
                         pct_change = ((price - prev_close) / prev_close) * 100
                     else:
@@ -296,7 +298,8 @@ def fetch_twelve_data_forex(pair='EUR/USD'):
                     pct_change = float(pct_change_raw)
                 return {
                     'price': price,
-                    'change': pct_change
+                    'change': pct_change,
+                    'previous_close': prev_close
                 }
             else:
                 logger.warning(f"⚠️ Twelve Data API error for {pair}: {data}")
@@ -420,6 +423,7 @@ def fetch_crypto_prices():
         if btc_data and btc_data.get('price', 0) > 0:
             cache['btc_price'] = btc_data['price']
             cache['btc_change'] = btc_data['change']
+            cache['btc_prev_close'] = btc_data.get('previous_close', 0)
             cache['volume_24h'] = btc_data.get('volume', 0) * btc_data['price']
         else:
             logger.warning("⚠️ Twelve Data BTC returned zero, keeping cached value")
@@ -427,6 +431,7 @@ def fetch_crypto_prices():
         if eth_data and eth_data.get('price', 0) > 0:
             cache['eth_price'] = eth_data['price']
             cache['eth_change'] = eth_data['change']
+            cache['eth_prev_close'] = eth_data.get('previous_close', 0)
         else:
             logger.warning("⚠️ Twelve Data ETH returned zero, keeping cached value")
         
@@ -463,17 +468,18 @@ def fetch_stock_prices():
     """Fetch stock prices from Twelve Data"""
     try:
         stocks = [
-            ('SPY', 'spy_price', 'spy_change'),
-            ('AAPL', 'aapl_price', 'aapl_change'),
-            ('MSFT', 'msft_price', 'msft_change'),
-            ('NVDA', 'nvda_price', 'nvda_change')
+            ('SPY', 'spy_price', 'spy_change', 'spy_prev_close'),
+            ('AAPL', 'aapl_price', 'aapl_change', 'aapl_prev_close'),
+            ('MSFT', 'msft_price', 'msft_change', 'msft_prev_close'),
+            ('NVDA', 'nvda_price', 'nvda_change', 'nvda_prev_close')
         ]
         
-        for ticker, price_key, change_key in stocks:
+        for ticker, price_key, change_key, prev_key in stocks:
             data = fetch_twelve_data_stock(ticker)
             if data:
                 cache[price_key] = data['price']
                 cache[change_key] = data['change']
+                cache[prev_key] = data.get('previous_close', 0)
         
         logger.info(f"✅ Twelve Data (Stocks): SPY ${cache['spy_price']:,.2f} | AAPL ${cache['aapl_price']:,.2f} | MSFT ${cache['msft_price']:,.2f} | NVDA ${cache['nvda_price']:,.2f}")
         return True
@@ -487,15 +493,16 @@ def fetch_forex_prices():
     """Fetch forex prices from Twelve Data"""
     try:
         pairs = [
-            ('EUR/USD', 'eurusd_price', 'eurusd_change'),
-            ('GBP/USD', 'gbpusd_price', 'gbpusd_change')
+            ('EUR/USD', 'eurusd_price', 'eurusd_change', 'eurusd_prev_close'),
+            ('GBP/USD', 'gbpusd_price', 'gbpusd_change', 'gbpusd_prev_close')
         ]
         
-        for pair, price_key, change_key in pairs:
+        for pair, price_key, change_key, prev_key in pairs:
             data = fetch_twelve_data_forex(pair)
             if data:
                 cache[price_key] = data['price']
                 cache[change_key] = data['change']
+                cache[prev_key] = data.get('previous_close', 0)
         
         logger.info(f"✅ Twelve Data (Forex): EUR/USD {cache['eurusd_price']:.4f} | GBP/USD {cache['gbpusd_price']:.4f}")
         return True
@@ -958,33 +965,47 @@ async def websocket_stream():
                     if 'price' in data:
                         symbol = data.get('symbol', 'UNKNOWN')
                         price = float(data.get('price', 0))
-                        change = float(data.get('percent_change', 0))
                         
-                        # Update cache
+                        # Twelve Data WebSocket doesn't send percent_change
+                        # Get change from cached REST API data, or calculate from previous close
+                        change = 0
+                        cache_key = None
+                        prev_key = None
+                        
+                        # Update cache and get change
                         if symbol == 'BTC/USD':
-                            cache['btc_price'] = price
-                            cache['btc_change'] = change
+                            cache_key, prev_key = 'btc_price', 'btc_prev_close'
+                            change = cache.get('btc_change', 0)
                         elif symbol == 'ETH/USD':
-                            cache['eth_price'] = price
-                            cache['eth_change'] = change
+                            cache_key, prev_key = 'eth_price', 'eth_prev_close'
+                            change = cache.get('eth_change', 0)
                         elif symbol == 'AAPL':
-                            cache['aapl_price'] = price
-                            cache['aapl_change'] = change
+                            cache_key, prev_key = 'aapl_price', 'aapl_prev_close'
+                            change = cache.get('aapl_change', 0)
                         elif symbol == 'MSFT':
-                            cache['msft_price'] = price
-                            cache['msft_change'] = change
+                            cache_key, prev_key = 'msft_price', 'msft_prev_close'
+                            change = cache.get('msft_change', 0)
                         elif symbol == 'NVDA':
-                            cache['nvda_price'] = price
-                            cache['nvda_change'] = change
+                            cache_key, prev_key = 'nvda_price', 'nvda_prev_close'
+                            change = cache.get('nvda_change', 0)
                         elif symbol == 'SPY':
-                            cache['spy_price'] = price
-                            cache['spy_change'] = change
+                            cache_key, prev_key = 'spy_price', 'spy_prev_close'
+                            change = cache.get('spy_change', 0)
                         elif symbol == 'EUR/USD':
-                            cache['eurusd_price'] = price
-                            cache['eurusd_change'] = change
+                            cache_key, prev_key = 'eurusd_price', 'eurusd_prev_close'
+                            change = cache.get('eurusd_change', 0)
                         elif symbol == 'GBP/USD':
-                            cache['gbpusd_price'] = price
-                            cache['gbpusd_change'] = change
+                            cache_key, prev_key = 'gbpusd_price', 'gbpusd_prev_close'
+                            change = cache.get('gbpusd_change', 0)
+                        
+                        # Update price cache
+                        if cache_key:
+                            cache[cache_key] = price
+                            
+                            # If we have previous close, recalculate change from current price
+                            prev_close = cache.get(prev_key)
+                            if prev_close and prev_close > 0:
+                                change = ((price - prev_close) / prev_close) * 100
                         
                         # Broadcast to all connected clients
                         broadcast_price_update(symbol, price, change)
@@ -1705,6 +1726,7 @@ def genius_tactics():
         return jsonify({'ok': False, 'error': str(e)}), 500
 
 
+@app.route('/api/news/headlines', methods=['GET'])
 def news_headlines():
     """Return curated news headlines"""
     try:
