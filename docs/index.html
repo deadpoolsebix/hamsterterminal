@@ -5027,7 +5027,7 @@
     // TICKER BAR - Update live market data
     async function updateTickerBar() {
       try {
-        const response = await fetch(`${API_BASE}/api/binance/summary`);
+        const response = await fetch(`${API_BASE}/api/crypto/summary`);
         if (!response.ok) return;
         const data = await response.json();
         if (data.ok) {
@@ -5049,7 +5049,7 @@
     // UPDATE SIDEBAR with live data
     async function updateSidebar() {
       try {
-        const response = await fetch(`${API_BASE}/api/binance/summary`);
+        const response = await fetch(`${API_BASE}/api/crypto/summary`);
         if (response.ok) {
           const data = await response.json();
           if (data.ok) {
@@ -5124,7 +5124,7 @@
     // ===== UPDATE METRICS BOXES (CURRENT PRICE, VOLUME, etc.) =====
     async function updateMetricsBoxes() {
       try {
-        const response = await fetch(`${API_BASE}/api/binance/summary`);
+        const response = await fetch(`${API_BASE}/api/crypto/summary`);
         if (!response.ok) return;
         const data = await response.json();
         if (data.ok) {
@@ -5550,7 +5550,7 @@
     // ===== UPDATE SNIPER SHOT (DYNAMIC LEVELS) =====
     async function updateSniperShot() {
       try {
-        const response = await fetch(`${API_BASE}/api/binance/summary`);
+        const response = await fetch(`${API_BASE}/api/crypto/summary`);
         if (!response.ok) return;
         const data = await response.json();
         
