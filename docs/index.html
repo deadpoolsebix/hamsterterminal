@@ -1273,7 +1273,12 @@
       .trend-grid { grid-template-columns: 1fr; }
     }
 
-    /* TOOLS NAV BUTTON (next to hamburger) */
+    /* TOOLS DROPDOWN CONTAINER */
+    .tools-dropdown-container {
+      position: relative;
+      display: inline-block;
+      margin-left: 12px;
+    }
     .tools-nav-btn {
       display: flex;
       align-items: center;
@@ -1286,7 +1291,6 @@
       color: var(--orange);
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-left: 12px;
       box-shadow: 0 0 12px rgba(255, 140, 0, 0.3);
     }
     .tools-nav-btn:hover {
@@ -1294,6 +1298,10 @@
       border-color: var(--orange);
       box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
       transform: scale(1.05);
+    }
+    .tools-nav-btn.active {
+      background: rgba(255, 140, 0, 0.4);
+      border-color: var(--orange);
     }
     .tools-nav-icon {
       font-size: 1.1em;
@@ -1304,171 +1312,149 @@
       font-size: 0.85em;
       text-transform: uppercase;
     }
-
-    /* LEFT TOOLS DRAWER */
-    .tools-handle {
-      position: fixed;
-      left: 0;
-      top: 140px;
-      width: 42px;
-      height: 180px;
-      background: rgba(255, 140, 0, 0.2);
-      backdrop-filter: blur(8px);
-      color: var(--orange);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 4px;
-      border: 2px solid rgba(255, 140, 0, 0.5);
-      border-left: none;
-      border-radius: 0 12px 12px 0;
-      z-index: 102;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    .tools-handle:hover {
-      width: 50px;
-      background: rgba(255, 140, 0, 0.35);
-      border-color: var(--orange);
-    }
-    .tools-handle-icon {
-      font-size: 1.2em;
-      margin-bottom: 2px;
-    }
-    .tools-handle-text {
-      writing-mode: vertical-rl;
-      font-weight: 800;
-      letter-spacing: 3px;
+    .tools-dropdown-arrow {
       font-size: 0.7em;
-      text-transform: uppercase;
+      transition: transform 0.3s ease;
     }
-    .tools-handle-arrow {
-      font-size: 0.9em;
-      margin-top: 2px;
+    .tools-nav-btn.active .tools-dropdown-arrow {
+      transform: rotate(180deg);
     }
-    /* When drawer is open, move handle to the right edge of drawer */
-    .tools-drawer.open + .tools-handle,
-    .tools-handle.drawer-open {
-      left: 350px;
-      background: rgba(255, 140, 0, 0.4);
-      border-color: var(--orange);
+    /* TOOLS DROPDOWN PANEL */
+    .tools-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      width: 420px;
+      max-height: 80vh;
+      background: linear-gradient(180deg, #0d0d0d 0%, #0a0a0a 100%);
+      border: 2px solid var(--orange);
+      border-radius: 8px;
+      box-shadow: 0 8px 32px rgba(255, 140, 0, 0.3);
       z-index: 10001;
-    }
-    .tools-drawer {
-      position: fixed;
-      left: 0;
-      top: 0;
-      height: 100vh;
-      width: 350px;
-      background: linear-gradient(180deg, #0a0a0a 0%, #0d0d0d 100%);
-      border-right: 3px solid var(--orange);
-      transform: translateX(-100%);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 10000;
-      padding: 16px;
-      overflow-y: auto;
-      box-shadow: 4px 0 20px rgba(255, 165, 0, 0.2);
-    }
-    .tools-drawer.open {
-      transform: translateX(0);
-      box-shadow: 8px 0 40px rgba(255, 165, 0, 0.3);
-    }
-    .tools-backdrop {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 9999;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
+      transform: translateY(-10px);
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+      overflow-y: auto;
     }
-    .tools-backdrop.visible {
+    .tools-dropdown.open {
       opacity: 1;
       visibility: visible;
+      transform: translateY(0);
     }
-    .tools-header {
+    .tools-dropdown-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: rgba(255, 140, 0, 0.1);
+      border-bottom: 2px solid var(--orange);
+      position: sticky;
+      top: 0;
+      z-index: 1;
+    }
+    .tools-dropdown-title {
       color: var(--orange);
       font-weight: 900;
-      margin-bottom: 16px;
-      font-size: 1.1em;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--orange);
       letter-spacing: 1px;
+      font-size: 0.95em;
     }
-    .tools-section {
-      background: linear-gradient(135deg, #1a1a1a 0%, #0d0d0d 100%);
-      border: 2px solid var(--orange);
+    .tools-dropdown-close {
+      background: transparent;
+      border: 1px solid var(--orange);
+      color: var(--orange);
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 1em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .tools-dropdown-close:hover {
+      background: var(--orange);
+      color: #000;
+    }
+    .tools-dropdown-content {
+      padding: 12px;
+    }
+    .tools-dropdown-section {
+      background: rgba(26, 26, 26, 0.8);
+      border: 1px solid #333;
+      border-radius: 6px;
       padding: 12px;
       margin-bottom: 12px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
     }
-    .tools-section:hover {
-      border-color: #ff9500;
-      box-shadow: 0 0 12px rgba(255, 165, 0, 0.2);
+    .tools-dropdown-section:last-child {
+      margin-bottom: 0;
     }
-    .tools-title {
+    .tools-section-title {
       color: var(--orange);
-      font-weight: 900;
-      font-size: 0.95em;
-      margin-bottom: 8px;
+      font-weight: 800;
+      font-size: 0.9em;
+      margin-bottom: 10px;
       letter-spacing: 0.5px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .tools-list { color: #eee; font-size: 0.9em; line-height: 1.8; }
-    .tools-list div { padding: 4px 0; display: flex; align-items: center; }
-    .tools-list.small { font-size: 0.85em; }
-    .tools-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-    .tools-grid label { color: #ddd; font-size: 0.85em; display: grid; gap: 4px; font-weight: 600; }
-    .tools-grid input {
-      background: #111;
-      color: var(--orange);
-      border: 2px solid var(--border);
-      padding: 8px;
+    .tools-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .tools-grid-2 label {
+      color: #aaa;
+      font-size: 0.8em;
       font-weight: 600;
-      transition: all 0.2s ease;
     }
-    .tools-grid input:focus {
+    .tools-grid-2 input, .tools-grid-2 select {
+      width: 100%;
+      padding: 8px;
+      background: #0a0a0a;
+      color: #fff;
+      border: 1px solid #333;
+      border-radius: 4px;
+      font-size: 0.9em;
+      font-family: 'Courier New', monospace;
+    }
+    .tools-grid-2 input:focus, .tools-grid-2 select:focus {
       border-color: var(--orange);
-      box-shadow: 0 0 8px rgba(255, 165, 0, 0.3);
       outline: none;
     }
-    .tools-btn {
-      padding: 8px 12px;
-      background: linear-gradient(90deg, var(--orange), #ff9500);
-      color: #000;
-      border: 2px solid #a85b00;
-      font-weight: 900;
-      cursor: pointer;
-      border-radius: 3px;
-      transition: all 0.2s ease;
-      grid-column: 1 / -1;
-      letter-spacing: 0.5px;
+    .tools-result-box {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid #333;
+      border-radius: 4px;
+      padding: 10px;
+      margin-top: 10px;
+      font-family: 'Courier New', monospace;
     }
-    .tools-btn:hover {
-      background: linear-gradient(90deg, #ff9500, #ffaa00);
-      box-shadow: 0 0 12px rgba(255, 165, 0, 0.4);
-      transform: scale(1.02);
-    }
-    .tools-note {
-      color: #aaa;
+    .tools-result-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 4px 0;
       font-size: 0.85em;
-      margin-top: 8px;
-      padding-top: 8px;
-      border-top: 1px solid var(--border);
+    }
+    .tools-result-label {
+      color: #888;
+    }
+    .tools-result-value {
+      color: #fff;
       font-weight: 600;
     }
-    .tools-footer {
-      color: #666;
-      font-size: 0.8em;
-      text-align: center;
-      margin-top: 20px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-      font-style: italic;
+    .tools-result-value.green { color: var(--green); }
+    .tools-result-value.red { color: var(--red); }
+    .tools-result-value.cyan { color: var(--cyan); }
+    .tools-result-value.orange { color: var(--orange); }
+    @media (max-width: 768px) {
+      .tools-dropdown {
+        width: calc(100vw - 20px);
+        left: -100px;
+        max-height: 70vh;
+      }
     }
 
     /* SIDEBAR MARKET INFO */
@@ -2047,216 +2033,12 @@
 </head>
 <body>
 
-  <!-- TOOLS BACKDROP (dark overlay) -->
-  <div class="tools-backdrop" id="toolsBackdrop"></div>
-
-  <!-- LEFT TOOLS DRAWER HANDLE - HIDDEN (moved to nav bar) -->
-  <div class="tools-handle" id="toolsHandle" style="display: none !important;">
-    <span class="tools-handle-icon">🛠</span>
-    <span class="tools-handle-text">TRADING TOOLS</span>
-    <span class="tools-handle-arrow" id="toolsHandleIcon">▶</span>
-  </div>
-
-  <!-- LEFT TOOLS DRAWER -->
-  <aside class="tools-drawer" id="toolsDrawer" aria-hidden="true">
-    <div class="tools-header" style="display: flex; justify-content: space-between; align-items: center;">
-      <span>🛠 TRADING TOOLS</span>
-      <button id="closeToolsBtn" style="background: transparent; border: 2px solid var(--orange); color: var(--orange); width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.2em; display: flex; align-items: center; justify-content: center;">✕</button>
-    </div>
-    
-    <!-- MARKET CORRELATIONS -->
-    <div class="tools-section">
-      <div class="tools-title">📈 Korelacje Rynkowe</div>
-      <div id="toolsCorrelations" style="font-size: 0.85em; line-height: 1.8;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: #fff;">BTC/NASDAQ</span>
-          <div style="background: rgba(0,255,0,0.2); padding: 2px 8px; border-radius: 3px;">
-            <span style="color: var(--green);">+0.72</span>
-          </div>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: #fff;">BTC/GOLD</span>
-          <div style="background: rgba(255,165,0,0.2); padding: 2px 8px; border-radius: 3px;">
-            <span style="color: var(--orange);">+0.35</span>
-          </div>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: #fff;">BTC/DXY</span>
-          <div style="background: rgba(255,0,0,0.2); padding: 2px 8px; border-radius: 3px;">
-            <span style="color: var(--red);">-0.58</span>
-          </div>
-        </div>
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <span style="color: #fff;">BTC/ETH</span>
-          <div style="background: rgba(0,255,0,0.2); padding: 2px 8px; border-radius: 3px;">
-            <span style="color: var(--green);">+0.89</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <!-- NARG INDICATORS -->
-    <div class="tools-section">
-      <div class="tools-title">🎯 NARG Indicators</div>
-      <div style="font-size: 0.85em; line-height: 1.6;">
-        <div style="padding: 4px 0;"><span style="color: var(--cyan);">NUPL:</span> <span style="color: #fff;">0.52</span> <span style="color: var(--gray);">(Belief)</span></div>
-        <div style="padding: 4px 0;"><span style="color: var(--cyan);">SOPR:</span> <span style="color: var(--green);">1.02</span> <span style="color: var(--gray);">(Profit)</span></div>
-        <div style="padding: 4px 0;"><span style="color: var(--cyan);">MVRV:</span> <span style="color: #fff;">2.1</span> <span style="color: var(--gray);">(Fair)</span></div>
-        <div style="padding: 4px 0;"><span style="color: var(--cyan);">STH/LTH:</span> <span style="color: var(--orange);">0.85</span></div>
-      </div>
-    </div>
-    
-    <!-- QUICK CALC -->
-    <div class="tools-section">
-      <div class="tools-title">🧮 Quick Calc</div>
-      <div class="tools-grid">
-        <label>Risk %<input type="number" id="calcRisk" value="1.0" step="0.1"></label>
-        <label>Entry<input type="number" id="calcEntry" value="95000"></label>
-        <label>SL<input type="number" id="calcSL" value="94000"></label>
-        <label>Acc Size<input type="number" id="calcSize" value="10000"></label>
-        <button id="calcRun" class="tools-btn" style="padding: 12px 16px; font-size: 1em;">CALCULATE</button>
-      </div>
-      <div class="tools-note" id="calcResult">Position: -- | Qty: --</div>
-    </div>
-    
-    <!-- FUNDING RATE CALCULATOR -->
-    <div class="tools-section">
-      <div class="tools-title">💰 Funding Rate Calculator</div>
-      <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
-        <label>Giełda
-          <select id="fundingExchange" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
-            <option value="binance">Binance</option>
-            <option value="bybit">Bybit</option>
-            <option value="okx">OKX</option>
-            <option value="bitget">Bitget</option>
-            <option value="deribit">Deribit</option>
-          </select>
-        </label>
-        <label>Symbol
-          <select id="fundingSymbol" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
-            <option value="BTCUSDT">BTC/USDT</option>
-            <option value="ETHUSDT">ETH/USDT</option>
-            <option value="SOLUSDT">SOL/USDT</option>
-            <option value="XRPUSDT">XRP/USDT</option>
-          </select>
-        </label>
-        <label>Pozycja ($)<input type="number" id="fundingPosition" value="10000" step="100"></label>
-        <label>Dźwignia<input type="number" id="fundingLeverage" value="10" step="1" min="1" max="125"></label>
-        <label>Dni<input type="number" id="fundingDays" value="30" step="1" min="1"></label>
-        <label>Rate (%)<input type="number" id="fundingRate" value="0.01" step="0.001"></label>
-      </div>
-      <button id="fundingCalcRun" class="tools-btn" style="width: 100%; padding: 10px; margin-top: 8px;">OBLICZ FUNDING</button>
-      <div id="fundingResult" style="margin-top: 10px; padding: 10px; background: rgba(0,212,255,0.1); border-radius: 6px; font-size: 0.85em;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: var(--gray);">Dzienny koszt:</span>
-          <span id="fundingDaily" style="color: var(--cyan);">--</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: var(--gray);">Koszt za okres:</span>
-          <span id="fundingTotal" style="color: var(--orange);">--</span>
-        </div>
-        <div style="display: flex; justify-content: space-between;">
-          <span style="color: var(--gray);">APR (roczny):</span>
-          <span id="fundingAPR" style="color: var(--yellow);">--</span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- MT5 PIP VALUE CALCULATOR -->
-    <div class="tools-section">
-      <div class="tools-title">📊 MT5 - Kalkulator PIP</div>
-      <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
-        <label>Instrument
-          <select id="mt5Instrument" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
-            <option value="XAUUSD">XAUUSD (Złoto)</option>
-            <option value="EURUSD">EURUSD</option>
-            <option value="GBPUSD">GBPUSD</option>
-            <option value="USDJPY">USDJPY</option>
-            <option value="US30">US30 (Dow Jones)</option>
-            <option value="NAS100">NAS100 (Nasdaq)</option>
-            <option value="BTCUSD">BTCUSD</option>
-          </select>
-        </label>
-        <label>Lot Size<input type="number" id="mt5LotSize" value="0.1" step="0.01" min="0.01"></label>
-      </div>
-      <div id="mt5PipResult" style="margin-top: 10px; padding: 10px; background: rgba(157,78,221,0.15); border-radius: 6px; font-size: 0.85em; border-left: 3px solid var(--purple);">
-        <div style="color: var(--purple); font-weight: 700; margin-bottom: 8px;">Wartość PIP:</div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-          <div><span style="color: var(--gray);">0.1 pip:</span> <span id="pip01" style="color: #fff;">--</span></div>
-          <div><span style="color: var(--gray);">0.5 pip:</span> <span id="pip05" style="color: #fff;">--</span></div>
-          <div><span style="color: var(--gray);">1 pip:</span> <span id="pip1" style="color: var(--green);">--</span></div>
-          <div><span style="color: var(--gray);">10 pips:</span> <span id="pip10" style="color: var(--cyan);">--</span></div>
-        </div>
-        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #333;">
-          <span style="color: var(--gray);">Spread typowy:</span> <span id="mt5Spread" style="color: var(--orange);">--</span>
-        </div>
-      </div>
-    </div>
-    
-    <!-- MT5 LIQUIDATION CALCULATOR -->
-    <div class="tools-section">
-      <div class="tools-title">⚠️ MT5 - Likwidacja & Koszty</div>
-      <div class="tools-grid" style="grid-template-columns: 1fr 1fr;">
-        <label>Depozyt ($)<input type="number" id="mt5Balance" value="1000" step="100"></label>
-        <label>Dźwignia<input type="number" id="mt5Leverage" value="100" step="10" min="1" max="500"></label>
-        <label>Entry Price<input type="number" id="mt5Entry" value="2650" step="1"></label>
-        <label>Lot Size<input type="number" id="mt5LotLiq" value="0.1" step="0.01"></label>
-        <label>Kierunek
-          <select id="mt5Direction" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
-            <option value="long">LONG (Buy)</option>
-            <option value="short">SHORT (Sell)</option>
-          </select>
-        </label>
-        <label>Instrument
-          <select id="mt5InstrumentLiq" style="width: 100%; padding: 6px; background: #0a0a0a; color: #fff; border: 1px solid #333; border-radius: 4px;">
-            <option value="XAUUSD">XAUUSD</option>
-            <option value="EURUSD">EURUSD</option>
-            <option value="BTCUSD">BTCUSD</option>
-            <option value="US30">US30</option>
-          </select>
-        </label>
-      </div>
-      <button id="mt5LiqCalcRun" class="tools-btn" style="width: 100%; padding: 10px; margin-top: 8px;">OBLICZ LIKWIDACJĘ</button>
-      <div id="mt5LiqResult" style="margin-top: 10px; padding: 10px; background: rgba(255,0,51,0.1); border-radius: 6px; font-size: 0.85em; border-left: 3px solid var(--red);">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: var(--gray);">Margin wymagany:</span>
-          <span id="mt5Margin" style="color: var(--cyan);">--</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: var(--gray);">Margin Level:</span>
-          <span id="mt5MarginLevel" style="color: var(--green);">--</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: var(--red); font-weight: 700;">Cena likwidacji:</span>
-          <span id="mt5LiqPrice" style="color: var(--red); font-weight: 700;">--</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-          <span style="color: var(--gray);">Odległość od LIQ:</span>
-          <span id="mt5LiqDistance" style="color: var(--orange);">--</span>
-        </div>
-        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #333;">
-          <div style="color: var(--gray); margin-bottom: 4px;">Koszty (szacunkowe):</div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--gray);">Swap/noc:</span>
-            <span id="mt5Swap" style="color: var(--orange);">--</span>
-          </div>
-          <div style="display: flex; justify-content: space-between;">
-            <span style="color: var(--gray);">Komisja RT:</span>
-            <span id="mt5Commission" style="color: var(--yellow);">--</span>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div class="tools-footer">🛠 Swipe lub kliknij TRADING TOOLS</div>
-  </aside>
-
   <!-- GENIUS AI SLIDE-OUT PANELS -->
   
   <!-- Smart Alerts Panel -->
   <div id="genius-panel-alerts" class="genius-panel">
     <div class="genius-panel-header">
-      <div class="genius-panel-title">🔔 Smart Alerts</div>
+      <div class="genius-panel-title">SMART ALERTS</div>
       <button class="genius-panel-close" onclick="closeGeniusPanel('genius-panel-alerts')">×</button>
     </div>
     <div class="genius-panel-content">
@@ -2438,11 +2220,176 @@
         <div class="bar"></div>
       </button>
       
-      <!-- TOOLS BUTTON (styled like original handle) -->
-      <button class="tools-nav-btn" id="toolsBtn" title="Trading Tools">
-        <span class="tools-nav-icon">🛠</span>
-        <span class="tools-nav-text">TOOLS</span>
-      </button>
+      <!-- TOOLS DROPDOWN (slides down) -->
+      <div class="tools-dropdown-container">
+        <button class="tools-nav-btn" id="toolsBtn" title="Trading Tools">
+          <span class="tools-nav-icon">T</span>
+          <span class="tools-nav-text">TOOLS</span>
+          <span class="tools-dropdown-arrow">▼</span>
+        </button>
+        <div class="tools-dropdown" id="toolsDropdown">
+          <div class="tools-dropdown-header">
+            <span class="tools-dropdown-title">TRADING TOOLS</span>
+            <button class="tools-dropdown-close" id="closeToolsDropdown">×</button>
+          </div>
+          <div class="tools-dropdown-content">
+            
+            <!-- PIP VALUE CALCULATOR -->
+            <div class="tools-dropdown-section">
+              <div class="tools-section-title">PIP VALUE CALCULATOR</div>
+              <div class="tools-grid-2">
+                <label>Instrument
+                  <select id="pipInstrument">
+                    <option value="XAUUSD">XAUUSD (Gold)</option>
+                    <option value="XAGUSD">XAGUSD (Silver)</option>
+                    <option value="EURUSD">EURUSD</option>
+                    <option value="GBPUSD">GBPUSD</option>
+                    <option value="USDJPY">USDJPY</option>
+                    <option value="US30">US30 (Dow Jones)</option>
+                    <option value="NAS100">NAS100 (Nasdaq)</option>
+                    <option value="SPX500">SPX500 (S&P 500)</option>
+                    <option value="DE40">DE40 (DAX)</option>
+                    <option value="BTCUSD">BTCUSD</option>
+                    <option value="ETHUSD">ETHUSD</option>
+                    <option value="USOIL">USOIL (WTI Crude)</option>
+                  </select>
+                </label>
+                <label>Lot Size
+                  <input type="number" id="pipLotSize" value="0.1" step="0.01" min="0.01">
+                </label>
+                <label>Account Currency
+                  <select id="pipCurrency">
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                    <option value="PLN">PLN</option>
+                    <option value="GBP">GBP</option>
+                  </select>
+                </label>
+                <label>Leverage
+                  <select id="pipLeverage">
+                    <option value="1">1:1</option>
+                    <option value="10">1:10</option>
+                    <option value="20">1:20</option>
+                    <option value="30">1:30</option>
+                    <option value="50">1:50</option>
+                    <option value="100" selected>1:100</option>
+                    <option value="200">1:200</option>
+                    <option value="500">1:500</option>
+                  </select>
+                </label>
+              </div>
+              <div class="tools-result-box" id="pipResults">
+                <div style="color: var(--cyan); font-weight: 700; margin-bottom: 8px; font-size: 0.85em;">PIP VALUES:</div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">0.1 pip:</span>
+                  <span class="tools-result-value" id="pip01val">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">0.5 pip:</span>
+                  <span class="tools-result-value cyan" id="pip05val">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">1 pip:</span>
+                  <span class="tools-result-value green" id="pip1val">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">10 pips:</span>
+                  <span class="tools-result-value orange" id="pip10val">--</span>
+                </div>
+                <div style="border-top: 1px solid #333; margin-top: 8px; padding-top: 8px;">
+                  <div class="tools-result-row">
+                    <span class="tools-result-label">Contract Size:</span>
+                    <span class="tools-result-value" id="pipContractSize">--</span>
+                  </div>
+                  <div class="tools-result-row">
+                    <span class="tools-result-label">Margin Required:</span>
+                    <span class="tools-result-value orange" id="pipMargin">--</span>
+                  </div>
+                  <div class="tools-result-row">
+                    <span class="tools-result-label">Position Value:</span>
+                    <span class="tools-result-value cyan" id="pipPositionValue">--</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- QUICK POSITION CALCULATOR -->
+            <div class="tools-dropdown-section">
+              <div class="tools-section-title">POSITION CALCULATOR</div>
+              <div class="tools-grid-2">
+                <label>Account Size ($)
+                  <input type="number" id="posAccSize" value="10000" step="100">
+                </label>
+                <label>Risk %
+                  <input type="number" id="posRisk" value="1" step="0.1" min="0.1" max="10">
+                </label>
+                <label>Entry Price
+                  <input type="number" id="posEntry" value="2650" step="0.01">
+                </label>
+                <label>Stop Loss
+                  <input type="number" id="posSL" value="2640" step="0.01">
+                </label>
+              </div>
+              <div class="tools-result-box">
+                <div class="tools-result-row">
+                  <span class="tools-result-label">Risk Amount:</span>
+                  <span class="tools-result-value red" id="posRiskAmt">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">SL Distance:</span>
+                  <span class="tools-result-value" id="posSLDist">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">Position Size:</span>
+                  <span class="tools-result-value green" id="posSizeResult">--</span>
+                </div>
+              </div>
+            </div>
+            
+            <!-- FUNDING RATE CALC -->
+            <div class="tools-dropdown-section">
+              <div class="tools-section-title">FUNDING RATE (PERPS)</div>
+              <div class="tools-grid-2">
+                <label>Position ($)
+                  <input type="number" id="fundPos" value="10000" step="100">
+                </label>
+                <label>Rate (%)
+                  <input type="number" id="fundRate" value="0.01" step="0.001">
+                </label>
+                <label>Days
+                  <input type="number" id="fundDays" value="30" step="1" min="1">
+                </label>
+                <label>Payments/Day
+                  <select id="fundPayments">
+                    <option value="3" selected>3x (Binance)</option>
+                    <option value="1">1x (Daily)</option>
+                    <option value="8">8x (Bybit)</option>
+                  </select>
+                </label>
+              </div>
+              <div class="tools-result-box">
+                <div class="tools-result-row">
+                  <span class="tools-result-label">Per Payment:</span>
+                  <span class="tools-result-value" id="fundPerPayment">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">Daily Cost:</span>
+                  <span class="tools-result-value orange" id="fundDaily">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">Total ({fundDays}d):</span>
+                  <span class="tools-result-value red" id="fundTotal">--</span>
+                </div>
+                <div class="tools-result-row">
+                  <span class="tools-result-label">APR:</span>
+                  <span class="tools-result-value cyan" id="fundAPR">--</span>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </div>
       
       <!-- BUTTONS on the right -->
       <div style="margin-left: auto; display: flex; gap: 8px;">
@@ -6759,76 +6706,6 @@
     setInterval(updateKillzoneOverlay, 20000);
     updateKillzoneOverlay();
 
-        const sniperTimerLabel = document.getElementById('sniperTimerLabel');
-        if (sniperTimerLabel) {
-          sniperTimerLabel.textContent = `Timer: ${timerText}`;
-        }
-
-        const sniper = data.sniper || {};
-        const entry = sniper.entry !== undefined && sniper.entry !== null ? `$${formatUsd(sniper.entry)}` : '--';
-        const tp1 = sniper.targets && sniper.targets[0] !== undefined ? `$${formatUsd(sniper.targets[0])}` : '--';
-        const tp2 = sniper.targets && sniper.targets[1] !== undefined ? `$${formatUsd(sniper.targets[1])}` : '--';
-        const stop = sniper.stop !== undefined && sniper.stop !== null ? `$${formatUsd(sniper.stop)}` : '--';
-
-        const sniperEntryLabel = document.getElementById('sniperEntryLabel');
-        if (sniperEntryLabel) {
-          sniperEntryLabel.textContent = entry !== '--' ? `Wejście Sniper ${entry}` : 'Wejście Sniper --';
-        }
-
-        const sniperTargetsLabel = document.getElementById('sniperTargetsLabel');
-        if (sniperTargetsLabel) {
-          sniperTargetsLabel.textContent = (tp1 !== '--' || tp2 !== '--') ? `Cele ${tp1} / ${tp2}` : 'Cele --';
-        }
-
-        const sessionLabel = document.getElementById('sessionCurrentLabel');
-        if (sessionLabel) {
-          const biasLabel = sniper.bias ? sniper.bias.toUpperCase() : 'NEUTRAL';
-          sessionLabel.textContent = `Sniper BTC • ${biasLabel}`;
-        }
-
-        const sniperEntryLine = document.getElementById('sniperEntryLine');
-        if (sniperEntryLine) {
-          sniperEntryLine.textContent = `Wejście: ${entry} • TP1: ${tp1} • TP2: ${tp2}`;
-        }
-
-        const sniperStopLine = document.getElementById('sniperStopLine');
-        if (sniperStopLine) {
-          const biasReadable = sniper.bias === 'bearish' ? 'Bearish' : sniper.bias === 'bullish' ? 'Bullish' : 'Neutral';
-          sniperStopLine.textContent = `Stop: ${stop} • Bias: ${biasReadable}`;
-        }
-
-        const sessionRecommendation = document.getElementById('sessionRecommendation');
-        if (sessionRecommendation) {
-          sessionRecommendation.textContent = `Rekomendacja: ${current.recommendation || 'Monitoruj rynek.'}`;
-        }
-
-        const aiPushNote = document.getElementById('aiPushNote');
-        if (aiPushNote) {
-          aiPushNote.textContent = `Notatka AI: ${data.aiNote || 'Brak informacji.'}`;
-        }
-
-        const sessionUpcomingNote = document.getElementById('sessionUpcomingNote');
-        if (sessionUpcomingNote) {
-          if (upcoming && typeof upcoming.minutesUntilStart === 'number') {
-            sessionUpcomingNote.textContent = `Następna killzone (${upcoming.label}) za ${formatMinutesToText(upcoming.minutesUntilStart)}`;
-          } else {
-            sessionUpcomingNote.textContent = 'Brak kolejnej killzone dziś.';
-          }
-        }
-
-        const [alertLine1, alertLine2] = splitAiNote(data.aiNote);
-        const aiAlertLine1 = document.getElementById('aiAlertLine1');
-        const aiAlertLine2 = document.getElementById('aiAlertLine2');
-        if (aiAlertLine1) aiAlertLine1.textContent = alertLine1;
-        if (aiAlertLine2) aiAlertLine2.textContent = alertLine2 || 'Monitoruj Sniper i RSI.';
-
-      } catch (err) {
-        console.log('Killzone API offline, tryb statyczny');
-        // Fallback - calculate session locally
-        updateSessionCountdownLocal();
-      }
-    }
-
     // ===== SESSION COUNTDOWN - EUROPEAN TIME (CET/CEST) =====
     // Sessions defined in CET (Central European Time)
     // Real market hours:
@@ -7611,96 +7488,163 @@
       });
     });
 
-    // ===== LEFT TOOLS DRAWER INTERACTIONS =====
-    const toolsDrawer = document.getElementById('toolsDrawer');
-    const toolsHandle = document.getElementById('toolsHandle');
-    const drawerWidth = 350; // must match CSS width
-    let dragging = false;
-    let startX = 0;
-
-    const toolsBackdrop = document.getElementById('toolsBackdrop');
-    const closeToolsBtn = document.getElementById('closeToolsBtn');
-
-    function openToolsDrawer() {
-      toolsDrawer?.classList.add('open');
-      toolsDrawer?.setAttribute('aria-hidden', 'false');
-      toolsHandle?.classList.add('drawer-open');
-      toolsBackdrop?.classList.add('visible');
-      document.body.style.overflow = 'hidden';
-      const icon = document.getElementById('toolsHandleIcon');
-      if (icon) icon.textContent = '◀';
-    }
-    function closeToolsDrawer() {
-      if (toolsDrawer) {
-        toolsDrawer.classList.remove('open');
-        toolsDrawer.setAttribute('aria-hidden', 'true');
-        toolsDrawer.style.transform = '';
-      }
-      toolsHandle?.classList.remove('drawer-open');
-      toolsBackdrop?.classList.remove('visible');
-      document.body.style.overflow = '';
-      const icon = document.getElementById('toolsHandleIcon');
-      if (icon) icon.textContent = '▶';
-    }
-    function toggleToolsDrawer() {
-      if (!toolsDrawer) return;
-      if (toolsDrawer.classList.contains('open')) {
-        closeToolsDrawer();
-      } else {
-        openToolsDrawer();
-      }
-    }
-
-    // Click on handle toggles
-    toolsHandle?.addEventListener('click', toggleToolsDrawer);
-    
-    // Click on TOOLS button in nav bar toggles
+    // ===== TOOLS DROPDOWN MENU =====
     const toolsBtn = document.getElementById('toolsBtn');
-    toolsBtn?.addEventListener('click', toggleToolsDrawer);
-    
-    // Click on backdrop closes drawer
-    toolsBackdrop?.addEventListener('click', closeToolsDrawer);
-    
-    // Click on close button closes drawer
-    closeToolsBtn?.addEventListener('click', closeToolsDrawer);
+    const toolsDropdown = document.getElementById('toolsDropdown');
+    const closeToolsDropdown = document.getElementById('closeToolsDropdown');
 
-    // Mouse drag from handle
-    toolsHandle?.addEventListener('mousedown', (e) => {
-      dragging = true; startX = e.clientX; toolsDrawer.style.transition = 'none';
-      document.body.style.userSelect = 'none';
-    });
-    window.addEventListener('mousemove', (e) => {
-      if (!dragging || !toolsDrawer) return;
-      const dx = e.clientX - startX;
-      const clamped = Math.max(0, Math.min(drawerWidth, dx));
-      toolsDrawer.style.transform = `translateX(${-drawerWidth + clamped}px)`;
-    });
-    window.addEventListener('mouseup', (e) => {
-      if (!dragging || !toolsDrawer) return;
-      dragging = false; toolsDrawer.style.transition = '';
-      document.body.style.userSelect = '';
-      const dx = e.clientX - startX;
-      if (dx > drawerWidth * 0.35) openToolsDrawer(); else closeToolsDrawer();
+    function openToolsDropdown() {
+      toolsBtn?.classList.add('active');
+      toolsDropdown?.classList.add('open');
+      // Calculate pip values on open
+      calculatePipValues();
+      calculatePosition();
+      calculateFunding();
+    }
+
+    function closeToolsDropdownFn() {
+      toolsBtn?.classList.remove('active');
+      toolsDropdown?.classList.remove('open');
+    }
+
+    function toggleToolsDropdown() {
+      if (toolsDropdown?.classList.contains('open')) {
+        closeToolsDropdownFn();
+      } else {
+        openToolsDropdown();
+      }
+    }
+
+    toolsBtn?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      toggleToolsDropdown();
     });
 
-    // Touch swipe from left edge
-    window.addEventListener('touchstart', (e) => {
-      const t = e.touches[0];
-      if (t.clientX < 20) { dragging = true; startX = t.clientX; toolsDrawer && (toolsDrawer.style.transition = 'none'); }
-    }, { passive: true });
-    window.addEventListener('touchmove', (e) => {
-      if (!dragging || !toolsDrawer) return;
-      const t = e.touches[0];
-      const dx = t.clientX - startX;
-      const clamped = Math.max(0, Math.min(drawerWidth, dx));
-      toolsDrawer.style.transform = `translateX(${-drawerWidth + clamped}px)`;
-    }, { passive: true });
-    window.addEventListener('touchend', (e) => {
-      if (!dragging || !toolsDrawer) return;
-      dragging = false; toolsDrawer.style.transition = '';
-      const dx = (e.changedTouches[0]?.clientX || startX) - startX;
-      if (dx > drawerWidth * 0.35) openToolsDrawer(); else closeToolsDrawer();
+    closeToolsDropdown?.addEventListener('click', closeToolsDropdownFn);
+
+    // Close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (toolsDropdown?.classList.contains('open')) {
+        if (!toolsDropdown.contains(e.target) && !toolsBtn.contains(e.target)) {
+          closeToolsDropdownFn();
+        }
+      }
     });
+
+    // ===== PIP VALUE CALCULATOR =====
+    const pipInstrumentData = {
+      'XAUUSD': { name: 'Gold', contractSize: 100, pipSize: 0.01, price: 2650 },
+      'XAGUSD': { name: 'Silver', contractSize: 5000, pipSize: 0.001, price: 31.5 },
+      'EURUSD': { name: 'EUR/USD', contractSize: 100000, pipSize: 0.0001, price: 1.08 },
+      'GBPUSD': { name: 'GBP/USD', contractSize: 100000, pipSize: 0.0001, price: 1.27 },
+      'USDJPY': { name: 'USD/JPY', contractSize: 100000, pipSize: 0.01, price: 156.5 },
+      'US30': { name: 'Dow Jones', contractSize: 1, pipSize: 1, price: 44500 },
+      'NAS100': { name: 'Nasdaq', contractSize: 1, pipSize: 1, price: 21500 },
+      'SPX500': { name: 'S&P 500', contractSize: 1, pipSize: 0.1, price: 6100 },
+      'DE40': { name: 'DAX', contractSize: 1, pipSize: 1, price: 21200 },
+      'BTCUSD': { name: 'Bitcoin', contractSize: 1, pipSize: 1, price: 105000 },
+      'ETHUSD': { name: 'Ethereum', contractSize: 1, pipSize: 0.01, price: 3300 },
+      'USOIL': { name: 'WTI Crude', contractSize: 1000, pipSize: 0.01, price: 75.5 }
+    };
+
+    const currencyRates = { 'USD': 1, 'EUR': 0.92, 'PLN': 4.02, 'GBP': 0.79 };
+
+    function calculatePipValues() {
+      const instrument = document.getElementById('pipInstrument')?.value || 'XAUUSD';
+      const lotSize = parseFloat(document.getElementById('pipLotSize')?.value) || 0.1;
+      const currency = document.getElementById('pipCurrency')?.value || 'USD';
+      const leverage = parseInt(document.getElementById('pipLeverage')?.value) || 100;
+
+      const data = pipInstrumentData[instrument];
+      if (!data) return;
+
+      // Pip value calculation
+      let pipValueUSD;
+      if (instrument === 'USDJPY') {
+        pipValueUSD = (data.pipSize * data.contractSize * lotSize) / data.price;
+      } else if (instrument.includes('JPY')) {
+        pipValueUSD = (data.pipSize * data.contractSize * lotSize) / data.price;
+      } else {
+        pipValueUSD = data.pipSize * data.contractSize * lotSize;
+      }
+
+      const rate = currencyRates[currency] || 1;
+      const pipValue = pipValueUSD / rate;
+      const currSymbol = currency === 'USD' ? '$' : currency === 'EUR' ? '€' : currency === 'GBP' ? '£' : 'zł';
+
+      // Position value
+      const positionValue = data.price * data.contractSize * lotSize;
+      const marginRequired = positionValue / leverage;
+
+      // Update display
+      document.getElementById('pip01val').textContent = `${currSymbol}${(pipValue * 0.1).toFixed(2)}`;
+      document.getElementById('pip05val').textContent = `${currSymbol}${(pipValue * 0.5).toFixed(2)}`;
+      document.getElementById('pip1val').textContent = `${currSymbol}${pipValue.toFixed(2)}`;
+      document.getElementById('pip10val').textContent = `${currSymbol}${(pipValue * 10).toFixed(2)}`;
+      document.getElementById('pipContractSize').textContent = `${data.contractSize.toLocaleString()} units`;
+      document.getElementById('pipMargin').textContent = `$${marginRequired.toFixed(2)}`;
+      document.getElementById('pipPositionValue').textContent = `$${positionValue.toLocaleString()}`;
+    }
+
+    // Add event listeners for pip calculator
+    ['pipInstrument', 'pipLotSize', 'pipCurrency', 'pipLeverage'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', calculatePipValues);
+      document.getElementById(id)?.addEventListener('input', calculatePipValues);
+    });
+
+    // ===== POSITION SIZE CALCULATOR =====
+    function calculatePosition() {
+      const accSize = parseFloat(document.getElementById('posAccSize')?.value) || 10000;
+      const riskPct = parseFloat(document.getElementById('posRisk')?.value) || 1;
+      const entry = parseFloat(document.getElementById('posEntry')?.value) || 2650;
+      const sl = parseFloat(document.getElementById('posSL')?.value) || 2640;
+
+      const riskAmount = accSize * (riskPct / 100);
+      const slDistance = Math.abs(entry - sl);
+      const slPct = (slDistance / entry) * 100;
+
+      // Position size in $ = risk / SL%
+      const positionSize = riskAmount / (slPct / 100);
+      
+      document.getElementById('posRiskAmt').textContent = `$${riskAmount.toFixed(2)}`;
+      document.getElementById('posSLDist').textContent = `${slDistance.toFixed(2)} (${slPct.toFixed(2)}%)`;
+      document.getElementById('posSizeResult').textContent = `$${positionSize.toFixed(0)}`;
+    }
+
+    ['posAccSize', 'posRisk', 'posEntry', 'posSL'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', calculatePosition);
+      document.getElementById(id)?.addEventListener('input', calculatePosition);
+    });
+
+    // ===== FUNDING RATE CALCULATOR =====
+    function calculateFunding() {
+      const position = parseFloat(document.getElementById('fundPos')?.value) || 10000;
+      const rate = parseFloat(document.getElementById('fundRate')?.value) || 0.01;
+      const days = parseInt(document.getElementById('fundDays')?.value) || 30;
+      const payments = parseInt(document.getElementById('fundPayments')?.value) || 3;
+
+      const perPayment = position * (rate / 100);
+      const dailyCost = perPayment * payments;
+      const totalCost = dailyCost * days;
+      const apr = (rate / 100) * payments * 365 * 100;
+
+      document.getElementById('fundPerPayment').textContent = `$${perPayment.toFixed(2)}`;
+      document.getElementById('fundDaily').textContent = `$${dailyCost.toFixed(2)}`;
+      document.getElementById('fundTotal').textContent = `$${totalCost.toFixed(2)}`;
+      document.getElementById('fundAPR').textContent = `${apr.toFixed(1)}%`;
+    }
+
+    ['fundPos', 'fundRate', 'fundDays', 'fundPayments'].forEach(id => {
+      document.getElementById(id)?.addEventListener('change', calculateFunding);
+      document.getElementById(id)?.addEventListener('input', calculateFunding);
+    });
+
+    // Initial calculations
+    setTimeout(() => {
+      calculatePipValues();
+      calculatePosition();
+      calculateFunding();
+    }, 100);
 
     // Quick calc action
     const calcRun = document.getElementById('calcRun');
