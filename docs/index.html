@@ -3598,77 +3598,101 @@
       </svg>
     </div>
 
-    <!-- SESSION INFO - Clean Text Description -->
+    <!-- OPEN INTEREST CHART -->
     <div style="background: #131722; border: 1px solid #2a2e39; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
       <!-- Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #2a2e39;">
-        <div style="color: #d1d4dc; font-weight: 700; font-size: 1.1em;">SESSION STATUS</div>
-        <div style="color: #2962ff; font-size: 0.9em; font-weight: 600;" id="sessionStatusLive">● LIVE</div>
-      </div>
-
-      <!-- Current Session Box -->
-      <div style="background: #1e222d; border-radius: 6px; padding: 20px; margin-bottom: 16px;">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div style="color: #787b86; font-size: 0.85em; margin-bottom: 6px;">ACTIVE SESSION</div>
-            <div id="currentSessionName" style="color: #d1d4dc; font-size: 1.5em; font-weight: 700;">London Open</div>
-            <div id="currentSessionTime" style="color: #787b86; font-size: 0.9em; margin-top: 4px;">08:00 - 12:00 CET</div>
-          </div>
-          <div style="text-align: right;">
-            <div style="color: #787b86; font-size: 0.85em; margin-bottom: 6px;">ENDS IN</div>
-            <div id="sessionCountdown" style="color: #2962ff; font-size: 2em; font-weight: 700; font-family: Arial, sans-serif;">02:34:12</div>
-          </div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #2a2e39;">
+        <div>
+          <div style="color: #d1d4dc; font-weight: 700; font-size: 1.1em;">OPEN INTEREST</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">BTC Perpetual Futures</div>
+        </div>
+        <div style="text-align: right;">
+          <div id="totalOI" style="color: #d1d4dc; font-size: 1.4em; font-weight: 700;">$12.45B</div>
+          <div id="oiChange24h" style="color: #089981; font-size: 0.9em;">+2.8% (24h)</div>
         </div>
       </div>
 
-      <!-- Session Grid -->
-      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;">
-        <div id="sessionCard-asia" style="padding: 14px; background: #1e222d; border-radius: 4px; border-left: 3px solid #ff9800;">
-          <div style="color: #ff9800; font-weight: 600; font-size: 0.9em;">🌏 ASIA</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">00:00 - 09:00 CET</div>
-          <div id="asiaStatus" style="color: #787b86; font-size: 0.85em; margin-top: 8px;">Ended</div>
+      <!-- OI Chart SVG -->
+      <svg id="oiChart" viewBox="0 0 800 120" style="width: 100%; height: 120px; background: #0d1117; border-radius: 4px;">
+        <!-- Grid lines -->
+        <line x1="50" y1="20" x2="780" y2="20" stroke="#1e222d" stroke-width="1"/>
+        <line x1="50" y1="60" x2="780" y2="60" stroke="#1e222d" stroke-width="1"/>
+        <line x1="50" y1="100" x2="780" y2="100" stroke="#1e222d" stroke-width="1"/>
+        
+        <!-- OI Area Fill -->
+        <defs>
+          <linearGradient id="oiGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" style="stop-color:#2962ff;stop-opacity:0.4"/>
+            <stop offset="100%" style="stop-color:#2962ff;stop-opacity:0.05"/>
+          </linearGradient>
+        </defs>
+        <path id="oiAreaPath" d="M50,100 L50,65 L100,62 L150,58 L200,55 L250,52 L300,48 L350,45 L400,42 L450,40 L500,38 L550,35 L600,38 L650,42 L700,38 L750,35 L780,32 L780,100 Z" fill="url(#oiGradient)"/>
+        
+        <!-- OI Line -->
+        <polyline id="oiLine" points="50,65 100,62 150,58 200,55 250,52 300,48 350,45 400,42 450,40 500,38 550,35 600,38 650,42 700,38 750,35 780,32" fill="none" stroke="#2962ff" stroke-width="2"/>
+        
+        <!-- Current value dot -->
+        <circle id="oiCurrentDot" cx="780" cy="32" r="4" fill="#2962ff"/>
+        
+        <!-- Axis labels -->
+        <text x="10" y="24" fill="#555" font-size="9">$14B</text>
+        <text x="10" y="64" fill="#555" font-size="9">$12B</text>
+        <text x="10" y="104" fill="#555" font-size="9">$10B</text>
+        
+        <!-- Time labels -->
+        <text x="50" y="115" fill="#555" font-size="8">24h ago</text>
+        <text x="400" y="115" fill="#555" font-size="8">12h ago</text>
+        <text x="750" y="115" fill="#555" font-size="8">Now</text>
+      </svg>
+
+      <!-- Exchange Breakdown -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px;">
+        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #f0b90b;">
+          <div style="color: #f0b90b; font-weight: 600; font-size: 0.85em;">BINANCE</div>
+          <div id="oiBinance" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$5.12B</div>
+          <div id="oiBinanceChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+3.2%</div>
         </div>
-        <div id="sessionCard-london" style="padding: 14px; background: rgba(41, 98, 255, 0.1); border-radius: 4px; border-left: 3px solid #2962ff;">
-          <div style="color: #2962ff; font-weight: 600; font-size: 0.9em;">🇬🇧 LONDON</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">08:00 - 17:00 CET</div>
-          <div id="londonStatus" style="color: #2962ff; font-size: 0.85em; margin-top: 8px; font-weight: 600;">● Active</div>
+        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #ff9800;">
+          <div style="color: #ff9800; font-weight: 600; font-size: 0.85em;">BYBIT</div>
+          <div id="oiBybit" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$3.85B</div>
+          <div id="oiBybitChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+2.1%</div>
         </div>
-        <div id="sessionCard-ny" style="padding: 14px; background: #1e222d; border-radius: 4px; border-left: 3px solid #089981;">
-          <div style="color: #089981; font-weight: 600; font-size: 0.9em;">🇺🇸 NEW YORK</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">14:30 - 21:00 CET</div>
-          <div id="nyStatus" style="color: #787b86; font-size: 0.85em; margin-top: 8px;">In 2h 15m</div>
+        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #2962ff;">
+          <div style="color: #2962ff; font-weight: 600; font-size: 0.85em;">OKX</div>
+          <div id="oiOkx" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$2.28B</div>
+          <div id="oiOkxChange" style="color: #f23645; font-size: 0.8em; margin-top: 4px;">-0.8%</div>
         </div>
-        <div id="sessionCard-overlap" style="padding: 14px; background: #1e222d; border-radius: 4px; border-left: 3px solid #f23645;">
-          <div style="color: #f23645; font-weight: 600; font-size: 0.9em;">⚡ OVERLAP</div>
-          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">14:30 - 17:00 CET</div>
-          <div id="overlapStatus" style="color: #787b86; font-size: 0.85em; margin-top: 8px;">High volatility zone</div>
+        <div style="background: #1e222d; padding: 14px; border-radius: 4px; border-left: 3px solid #089981;">
+          <div style="color: #089981; font-weight: 600; font-size: 0.85em;">OTHERS</div>
+          <div id="oiOthers" style="color: #d1d4dc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$1.20B</div>
+          <div id="oiOthersChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+1.5%</div>
         </div>
       </div>
 
-      <!-- AI Session Analysis -->
-      <div style="background: #1e222d; border-radius: 6px; padding: 16px; border-left: 3px solid #2962ff;">
-        <div style="color: #787b86; font-size: 0.85em; margin-bottom: 10px;">AI SESSION ANALYSIS</div>
-        <div id="sessionAIAnalysis" style="color: #d1d4dc; font-size: 1em; line-height: 1.6;">
-          <strong style="color: #2962ff;">London session active.</strong> Volatility expected to increase as European markets open. Watch for GBP/USD correlation with BTC. Key level at $96,500 resistance - if broken, expect momentum continuation. NY overlap (14:30 CET) typically brings highest volume - prepare for potential breakout.
+      <!-- OI Analysis -->
+      <div style="background: #1e222d; border-radius: 6px; padding: 16px; margin-top: 16px; border-left: 3px solid #2962ff;">
+        <div style="color: #787b86; font-size: 0.85em; margin-bottom: 10px;">OI ANALYSIS</div>
+        <div id="oiAnalysisText" style="color: #d1d4dc; font-size: 0.95em; line-height: 1.6;">
+          <strong style="color: #089981;">OI rosnące przy wzroście ceny</strong> - nowe pozycje long wchodzą na rynek. Sygnał kontynuacji trendu. Uważaj na nagły spadek OI przy wysokich cenach - może oznaczać realizację zysków i potencjalny pullback.
         </div>
       </div>
 
-      <!-- Quick Stats -->
-      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px;">
+      <!-- OI Metrics -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px;">
         <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
-          <div style="color: #787b86; font-size: 0.8em;">NEXT SESSION</div>
-          <div id="nextSessionName" style="color: #d1d4dc; font-size: 1.1em; font-weight: 600; margin-top: 4px;">New York</div>
-          <div id="nextSessionIn" style="color: #089981; font-size: 0.9em; margin-top: 2px;">in 2h 15m</div>
+          <div style="color: #787b86; font-size: 0.8em;">LONG/SHORT RATIO</div>
+          <div id="longShortRatio" style="color: #089981; font-size: 1.2em; font-weight: 700; margin-top: 4px;">1.24</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">Longs dominant</div>
         </div>
         <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
-          <div style="color: #787b86; font-size: 0.8em;">VOLATILITY LEVEL</div>
-          <div id="volatilityLevel" style="color: #ff9800; font-size: 1.1em; font-weight: 600; margin-top: 4px;">MEDIUM</div>
-          <div style="color: #787b86; font-size: 0.9em; margin-top: 2px;">London typical</div>
+          <div style="color: #787b86; font-size: 0.8em;">24H LIQUIDATIONS</div>
+          <div id="liquidations24h" style="color: #f23645; font-size: 1.2em; font-weight: 700; margin-top: 4px;">$85.2M</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">Shorts: 62%</div>
         </div>
         <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
-          <div style="color: #787b86; font-size: 0.8em;">BEST TRADING WINDOW</div>
-          <div id="bestWindow" style="color: #2962ff; font-size: 1.1em; font-weight: 600; margin-top: 4px;">14:30 - 17:00</div>
-          <div style="color: #787b86; font-size: 0.9em; margin-top: 2px;">London/NY overlap</div>
+          <div style="color: #787b86; font-size: 0.8em;">FUNDING RATE</div>
+          <div id="fundingRateOI" style="color: #089981; font-size: 1.2em; font-weight: 700; margin-top: 4px;">+0.008%</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 2px;">Neutral-bullish</div>
         </div>
       </div>
     </div>
@@ -5757,134 +5781,160 @@
     setInterval(updateLargeTransfers, 5000);
     setTimeout(updateLargeTransfers, 300); // Fast initial load
 
-    // ===== SESSION STATUS UPDATER =====
-    function updateSessionStatus() {
-      const now = new Date();
-      const cetOffset = 1; // CET = UTC+1
-      const cetHour = (now.getUTCHours() + cetOffset) % 24;
-      const cetMinutes = now.getUTCMinutes();
-      
-      // Session definitions (CET times)
-      const sessions = {
-        asia: { name: 'Asia', emoji: '🌏', start: 0, end: 9, color: '#ff9800' },
-        london: { name: 'London', emoji: '🇬🇧', start: 8, end: 17, color: '#2962ff' },
-        ny: { name: 'New York', emoji: '🇺🇸', start: 14.5, end: 21, color: '#089981' },
-        overlap: { name: 'London/NY Overlap', emoji: '⚡', start: 14.5, end: 17, color: '#f23645' }
-      };
-      
-      // Check which sessions are active
-      const currentHourDecimal = cetHour + (cetMinutes / 60);
-      
-      let activeSession = null;
-      let volatilityLevel = 'LOW';
-      
-      // Update session cards
-      Object.keys(sessions).forEach(key => {
-        const s = sessions[key];
-        const isActive = currentHourDecimal >= s.start && currentHourDecimal < s.end;
-        const card = document.getElementById(`sessionCard-${key}`);
-        const status = document.getElementById(`${key}Status`);
-        
-        if (card && status) {
-          if (isActive) {
-            card.style.background = `rgba(${key === 'london' ? '41, 98, 255' : key === 'ny' ? '8, 153, 129' : key === 'overlap' ? '242, 54, 69' : '255, 152, 0'}, 0.1)`;
-            status.innerHTML = `<span style="color: ${s.color};">● Active</span>`;
-            status.style.fontWeight = '600';
-            
-            if (!activeSession || key === 'overlap') {
-              activeSession = s;
-            }
-          } else {
-            card.style.background = '#1e222d';
-            const timeUntil = s.start - currentHourDecimal;
-            if (timeUntil > 0 && timeUntil < 12) {
-              const hours = Math.floor(timeUntil);
-              const mins = Math.round((timeUntil - hours) * 60);
-              status.textContent = `In ${hours}h ${mins}m`;
-              status.style.fontWeight = '400';
-            } else {
-              status.textContent = 'Ended';
-              status.style.fontWeight = '400';
-            }
-          }
-        }
-      });
-      
-      // Determine volatility
-      if (currentHourDecimal >= 14.5 && currentHourDecimal < 17) {
-        volatilityLevel = 'HIGH';
-      } else if ((currentHourDecimal >= 8 && currentHourDecimal < 10) || (currentHourDecimal >= 14.5 && currentHourDecimal < 16)) {
-        volatilityLevel = 'MEDIUM';
-      }
-      
-      // Update main display
-      const currentSessionName = document.getElementById('currentSessionName');
-      const sessionCountdown = document.getElementById('sessionCountdown');
-      const volatilityEl = document.getElementById('volatilityLevel');
-      const sessionAI = document.getElementById('sessionAIAnalysis');
-      
-      if (activeSession && currentSessionName) {
-        currentSessionName.textContent = activeSession.name;
-        currentSessionName.style.color = activeSession.color;
-        
-        // Calculate time remaining
-        const endHour = Math.floor(activeSession.end);
-        const endMin = (activeSession.end % 1) * 60;
-        const remainingMins = (endHour * 60 + endMin) - (cetHour * 60 + cetMinutes);
-        const remainingH = Math.floor(remainingMins / 60);
-        const remainingM = remainingMins % 60;
-        const remainingS = 60 - now.getSeconds();
-        
-        if (sessionCountdown) {
-          sessionCountdown.textContent = `${String(remainingH).padStart(2, '0')}:${String(remainingM).padStart(2, '0')}:${String(remainingS).padStart(2, '0')}`;
-        }
-      }
-      
-      if (volatilityEl) {
-        volatilityEl.textContent = volatilityLevel;
-        volatilityEl.style.color = volatilityLevel === 'HIGH' ? '#f23645' : volatilityLevel === 'MEDIUM' ? '#ff9800' : '#787b86';
-      }
-      
-      // Update AI Analysis based on time
-      if (sessionAI) {
-        let analysis = '';
-        if (currentHourDecimal >= 14.5 && currentHourDecimal < 17) {
-          analysis = `<strong style="color: #f23645;">⚡ London/NY Overlap - Peak Volatility.</strong> This is the most liquid and volatile period. Major moves often occur now. Watch for institutional order flow and breakout patterns. High volume expected - ideal for momentum trades.`;
-        } else if (currentHourDecimal >= 8 && currentHourDecimal < 14.5) {
-          analysis = `<strong style="color: #2962ff;">London session active.</strong> European markets are open. Watch for GBP/USD and EUR/USD correlation with BTC. NY overlap starts at 14:30 CET - prepare for increased volatility. Key support/resistance levels are being tested.`;
-        } else if (currentHourDecimal >= 14.5 && currentHourDecimal < 21) {
-          analysis = `<strong style="color: #089981;">New York session active.</strong> US markets are driving volume. Watch for stock market correlation (SPX, QQQ). Major economic data releases can cause sharp moves. Consider tighter stops during news events.`;
-        } else if (currentHourDecimal >= 0 && currentHourDecimal < 8) {
-          analysis = `<strong style="color: #ff9800;">Asia session - Low Volatility.</strong> Typically quieter period with ranging price action. Good for scalping in tight ranges. Watch for news from China/Japan markets. London open at 08:00 CET often brings momentum.`;
-        } else {
-          analysis = `<strong style="color: #787b86;">After Hours.</strong> Low liquidity period between sessions. Wide spreads possible. Wait for London or Asia open for better trading conditions.`;
-        }
-        sessionAI.innerHTML = analysis;
-      }
-      
-      // Update next session
-      const nextSessionName = document.getElementById('nextSessionName');
-      const nextSessionIn = document.getElementById('nextSessionIn');
-      if (nextSessionName && nextSessionIn) {
-        if (currentHourDecimal < 8) {
-          nextSessionName.textContent = 'London';
-          const timeToLondon = 8 - currentHourDecimal;
-          nextSessionIn.textContent = `in ${Math.floor(timeToLondon)}h ${Math.round((timeToLondon % 1) * 60)}m`;
-        } else if (currentHourDecimal < 14.5) {
-          nextSessionName.textContent = 'NY Open';
-          const timeToNY = 14.5 - currentHourDecimal;
-          nextSessionIn.textContent = `in ${Math.floor(timeToNY)}h ${Math.round((timeToNY % 1) * 60)}m`;
-        } else if (currentHourDecimal < 21) {
-          nextSessionName.textContent = 'Asia';
-          const timeToAsia = 24 - currentHourDecimal;
-          nextSessionIn.textContent = `in ${Math.floor(timeToAsia)}h ${Math.round((timeToAsia % 1) * 60)}m`;
-        }
+    // ===== OPEN INTEREST UPDATER =====
+    let oiHistory = [];
+    let oiData = {
+      total: 12.45,
+      change24h: 2.8,
+      binance: { value: 5.12, change: 3.2 },
+      bybit: { value: 3.85, change: 2.1 },
+      okx: { value: 2.28, change: -0.8 },
+      others: { value: 1.20, change: 1.5 },
+      longShortRatio: 1.24,
+      liquidations24h: 85.2,
+      fundingRate: 0.008
+    };
+    
+    // Initialize OI history for chart
+    function initOIHistory() {
+      const baseOI = 12.0;
+      for (let i = 0; i < 24; i++) {
+        const variation = (Math.random() - 0.3) * 0.8;
+        oiHistory.push(baseOI + variation + (i * 0.02));
       }
     }
+    initOIHistory();
     
-    // Update session status every second
-    setInterval(updateSessionStatus, 1000);
-    updateSessionStatus();
+    function updateOpenInterest() {
+      // Simulate OI changes (small fluctuations)
+      const btcPrice = parseFloat(document.getElementById('btcPrice')?.textContent.replace(/[^0-9.]/g, '')) || 96000;
+      const priceChange = parseFloat(document.getElementById('btcChange')?.textContent) || 0;
+      
+      // OI tends to increase with price moves
+      const oiTrend = priceChange > 0 ? 0.02 : -0.01;
+      oiData.total += (Math.random() - 0.4) * 0.05 + oiTrend;
+      oiData.total = Math.max(10, Math.min(16, oiData.total)); // Keep between 10-16B
+      
+      // Update individual exchanges
+      oiData.binance.value = oiData.total * 0.41 + (Math.random() - 0.5) * 0.1;
+      oiData.bybit.value = oiData.total * 0.31 + (Math.random() - 0.5) * 0.1;
+      oiData.okx.value = oiData.total * 0.18 + (Math.random() - 0.5) * 0.05;
+      oiData.others.value = oiData.total * 0.10;
+      
+      // Update changes
+      oiData.change24h = ((oiData.total - 12.1) / 12.1 * 100).toFixed(1);
+      oiData.binance.change = (Math.random() * 6 - 2).toFixed(1);
+      oiData.bybit.change = (Math.random() * 5 - 1.5).toFixed(1);
+      oiData.okx.change = (Math.random() * 4 - 2).toFixed(1);
+      oiData.others.change = (Math.random() * 3 - 0.5).toFixed(1);
+      
+      // Update long/short ratio
+      oiData.longShortRatio = (1.1 + Math.random() * 0.3).toFixed(2);
+      
+      // Update liquidations (more when price moves)
+      oiData.liquidations24h = (50 + Math.random() * 100 + Math.abs(priceChange) * 10).toFixed(1);
+      
+      // Update funding rate
+      oiData.fundingRate = (0.005 + Math.random() * 0.01 - 0.002).toFixed(4);
+      
+      // Add to history
+      oiHistory.push(oiData.total);
+      if (oiHistory.length > 24) oiHistory.shift();
+      
+      // Update DOM
+      document.getElementById('totalOI').textContent = `$${oiData.total.toFixed(2)}B`;
+      const change24hEl = document.getElementById('oiChange24h');
+      change24hEl.textContent = `${oiData.change24h > 0 ? '+' : ''}${oiData.change24h}% (24h)`;
+      change24hEl.style.color = oiData.change24h >= 0 ? '#089981' : '#f23645';
+      
+      // Exchange values
+      document.getElementById('oiBinance').textContent = `$${oiData.binance.value.toFixed(2)}B`;
+      document.getElementById('oiBybit').textContent = `$${oiData.bybit.value.toFixed(2)}B`;
+      document.getElementById('oiOkx').textContent = `$${oiData.okx.value.toFixed(2)}B`;
+      document.getElementById('oiOthers').textContent = `$${oiData.others.value.toFixed(2)}B`;
+      
+      // Exchange changes
+      const setChangeColor = (id, value) => {
+        const el = document.getElementById(id);
+        el.textContent = `${value >= 0 ? '+' : ''}${value}%`;
+        el.style.color = value >= 0 ? '#089981' : '#f23645';
+      };
+      setChangeColor('oiBinanceChange', oiData.binance.change);
+      setChangeColor('oiBybitChange', oiData.bybit.change);
+      setChangeColor('oiOkxChange', oiData.okx.change);
+      setChangeColor('oiOthersChange', oiData.others.change);
+      
+      // Metrics
+      document.getElementById('longShortRatio').textContent = oiData.longShortRatio;
+      document.getElementById('longShortRatio').style.color = oiData.longShortRatio > 1 ? '#089981' : '#f23645';
+      document.getElementById('liquidations24h').textContent = `$${oiData.liquidations24h}M`;
+      
+      const fundingEl = document.getElementById('fundingRateOI');
+      fundingEl.textContent = `${oiData.fundingRate >= 0 ? '+' : ''}${(oiData.fundingRate * 100).toFixed(4)}%`;
+      fundingEl.style.color = oiData.fundingRate >= 0 ? '#089981' : '#f23645';
+      
+      // Update chart
+      updateOIChart();
+      
+      // Update analysis text
+      updateOIAnalysis();
+    }
+    
+    function updateOIChart() {
+      if (oiHistory.length < 2) return;
+      
+      const minOI = Math.min(...oiHistory) - 0.5;
+      const maxOI = Math.max(...oiHistory) + 0.5;
+      const range = maxOI - minOI;
+      
+      // Generate line points
+      const points = oiHistory.map((val, i) => {
+        const x = 50 + (i / (oiHistory.length - 1)) * 730;
+        const y = 100 - ((val - minOI) / range) * 80;
+        return `${x},${y}`;
+      }).join(' ');
+      
+      // Generate area path
+      const areaPath = `M50,100 L${oiHistory.map((val, i) => {
+        const x = 50 + (i / (oiHistory.length - 1)) * 730;
+        const y = 100 - ((val - minOI) / range) * 80;
+        return `${x},${y}`;
+      }).join(' L')} L780,100 Z`;
+      
+      document.getElementById('oiLine').setAttribute('points', points);
+      document.getElementById('oiAreaPath').setAttribute('d', areaPath);
+      
+      // Update current dot position
+      const lastY = 100 - ((oiHistory[oiHistory.length - 1] - minOI) / range) * 80;
+      document.getElementById('oiCurrentDot').setAttribute('cy', lastY);
+    }
+    
+    function updateOIAnalysis() {
+      const analysis = document.getElementById('oiAnalysisText');
+      if (!analysis) return;
+      
+      const priceChange = parseFloat(document.getElementById('btcChange')?.textContent) || 0;
+      const oiTrend = oiData.change24h > 1 ? 'rosnące' : oiData.change24h < -1 ? 'spadające' : 'stabilne';
+      
+      let text = '';
+      if (oiData.change24h > 2 && priceChange > 0) {
+        text = `<strong style="color: #089981;">OI rosnące przy wzroście ceny</strong> - nowe pozycje long wchodzą na rynek. Sygnał kontynuacji trendu wzrostowego. Momentum silne.`;
+      } else if (oiData.change24h > 2 && priceChange < 0) {
+        text = `<strong style="color: #f23645;">OI rosnące przy spadku ceny</strong> - nowe shorty otwierane. Presja sprzedażowa może się nasilić. Uważaj na dalsze spadki.`;
+      } else if (oiData.change24h < -1 && priceChange > 0) {
+        text = `<strong style="color: #ff9800;">OI spadające przy wzroście ceny</strong> - short squeeze w toku. Zamykanie shortów pompuje cenę. Ruch może być krótkotrwały.`;
+      } else if (oiData.change24h < -1 && priceChange < 0) {
+        text = `<strong style="color: #ff9800;">OI spadające przy spadku ceny</strong> - longi likwidowane. Realizacja strat. Poszukaj wsparcia przed kolejnym wejściem.`;
+      } else {
+        text = `<strong style="color: #787b86;">OI ${oiTrend}</strong> - rynek w konsolidacji. Czekaj na wyraźny sygnał kierunku przed zajęciem pozycji. Long/Short ratio: ${oiData.longShortRatio}.`;
+      }
+      
+      analysis.innerHTML = text;
+    }
+    
+    // Update OI every 10 seconds
+    setInterval(updateOpenInterest, 10000);
+    setTimeout(updateOpenInterest, 500);
 
     // ===== UPDATE MARKET MOVERS (TOP GAINERS/LOSERS) =====
     async function updateMarketMovers() {
