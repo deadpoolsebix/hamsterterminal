@@ -3468,177 +3468,163 @@
     <div>
       <!-- TIMEFRAME SELECTOR -->
       <div class="timeframe-selector">
-        <button class="timeframe-btn" data-timeframe="1m">1M</button>
-        <button class="timeframe-btn" data-timeframe="5m">5M</button>
-        <button class="timeframe-btn" data-timeframe="15m">15M</button>
+        <button class="timeframe-btn" data-timeframe="1m">1m</button>
+        <button class="timeframe-btn" data-timeframe="5m">5m</button>
+        <button class="timeframe-btn" data-timeframe="15m">15m</button>
         <button class="timeframe-btn" data-timeframe="1h">1H</button>
         <button class="timeframe-btn" data-timeframe="4h">4H</button>
-        <button class="timeframe-btn" data-timeframe="1d" class="active">1D</button>
+        <button class="timeframe-btn active" data-timeframe="1d">1D</button>
         <button class="timeframe-btn" data-timeframe="1w">1W</button>
-        <button class="timeframe-btn" data-timeframe="1M">1M</button>
-        <button class="timeframe-btn" data-timeframe="3M">3M</button>
       </div>
       <div class="chart-box">
-      <svg class="chart-svg" id="mainChart" viewBox="0 0 800 420" preserveAspectRatio="xMidYMid meet">
+      <svg class="chart-svg" id="mainChart" viewBox="0 0 860 400" preserveAspectRatio="xMidYMid meet">
         <!-- BACKGROUND -->
-        <rect x="0" y="0" width="800" height="420" fill="#0a0a0a"/>
+        <rect x="0" y="0" width="860" height="400" fill="#0a0a0a"/>
         
+        <!-- LEGEND (TOP) - First so it's at top layer -->
+        <rect x="75" y="5" width="700" height="28" fill="rgba(10,10,10,0.95)" rx="3" stroke="#333" stroke-width="1"/>
+        <line x1="90" y1="19" x2="115" y2="19" stroke="var(--orange)" stroke-width="3"/>
+        <text x="120" y="23" class="chart-label" fill="var(--orange)" font-size="9" font-weight="bold">PRICE</text>
+        <line x1="175" y1="19" x2="200" y2="19" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="4,3"/>
+        <text x="205" y="23" class="chart-label" fill="var(--cyan)" font-size="9">EMA 20</text>
+        <line x1="265" y1="19" x2="290" y2="19" stroke="#666666" stroke-width="2" stroke-dasharray="5,4"/>
+        <text x="295" y="23" class="chart-label" fill="#888888" font-size="9">EMA 50</text>
+        <rect x="360" y="12" width="12" height="12" fill="rgba(0, 212, 255, 0.2)" stroke="var(--cyan)" stroke-width="1" rx="2"/>
+        <text x="377" y="23" class="chart-label" fill="var(--cyan)" font-size="9">FVG</text>
+        <circle cx="430" cy="19" r="4" fill="var(--green)"/>
+        <text x="438" y="23" class="chart-label" fill="var(--green)" font-size="9">BUY</text>
+        <circle cx="490" cy="19" r="4" fill="var(--red)"/>
+        <text x="498" y="23" class="chart-label" fill="var(--red)" font-size="9">SELL</text>
+        <rect x="545" y="12" width="40" height="12" fill="rgba(0, 255, 65, 0.1)" stroke="var(--green)" stroke-width="1" stroke-dasharray="3,2" rx="2"/>
+        <text x="550" y="21" class="chart-label" fill="var(--green)" font-size="7">SUPPORT</text>
+        <rect x="595" y="12" width="40" height="12" fill="rgba(255, 0, 51, 0.1)" stroke="var(--red)" stroke-width="1" stroke-dasharray="3,2" rx="2"/>
+        <text x="600" y="21" class="chart-label" fill="var(--red)" font-size="7">RESIST</text>
+
         <!-- GRID -->
         <g class="chart-grid">
           <!-- BORDER -->
-          <line x1="70" y1="45" x2="70" y2="340" stroke="#333333" stroke-width="2"/>
-          <line x1="70" y1="340" x2="780" y2="340" stroke="#333333" stroke-width="2"/>
-          <line x1="70" y1="45" x2="780" y2="45" stroke="#333333" stroke-width="1"/>
-          <line x1="780" y1="45" x2="780" y2="340" stroke="#333333" stroke-width="1"/>
+          <line x1="75" y1="40" x2="75" y2="320" stroke="#333333" stroke-width="2"/>
+          <line x1="75" y1="320" x2="780" y2="320" stroke="#333333" stroke-width="2"/>
+          <line x1="75" y1="40" x2="780" y2="40" stroke="#333333" stroke-width="1"/>
+          <line x1="780" y1="40" x2="780" y2="320" stroke="#333333" stroke-width="1"/>
           
           <!-- HORIZONTAL GRID LINES -->
-          <line x1="70" y1="95" x2="780" y2="95" stroke="#1a1a1a" stroke-width="1"/>
-          <line x1="70" y1="145" x2="780" y2="145" stroke="#1a1a1a" stroke-width="1"/>
-          <line x1="70" y1="195" x2="780" y2="195" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="4,4"/>
-          <line x1="70" y1="245" x2="780" y2="245" stroke="#1a1a1a" stroke-width="1"/>
-          <line x1="70" y1="295" x2="780" y2="295" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="75" y1="90" x2="780" y2="90" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="75" y1="140" x2="780" y2="140" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="75" y1="180" x2="780" y2="180" stroke="#1a1a1a" stroke-width="1" stroke-dasharray="4,4"/>
+          <line x1="75" y1="230" x2="780" y2="230" stroke="#1a1a1a" stroke-width="1"/>
+          <line x1="75" y1="280" x2="780" y2="280" stroke="#1a1a1a" stroke-width="1"/>
           
           <!-- VERTICAL GRID LINES -->
-          <line x1="180" y1="45" x2="180" y2="340" stroke="#1a1a1a" stroke-width="0.5"/>
-          <line x1="290" y1="45" x2="290" y2="340" stroke="#1a1a1a" stroke-width="0.5"/>
-          <line x1="400" y1="45" x2="400" y2="340" stroke="#1a1a1a" stroke-width="0.5"/>
-          <line x1="510" y1="45" x2="510" y2="340" stroke="#1a1a1a" stroke-width="0.5"/>
-          <line x1="620" y1="45" x2="620" y2="340" stroke="#1a1a1a" stroke-width="0.5"/>
-          <line x1="730" y1="45" x2="730" y2="340" stroke="#1a1a1a" stroke-width="0.5"/>
+          <line x1="190" y1="40" x2="190" y2="320" stroke="#1a1a1a" stroke-width="0.5"/>
+          <line x1="305" y1="40" x2="305" y2="320" stroke="#1a1a1a" stroke-width="0.5"/>
+          <line x1="420" y1="40" x2="420" y2="320" stroke="#1a1a1a" stroke-width="0.5"/>
+          <line x1="535" y1="40" x2="535" y2="320" stroke="#1a1a1a" stroke-width="0.5"/>
+          <line x1="650" y1="40" x2="650" y2="320" stroke="#1a1a1a" stroke-width="0.5"/>
+          <line x1="765" y1="40" x2="765" y2="320" stroke="#1a1a1a" stroke-width="0.5"/>
         </g>
 
-        <!-- LIQUIDITY GRAB ZONE - BUY (bottom) -->
-        <rect id="buyZoneRect" x="70" y="280" width="710" height="40" fill="rgba(0, 255, 65, 0.08)" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="6,4"/>
-        <text id="buyZoneLabel" x="80" y="300" class="chart-value" fill="var(--green)" font-size="12" font-weight="bold">LIQUIDITY GRAB ZONE (BUY): $94,200 - $94,800</text>
-        <text x="80" y="312" class="chart-label" fill="var(--green)" font-size="10">Iceberg Orders Detected | Whale Accumulation</text>
+        <!-- LIQUIDITY GRAB ZONE - SELL (top) - BEHIND EVERYTHING -->
+        <rect id="sellZoneRect" x="75" y="50" width="705" height="30" fill="rgba(255, 0, 51, 0.06)" stroke="var(--red)" stroke-width="1" stroke-dasharray="5,3"/>
         
-        <!-- LIQUIDITY GRAB ZONE - SELL (top) -->
-        <rect id="sellZoneRect" x="70" y="60" width="710" height="40" fill="rgba(255, 0, 51, 0.08)" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="6,4"/>
-        <text id="sellZoneLabel" x="80" y="80" class="chart-value" fill="var(--red)" font-size="12" font-weight="bold">LIQUIDITY GRAB ZONE (SELL): $97,200 - $97,800</text>
-        <text x="80" y="92" class="chart-label" fill="var(--red)" font-size="10">Stop Loss Cluster | Whale Distribution</text>
+        <!-- LIQUIDITY GRAB ZONE - BUY (bottom) - BEHIND EVERYTHING -->
+        <rect id="buyZoneRect" x="75" y="278" width="705" height="32" fill="rgba(0, 255, 65, 0.06)" stroke="var(--green)" stroke-width="1" stroke-dasharray="5,3"/>
 
         <!-- SUPPORT LINE -->
-        <line id="supportLine" x1="70" y1="295" x2="780" y2="295" class="chart-support" stroke-width="2.5"/>
-        <rect x="680" y="282" width="95" height="16" fill="#0a0a0a" rx="2"/>
-        <text id="supportLabel" x="685" y="294" class="chart-value" fill="var(--green)" font-size="12">SUPPORT $94.5k</text>
+        <line id="supportLine" x1="75" y1="285" x2="780" y2="285" class="chart-support" stroke-width="2"/>
         
         <!-- RESISTANCE LINE -->
-        <line id="resistanceLine" x1="70" y1="75" x2="780" y2="75" class="chart-resistance" stroke-width="2.5"/>
-        <rect x="680" y="58" width="95" height="16" fill="#0a0a0a" rx="2"/>
-        <text id="resistanceLabel" x="685" y="70" class="chart-value" fill="var(--red)" font-size="12">RESIST $97.5k</text>
+        <line id="resistanceLine" x1="75" y1="65" x2="780" y2="65" class="chart-resistance" stroke-width="2"/>
 
         <!-- FAIR VALUE GAP UP -->
-        <rect id="fvgUp" x="220" y="200" width="60" height="25" fill="rgba(0, 212, 255, 0.15)" stroke="var(--cyan)" stroke-width="1.5" rx="2"/>
-        <text id="fvgUpLabel" x="225" y="215" class="chart-label" fill="var(--cyan)" font-size="10" font-weight="bold">FVG UP</text>
+        <rect id="fvgUp" x="230" y="190" width="50" height="22" fill="rgba(0, 212, 255, 0.12)" stroke="var(--cyan)" stroke-width="1" rx="2"/>
+        <text id="fvgUpLabel" x="255" y="204" class="chart-label" fill="var(--cyan)" font-size="9" font-weight="bold" text-anchor="middle">FVG↑</text>
         
         <!-- FAIR VALUE GAP DOWN -->
-        <rect id="fvgDown" x="480" y="140" width="60" height="25" fill="rgba(255, 0, 51, 0.15)" stroke="var(--red)" stroke-width="1.5" rx="2"/>
-        <text id="fvgDownLabel" x="485" y="155" class="chart-label" fill="var(--red)" font-size="10" font-weight="bold">FVG DN</text>
+        <rect id="fvgDown" x="500" y="125" width="50" height="22" fill="rgba(255, 0, 51, 0.12)" stroke="var(--red)" stroke-width="1" rx="2"/>
+        <text id="fvgDownLabel" x="525" y="139" class="chart-label" fill="var(--red)" font-size="9" font-weight="bold" text-anchor="middle">FVG↓</text>
 
-        <!-- PRICE LINE (MAIN) - THICKER AND BRIGHTER -->
-        <polyline id="priceLine" points="90,250 150,230 220,200 290,210 360,180 430,160 500,170 570,150 640,160 710,145 760,155" 
-                  class="chart-price-line"/>
-        
-        <!-- PRICE GLOW EFFECT -->
-        <polyline id="priceLineGlow" points="90,250 150,230 220,200 290,210 360,180 430,160 500,170 570,150 640,160 710,145 760,155" 
-                  stroke="var(--orange)" stroke-width="8" fill="none" opacity="0.15"/>
+        <!-- PRICE GLOW EFFECT (background) -->
+        <polyline id="priceLineGlow" points="95,240 160,220 230,185 305,195 380,165 455,145 530,155 605,140 680,150 755,135" 
+                  stroke="var(--orange)" stroke-width="10" fill="none" opacity="0.12"/>
+
+        <!-- EMA LINE 50 (furthest back) -->
+        <polyline id="emaLine50" points="95,260 160,248 230,225 305,228 380,205 455,188 530,190 605,178 680,182 755,175" 
+                  class="chart-ema50" stroke="#555555"/>
 
         <!-- EMA LINE 20 -->
-        <polyline id="emaLine20" points="90,260 150,245 220,220 290,225 360,200 430,180 500,185 570,168 640,175 710,165 760,170" 
+        <polyline id="emaLine20" points="95,250 160,235 230,205 305,210 380,185 455,165 530,170 605,155 680,162 755,155" 
                   class="chart-ema" stroke="var(--cyan)"/>
 
-        <!-- EMA LINE 50 -->
-        <polyline id="emaLine50" points="90,275 150,260 220,240 290,242 360,220 430,200 500,202 570,188 640,195 710,188 760,190" 
-                  class="chart-ema50" stroke="#666666"/>
+        <!-- PRICE LINE (MAIN) - ON TOP -->
+        <polyline id="priceLine" points="95,240 160,220 230,185 305,195 380,165 455,145 530,155 605,140 680,150 755,135" 
+                  class="chart-price-line"/>
 
-        <!-- ======= BUY SIGNAL - LIQUIDITY GRAB + ICEBERG ======= -->
+        <!-- ======= BUY SIGNAL ======= -->
         <g id="buySignalGroup">
-          <!-- Signal Background Glow -->
-          <circle cx="290" cy="210" r="18" fill="rgba(0, 255, 65, 0.15)"/>
-          <circle cx="290" cy="210" r="12" fill="rgba(0, 255, 65, 0.25)"/>
-          <!-- Main Circle -->
-          <circle id="buySignalCircle" cx="290" cy="210" r="8" class="chart-buy-signal" stroke="var(--green)" stroke-width="3"/>
-          <!-- Arrow Up -->
-          <polygon points="290,195 283,205 297,205" fill="var(--green)"/>
-          <!-- Labels -->
-          <rect x="240" y="172" width="100" height="20" fill="#0a0a0a" rx="3" stroke="var(--green)" stroke-width="1"/>
-          <text id="buySignalText" x="290" y="186" class="chart-value" fill="var(--green)" text-anchor="middle" font-size="11" font-weight="bold">BUY SIGNAL</text>
-          <!-- Vertical Line to Data -->
-          <line id="buySignalLine" x1="290" y1="218" x2="290" y2="340" stroke="var(--green)" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.7"/>
-          <!-- Liquidity Info Box -->
-          <rect x="245" y="350" width="90" height="30" fill="#0a0a0a" rx="3" stroke="var(--green)" stroke-width="1"/>
-          <text id="buySignalLiq" x="290" y="362" class="chart-label" fill="var(--green)" font-size="9" text-anchor="middle">LIQUIDITY: $84M</text>
-          <text x="290" y="374" class="chart-label" fill="#00ff41" font-size="8" text-anchor="middle">ICEBERG DETECTED</text>
+          <circle cx="305" cy="195" r="14" fill="rgba(0, 255, 65, 0.12)"/>
+          <circle cx="305" cy="195" r="9" fill="rgba(0, 255, 65, 0.2)"/>
+          <circle id="buySignalCircle" cx="305" cy="195" r="6" class="chart-buy-signal" stroke="var(--green)" stroke-width="2"/>
+          <polygon points="305,182 300,190 310,190" fill="var(--green)"/>
+          <rect x="262" y="158" width="86" height="18" fill="#0a0a0a" rx="2" stroke="var(--green)" stroke-width="1"/>
+          <text id="buySignalText" x="305" y="170" class="chart-value" fill="var(--green)" text-anchor="middle" font-size="10" font-weight="bold">BUY SIGNAL</text>
+          <line id="buySignalLine" x1="305" y1="204" x2="305" y2="320" stroke="var(--green)" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
         </g>
 
-        <!-- ======= SELL SIGNAL - LIQUIDITY GRAB + ICEBERG ======= -->
+        <!-- ======= SELL SIGNAL ======= -->
         <g id="sellSignalGroup">
-          <!-- Signal Background Glow -->
-          <circle cx="640" cy="160" r="18" fill="rgba(255, 0, 51, 0.15)"/>
-          <circle cx="640" cy="160" r="12" fill="rgba(255, 0, 51, 0.25)"/>
-          <!-- Main Circle -->
-          <circle id="sellSignalCircle" cx="640" cy="160" r="8" class="chart-sell-signal" stroke="var(--red)" stroke-width="3"/>
-          <!-- Arrow Down -->
-          <polygon points="640,175 633,165 647,165" fill="var(--red)"/>
-          <!-- Labels -->
-          <rect x="590" y="122" width="100" height="20" fill="#0a0a0a" rx="3" stroke="var(--red)" stroke-width="1"/>
-          <text id="sellSignalText" x="640" y="136" class="chart-value" fill="var(--red)" text-anchor="middle" font-size="11" font-weight="bold">SELL SIGNAL</text>
-          <!-- Vertical Line to Data -->
-          <line id="sellSignalLine" x1="640" y1="168" x2="640" y2="340" stroke="var(--red)" stroke-width="1.5" stroke-dasharray="3,3" opacity="0.7"/>
-          <!-- Liquidity Info Box -->
-          <rect x="595" y="350" width="90" height="30" fill="#0a0a0a" rx="3" stroke="var(--red)" stroke-width="1"/>
-          <text id="sellSignalLiq" x="640" y="362" class="chart-label" fill="var(--red)" font-size="9" text-anchor="middle">LIQUIDITY: $96M</text>
-          <text x="640" y="374" class="chart-label" fill="#ff3366" font-size="8" text-anchor="middle">WHALE SELLING</text>
+          <circle cx="680" cy="150" r="14" fill="rgba(255, 0, 51, 0.12)"/>
+          <circle cx="680" cy="150" r="9" fill="rgba(255, 0, 51, 0.2)"/>
+          <circle id="sellSignalCircle" cx="680" cy="150" r="6" class="chart-sell-signal" stroke="var(--red)" stroke-width="2"/>
+          <polygon points="680,163 675,155 685,155" fill="var(--red)"/>
+          <rect x="635" y="108" width="90" height="18" fill="#0a0a0a" rx="2" stroke="var(--red)" stroke-width="1"/>
+          <text id="sellSignalText" x="680" y="120" class="chart-value" fill="var(--red)" text-anchor="middle" font-size="10" font-weight="bold">SELL SIGNAL</text>
+          <line id="sellSignalLine" x1="680" y1="159" x2="680" y2="320" stroke="var(--red)" stroke-width="1" stroke-dasharray="3,3" opacity="0.5"/>
         </g>
 
         <!-- CURRENT PRICE INDICATOR -->
         <g id="currentPriceGroup">
-          <line x1="760" y1="155" x2="780" y2="155" stroke="var(--orange)" stroke-width="3"/>
-          <rect x="782" y="145" width="70" height="22" fill="var(--orange)" rx="2"/>
-          <text id="currentPriceLabel" x="817" y="160" class="chart-price-current" fill="#000000" text-anchor="middle" font-size="12" font-weight="900">$96,420</text>
+          <line x1="755" y1="135" x2="780" y2="135" stroke="var(--orange)" stroke-width="3"/>
+          <rect x="782" y="126" width="72" height="20" fill="var(--orange)" rx="2"/>
+          <text id="currentPriceLabel" x="818" y="140" class="chart-price-current" fill="#000000" text-anchor="middle" font-size="11" font-weight="900">$96,420</text>
         </g>
 
         <!-- AXIS LABELS - PRICES (LEFT SIDE) -->
-        <text id="axisLabelHigh" x="10" y="50" class="chart-value" fill="#ffffff" font-size="12">$97.8k</text>
-        <text id="axisLabel1" x="10" y="100" class="chart-label" fill="#aaaaaa" font-size="11">$97.0k</text>
-        <text id="axisLabel2" x="10" y="150" class="chart-label" fill="#aaaaaa" font-size="11">$96.5k</text>
-        <text id="axisLabelMid" x="10" y="200" class="chart-value" fill="#ffffff" font-size="12">$96.0k</text>
-        <text id="axisLabel3" x="10" y="250" class="chart-label" fill="#aaaaaa" font-size="11">$95.5k</text>
-        <text id="axisLabel4" x="10" y="300" class="chart-label" fill="#aaaaaa" font-size="11">$95.0k</text>
-        <text id="axisLabelLow" x="10" y="340" class="chart-value" fill="#ffffff" font-size="12">$94.2k</text>
+        <text id="axisLabelHigh" x="8" y="48" class="chart-value" fill="#ffffff" font-size="11">$97.8k</text>
+        <text id="axisLabel1" x="8" y="95" class="chart-label" fill="#999999" font-size="10">$97.0k</text>
+        <text id="axisLabel2" x="8" y="145" class="chart-label" fill="#999999" font-size="10">$96.5k</text>
+        <text id="axisLabelMid" x="8" y="185" class="chart-value" fill="#ffffff" font-size="11">$96.0k</text>
+        <text id="axisLabel3" x="8" y="235" class="chart-label" fill="#999999" font-size="10">$95.5k</text>
+        <text id="axisLabel4" x="8" y="285" class="chart-label" fill="#999999" font-size="10">$95.0k</text>
+        <text id="axisLabelLow" x="8" y="320" class="chart-value" fill="#ffffff" font-size="11">$94.2k</text>
+
+        <!-- SUPPORT/RESIST LABELS (RIGHT) -->
+        <rect x="784" y="57" width="68" height="16" fill="#0a0a0a" rx="2" stroke="var(--red)" stroke-width="0.5"/>
+        <text id="resistanceLabel" x="788" y="69" class="chart-value" fill="var(--red)" font-size="9">RESIST $97.5k</text>
+        <rect x="784" y="277" width="68" height="16" fill="#0a0a0a" rx="2" stroke="var(--green)" stroke-width="0.5"/>
+        <text id="supportLabel" x="788" y="289" class="chart-value" fill="var(--green)" font-size="9">SUPPORT $94.5k</text>
+
+        <!-- LIQUIDITY ZONE LABELS (INSIDE ZONES) -->
+        <text id="sellZoneLabel" x="80" y="70" class="chart-label" fill="var(--red)" font-size="9" opacity="0.9">SELL ZONE: $97,200 - $97,800</text>
+        <text id="buyZoneLabel" x="80" y="302" class="chart-label" fill="var(--green)" font-size="9" opacity="0.9">BUY ZONE: $94,200 - $94,800</text>
 
         <!-- TIME LABELS (BOTTOM) -->
-        <text x="90" y="395" class="chart-label" fill="#888888" font-size="11">-24h</text>
-        <text x="180" y="395" class="chart-label" fill="#888888" font-size="11">-20h</text>
-        <text x="290" y="395" class="chart-label" fill="#888888" font-size="11">-16h</text>
-        <text x="400" y="395" class="chart-label" fill="#888888" font-size="11">-12h</text>
-        <text x="510" y="395" class="chart-label" fill="#888888" font-size="11">-8h</text>
-        <text x="620" y="395" class="chart-label" fill="#888888" font-size="11">-4h</text>
-        <text x="730" y="395" class="chart-label" fill="var(--orange)" font-size="12" font-weight="bold">NOW</text>
+        <text x="95" y="340" class="chart-label" fill="#666666" font-size="10">-24h</text>
+        <text x="190" y="340" class="chart-label" fill="#666666" font-size="10">-20h</text>
+        <text x="305" y="340" class="chart-label" fill="#666666" font-size="10">-16h</text>
+        <text x="420" y="340" class="chart-label" fill="#666666" font-size="10">-12h</text>
+        <text x="535" y="340" class="chart-label" fill="#666666" font-size="10">-8h</text>
+        <text x="650" y="340" class="chart-label" fill="#666666" font-size="10">-4h</text>
+        <text x="755" y="340" class="chart-label" fill="var(--orange)" font-size="10" font-weight="bold">NOW</text>
 
-        <!-- LEGEND (TOP) -->
-        <rect x="70" y="5" width="710" height="32" fill="rgba(10,10,10,0.9)" rx="4" stroke="#333" stroke-width="1"/>
-        
-        <line x1="85" y1="22" x2="115" y2="22" stroke="var(--orange)" stroke-width="3"/>
-        <text x="120" y="26" class="chart-label" fill="var(--orange)" font-size="10" font-weight="bold">PRICE</text>
+        <!-- LIQUIDITY INFO BOXES (BOTTOM OUTSIDE CHART) -->
+        <rect x="260" y="355" width="90" height="36" fill="#0a0a0a" rx="3" stroke="var(--green)" stroke-width="1"/>
+        <text id="buySignalLiq" x="305" y="370" class="chart-label" fill="var(--green)" font-size="9" text-anchor="middle">LIQUIDITY: $84M</text>
+        <text x="305" y="383" class="chart-label" fill="#00ff41" font-size="8" text-anchor="middle">ICEBERG DETECTED</text>
 
-        <line x1="185" y1="22" x2="215" y2="22" stroke="var(--cyan)" stroke-width="2" stroke-dasharray="4,3"/>
-        <text x="220" y="26" class="chart-label" fill="var(--cyan)" font-size="10">EMA 20</text>
-
-        <line x1="290" y1="22" x2="320" y2="22" stroke="#666666" stroke-width="2" stroke-dasharray="5,4"/>
-        <text x="325" y="26" class="chart-label" fill="#888888" font-size="10">EMA 50</text>
-
-        <rect x="395" y="15" width="14" height="14" fill="rgba(0, 212, 255, 0.2)" stroke="var(--cyan)" stroke-width="1" rx="2"/>
-        <text x="415" y="26" class="chart-label" fill="var(--cyan)" font-size="10">FVG</text>
-
-        <circle cx="490" cy="22" r="5" fill="var(--green)"/>
-        <text x="500" y="26" class="chart-label" fill="var(--green)" font-size="10">BUY (Liq Grab)</text>
-
-        <circle cx="610" cy="22" r="5" fill="var(--red)"/>
-        <text x="620" y="26" class="chart-label" fill="var(--red)" font-size="10">SELL (Whale Exit)</text>
-
-        <rect x="720" y="15" width="50" height="14" fill="rgba(0, 255, 65, 0.1)" stroke="var(--green)" stroke-width="1" stroke-dasharray="3,2" rx="2"/>
-        <text x="730" y="25" class="chart-label" fill="var(--green)" font-size="8">LIQ ZONE</text>
+        <rect x="635" y="355" width="90" height="36" fill="#0a0a0a" rx="3" stroke="var(--red)" stroke-width="1"/>
+        <text id="sellSignalLiq" x="680" y="370" class="chart-label" fill="var(--red)" font-size="9" text-anchor="middle">LIQUIDITY: $96M</text>
+        <text x="680" y="383" class="chart-label" fill="#ff3366" font-size="8" text-anchor="middle">WHALE SELLING</text>
       </svg>
     </div>
 
@@ -5880,11 +5866,11 @@
           close: p.close
         }));
         
-        // NEW Chart dimensions (matching viewBox 0 0 800 420)
-        const chartLeft = 90;
-        const chartRight = 760;
-        const chartTop = 55;
-        const chartBottom = 330;
+        // NEW Chart dimensions (matching viewBox 0 0 860 400)
+        const chartLeft = 95;
+        const chartRight = 755;
+        const chartTop = 50;
+        const chartBottom = 310;
         const chartWidth = chartRight - chartLeft;
         const chartHeight = chartBottom - chartTop;
         
@@ -5967,35 +5953,50 @@
         if (axisLabel4) axisLabel4.textContent = formatPrice(minPrice + priceRange * 0.17);
         if (axisLow) axisLow.textContent = formatPrice(minPrice);
         
-        // Update support/resistance labels
+        // Update support/resistance labels (shorter format for new layout)
         const supportLabel = document.getElementById('supportLabel');
         const resistanceLabel = document.getElementById('resistanceLabel');
         if (supportLabel) supportLabel.textContent = `SUPPORT ${formatPrice(support)}`;
         if (resistanceLabel) resistanceLabel.textContent = `RESIST ${formatPrice(resistance)}`;
         
-        // Update current price indicator
+        // Update current price indicator position and label
         const currentPriceLabel = document.getElementById('currentPriceLabel');
+        const currentPriceY = priceToY(currentPrice);
         if (currentPriceLabel) {
           currentPriceLabel.textContent = formatPriceFull(currentPrice);
+          // Update the indicator line position
+          const currentPriceGroup = document.getElementById('currentPriceGroup');
+          if (currentPriceGroup) {
+            const line = currentPriceGroup.querySelector('line');
+            const rect = currentPriceGroup.querySelector('rect');
+            if (line) {
+              line.setAttribute('y1', currentPriceY);
+              line.setAttribute('y2', currentPriceY);
+            }
+            if (rect) {
+              rect.setAttribute('y', currentPriceY - 10);
+            }
+            currentPriceLabel.setAttribute('y', currentPriceY + 4);
+          }
         }
         
-        // Update Liquidity Grab zone labels (smart zones based on orderbook depth)
-        const buyZoneLow = support * 0.995;  // Just below support - liquidity grab area
+        // Update Liquidity Grab zone labels (shorter, cleaner format)
+        const buyZoneLow = support * 0.995;
         const buyZoneHigh = support * 1.005;
         const sellZoneLow = resistance * 0.995;
-        const sellZoneHigh = resistance * 1.005;  // Just above resistance - liquidity grab area
+        const sellZoneHigh = resistance * 1.005;
         
         const buyZoneLabel = document.getElementById('buyZoneLabel');
         const sellZoneLabel = document.getElementById('sellZoneLabel');
-        if (buyZoneLabel) buyZoneLabel.textContent = `LIQUIDITY GRAB ZONE (BUY): ${formatPriceFull(buyZoneLow)} - ${formatPriceFull(buyZoneHigh)}`;
-        if (sellZoneLabel) sellZoneLabel.textContent = `LIQUIDITY GRAB ZONE (SELL): ${formatPriceFull(sellZoneLow)} - ${formatPriceFull(sellZoneHigh)}`;
+        if (buyZoneLabel) buyZoneLabel.textContent = `BUY ZONE: ${formatPriceFull(buyZoneLow)} - ${formatPriceFull(buyZoneHigh)}`;
+        if (sellZoneLabel) sellZoneLabel.textContent = `SELL ZONE: ${formatPriceFull(sellZoneLow)} - ${formatPriceFull(sellZoneHigh)}`;
         
         // ===== SMART SIGNAL POSITIONING =====
-        // Find best BUY signal - lowest point near support (liquidity grab opportunity)
+        // Find best BUY signal - lowest point near support
         let bestBuyIdx = 0;
         let lowestPrice = points[0]?.low || currentPrice;
         points.forEach((p, i) => {
-          if (p.low < lowestPrice && i > 3 && i < points.length - 3) {  // Not at edges
+          if (p.low < lowestPrice && i > 2 && i < points.length - 2) {
             lowestPrice = p.low;
             bestBuyIdx = i;
           }
@@ -6005,7 +6006,7 @@
         let bestSellIdx = points.length - 1;
         let highestPrice = points[0]?.high || currentPrice;
         points.forEach((p, i) => {
-          if (p.high > highestPrice && i > 3 && i < points.length - 3) {
+          if (p.high > highestPrice && i > 2 && i < points.length - 2) {
             highestPrice = p.high;
             bestSellIdx = i;
           }
@@ -6017,37 +6018,72 @@
         const sellSignalX = chartLeft + (bestSellIdx / (points.length - 1)) * chartWidth;
         const sellSignalY = priceToY(points[bestSellIdx]?.close || highestPrice);
         
-        // Update BUY signal position (for liquidity grab + iceberg detection)
-        const buySignalCircle = document.getElementById('buySignalCircle');
-        const buySignalLine = document.getElementById('buySignalLine');
-        const buySignalLiq = document.getElementById('buySignalLiq');
-        if (buySignalCircle) {
-          buySignalCircle.setAttribute('cx', buySignalX);
-          buySignalCircle.setAttribute('cy', buySignalY);
-        }
-        if (buySignalLine) {
-          buySignalLine.setAttribute('x1', buySignalX);
-          buySignalLine.setAttribute('x2', buySignalX);
-          buySignalLine.setAttribute('y1', buySignalY + 10);
-        }
-        if (buySignalLiq) {
-          // Simulate liquidity amount based on price distance from support
-          const liqAmount = Math.floor(50 + Math.random() * 80);
-          buySignalLiq.textContent = `LIQUIDITY: $${liqAmount}M`;
+        // Update BUY signal group position
+        const buySignalGroup = document.getElementById('buySignalGroup');
+        if (buySignalGroup) {
+          // Update all circles in the group
+          buySignalGroup.querySelectorAll('circle').forEach(c => {
+            c.setAttribute('cx', buySignalX);
+            c.setAttribute('cy', buySignalY);
+          });
+          // Arrow
+          const arrow = buySignalGroup.querySelector('polygon');
+          if (arrow) arrow.setAttribute('points', `${buySignalX},${buySignalY-13} ${buySignalX-5},${buySignalY-5} ${buySignalX+5},${buySignalY-5}`);
+          // Label box
+          const labelRect = buySignalGroup.querySelector('rect');
+          if (labelRect) {
+            labelRect.setAttribute('x', buySignalX - 43);
+            labelRect.setAttribute('y', buySignalY - 37);
+          }
+          const labelText = buySignalGroup.querySelector('text');
+          if (labelText) {
+            labelText.setAttribute('x', buySignalX);
+            labelText.setAttribute('y', buySignalY - 25);
+          }
+          // Line
+          const line = buySignalGroup.querySelector('line');
+          if (line) {
+            line.setAttribute('x1', buySignalX);
+            line.setAttribute('x2', buySignalX);
+            line.setAttribute('y1', buySignalY + 9);
+            line.setAttribute('y2', chartBottom);
+          }
         }
         
-        // Update SELL signal position
-        const sellSignalCircle = document.getElementById('sellSignalCircle');
-        const sellSignalLine = document.getElementById('sellSignalLine');
-        const sellSignalLiq = document.getElementById('sellSignalLiq');
-        if (sellSignalCircle) {
-          sellSignalCircle.setAttribute('cx', sellSignalX);
-          sellSignalCircle.setAttribute('cy', sellSignalY);
+        // Update SELL signal group position
+        const sellSignalGroup = document.getElementById('sellSignalGroup');
+        if (sellSignalGroup) {
+          sellSignalGroup.querySelectorAll('circle').forEach(c => {
+            c.setAttribute('cx', sellSignalX);
+            c.setAttribute('cy', sellSignalY);
+          });
+          const arrow = sellSignalGroup.querySelector('polygon');
+          if (arrow) arrow.setAttribute('points', `${sellSignalX},${sellSignalY+13} ${sellSignalX-5},${sellSignalY+5} ${sellSignalX+5},${sellSignalY+5}`);
+          const labelRect = sellSignalGroup.querySelector('rect');
+          if (labelRect) {
+            labelRect.setAttribute('x', sellSignalX - 45);
+            labelRect.setAttribute('y', sellSignalY - 42);
+          }
+          const labelText = sellSignalGroup.querySelector('text');
+          if (labelText) {
+            labelText.setAttribute('x', sellSignalX);
+            labelText.setAttribute('y', sellSignalY - 30);
+          }
+          const line = sellSignalGroup.querySelector('line');
+          if (line) {
+            line.setAttribute('x1', sellSignalX);
+            line.setAttribute('x2', sellSignalX);
+            line.setAttribute('y1', sellSignalY + 9);
+            line.setAttribute('y2', chartBottom);
+          }
         }
-        if (sellSignalLine) {
-          sellSignalLine.setAttribute('x1', sellSignalX);
-          sellSignalLine.setAttribute('x2', sellSignalX);
-          sellSignalLine.setAttribute('y1', sellSignalY + 10);
+        
+        // Update liquidity amounts
+        const buySignalLiq = document.getElementById('buySignalLiq');
+        const sellSignalLiq = document.getElementById('sellSignalLiq');
+        if (buySignalLiq) {
+          const liqAmount = Math.floor(50 + Math.random() * 80);
+          buySignalLiq.textContent = `LIQUIDITY: $${liqAmount}M`;
         }
         if (sellSignalLiq) {
           const liqAmount = Math.floor(60 + Math.random() * 90);
