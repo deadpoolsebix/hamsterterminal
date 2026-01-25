@@ -3464,7 +3464,7 @@
   </div>
 
   <!-- CHART + TRANSFERS -->
-  <div style="display: grid; grid-template-columns: 2.2fr 1fr; gap: 14px; padding: 14px 24px;">
+  <div style="padding: 14px 24px;">
     <div>
       <!-- TIMEFRAME SELECTOR -->
       <div class="timeframe-selector">
@@ -3477,18 +3477,18 @@
         <button class="timeframe-btn" data-timeframe="1w">1W</button>
       </div>
       <div class="chart-box">
-      <svg class="chart-svg" id="mainChart" viewBox="0 0 860 340" preserveAspectRatio="xMidYMid meet">
+      <svg class="chart-svg" id="mainChart" viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid meet">
         <!-- CLEAN TERMINAL STYLE CHART -->
-        <rect x="0" y="0" width="860" height="340" fill="#000"/>
+        <rect x="0" y="0" width="1200" height="340" fill="#000"/>
         
         <!-- MINIMAL GRID -->
         <g class="chart-grid" opacity="0.3">
-          <line x1="60" y1="50" x2="800" y2="50" stroke="#222"/>
-          <line x1="60" y1="100" x2="800" y2="100" stroke="#222"/>
-          <line x1="60" y1="150" x2="800" y2="150" stroke="#222"/>
-          <line x1="60" y1="200" x2="800" y2="200" stroke="#222"/>
-          <line x1="60" y1="250" x2="800" y2="250" stroke="#222"/>
-          <line x1="60" y1="295" x2="800" y2="295" stroke="#333"/>
+          <line x1="60" y1="50" x2="1140" y2="50" stroke="#222"/>
+          <line x1="60" y1="100" x2="1140" y2="100" stroke="#222"/>
+          <line x1="60" y1="150" x2="1140" y2="150" stroke="#222"/>
+          <line x1="60" y1="200" x2="1140" y2="200" stroke="#222"/>
+          <line x1="60" y1="250" x2="1140" y2="250" stroke="#222"/>
+          <line x1="60" y1="295" x2="1140" y2="295" stroke="#333"/>
         </g>
 
         <!-- PRICE AXIS (LEFT) -->
@@ -3499,36 +3499,36 @@
         <text id="axisLabelLow" x="8" y="255" fill="#888" font-size="11" font-family="Consolas, Monaco, monospace">$94.0k</text>
 
         <!-- TIME AXIS (BOTTOM) -->
-        <text x="80" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-24h</text>
-        <text x="200" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-18h</text>
-        <text x="320" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-12h</text>
-        <text x="440" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-6h</text>
-        <text x="560" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-3h</text>
-        <text x="680" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-1h</text>
-        <text x="765" y="315" fill="#fff" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace">NOW</text>
+        <text x="100" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-24h</text>
+        <text x="260" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-18h</text>
+        <text x="420" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-12h</text>
+        <text x="580" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-6h</text>
+        <text x="740" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-3h</text>
+        <text x="900" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-1h</text>
+        <text x="1100" y="315" fill="#fff" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace">NOW</text>
 
         <!-- SUPPORT/RESISTANCE LINES -->
-        <line id="resistanceLine" x1="60" y1="65" x2="800" y2="65" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
-        <line id="supportLine" x1="60" y1="235" x2="800" y2="235" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
+        <line id="resistanceLine" x1="60" y1="65" x2="1140" y2="65" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
+        <line id="supportLine" x1="60" y1="235" x2="1140" y2="235" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
         
         <!-- RESISTANCE/SUPPORT LABELS -->
-        <text id="resistanceLabel" x="805" y="68" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">R $97.5k</text>
-        <text id="supportLabel" x="805" y="238" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">S $94.5k</text>
+        <text id="resistanceLabel" x="1145" y="68" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">R $97.5k</text>
+        <text id="supportLabel" x="1145" y="238" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">S $94.5k</text>
 
         <!-- EMA 50 LINE -->
-        <polyline id="emaLine50" points="80,210 140,200 200,185 270,190 340,175 410,160 480,165 550,155 620,160 690,155 760,150" 
+        <polyline id="emaLine50" points="80,210 180,200 280,185 380,190 480,175 580,160 680,165 780,155 880,160 980,155 1080,150" 
                   stroke="#555" stroke-width="1" fill="none" opacity="0.8"/>
 
         <!-- EMA 20 LINE -->
-        <polyline id="emaLine20" points="80,195 140,180 200,160 270,170 340,150 410,135 480,145 550,130 620,140 690,135 760,125" 
+        <polyline id="emaLine20" points="80,195 180,180 280,160 380,170 480,150 580,135 680,145 780,130 880,140 980,135 1080,125" 
                   stroke="#888" stroke-width="1" fill="none" opacity="0.8"/>
 
         <!-- MAIN PRICE LINE -->
-        <polyline id="priceLine" points="80,185 140,165 200,140 270,155 340,130 410,110 480,125 550,105 620,120 690,115 760,100" 
+        <polyline id="priceLine" points="80,185 180,165 280,140 380,155 480,130 580,110 680,125 780,105 880,120 980,115 1080,100" 
                   stroke="#fff" stroke-width="2" fill="none"/>
 
         <!-- PRICE AREA FILL -->
-        <polygon id="priceArea" points="80,185 140,165 200,140 270,155 340,130 410,110 480,125 550,105 620,120 690,115 760,100 760,295 80,295" 
+        <polygon id="priceArea" points="80,185 180,165 280,140 380,155 480,130 580,110 680,125 780,105 880,120 980,115 1080,100 1080,295 80,295" 
                  fill="url(#priceGradient)" opacity="0.1"/>
         
         <defs>
@@ -3540,25 +3540,25 @@
 
         <!-- BUY SIGNAL -->
         <g id="buySignalGroup">
-          <circle id="buySignalCircle" cx="270" cy="155" r="4" fill="#fff" stroke="#888" stroke-width="1"/>
-          <text id="buySignalText" x="270" y="175" fill="#fff" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">BUY</text>
+          <circle id="buySignalCircle" cx="380" cy="155" r="4" fill="#fff" stroke="#888" stroke-width="1"/>
+          <text id="buySignalText" x="380" y="175" fill="#fff" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">BUY</text>
         </g>
 
         <!-- SELL SIGNAL -->
         <g id="sellSignalGroup">
-          <circle id="sellSignalCircle" cx="620" cy="120" r="4" fill="#888" stroke="#666" stroke-width="1"/>
-          <text id="sellSignalText" x="620" y="108" fill="#888" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">SELL</text>
+          <circle id="sellSignalCircle" cx="880" cy="120" r="4" fill="#888" stroke="#666" stroke-width="1"/>
+          <text id="sellSignalText" x="880" y="108" fill="#888" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">SELL</text>
         </g>
 
         <!-- CURRENT PRICE TAG -->
         <g id="currentPriceGroup">
-          <line x1="760" y1="100" x2="800" y2="100" stroke="#fff" stroke-width="1"/>
-          <rect x="800" y="91" width="55" height="18" fill="#333" stroke="#fff" stroke-width="1" rx="0"/>
-          <text id="currentPriceLabel" x="827" y="104" fill="#fff" text-anchor="middle" font-size="11" font-weight="600" font-family="Consolas, Monaco, monospace">$96.4k</text>
+          <line x1="1080" y1="100" x2="1120" y2="100" stroke="#fff" stroke-width="1"/>
+          <rect x="1120" y="91" width="55" height="18" fill="#333" stroke="#fff" stroke-width="1" rx="0"/>
+          <text id="currentPriceLabel" x="1147" y="104" fill="#fff" text-anchor="middle" font-size="11" font-weight="600" font-family="Consolas, Monaco, monospace">$96.4k</text>
         </g>
 
         <!-- LEGEND (TOP RIGHT) -->
-        <g transform="translate(640, 20)">
+        <g transform="translate(980, 20)">
           <line x1="0" y1="0" x2="20" y2="0" stroke="#fff" stroke-width="2"/>
           <text x="25" y="4" fill="#888" font-size="9" font-family="Consolas, Monaco, monospace">PRICE</text>
           <line x1="70" y1="0" x2="90" y2="0" stroke="#888" stroke-width="1"/>
@@ -3570,31 +3570,31 @@
     </div>
 
     <!-- RSI INDICATOR -->
-    <div style="background: #0d0d0d; border: 1px solid #1a1a1a; border-top: none; padding: 12px; height: 100px; margin-bottom: 20px;">
-      <svg class="chart-svg" viewBox="0 0 800 80" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
-        <!-- RSI BACKGROUND ZONES - Subtle -->
-        <rect x="60" y="5" width="720" height="18" fill="rgba(180, 70, 70, 0.1)"/>
-        <text x="65" y="17" fill="#996666" font-size="8">OVERBOUGHT (70)</text>
+    <div style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 12px; height: 100px; margin-top: -10px;">
+      <svg class="chart-svg" viewBox="0 0 1200 80" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
+        <!-- RSI LEVEL LINES -->
+        <line x1="60" y1="12" x2="1140" y2="12" stroke="#222222" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="65" y="10" fill="#444444" font-size="8">OVERBOUGHT (70)</text>
 
-        <rect x="60" y="57" width="720" height="18" fill="rgba(70, 140, 80, 0.1)"/>
-        <text x="65" y="70" fill="#669966" font-size="8">OVERSOLD (30)</text>
+        <line x1="60" y1="68" x2="1140" y2="68" stroke="#222222" stroke-width="1" stroke-dasharray="4,4"/>
+        <text x="65" y="78" fill="#444444" font-size="8">OVERSOLD (30)</text>
 
         <!-- RSI MIDLINE (50) - Solid -->
-        <line x1="60" y1="40" x2="780" y2="40" stroke="#252525" stroke-width="1"/>
-        <text x="785" y="43" fill="#555" font-size="8">50</text>
+        <line x1="60" y1="40" x2="1140" y2="40" stroke="#1a1a1a" stroke-width="1"/>
+        <text x="1145" y="43" fill="#333333" font-size="8">50</text>
 
         <!-- RSI LINE -->
-        <polyline id="rsiLine" points="80,28 150,30 220,34 290,32 360,38 430,42 500,40 570,46 640,50 710,46 780,44" 
+        <polyline id="rsiLine" points="80,28 180,30 280,34 380,32 480,38 580,42 680,40 780,46 880,50 980,46 1080,44" 
                   stroke="#d4a856" stroke-width="2" fill="none"/>
 
         <!-- AXIS LABELS -->
-        <text x="35" y="12" fill="#555" font-size="8">100</text>
-        <text x="40" y="43" fill="#555" font-size="8">50</text>
-        <text x="45" y="75" fill="#555" font-size="8">0</text>
+        <text x="35" y="12" fill="#333333" font-size="8">100</text>
+        <text x="40" y="43" fill="#333333" font-size="8">50</text>
+        <text x="45" y="75" fill="#333333" font-size="8">0</text>
 
         <!-- RSI CURRENT VALUE -->
-        <circle id="rsiCurrentDot" cx="780" cy="44" r="3" fill="#d4a856"/>
-        <text id="rsiCurrentLabel" x="720" y="28" fill="#d4a856" font-size="9" font-weight="600">RSI: 55</text>
+        <circle id="rsiCurrentDot" cx="1080" cy="44" r="3" fill="#d4a856"/>
+        <text id="rsiCurrentLabel" x="1020" y="28" fill="#d4a856" font-size="9" font-weight="600">RSI: 55</text>
       </svg>
     </div>
 
@@ -3647,33 +3647,33 @@
 
       <!-- Exchange Breakdown -->
       <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 16px;">
-        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #f0b90b;">
-          <div style="color: #f0b90b; font-weight: 600; font-size: 0.85em;">BINANCE</div>
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.85em;">BINANCE</div>
           <div id="oiBinance" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$5.12B</div>
-          <div id="oiBinanceChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+3.2%</div>
+          <div id="oiBinanceChange" style="color: #999999; font-size: 0.8em; margin-top: 4px;">+3.2%</div>
         </div>
-        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #ff9800;">
-          <div style="color: #ff9800; font-weight: 600; font-size: 0.85em;">BYBIT</div>
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.85em;">BYBIT</div>
           <div id="oiBybit" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$3.85B</div>
-          <div id="oiBybitChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+2.1%</div>
+          <div id="oiBybitChange" style="color: #999999; font-size: 0.8em; margin-top: 4px;">+2.1%</div>
         </div>
-        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #2962ff;">
-          <div style="color: #2962ff; font-weight: 600; font-size: 0.85em;">OKX</div>
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.85em;">OKX</div>
           <div id="oiOkx" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$2.28B</div>
-          <div id="oiOkxChange" style="color: #f23645; font-size: 0.8em; margin-top: 4px;">-0.8%</div>
+          <div id="oiOkxChange" style="color: #999999; font-size: 0.8em; margin-top: 4px;">-0.8%</div>
         </div>
-        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #089981;">
-          <div style="color: #089981; font-weight: 600; font-size: 0.85em;">OTHERS</div>
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
+          <div style="color: #ffffff; font-weight: 600; font-size: 0.85em;">OTHERS</div>
           <div id="oiOthers" style="color: #cccccc; font-size: 1.2em; font-weight: 700; margin-top: 6px;">$1.20B</div>
-          <div id="oiOthersChange" style="color: #089981; font-size: 0.8em; margin-top: 4px;">+1.5%</div>
+          <div id="oiOthersChange" style="color: #999999; font-size: 0.8em; margin-top: 4px;">+1.5%</div>
         </div>
       </div>
 
       <!-- OI Analysis -->
-      <div style="background: #0a0a0a; border-radius: 6px; padding: 16px; margin-top: 16px; border-left: 3px solid #2962ff;">
+      <div style="background: #0a0a0a; border-radius: 6px; padding: 16px; margin-top: 16px; border-left: 3px solid #333333;">
         <div style="color: #666666; font-size: 0.85em; margin-bottom: 10px;">OI ANALYSIS</div>
         <div id="oiAnalysisText" style="color: #cccccc; font-size: 0.95em; line-height: 1.6;">
-          <strong style="color: #089981;">OI rosnące przy wzroście ceny</strong> - nowe pozycje long wchodzą na rynek. Sygnał kontynuacji trendu. Uważaj na nagły spadek OI przy wysokich cenach - może oznaczać realizację zysków i potencjalny pullback.
+          OI rosnące - rynek w konsolidacji. Czekaj na wyraźny sygnał kierunku przed zajęciem pozycji.
         </div>
       </div>
 
@@ -3704,7 +3704,7 @@
     </div>
     
     <!-- SIDE PANEL - Flat Ticker Style (like DJI 38,650.00 +0.30% • DAX) -->
-    <div style="background: #000000; border: 1px solid #333333; padding: 0; font-weight: 700; letter-spacing: 0.5px; margin-top: 380px;">
+    <div style="background: #000000; border: 1px solid #333333; padding: 0; font-weight: 700; letter-spacing: 0.5px; margin-top: 20px;">
       
       <!-- WHALE TRANSFERS - Flat ticker row -->
       <div style="padding: 14px 16px; border-bottom: 1px solid #333333; display: flex; align-items: center; flex-wrap: wrap; gap: 8px;">
@@ -3712,7 +3712,10 @@
         <span style="color: #666666;">•</span>
         <span style="color: #cccccc; font-size: 0.95em;">TRANSFERS</span>
         <span style="color: #666666;">•</span>
-        <span style="color: #999999; font-size: 0.9em;" id="transfersLastUpdate">--:--:--</span>
+        <span style="display: inline-flex; align-items: center; gap: 4px;">
+          <span style="width: 6px; height: 6px; background: #ff3333; border-radius: 50%; animation: livePulse 1.5s infinite;"></span>
+          <span style="color: #ff3333; font-size: 0.75em; font-weight: 600;">LIVE</span>
+        </span>
       </div>
       <div id="largeTransfersList" style="padding: 8px 16px; font-size: 0.9em;">
         <div style="color: #666666;">Loading...</div>
@@ -3743,44 +3746,65 @@
         <span style="color: #999999;">~1,800 BTC</span>
       </div>
       
-      <!-- SESSION - Flat ticker row -->
-      <div style="padding: 14px 16px; border-bottom: 1px solid #333333; display: flex; align-items: center; gap: 10px;">
-        <span style="color: #ffffff; font-size: 1.8em;">SESSION</span>
-        <span style="color: #cccccc; font-size: 1.2em;" id="frontSessionTimer">--:--:--</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #999999; font-size: 0.95em;" id="frontSessionName">--</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #666666; font-size: 0.9em;">Next:</span>
-        <span style="color: #cccccc; font-size: 0.9em;" id="nextSessionInfo">--</span>
+      <!-- SESSION - Flat ticker row with progress bar -->
+      <div style="padding: 14px 16px; border-bottom: 1px solid #333333;">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+          <span style="color: #ffffff; font-size: 1.8em;">SESSION</span>
+          <span style="color: #cccccc; font-size: 1.2em;" id="frontSessionTimer">--:--:--</span>
+          <span style="color: #666666;">•</span>
+          <span style="color: #999999; font-size: 0.95em;" id="frontSessionName">--</span>
+          <span style="color: #666666;">•</span>
+          <span style="color: #666666; font-size: 0.9em;">Next:</span>
+          <span style="color: #cccccc; font-size: 1.1em; font-weight: 500;" id="nextSessionInfo">--</span>
+        </div>
+        <!-- Session Progress Bar -->
+        <div style="background: #1a1a1a; height: 4px; border-radius: 2px; overflow: hidden;">
+          <div id="sessionProgressBar" style="background: #ffffff; height: 100%; width: 50%; transition: width 1s linear;"></div>
+        </div>
       </div>
       
-      <!-- LIQUIDATION - Flat ticker rows -->
-      <div style="padding: 14px 16px; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 8px;">
+      <!-- LIQUIDATION LEVELS - Improved readability -->
+      <div style="padding: 14px 16px; border-bottom: 1px solid #333333; display: flex; align-items: center; gap: 8px;">
         <span style="color: #ffffff; font-size: 1.8em;">LIQUIDATION</span>
         <span style="color: #666666;">•</span>
         <span style="color: #cccccc; font-size: 0.95em;">LEVELS</span>
       </div>
-      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
-        <span style="color: #ffffff; font-size: 1.1em;">LONG</span>
-        <span style="color: #cccccc;" id="longLiqPrice">$93,450</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #999999;" id="longLiqVolume">$245M</span>
-      </div>
-      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222;">
-        <span style="color: #ffffff; font-size: 1.1em;">SHORT</span>
-        <span style="color: #cccccc;" id="shortLiqPrice">$97,800</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #999999;" id="shortLiqVolume">$180M</span>
-      </div>
-      <div style="padding: 10px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #333333;">
-        <span style="color: #ffffff; font-size: 1.1em;">MEGA</span>
-        <span style="color: #cccccc;" id="megaLiqPrice">$91,200</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #999999;" id="megaLiqVolume">$520M</span>
+      
+      <!-- Liquidation Grid -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; padding: 16px;">
+        <!-- LONG -->
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
+          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 6px;">LONG LIQ</div>
+          <div id="longLiqPrice" style="color: #ffffff; font-size: 1.3em; font-weight: 700;">$93,450</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+            <span style="color: #666666; font-size: 0.8em;">Vol:</span>
+            <span id="longLiqVolume" style="color: #cccccc; font-size: 0.9em;">$245M</span>
+          </div>
+        </div>
+        
+        <!-- SHORT -->
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
+          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 6px;">SHORT LIQ</div>
+          <div id="shortLiqPrice" style="color: #ffffff; font-size: 1.3em; font-weight: 700;">$97,800</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+            <span style="color: #666666; font-size: 0.8em;">Vol:</span>
+            <span id="shortLiqVolume" style="color: #cccccc; font-size: 0.9em;">$180M</span>
+          </div>
+        </div>
+        
+        <!-- MEGA -->
+        <div style="background: #0a0a0a; padding: 14px; border-radius: 4px; border-left: 3px solid #333333;">
+          <div style="color: #888888; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 6px;">MEGA CLUSTER</div>
+          <div id="megaLiqPrice" style="color: #ffffff; font-size: 1.3em; font-weight: 700;">$91,200</div>
+          <div style="display: flex; align-items: center; gap: 6px; margin-top: 6px;">
+            <span style="color: #666666; font-size: 0.8em;">Vol:</span>
+            <span id="megaLiqVolume" style="color: #cccccc; font-size: 0.9em;">$520M</span>
+          </div>
+        </div>
       </div>
       
       <!-- FOOTER STATS - Flat ticker row -->
-      <div style="padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 0.9em;">
+      <div style="padding: 12px 16px; display: flex; align-items: center; gap: 10px; font-size: 0.9em; border-top: 1px solid #222222;">
         <span style="color: #ffffff;">VOL</span>
         <span style="color: #cccccc;" id="totalTransferVolume">--</span>
         <span style="color: #666666;">•</span>
@@ -7093,7 +7117,7 @@
     // - USA (NYSE, NASDAQ): 15:30 – 22:00 CET
     // Note: Summer/winter time may shift US markets by 1 hour (14:30-21:00)
     const KILLZONE_SESSIONS = [
-      { name: 'Tokyo Session', label: 'Tokyo', startHour: 1, endHour: 7, color: '#9d4edd' },
+      { name: 'Tokyo Session', label: 'Tokyo', startHour: 1, endHour: 7, color: '#888888' },
       { name: 'Pre-Market EU', label: 'Pre-EU', startHour: 7, endHour: 9, color: '#666666' },
       { name: 'Frankfurt/London', label: 'EU Open', startHour: 9, endHour: 15, color: '#00d4ff' },
       { name: 'NY Session', label: 'NY Open', startHour: 15, endHour: 17, color: '#00ff88' },
@@ -7277,9 +7301,9 @@
       }
       
       if (progressBar) {
-        progressBar.style.width = `${info.progress}%`;
         if (info.currentSession) {
-          progressBar.style.background = `linear-gradient(90deg, ${info.currentSession.color}, var(--green))`;
+          progressBar.style.width = `${info.progress}%`;
+          progressBar.style.background = '#ffffff';
         } else {
           progressBar.style.width = '0%';
         }
