@@ -3523,15 +3523,23 @@
         <text x="900" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-1h</text>
         <text x="1100" y="315" fill="#fff" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace">NOW</text>
 
-        <!-- SUPPORT/RESISTANCE LINES -->
-        <line id="resistanceLine" x1="60" y1="65" x2="1140" y2="65" stroke="#ff4444" stroke-width="1.5" stroke-dasharray="8,4" opacity="0.8"/>
-        <line id="supportLine" x1="60" y1="235" x2="1140" y2="235" stroke="#00ff88" stroke-width="1.5" stroke-dasharray="8,4" opacity="0.8"/>
+        <!-- SUPPORT/RESISTANCE ZONES - Bloomberg Style -->
+        <!-- RESISTANCE ZONE (SELL) -->
+        <rect id="resistanceZone" x="60" y="45" width="1080" height="40" fill="#ff0000" opacity="0.08"/>
+        <line id="resistanceLine" x1="60" y1="65" x2="1140" y2="65" stroke="#ff4444" stroke-width="1" opacity="0.6"/>
         
-        <!-- RESISTANCE/SUPPORT LABELS -->
-        <rect x="1145" y="56" width="50" height="18" fill="#1a0000" stroke="#ff4444" stroke-width="1" rx="2"/>
-        <text id="resistanceLabel" x="1170" y="69" fill="#ff4444" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace" text-anchor="middle">R $97.5k</text>
-        <rect x="1145" y="226" width="50" height="18" fill="#001a00" stroke="#00ff88" stroke-width="1" rx="2"/>
-        <text id="supportLabel" x="1170" y="239" fill="#00ff88" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace" text-anchor="middle">S $94.5k</text>
+        <!-- SUPPORT ZONE (BUY) -->
+        <rect id="supportZone" x="60" y="215" width="1080" height="40" fill="#00ff00" opacity="0.08"/>
+        <line id="supportLine" x1="60" y1="235" x2="1140" y2="235" stroke="#00ff88" stroke-width="1" opacity="0.6"/>
+        
+        <!-- RESISTANCE/SUPPORT LABELS - Bloomberg Style -->
+        <rect x="1145" y="53" width="80" height="24" fill="#1a0505" stroke="#ff4444" stroke-width="1" rx="0"/>
+        <text x="1152" y="62" fill="#ff4444" font-size="8" font-weight="400" font-family="Consolas, Monaco, monospace">RESISTANCE</text>
+        <text id="resistanceLabel" x="1152" y="73" fill="#ff6666" font-size="10" font-weight="700" font-family="Consolas, Monaco, monospace">$86.8k</text>
+        
+        <rect x="1145" y="223" width="80" height="24" fill="#051a0a" stroke="#00ff88" stroke-width="1" rx="0"/>
+        <text x="1152" y="232" fill="#00ff88" font-size="8" font-weight="400" font-family="Consolas, Monaco, monospace">SUPPORT</text>
+        <text id="supportLabel" x="1152" y="243" fill="#66ffaa" font-size="10" font-weight="700" font-family="Consolas, Monaco, monospace">$86.2k</text>
 
         <!-- EMA 50 LINE -->
         <polyline id="emaLine50" points="80,210 180,200 280,185 380,190 480,175 580,160 680,165 780,155 880,160 980,155 1080,150" 
@@ -3594,49 +3602,48 @@
     <!-- RSI INDICATOR - ENLARGED -->
     <div style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 16px; height: 160px; margin-top: -10px;">
       <svg class="chart-svg" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
-        <!-- RSI ZONES BACKGROUND -->
-        <!-- OVERBOUGHT ZONE (70-100) - Subtle red -->
-        <rect x="60" y="0" width="1080" height="42" fill="#ff0000" opacity="0.05"/>
-        <!-- OVERSOLD ZONE (0-30) - Subtle green -->
-        <rect x="60" y="98" width="1080" height="42" fill="#00ff00" opacity="0.05"/>
+        <!-- RSI ZONES - Bloomberg Style -->
+        <!-- SELL ZONE (70-100) -->
+        <rect x="60" y="0" width="1080" height="42" fill="#ff0000" opacity="0.1"/>
+        <!-- BUY ZONE (0-30) -->
+        <rect x="60" y="98" width="1080" height="42" fill="#00ff00" opacity="0.1"/>
         
-        <!-- RSI LEVEL LINES -->
-        <line x1="60" y1="0" x2="1140" y2="0" stroke="#333333" stroke-width="1"/>
-        <line x1="60" y1="42" x2="1140" y2="42" stroke="#ff4444" stroke-width="1" stroke-dasharray="6,4"/>
-        <text x="65" y="38" fill="#ff4444" font-size="11" font-weight="600">OVERBOUGHT (70) - SELL ZONE</text>
-        
-        <line x1="60" y1="98" x2="1140" y2="98" stroke="#00ff88" stroke-width="1" stroke-dasharray="6,4"/>
-        <text x="65" y="115" fill="#00ff88" font-size="11" font-weight="600">OVERSOLD (30) - BUY ZONE</text>
-        
-        <line x1="60" y1="140" x2="1140" y2="140" stroke="#333333" stroke-width="1"/>
-
-        <!-- RSI MIDLINE (50) -->
-        <line x1="60" y1="70" x2="1140" y2="70" stroke="#333333" stroke-width="1" stroke-dasharray="3,3"/>
-        <text x="1145" y="73" fill="#555555" font-size="10">50</text>
+        <!-- RSI LEVEL LINES - Solid -->
+        <line x1="60" y1="0" x2="1140" y2="0" stroke="#222222" stroke-width="1"/>
+        <line x1="60" y1="42" x2="1140" y2="42" stroke="#ff4444" stroke-width="1" opacity="0.5"/>
+        <line x1="60" y1="98" x2="1140" y2="98" stroke="#00ff88" stroke-width="1" opacity="0.5"/>
+        <line x1="60" y1="140" x2="1140" y2="140" stroke="#222222" stroke-width="1"/>
+        <line x1="60" y1="70" x2="1140" y2="70" stroke="#333333" stroke-width="1" opacity="0.5"/>
 
         <!-- Y-AXIS LABELS -->
-        <text x="20" y="8" fill="#666666" font-size="11" font-weight="600">100</text>
-        <text x="25" y="45" fill="#ff4444" font-size="10">70</text>
-        <text x="25" y="73" fill="#555555" font-size="10">50</text>
-        <text x="25" y="102" fill="#00ff88" font-size="10">30</text>
-        <text x="35" y="138" fill="#666666" font-size="11" font-weight="600">0</text>
+        <text x="20" y="8" fill="#555555" font-size="10">100</text>
+        <text x="25" y="45" fill="#ff4444" font-size="9">70</text>
+        <text x="25" y="73" fill="#444444" font-size="9">50</text>
+        <text x="25" y="102" fill="#00ff88" font-size="9">30</text>
+        <text x="35" y="138" fill="#555555" font-size="10">0</text>
+        
+        <!-- ZONE LABELS - Bloomberg Style -->
+        <rect x="65" y="8" width="80" height="20" fill="#1a0505" stroke="#ff4444" stroke-width="1" rx="0"/>
+        <text x="72" y="16" fill="#ff4444" font-size="7" font-weight="400">SELL ZONE</text>
+        <text x="72" y="24" fill="#ff6666" font-size="8" font-weight="600">OVERBOUGHT</text>
+        
+        <rect x="65" y="105" width="80" height="20" fill="#051a0a" stroke="#00ff88" stroke-width="1" rx="0"/>
+        <text x="72" y="113" fill="#00ff88" font-size="7" font-weight="400">BUY ZONE</text>
+        <text x="72" y="121" fill="#66ffaa" font-size="8" font-weight="600">OVERSOLD</text>
 
         <!-- RSI LINE -->
         <polyline id="rsiLine" points="80,56 180,58 280,62 380,60 480,66 580,70 680,68 780,74 880,78 980,74 1080,72" 
-                  stroke="#d4a856" stroke-width="2.5" fill="none"/>
+                  stroke="#ffffff" stroke-width="2" fill="none"/>
 
         <!-- RSI CURRENT VALUE -->
-        <circle id="rsiCurrentDot" cx="1080" cy="72" r="5" fill="#d4a856" stroke="#ffffff" stroke-width="1"/>
-        <rect id="rsiValueBg" x="1085" y="60" width="50" height="22" fill="#1a1a1a" stroke="#d4a856" stroke-width="1" rx="2"/>
-        <text id="rsiCurrentLabel" x="1110" y="76" fill="#00ff88" font-size="13" font-weight="700" text-anchor="middle">RSI: 45</text>
+        <circle id="rsiCurrentDot" cx="1080" cy="72" r="4" fill="#ffffff" stroke="#333333" stroke-width="1"/>
+        <rect id="rsiValueBg" x="1090" y="62" width="45" height="18" fill="#111111" stroke="#333333" stroke-width="1" rx="0"/>
+        <text id="rsiCurrentLabel" x="1112" y="75" fill="#ffffff" font-size="11" font-weight="600" text-anchor="middle">45</text>
         
         <!-- RSI SIGNAL INDICATOR -->
         <g id="rsiSignalGroup">
-          <text id="rsiSignalText" x="600" y="130" fill="#666666" font-size="11" font-weight="600" text-anchor="middle">NEUTRAL ZONE</text>
+          <text id="rsiSignalText" x="1140" y="130" fill="#444444" font-size="9" text-anchor="end">NEUTRAL</text>
         </g>
-        
-        <!-- TIMEFRAME SYNC INDICATOR -->
-        <text id="rsiTimeframeLabel" x="1140" y="130" fill="#444444" font-size="9" text-anchor="end">TF: 1D</text>
       </svg>
     </div>
 
