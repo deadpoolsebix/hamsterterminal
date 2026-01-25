@@ -1516,18 +1516,18 @@
       border-bottom: 1px solid var(--border);
     }
 
-    /* HAMBURGER MENU BUTTON - LARGER FOR MOBILE */
+    /* HAMBURGER MENU BUTTON - WHITE STYLE */
     .hamburger-menu {
       display: flex;
       flex-direction: column;
-      gap: 6px;
-      background: rgba(255, 140, 0, 0.1);
-      border: 2px solid var(--orange);
-      border-radius: 8px;
+      gap: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #444444;
+      border-radius: 4px;
       cursor: pointer;
-      padding: 14px 20px;
-      min-width: 70px;
-      min-height: 60px;
+      padding: 10px 14px;
+      min-width: 50px;
+      min-height: 40px;
       align-items: center;
       justify-content: center;
       transition: all 0.2s;
@@ -1535,22 +1535,22 @@
     }
     
     .hamburger-menu:hover {
-      border-color: var(--orange);
-      background: rgba(255, 140, 0, 0.2);
+      border-color: #666666;
+      background: rgba(255, 255, 255, 0.1);
     }
     
     .hamburger-menu:active {
-      background: rgba(255, 140, 0, 0.3);
+      background: rgba(255, 255, 255, 0.15);
       transform: scale(0.95);
     }
 
     .hamburger-menu .bar {
-      width: 30px;
-      height: 4px;
-      background: var(--orange);
+      width: 20px;
+      height: 2px;
+      background: #ffffff;
       transition: all 0.3s ease;
       display: block;
-      border-radius: 2px;
+      border-radius: 1px;
     }
 
     .hamburger-menu.open .bar:nth-child(1) {
@@ -1574,26 +1574,26 @@
       }
       
       .hamburger-menu {
-        min-width: 120px;
-        min-height: 65px;
-        padding: 16px 30px;
+        min-width: 80px;
+        min-height: 45px;
+        padding: 12px 20px;
         order: -1;
       }
       
       .hamburger-menu .bar {
-        width: 36px;
-        height: 5px;
+        width: 24px;
+        height: 3px;
       }
       
       .hamburger-menu::after {
         content: 'MENU';
         position: absolute;
-        bottom: -18px;
+        bottom: -16px;
         left: 50%;
         transform: translateX(-50%);
-        font-size: 0.7em;
-        font-weight: 700;
-        color: var(--orange);
+        font-size: 0.65em;
+        font-weight: 600;
+        color: #888888;
         letter-spacing: 1px;
       }
       
@@ -3467,28 +3467,24 @@
   <!-- CHART + TRANSFERS -->
   <div style="padding: 14px 24px;">
     <div>
-      <!-- TIMEFRAME SELECTOR -->
-      <div class="timeframe-selector">
-        <button class="timeframe-btn" data-timeframe="1m">1m</button>
-        <button class="timeframe-btn" data-timeframe="5m">5m</button>
-        <button class="timeframe-btn" data-timeframe="15m">15m</button>
-        <button class="timeframe-btn" data-timeframe="1h">1H</button>
-        <button class="timeframe-btn" data-timeframe="4h">4H</button>
-        <button class="timeframe-btn active" data-timeframe="1d">1D</button>
-        <button class="timeframe-btn" data-timeframe="1w">1W</button>
-      </div>
-      
-      <!-- SESSION - Inline after timeframe -->
-      <div style="display: flex; align-items: center; gap: 12px; padding: 8px 0; margin-bottom: 8px; border-bottom: 1px solid #1a1a1a;">
-        <span style="color: #ffffff; font-weight: 700; font-size: 1.1em;">SESSION</span>
-        <span style="color: #cccccc; font-size: 1em;" id="frontSessionTimer">--:--:--</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #ff6600; font-size: 0.95em; font-weight: 600;" id="frontSessionName">--</span>
-        <span style="color: #666666;">•</span>
-        <span style="color: #555555; font-size: 0.85em;">Next:</span>
-        <span style="color: #888888; font-size: 0.95em;" id="nextSessionInfo">--</span>
-        <!-- Session Progress Bar -->
-        <div style="flex: 1; max-width: 150px; background: #1a1a1a; height: 4px; border-radius: 2px; overflow: hidden; margin-left: auto;">
+      <!-- TIMEFRAME SELECTOR + SESSION in one row -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px; flex-wrap: wrap;">
+        <div class="timeframe-selector" style="margin-bottom: 0;">
+          <button class="timeframe-btn" data-timeframe="1m">1m</button>
+          <button class="timeframe-btn" data-timeframe="5m">5m</button>
+          <button class="timeframe-btn" data-timeframe="15m">15m</button>
+          <button class="timeframe-btn" data-timeframe="1h">1H</button>
+          <button class="timeframe-btn" data-timeframe="4h">4H</button>
+          <button class="timeframe-btn active" data-timeframe="1d">1D</button>
+          <button class="timeframe-btn" data-timeframe="1w">1W</button>
+        </div>
+        <span style="color: #333333;">|</span>
+        <span style="color: #888888; font-size: 0.85em;">SESSION</span>
+        <span style="color: #cccccc; font-size: 0.9em;" id="frontSessionTimer">--:--:--</span>
+        <span style="color: #ff6600; font-size: 0.85em; font-weight: 600;" id="frontSessionName">--</span>
+        <span style="color: #555555; font-size: 0.8em;">Next:</span>
+        <span style="color: #666666; font-size: 0.85em;" id="nextSessionInfo">--</span>
+        <div style="width: 100px; background: #1a1a1a; height: 3px; border-radius: 2px; overflow: hidden;">
           <div id="sessionProgressBar" style="background: #ffffff; height: 100%; width: 50%; transition: width 1s linear;"></div>
         </div>
       </div>
@@ -3564,20 +3560,16 @@
           </linearGradient>
         </defs>
 
-        <!-- BUY SIGNAL - GREEN ARROW -->
+        <!-- BUY SIGNAL - Small dot on price line -->
         <g id="buySignalGroup">
-          <!-- Arrow pointing up -->
-          <polygon id="buySignalArrow" points="380,175 370,195 375,195 375,210 385,210 385,195 390,195" fill="#00ff88" stroke="#00cc66" stroke-width="1"/>
-          <rect x="358" y="212" width="44" height="18" fill="#001a00" stroke="#00ff88" stroke-width="1" rx="3"/>
-          <text id="buySignalText" x="380" y="225" fill="#00ff88" text-anchor="middle" font-size="11" font-weight="700" font-family="Consolas, Monaco, monospace">BUY</text>
+          <circle id="buySignalDot" cx="380" cy="155" r="6" fill="#00ff88" stroke="#001a00" stroke-width="2"/>
+          <text id="buySignalText" x="380" y="175" fill="#00ff88" text-anchor="middle" font-size="9" font-weight="700" font-family="Consolas, Monaco, monospace">BUY</text>
         </g>
 
-        <!-- SELL SIGNAL - RED ARROW -->
+        <!-- SELL SIGNAL - Small dot on price line -->
         <g id="sellSignalGroup">
-          <!-- Arrow pointing down -->
-          <polygon id="sellSignalArrow" points="880,95 870,75 875,75 875,60 885,60 885,75 890,75" fill="#ff4444" stroke="#cc3333" stroke-width="1"/>
-          <rect x="858" y="40" width="44" height="18" fill="#1a0000" stroke="#ff4444" stroke-width="1" rx="3"/>
-          <text id="sellSignalText" x="880" y="53" fill="#ff4444" text-anchor="middle" font-size="11" font-weight="700" font-family="Consolas, Monaco, monospace">SELL</text>
+          <circle id="sellSignalDot" cx="880" cy="120" r="6" fill="#ff4444" stroke="#1a0000" stroke-width="2"/>
+          <text id="sellSignalText" x="880" y="105" fill="#ff4444" text-anchor="middle" font-size="9" font-weight="700" font-family="Consolas, Monaco, monospace">SELL</text>
         </g>
 
         <!-- CURRENT PRICE TAG -->
@@ -3598,9 +3590,20 @@
         </g>
       </svg>
     </div>
+    
+    <!-- GENIUS COMMENTARY - Between chart and RSI -->
+    <div style="background: #0a0a14; border: 1px solid #1a1a2a; border-top: none; padding: 10px 16px; margin-top: -1px;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="color: #4444ff; font-weight: 700; font-size: 0.8em;">◆ GENIUS</span>
+        <span style="color: #333333;">|</span>
+        <div id="geniusInlineCommentary" style="color: #888888; font-size: 0.85em; flex: 1; line-height: 1.4;">
+          Analizuję rynek... Wykryto wzrost OI przy stabilnej cenie - akumulacja instytucjonalna prawdopodobna.
+        </div>
+      </div>
+    </div>
 
     <!-- RSI INDICATOR - ENLARGED -->
-    <div style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 16px; height: 160px; margin-top: -10px;">
+    <div style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 16px; height: 160px; margin-top: -1px;">
       <svg class="chart-svg" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
         <!-- RSI ZONES - Bloomberg Style -->
         <!-- SELL ZONE (70-100) -->
@@ -3763,11 +3766,6 @@
           <div style="color: #666666; font-size: 0.8em; margin-top: 2px;">Neutral-bullish</div>
         </div>
       </div>
-    </div>
-
-    <div class="genius-commentary">
-      <div class="genius-commentary-title">◆ Komentarz Genius AI</div>
-      <div class="genius-commentary-text" id="geniusCommentaryMain">Ładowanie komentarza z API...</div>
     </div>
     </div>
     
@@ -4723,6 +4721,12 @@
         geniusTextEl.textContent = commentary;
       }
       
+      // Update inline genius commentary between chart and RSI
+      const inlineGeniusEl = document.getElementById('geniusInlineCommentary');
+      if (inlineGeniusEl) {
+        inlineGeniusEl.textContent = commentary;
+      }
+      
       // Update live commentary with typewriter effect
       if (typeof updateLiveCommentary === 'function') {
         updateLiveCommentary(commentary);
@@ -5060,6 +5064,59 @@
       }
     }
 
+    // HAMSTER GENIUS - Generate intelligent local commentary based on market data
+    function generateLocalGeniusCommentary() {
+      const priceEl = document.getElementById('metricPrice');
+      const price = parseFloat(priceEl?.textContent?.replace(/[$,]/g, '')) || 104000;
+      const changeEl = document.getElementById('metricPriceChange');
+      const changeText = changeEl?.textContent || '';
+      const isUp = changeText.includes('▲') || changeText.includes('+');
+      const changePercent = parseFloat(changeText.replace(/[^0-9.-]/g, '')) || 0;
+      
+      const rsiLabel = document.getElementById('rsiCurrentLabel');
+      const rsi = parseInt(rsiLabel?.textContent) || 50;
+      
+      const oiEl = document.getElementById('totalOI');
+      const oiText = oiEl?.textContent || '$12B';
+      
+      // Get last whale transfer
+      const transfers = persistentTransfers || [];
+      const lastTransfer = transfers[0];
+      
+      // Generate context-aware comment
+      let comment = '';
+      
+      if (rsi > 70) {
+        comment = `RSI ${rsi} w strefie wykupienia - szukaj sygnałów sprzedaży przy $${(price/1000).toFixed(1)}k. `;
+      } else if (rsi < 30) {
+        comment = `RSI ${rsi} wyprzedanie - potencjalny punkt wejścia LONG. `;
+      } else if (rsi > 55 && isUp) {
+        comment = `RSI ${rsi} rośnie z ceną - momentum bullish potwierdzony. `;
+      } else if (rsi < 45 && !isUp) {
+        comment = `RSI ${rsi} spada - presja sprzedających rośnie. `;
+      } else {
+        comment = `RSI ${rsi} neutralny - czekaj na wyraźny sygnał kierunku. `;
+      }
+      
+      if (lastTransfer && lastTransfer.entity) {
+        if (lastTransfer.type === 'BUY') {
+          comment += `${lastTransfer.entity} akumuluje ${lastTransfer.amount} BTC - sygnał instytucjonalny bullish. `;
+        } else if (lastTransfer.type === 'SELL') {
+          comment += `${lastTransfer.entity} sprzedaje ${lastTransfer.amount} BTC - uwaga na presję podażową. `;
+        }
+      } else if (lastTransfer) {
+        comment += `Wykryto transfer ${lastTransfer.amount} BTC (${lastTransfer.type}). `;
+      }
+      
+      if (changePercent > 3) {
+        comment += `Silny ruch +${changePercent.toFixed(1)}% - rozważ częściowe TP.`;
+      } else if (changePercent < -3) {
+        comment += `Korekta -${Math.abs(changePercent).toFixed(1)}% - wsparcie testowane.`;
+      }
+      
+      return comment;
+    }
+    
     // HAMSTER GENIUS - Fetch live commentary from backend
     async function updateGeniusCommentary() {
       try {
@@ -5075,9 +5132,16 @@
           console.warn('Genius API HTTP error', response.status);
         }
       } catch (err) {
-        console.log('Genius API offline, fallback in use.', err);
+        console.log('Genius API offline, using local commentary.', err);
       }
 
+      // Use local intelligent commentary when API fails
+      const localComment = generateLocalGeniusCommentary();
+      const inlineEl = document.getElementById('geniusInlineCommentary');
+      if (inlineEl) inlineEl.textContent = localComment;
+      const textEl = document.getElementById('geniusCommentaryText');
+      if (textEl) textEl.textContent = localComment;
+      
       applyGeniusPayload(null);
     }
 
@@ -5856,7 +5920,7 @@
           <span style="color: #ffffff; font-size: 0.95em;">$${(t.valueUSD / 1000000).toFixed(1)}M</span>
           ${entityBadge}
           <span style="color: #666666; margin-left: auto;">•</span>
-          <span style="color: #555555; font-size: 0.85em;">${timeAgo}</span>
+          <span data-time="1" style="color: #555555; font-size: 0.85em;">${timeAgo}</span>
         </div>
       `;
     }
@@ -5891,15 +5955,32 @@
         }
       }
       
-      // Update time display for existing transfers
+      // Update time display for existing transfers - only update times, not full DOM
       const listEl = document.getElementById('largeTransfersList');
       if (listEl) {
-        listEl.innerHTML = persistentTransfers.map(t => renderTransfer(t)).join('');
+        // Check if structure changed (new transfers)
+        const currentIds = persistentTransfers.map(t => t.id).join(',');
+        const existingIds = listEl.dataset.ids || '';
         
-        // Mark new transfers as seen after animation
-        setTimeout(() => {
-          persistentTransfers.forEach(t => t.isNew = false);
-        }, 500);
+        if (currentIds !== existingIds || listEl.children.length === 0) {
+          // Structure changed - rebuild DOM
+          listEl.innerHTML = persistentTransfers.map(t => renderTransfer(t)).join('');
+          listEl.dataset.ids = currentIds;
+          
+          // Mark new transfers as seen after animation
+          setTimeout(() => {
+            persistentTransfers.forEach(t => t.isNew = false);
+          }, 500);
+        } else {
+          // Only update time displays without rebuilding
+          persistentTransfers.forEach(t => {
+            const row = listEl.querySelector(`[data-id="${t.id}"]`);
+            if (row) {
+              const timeSpan = row.querySelector('[data-time]');
+              if (timeSpan) timeSpan.textContent = getTimeAgo(t.timestamp);
+            }
+          });
+        }
       }
       
       // Update total volume
