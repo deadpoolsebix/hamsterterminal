@@ -3653,28 +3653,28 @@
         <line x1="60" y1="85" x2="820" y2="85" class="session-axis" opacity="0.3"/>
 
         <!-- AUTO KILLZONES -->
-        <g class="killzone-block" data-zone="asia">
+        <g class="killzone-block" data-zone="asia" id="killzoneBlock-asia">
           <rect id="killzoneRect-asia" x="80" y="45" width="150" height="70" class="killzone-rect killzone-asia"/>
           <text id="killzoneLabel-asia" data-role="label" x="90" y="60" class="chart-label" fill="var(--yellow)" font-size="10">Killzone Azja</text>
-          <text id="killzoneTime-asia" data-role="time" x="90" y="78" class="chart-label" fill="var(--yellow)" font-size="9">01:00 - 05:00 UTC</text>
+          <text id="killzoneTime-asia" data-role="time" x="90" y="78" class="chart-label" fill="var(--yellow)" font-size="9">00:00 - 06:00 UTC</text>
         </g>
 
-        <g class="killzone-block" data-zone="london_open">
-          <rect id="killzoneRect-london_open" x="250" y="45" width="210" height="70" class="killzone-rect killzone-london"/>
-          <text id="killzoneLabel-london_open" data-role="label" x="260" y="60" class="chart-label" fill="var(--cyan)" font-size="10">Killzone Londyn</text>
-          <text id="killzoneTime-london_open" data-role="time" x="260" y="78" class="chart-label" fill="var(--cyan)" font-size="9">07:30 - 10:30 UTC</text>
+        <g class="killzone-block" data-zone="london" id="killzoneBlock-london">
+          <rect id="killzoneRect-london" x="250" y="45" width="210" height="70" class="killzone-rect killzone-london"/>
+          <text id="killzoneLabel-london" data-role="label" x="260" y="60" class="chart-label" fill="var(--cyan)" font-size="10">Killzone Londyn</text>
+          <text id="killzoneTime-london" data-role="time" x="260" y="78" class="chart-label" fill="var(--cyan)" font-size="9">07:00 - 10:00 UTC</text>
         </g>
 
-        <g class="killzone-block" data-zone="ny_am">
-          <rect id="killzoneRect-ny_am" x="500" y="45" width="220" height="70" class="killzone-rect killzone-ny"/>
-          <text id="killzoneLabel-ny_am" data-role="label" x="510" y="60" class="chart-label" fill="var(--red)" font-size="10">Killzone Nowy Jork</text>
-          <text id="killzoneTime-ny_am" data-role="time" x="510" y="78" class="chart-label" fill="var(--red)" font-size="9">12:30 - 16:00 UTC</text>
+        <g class="killzone-block" data-zone="newyork_am" id="killzoneBlock-newyork_am">
+          <rect id="killzoneRect-newyork_am" x="500" y="45" width="220" height="70" class="killzone-rect killzone-ny"/>
+          <text id="killzoneLabel-newyork_am" data-role="label" x="510" y="60" class="chart-label" fill="var(--red)" font-size="10">Killzone Nowy Jork</text>
+          <text id="killzoneTime-newyork_am" data-role="time" x="510" y="78" class="chart-label" fill="var(--red)" font-size="9">13:00 - 16:00 UTC</text>
         </g>
 
-        <g class="killzone-block" data-zone="ny_pm">
-          <rect id="killzoneRect-ny_pm" x="740" y="45" width="110" height="70" class="killzone-rect killzone-ny" opacity="0.65"/>
-          <text id="killzoneLabel-ny_pm" data-role="label" x="750" y="60" class="chart-label" fill="var(--red)" font-size="10">NY PM Fixing</text>
-          <text id="killzoneTime-ny_pm" data-role="time" x="750" y="78" class="chart-label" fill="var(--red)" font-size="9">18:30 - 21:00 UTC</text>
+        <g class="killzone-block" data-zone="newyork_pm" id="killzoneBlock-newyork_pm">
+          <rect id="killzoneRect-newyork_pm" x="740" y="45" width="110" height="70" class="killzone-rect killzone-ny" opacity="0.65"/>
+          <text id="killzoneLabel-newyork_pm" data-role="label" x="750" y="60" class="chart-label" fill="var(--red)" font-size="10">NY PM Sweep</text>
+          <text id="killzoneTime-newyork_pm" data-role="time" x="750" y="78" class="chart-label" fill="var(--red)" font-size="9">19:00 - 21:00 UTC</text>
         </g>
 
         <!-- PRICE PATH INSIDE KILLZONES -->
@@ -5695,6 +5695,14 @@
         const support = data.support;
         const resistance = data.resistance;
         
+        // Cache chart data for real-time smooth updates
+        chartDataCache = points.map(p => ({
+          open: p.open,
+          high: p.high,
+          low: p.low,
+          close: p.close
+        }));
+        
         // Chart dimensions
         const chartLeft = 80;
         const chartRight = 780;
@@ -6531,27 +6539,30 @@
     async function updateKillzoneOverlay() {
       try {
         const response = await fetch(`${API_BASE}/api/killzones/overview`);
-        if (!response.ok) return;
+        if (!response.ok) {
+          console.log('Killzone API not available, using local time calculation');
+          updateKillzoneFromLocalTime();
+          return;
+        }
         const data = await response.json();
-        if (!data.ok) return;
+        if (!data.ok) {
+          updateKillzoneFromLocalTime();
+          return;
+        }
 
         const overlayMap = {};
         (data.overlays || []).forEach(item => {
           overlayMap[item.name] = item;
         });
 
-        const current = data.current || {};
+        const current = data.current || null;
         const upcoming = data.upcoming || null;
 
         const killzoneBlocks = document.querySelectorAll('.killzone-block');
         killzoneBlocks.forEach(block => {
           const zoneName = block.getAttribute('data-zone');
-          const rectEl = block.querySelector('.killzone-rect');
-          const labelEl = block.querySelector('[data-role="label"]');
-          const timeEl = block.querySelector('[data-role="time"]');
-          const zoneMeta = overlayMap[zoneName];
-          applyKillzoneRect(rectEl, labelEl, timeEl, zoneMeta, zoneMeta);
           block.classList.remove('killzone-active', 'killzone-upcoming');
+          
           if (current && current.name === zoneName) {
             block.classList.add('killzone-active');
           }
@@ -6568,8 +6579,74 @@
 
         const sessionTitleEl = document.getElementById('sessionTitle');
         if (sessionTitleEl) {
-          sessionTitleEl.textContent = current.label ? `Nakładka Killzone • ${current.label}` : 'Nakładka Killzone Sesji';
+          sessionTitleEl.textContent = current?.label ? `Nakładka Killzone • ${current.label}` : 'Nakładka Killzone Sesji';
         }
+
+        console.log('✅ Killzone updated:', current?.name || 'none active', '| upcoming:', upcoming?.name || 'none');
+
+      } catch (e) {
+        console.log('Killzone error, using local fallback:', e);
+        updateKillzoneFromLocalTime();
+      }
+    }
+    
+    // Local time-based killzone fallback
+    function updateKillzoneFromLocalTime() {
+      const now = new Date();
+      const utcHour = now.getUTCHours();
+      const utcMinute = now.getUTCMinutes();
+      const minutesNow = utcHour * 60 + utcMinute;
+      
+      // Define killzones in UTC
+      const zones = [
+        { name: 'asia', start: 0, end: 360, label: 'Azja Range' },        // 00:00 - 06:00
+        { name: 'london', start: 420, end: 600, label: 'London Open' },   // 07:00 - 10:00
+        { name: 'newyork_am', start: 780, end: 960, label: 'NY Open' },   // 13:00 - 16:00
+        { name: 'newyork_pm', start: 1140, end: 1260, label: 'NY PM' }    // 19:00 - 21:00
+      ];
+      
+      let currentZone = null;
+      let upcomingZone = null;
+      
+      for (const zone of zones) {
+        if (minutesNow >= zone.start && minutesNow < zone.end) {
+          currentZone = zone;
+        } else if (minutesNow < zone.start && !upcomingZone) {
+          upcomingZone = zone;
+        }
+      }
+      
+      // Update killzone blocks
+      const killzoneBlocks = document.querySelectorAll('.killzone-block');
+      killzoneBlocks.forEach(block => {
+        const zoneName = block.getAttribute('data-zone');
+        block.classList.remove('killzone-active', 'killzone-upcoming');
+        
+        if (currentZone && currentZone.name === zoneName) {
+          block.classList.add('killzone-active');
+        }
+        if (upcomingZone && upcomingZone.name === zoneName) {
+          block.classList.add('killzone-upcoming');
+        }
+      });
+      
+      const sessionTitleEl = document.getElementById('sessionTitle');
+      if (sessionTitleEl) {
+        sessionTitleEl.textContent = currentZone ? `Nakładka Killzone • ${currentZone.label}` : 'Nakładka Killzone Sesji';
+      }
+      
+      // Calculate candle timer (for 1h candle)
+      const minutesToNextHour = 60 - utcMinute;
+      const sessionTimerEl = document.getElementById('sessionTimer');
+      if (sessionTimerEl) {
+        sessionTimerEl.textContent = `Świeca zamyka się za ${minutesToNextHour}:00`;
+      }
+      
+      console.log('✅ Killzone (local):', currentZone?.name || 'none', '| UTC:', utcHour + ':' + utcMinute.toString().padStart(2,'0'));
+    }
+
+    setInterval(updateKillzoneOverlay, 20000);
+    updateKillzoneOverlay();
 
         const sniperTimerLabel = document.getElementById('sniperTimerLabel');
         if (sniperTimerLabel) {
@@ -8035,6 +8112,73 @@
       }
     }
 
+    // ===== SMOOTH REALTIME CHART UPDATE =====
+    let chartDataCache = [];
+    let lastChartUpdate = 0;
+    
+    function updateChartRealtimeSmooth(newPrice) {
+      // Only update chart if we have cached data and price changed
+      if (chartDataCache.length === 0 || !newPrice) return;
+      
+      const now = Date.now();
+      // Limit updates to every 2 seconds for smooth animation
+      if (now - lastChartUpdate < 2000) return;
+      lastChartUpdate = now;
+      
+      // Add new price point and shift old ones
+      const latestPoint = { ...chartDataCache[chartDataCache.length - 1] };
+      latestPoint.close = newPrice;
+      latestPoint.high = Math.max(latestPoint.high, newPrice);
+      latestPoint.low = Math.min(latestPoint.low, newPrice);
+      
+      chartDataCache[chartDataCache.length - 1] = latestPoint;
+      
+      // Recalculate and update chart lines smoothly
+      const minPrice = Math.min(...chartDataCache.map(p => p.low));
+      const maxPrice = Math.max(...chartDataCache.map(p => p.high));
+      
+      const chartLeft = 80, chartRight = 780;
+      const chartTop = 60, chartBottom = 290;
+      const chartWidth = chartRight - chartLeft;
+      const chartHeight = chartBottom - chartTop;
+      
+      const priceToY = (price) => {
+        const ratio = (price - minPrice) / (maxPrice - minPrice);
+        return chartBottom - (ratio * chartHeight);
+      };
+      
+      // Update price line smoothly
+      const pointsStr = chartDataCache.map((p, i) => {
+        const x = chartLeft + (i / (chartDataCache.length - 1)) * chartWidth;
+        const y = priceToY(p.close);
+        return `${x.toFixed(0)},${y.toFixed(0)}`;
+      }).join(' ');
+      
+      const priceLine = document.getElementById('priceLine');
+      if (priceLine) {
+        priceLine.setAttribute('points', pointsStr);
+      }
+      
+      // Update EMA lines
+      let ema20 = chartDataCache[0]?.close || newPrice;
+      let ema50 = chartDataCache[0]?.close || newPrice;
+      const k20 = 2 / 21, k50 = 2 / 51;
+      const ema20Points = [], ema50Points = [];
+      
+      chartDataCache.forEach((p, i) => {
+        ema20 = p.close * k20 + ema20 * (1 - k20);
+        ema50 = p.close * k50 + ema50 * (1 - k50);
+        const x = chartLeft + (i / (chartDataCache.length - 1)) * chartWidth;
+        ema20Points.push(`${x.toFixed(0)},${priceToY(ema20).toFixed(0)}`);
+        ema50Points.push(`${x.toFixed(0)},${priceToY(ema50).toFixed(0)}`);
+      });
+      
+      const emaLine20 = document.getElementById('emaLine20');
+      const emaLine50 = document.getElementById('emaLine50');
+      if (emaLine20) emaLine20.setAttribute('points', ema20Points.join(' '));
+      if (emaLine50) emaLine50.setAttribute('points', ema50Points.join(' '));
+    }
+
     function handlePriceUpdate(data) {
       const { symbol, price, change, timestamp } = data;
       
@@ -8064,6 +8208,9 @@
           changeEl.textContent = `${arrow} ${Math.abs(change).toFixed(2)}%`;
           changeEl.className = 'metric-change ' + (change >= 0 ? 'up' : 'down');
         }
+        
+        // Smooth chart update with new price
+        updateChartRealtimeSmooth(price);
         
         // Update ticker if visible
         updateTickerPrice('BTC', price, change);
