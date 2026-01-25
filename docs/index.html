@@ -3476,6 +3476,21 @@
         <button class="timeframe-btn active" data-timeframe="1d">1D</button>
         <button class="timeframe-btn" data-timeframe="1w">1W</button>
       </div>
+      
+      <!-- SESSION - Inline after timeframe -->
+      <div style="display: flex; align-items: center; gap: 12px; padding: 8px 0; margin-bottom: 8px; border-bottom: 1px solid #1a1a1a;">
+        <span style="color: #ffffff; font-weight: 700; font-size: 1.1em;">SESSION</span>
+        <span style="color: #cccccc; font-size: 1em;" id="frontSessionTimer">--:--:--</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #ff6600; font-size: 0.95em; font-weight: 600;" id="frontSessionName">--</span>
+        <span style="color: #666666;">•</span>
+        <span style="color: #555555; font-size: 0.85em;">Next:</span>
+        <span style="color: #888888; font-size: 0.95em;" id="nextSessionInfo">--</span>
+        <!-- Session Progress Bar -->
+        <div style="flex: 1; max-width: 150px; background: #1a1a1a; height: 4px; border-radius: 2px; overflow: hidden; margin-left: auto;">
+          <div id="sessionProgressBar" style="background: #ffffff; height: 100%; width: 50%; transition: width 1s linear;"></div>
+        </div>
+      </div>
       <div class="chart-box">
       <svg class="chart-svg" id="mainChart" viewBox="0 0 1200 340" preserveAspectRatio="xMidYMid meet">
         <!-- CLEAN TERMINAL STYLE CHART -->
@@ -3786,23 +3801,6 @@
         <span style="color: #cccccc;">$96,000 - $96,500</span>
         <span style="color: #666666;">•</span>
         <span style="color: #999999;">~1,800 BTC</span>
-      </div>
-      
-      <!-- SESSION - Flat ticker row with progress bar -->
-      <div style="padding: 14px 16px; border-bottom: 1px solid #333333;">
-        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
-          <span style="color: #ffffff; font-size: 1.8em;">SESSION</span>
-          <span style="color: #cccccc; font-size: 1.2em;" id="frontSessionTimer">--:--:--</span>
-          <span style="color: #666666;">•</span>
-          <span style="color: #999999; font-size: 0.95em;" id="frontSessionName">--</span>
-          <span style="color: #666666;">•</span>
-          <span style="color: #666666; font-size: 0.9em;">Next:</span>
-          <span style="color: #cccccc; font-size: 1.1em; font-weight: 500;" id="nextSessionInfo">--</span>
-        </div>
-        <!-- Session Progress Bar -->
-        <div style="background: #1a1a1a; height: 4px; border-radius: 2px; overflow: hidden;">
-          <div id="sessionProgressBar" style="background: #ffffff; height: 100%; width: 50%; transition: width 1s linear;"></div>
-        </div>
       </div>
       
       <!-- LIQUIDATION LEVELS - Improved readability -->
