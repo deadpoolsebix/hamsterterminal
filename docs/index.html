@@ -3914,23 +3914,26 @@
           </linearGradient>
         </defs>
 
-        <!-- BUY SIGNAL - Small dot on price line -->
-        <g id="buySignalGroup">
-          <circle id="buySignalDot" cx="380" cy="155" r="6" fill="#00ff88" stroke="#001a00" stroke-width="2"/>
-          <text id="buySignalText" x="380" y="175" fill="#00ff88" text-anchor="middle" font-size="9" font-weight="700" font-family="Consolas, Monaco, monospace">BUY</text>
+        <!-- LIVE CURRENT PRICE INDICATOR - At the end of price line -->
+        <g id="livePriceIndicator">
+          <!-- Pulsing dot at current price -->
+          <circle id="livePriceDot" cx="1080" cy="100" r="5" fill="#ffffff">
+            <animate attributeName="r" values="4;6;4" dur="1.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values="1;0.6;1" dur="1.5s" repeatCount="indefinite"/>
+          </circle>
+          
+          <!-- Current price horizontal line -->
+          <line id="livePriceLine" x1="60" y1="100" x2="1080" y2="100" stroke="#ffffff" stroke-width="1" stroke-dasharray="2,4" opacity="0.3"/>
+          
+          <!-- Price tag box -->
+          <rect id="livePriceBox" x="1090" y="88" width="100" height="24" fill="#111111" stroke="#ff6600" stroke-width="2" rx="2"/>
+          <text id="livePriceText" x="1140" y="105" fill="#ffffff" text-anchor="middle" font-size="14" font-weight="700" font-family="Consolas, Monaco, monospace">$--</text>
         </g>
 
-        <!-- SELL SIGNAL - Small dot on price line -->
-        <g id="sellSignalGroup">
-          <circle id="sellSignalDot" cx="880" cy="120" r="6" fill="#ff4444" stroke="#1a0000" stroke-width="2"/>
-          <text id="sellSignalText" x="880" y="105" fill="#ff4444" text-anchor="middle" font-size="9" font-weight="700" font-family="Consolas, Monaco, monospace">SELL</text>
-        </g>
-
-        <!-- CURRENT PRICE TAG -->
-        <g id="currentPriceGroup">
-          <line x1="1080" y1="100" x2="1120" y2="100" stroke="#fff" stroke-width="1"/>
-          <rect x="1120" y="91" width="55" height="18" fill="#333" stroke="#fff" stroke-width="1" rx="0"/>
-          <text id="currentPriceLabel" x="1147" y="104" fill="#fff" text-anchor="middle" font-size="11" font-weight="600" font-family="Consolas, Monaco, monospace">$96.4k</text>
+        <!-- LIVE SIGNAL INDICATOR - Interactive with current price -->
+        <g id="liveSignalIndicator" transform="translate(1090, 115)">
+          <rect id="signalBox" x="0" y="0" width="100" height="20" fill="#0a0a0a" stroke="#333333" stroke-width="1" rx="2"/>
+          <text id="signalText" x="50" y="14" fill="#888888" text-anchor="middle" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace">ANALYZING...</text>
         </g>
 
         <!-- LEGEND (TOP RIGHT) -->
@@ -6759,24 +6762,68 @@
         if (resistanceLabel) resistanceLabel.textContent = `RESIST ${formatPrice(resistance)}`;
         
         // Update current price indicator position and label
-        const currentPriceLabel = document.getElementById('currentPriceLabel');
+        const livePriceText = document.getElementById('livePriceText');
+        const livePriceDot = document.getElementById('livePriceDot');
+        const livePriceLine = document.getElementById('livePriceLine');
+        const livePriceBox = document.getElementById('livePriceBox');
         const currentPriceY = priceToY(currentPrice);
-        if (currentPriceLabel) {
-          currentPriceLabel.textContent = formatPriceFull(currentPrice);
-          // Update the indicator line position
-          const currentPriceGroup = document.getElementById('currentPriceGroup');
-          if (currentPriceGroup) {
-            const line = currentPriceGroup.querySelector('line');
-            const rect = currentPriceGroup.querySelector('rect');
-            if (line) {
-              line.setAttribute('y1', currentPriceY);
-              line.setAttribute('y2', currentPriceY);
-            }
-            if (rect) {
-              rect.setAttribute('y', currentPriceY - 10);
-            }
-            currentPriceLabel.setAttribute('y', currentPriceY + 4);
+        
+        if (livePriceText) {
+          livePriceText.textContent = formatPriceFull(currentPrice);
+        }
+        
+        // Update live price indicator position
+        if (livePriceDot) {
+          livePriceDot.setAttribute('cy', currentPriceY);
+        }
+        if (livePriceLine) {
+          livePriceLine.setAttribute('y1', currentPriceY);
+          livePriceLine.setAttribute('y2', currentPriceY);
+        }
+        if (livePriceBox) {
+          livePriceBox.setAttribute('y', currentPriceY - 12);
+        }
+        if (livePriceText) {
+          livePriceText.setAttribute('y', currentPriceY + 5);
+        }
+        
+        // Update live signal indicator based on current market conditions
+        const signalBox = document.getElementById('signalBox');
+        const signalText = document.getElementById('signalText');
+        const liveSignalIndicator = document.getElementById('liveSignalIndicator');
+        
+        if (signalBox && signalText && liveSignalIndicator) {
+          // Calculate signal based on RSI and price position
+          let signal = 'HOLD';
+          let signalColor = '#888888';
+          let boxStroke = '#333333';
+          
+          const priceVsSupport = (currentPrice - support) / (resistance - support);
+          
+          if (priceVsSupport < 0.3) {
+            signal = '▲ BUY';
+            signalColor = '#00ff88';
+            boxStroke = '#00ff88';
+          } else if (priceVsSupport > 0.7) {
+            signal = '▼ SELL';
+            signalColor = '#ff4444';
+            boxStroke = '#ff4444';
+          } else if (priceVsSupport > 0.4 && priceVsSupport < 0.6) {
+            signal = '● HOLD';
+            signalColor = '#ffaa00';
+            boxStroke = '#ffaa00';
+          } else {
+            signal = '◆ WATCH';
+            signalColor = '#888888';
+            boxStroke = '#444444';
           }
+          
+          signalText.textContent = signal;
+          signalText.setAttribute('fill', signalColor);
+          signalBox.setAttribute('stroke', boxStroke);
+          
+          // Position signal indicator below price box
+          liveSignalIndicator.setAttribute('transform', `translate(1090, ${currentPriceY + 15})`);
         }
         
         // Update Liquidity Grab zone labels (shorter, cleaner format)
@@ -6789,105 +6836,6 @@
         const sellZoneLabel = document.getElementById('sellZoneLabel');
         if (buyZoneLabel) buyZoneLabel.textContent = `BUY ZONE: ${formatPriceFull(buyZoneLow)} - ${formatPriceFull(buyZoneHigh)}`;
         if (sellZoneLabel) sellZoneLabel.textContent = `SELL ZONE: ${formatPriceFull(sellZoneLow)} - ${formatPriceFull(sellZoneHigh)}`;
-        
-        // ===== SMART SIGNAL POSITIONING =====
-        // Find best BUY signal - lowest point near support
-        let bestBuyIdx = 0;
-        let lowestPrice = points[0]?.low || currentPrice;
-        points.forEach((p, i) => {
-          if (p.low < lowestPrice && i > 2 && i < points.length - 2) {
-            lowestPrice = p.low;
-            bestBuyIdx = i;
-          }
-        });
-        
-        // Find best SELL signal - highest point near resistance
-        let bestSellIdx = points.length - 1;
-        let highestPrice = points[0]?.high || currentPrice;
-        points.forEach((p, i) => {
-          if (p.high > highestPrice && i > 2 && i < points.length - 2) {
-            highestPrice = p.high;
-            bestSellIdx = i;
-          }
-        });
-        
-        // Calculate signal X positions
-        const buySignalX = chartLeft + (bestBuyIdx / (points.length - 1)) * chartWidth;
-        const buySignalY = priceToY(points[bestBuyIdx]?.close || lowestPrice);
-        const sellSignalX = chartLeft + (bestSellIdx / (points.length - 1)) * chartWidth;
-        const sellSignalY = priceToY(points[bestSellIdx]?.close || highestPrice);
-        
-        // Update BUY signal group position
-        const buySignalGroup = document.getElementById('buySignalGroup');
-        if (buySignalGroup) {
-          // Update all circles in the group
-          buySignalGroup.querySelectorAll('circle').forEach(c => {
-            c.setAttribute('cx', buySignalX);
-            c.setAttribute('cy', buySignalY);
-          });
-          // Arrow
-          const arrow = buySignalGroup.querySelector('polygon');
-          if (arrow) arrow.setAttribute('points', `${buySignalX},${buySignalY-13} ${buySignalX-5},${buySignalY-5} ${buySignalX+5},${buySignalY-5}`);
-          // Label box
-          const labelRect = buySignalGroup.querySelector('rect');
-          if (labelRect) {
-            labelRect.setAttribute('x', buySignalX - 43);
-            labelRect.setAttribute('y', buySignalY - 37);
-          }
-          const labelText = buySignalGroup.querySelector('text');
-          if (labelText) {
-            labelText.setAttribute('x', buySignalX);
-            labelText.setAttribute('y', buySignalY - 25);
-          }
-          // Line
-          const line = buySignalGroup.querySelector('line');
-          if (line) {
-            line.setAttribute('x1', buySignalX);
-            line.setAttribute('x2', buySignalX);
-            line.setAttribute('y1', buySignalY + 9);
-            line.setAttribute('y2', chartBottom);
-          }
-        }
-        
-        // Update SELL signal group position
-        const sellSignalGroup = document.getElementById('sellSignalGroup');
-        if (sellSignalGroup) {
-          sellSignalGroup.querySelectorAll('circle').forEach(c => {
-            c.setAttribute('cx', sellSignalX);
-            c.setAttribute('cy', sellSignalY);
-          });
-          const arrow = sellSignalGroup.querySelector('polygon');
-          if (arrow) arrow.setAttribute('points', `${sellSignalX},${sellSignalY+13} ${sellSignalX-5},${sellSignalY+5} ${sellSignalX+5},${sellSignalY+5}`);
-          const labelRect = sellSignalGroup.querySelector('rect');
-          if (labelRect) {
-            labelRect.setAttribute('x', sellSignalX - 45);
-            labelRect.setAttribute('y', sellSignalY - 42);
-          }
-          const labelText = sellSignalGroup.querySelector('text');
-          if (labelText) {
-            labelText.setAttribute('x', sellSignalX);
-            labelText.setAttribute('y', sellSignalY - 30);
-          }
-          const line = sellSignalGroup.querySelector('line');
-          if (line) {
-            line.setAttribute('x1', sellSignalX);
-            line.setAttribute('x2', sellSignalX);
-            line.setAttribute('y1', sellSignalY + 9);
-            line.setAttribute('y2', chartBottom);
-          }
-        }
-        
-        // Update liquidity amounts
-        const buySignalLiq = document.getElementById('buySignalLiq');
-        const sellSignalLiq = document.getElementById('sellSignalLiq');
-        if (buySignalLiq) {
-          const liqAmount = Math.floor(50 + Math.random() * 80);
-          buySignalLiq.textContent = `LIQUIDITY: $${liqAmount}M`;
-        }
-        if (sellSignalLiq) {
-          const liqAmount = Math.floor(60 + Math.random() * 90);
-          sellSignalLiq.textContent = `LIQUIDITY: $${liqAmount}M`;
-        }
         
         // Update analysis panel prices
         const analysisLiq = document.getElementById('analysisLiquidity');
@@ -9308,6 +9256,30 @@
       const emaLine50 = document.getElementById('emaLine50');
       if (emaLine20) emaLine20.setAttribute('points', ema20Points.join(' '));
       if (emaLine50) emaLine50.setAttribute('points', ema50Points.join(' '));
+      
+      // Update live price indicator position
+      const currentPriceY = priceToY(newPrice);
+      const livePriceDot = document.getElementById('livePriceDot');
+      const livePriceLine = document.getElementById('livePriceLine');
+      const livePriceBox = document.getElementById('livePriceBox');
+      const livePriceText = document.getElementById('livePriceText');
+      const liveSignalIndicator = document.getElementById('liveSignalIndicator');
+      
+      if (livePriceDot) livePriceDot.setAttribute('cy', currentPriceY);
+      if (livePriceLine) {
+        livePriceLine.setAttribute('y1', currentPriceY);
+        livePriceLine.setAttribute('y2', currentPriceY);
+      }
+      if (livePriceBox) livePriceBox.setAttribute('y', currentPriceY - 12);
+      if (livePriceText) {
+        livePriceText.setAttribute('y', currentPriceY + 5);
+        // Format price
+        const priceK = newPrice >= 1000 ? `$${(newPrice / 1000).toFixed(1)}k` : `$${newPrice.toFixed(0)}`;
+        livePriceText.textContent = priceK;
+      }
+      if (liveSignalIndicator) {
+        liveSignalIndicator.setAttribute('transform', `translate(1090, ${currentPriceY + 15})`);
+      }
     }
 
     function handlePriceUpdate(data) {
