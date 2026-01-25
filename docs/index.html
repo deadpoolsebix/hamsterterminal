@@ -3478,93 +3478,93 @@
       </div>
       <div class="chart-box">
       <svg class="chart-svg" id="mainChart" viewBox="0 0 860 340" preserveAspectRatio="xMidYMid meet">
-        <!-- CLEAN TRADINGVIEW STYLE CHART -->
-        <rect x="0" y="0" width="860" height="340" fill="#131722"/>
+        <!-- CLEAN TERMINAL STYLE CHART -->
+        <rect x="0" y="0" width="860" height="340" fill="#000"/>
         
         <!-- MINIMAL GRID -->
-        <g class="chart-grid" opacity="0.4">
-          <line x1="60" y1="50" x2="800" y2="50" stroke="#1e222d"/>
-          <line x1="60" y1="100" x2="800" y2="100" stroke="#1e222d"/>
-          <line x1="60" y1="150" x2="800" y2="150" stroke="#1e222d"/>
-          <line x1="60" y1="200" x2="800" y2="200" stroke="#1e222d"/>
-          <line x1="60" y1="250" x2="800" y2="250" stroke="#1e222d"/>
-          <line x1="60" y1="295" x2="800" y2="295" stroke="#2a2e39"/>
+        <g class="chart-grid" opacity="0.3">
+          <line x1="60" y1="50" x2="800" y2="50" stroke="#222"/>
+          <line x1="60" y1="100" x2="800" y2="100" stroke="#222"/>
+          <line x1="60" y1="150" x2="800" y2="150" stroke="#222"/>
+          <line x1="60" y1="200" x2="800" y2="200" stroke="#222"/>
+          <line x1="60" y1="250" x2="800" y2="250" stroke="#222"/>
+          <line x1="60" y1="295" x2="800" y2="295" stroke="#333"/>
         </g>
 
         <!-- PRICE AXIS (LEFT) -->
-        <text id="axisLabelHigh" x="8" y="55" fill="#787b86" font-size="11" font-family="Arial">$98.0k</text>
-        <text x="8" y="105" fill="#787b86" font-size="11" font-family="Arial">$97.0k</text>
-        <text x="8" y="155" fill="#787b86" font-size="11" font-family="Arial">$96.0k</text>
-        <text x="8" y="205" fill="#787b86" font-size="11" font-family="Arial">$95.0k</text>
-        <text id="axisLabelLow" x="8" y="255" fill="#787b86" font-size="11" font-family="Arial">$94.0k</text>
+        <text id="axisLabelHigh" x="8" y="55" fill="#888" font-size="11" font-family="Consolas, Monaco, monospace">$98.0k</text>
+        <text x="8" y="105" fill="#888" font-size="11" font-family="Consolas, Monaco, monospace">$97.0k</text>
+        <text x="8" y="155" fill="#888" font-size="11" font-family="Consolas, Monaco, monospace">$96.0k</text>
+        <text x="8" y="205" fill="#888" font-size="11" font-family="Consolas, Monaco, monospace">$95.0k</text>
+        <text id="axisLabelLow" x="8" y="255" fill="#888" font-size="11" font-family="Consolas, Monaco, monospace">$94.0k</text>
 
         <!-- TIME AXIS (BOTTOM) -->
-        <text x="80" y="315" fill="#787b86" font-size="10" font-family="Arial">-24h</text>
-        <text x="200" y="315" fill="#787b86" font-size="10" font-family="Arial">-18h</text>
-        <text x="320" y="315" fill="#787b86" font-size="10" font-family="Arial">-12h</text>
-        <text x="440" y="315" fill="#787b86" font-size="10" font-family="Arial">-6h</text>
-        <text x="560" y="315" fill="#787b86" font-size="10" font-family="Arial">-3h</text>
-        <text x="680" y="315" fill="#787b86" font-size="10" font-family="Arial">-1h</text>
-        <text x="765" y="315" fill="#2962ff" font-size="10" font-weight="600" font-family="Arial">NOW</text>
+        <text x="80" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-24h</text>
+        <text x="200" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-18h</text>
+        <text x="320" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-12h</text>
+        <text x="440" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-6h</text>
+        <text x="560" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-3h</text>
+        <text x="680" y="315" fill="#666" font-size="10" font-family="Consolas, Monaco, monospace">-1h</text>
+        <text x="765" y="315" fill="#fff" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace">NOW</text>
 
         <!-- SUPPORT/RESISTANCE LINES -->
-        <line id="resistanceLine" x1="60" y1="65" x2="800" y2="65" stroke="#f23645" stroke-width="1" opacity="0.5"/>
-        <line id="supportLine" x1="60" y1="235" x2="800" y2="235" stroke="#089981" stroke-width="1" opacity="0.5"/>
+        <line id="resistanceLine" x1="60" y1="65" x2="800" y2="65" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
+        <line id="supportLine" x1="60" y1="235" x2="800" y2="235" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
         
         <!-- RESISTANCE/SUPPORT LABELS -->
-        <text id="resistanceLabel" x="805" y="68" fill="#f23645" font-size="10" font-family="Arial">R $97.5k</text>
-        <text id="supportLabel" x="805" y="238" fill="#089981" font-size="10" font-family="Arial">S $94.5k</text>
+        <text id="resistanceLabel" x="805" y="68" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">R $97.5k</text>
+        <text id="supportLabel" x="805" y="238" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">S $94.5k</text>
 
         <!-- EMA 50 LINE -->
         <polyline id="emaLine50" points="80,210 140,200 200,185 270,190 340,175 410,160 480,165 550,155 620,160 690,155 760,150" 
-                  stroke="#ff9800" stroke-width="1.2" fill="none" opacity="0.6"/>
+                  stroke="#555" stroke-width="1" fill="none" opacity="0.8"/>
 
         <!-- EMA 20 LINE -->
         <polyline id="emaLine20" points="80,195 140,180 200,160 270,170 340,150 410,135 480,145 550,130 620,140 690,135 760,125" 
-                  stroke="#26a69a" stroke-width="1.2" fill="none" opacity="0.7"/>
+                  stroke="#888" stroke-width="1" fill="none" opacity="0.8"/>
 
         <!-- MAIN PRICE LINE -->
         <polyline id="priceLine" points="80,185 140,165 200,140 270,155 340,130 410,110 480,125 550,105 620,120 690,115 760,100" 
-                  stroke="#2962ff" stroke-width="2.5" fill="none"/>
+                  stroke="#fff" stroke-width="2" fill="none"/>
 
         <!-- PRICE AREA FILL -->
         <polygon id="priceArea" points="80,185 140,165 200,140 270,155 340,130 410,110 480,125 550,105 620,120 690,115 760,100 760,295 80,295" 
-                 fill="url(#priceGradient)" opacity="0.15"/>
+                 fill="url(#priceGradient)" opacity="0.1"/>
         
         <defs>
           <linearGradient id="priceGradient" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" style="stop-color:#2962ff;stop-opacity:0.5"/>
-            <stop offset="100%" style="stop-color:#2962ff;stop-opacity:0"/>
+            <stop offset="0%" style="stop-color:#fff;stop-opacity:0.3"/>
+            <stop offset="100%" style="stop-color:#fff;stop-opacity:0"/>
           </linearGradient>
         </defs>
 
         <!-- BUY SIGNAL -->
         <g id="buySignalGroup">
-          <circle id="buySignalCircle" cx="270" cy="155" r="5" fill="#089981"/>
-          <text id="buySignalText" x="270" y="175" fill="#089981" text-anchor="middle" font-size="11" font-weight="600" font-family="Arial">▲ BUY</text>
+          <circle id="buySignalCircle" cx="270" cy="155" r="4" fill="#fff" stroke="#888" stroke-width="1"/>
+          <text id="buySignalText" x="270" y="175" fill="#fff" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">BUY</text>
         </g>
 
         <!-- SELL SIGNAL -->
         <g id="sellSignalGroup">
-          <circle id="sellSignalCircle" cx="620" cy="120" r="5" fill="#f23645"/>
-          <text id="sellSignalText" x="620" y="108" fill="#f23645" text-anchor="middle" font-size="11" font-weight="600" font-family="Arial">▼ SELL</text>
+          <circle id="sellSignalCircle" cx="620" cy="120" r="4" fill="#888" stroke="#666" stroke-width="1"/>
+          <text id="sellSignalText" x="620" y="108" fill="#888" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">SELL</text>
         </g>
 
         <!-- CURRENT PRICE TAG -->
         <g id="currentPriceGroup">
-          <line x1="760" y1="100" x2="800" y2="100" stroke="#2962ff" stroke-width="1.5"/>
-          <rect x="800" y="91" width="55" height="18" fill="#2962ff" rx="2"/>
-          <text id="currentPriceLabel" x="827" y="104" fill="#fff" text-anchor="middle" font-size="11" font-weight="600" font-family="Arial">$96.4k</text>
+          <line x1="760" y1="100" x2="800" y2="100" stroke="#fff" stroke-width="1"/>
+          <rect x="800" y="91" width="55" height="18" fill="#333" stroke="#fff" stroke-width="1" rx="0"/>
+          <text id="currentPriceLabel" x="827" y="104" fill="#fff" text-anchor="middle" font-size="11" font-weight="600" font-family="Consolas, Monaco, monospace">$96.4k</text>
         </g>
 
         <!-- LEGEND (TOP RIGHT) -->
         <g transform="translate(640, 20)">
-          <line x1="0" y1="0" x2="20" y2="0" stroke="#2962ff" stroke-width="2"/>
-          <text x="25" y="4" fill="#787b86" font-size="10" font-family="Arial">Price</text>
-          <line x1="70" y1="0" x2="90" y2="0" stroke="#26a69a" stroke-width="1.2"/>
-          <text x="95" y="4" fill="#787b86" font-size="10" font-family="Arial">EMA20</text>
-          <line x1="140" y1="0" x2="160" y2="0" stroke="#ff9800" stroke-width="1.2"/>
-          <text x="165" y="4" fill="#787b86" font-size="10" font-family="Arial">EMA50</text>
+          <line x1="0" y1="0" x2="20" y2="0" stroke="#fff" stroke-width="2"/>
+          <text x="25" y="4" fill="#888" font-size="9" font-family="Consolas, Monaco, monospace">PRICE</text>
+          <line x1="70" y1="0" x2="90" y2="0" stroke="#888" stroke-width="1"/>
+          <text x="95" y="4" fill="#666" font-size="9" font-family="Consolas, Monaco, monospace">EMA20</text>
+          <line x1="140" y1="0" x2="160" y2="0" stroke="#555" stroke-width="1"/>
+          <text x="165" y="4" fill="#666" font-size="9" font-family="Consolas, Monaco, monospace">EMA50</text>
         </g>
       </svg>
     </div>
@@ -3679,12 +3679,12 @@
     </div>
     </div>
     
-    <!-- LARGE TRANSFERS - Bloomberg Terminal Style -->
-    <div style="background: #000; border: 1px solid #333; padding: 16px; font-family: 'Consolas', 'Monaco', monospace;">
+    <!-- LARGE TRANSFERS -->
+    <div style="background: #000; border: 1px solid #222; padding: 16px;">
       <!-- Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #333;">
-        <div style="color: #ff8c00; font-weight: 700; font-size: 0.9em;">WHALE TRANSFERS</div>
-        <div style="color: #888; font-size: 0.8em;" id="transfersLastUpdate">--:--:--</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #222;">
+        <div style="color: #888; font-weight: 700; font-size: 0.85em; letter-spacing: 1px;">WHALE TRANSFERS</div>
+        <div style="color: #666; font-size: 0.75em;" id="transfersLastUpdate">--:--:--</div>
       </div>
       
       <div id="largeTransfersList" style="font-size: 0.9em;">
@@ -3692,68 +3692,68 @@
       </div>
       
       <!-- ICEBERG ORDERS -->
-      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333;">
-        <div style="color: #ff8c00; font-weight: 700; font-size: 0.8em; margin-bottom: 10px;">ICEBERG ORDERS</div>
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
-          <tr style="border-bottom: 1px solid #222;">
-            <td style="padding: 6px 0; color: #888;">BUY</td>
-            <td style="padding: 6px 0; color: #fff; text-align: right;">$94,800 - $95,200</td>
-            <td style="padding: 6px 0; color: #888; text-align: right;">~3,200 BTC</td>
-          </tr>
-          <tr style="border-bottom: 1px solid #222;">
-            <td style="padding: 6px 0; color: #888;">SELL</td>
-            <td style="padding: 6px 0; color: #fff; text-align: right;">$97,400 - $97,800</td>
-            <td style="padding: 6px 0; color: #888; text-align: right;">~2,100 BTC</td>
-          </tr>
-          <tr>
-            <td style="padding: 6px 0; color: #888;">HIDDEN</td>
-            <td style="padding: 6px 0; color: #fff; text-align: right;">$96,000 - $96,500</td>
-            <td style="padding: 6px 0; color: #888; text-align: right;">~1,800 BTC</td>
-          </tr>
-        </table>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222;">
+        <div style="color: #888; font-weight: 700; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 10px;">ICEBERG ORDERS</div>
+        <div style="font-size: 0.85em;">
+          <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #1a1a1a;">
+            <span style="color: #666;">BUY</span>
+            <span style="color: #fff;">$94,800 - $95,200</span>
+            <span style="color: #666;">~3,200 BTC</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #1a1a1a;">
+            <span style="color: #666;">SELL</span>
+            <span style="color: #fff;">$97,400 - $97,800</span>
+            <span style="color: #666;">~2,100 BTC</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 0;">
+            <span style="color: #666;">HIDDEN</span>
+            <span style="color: #fff;">$96,000 - $96,500</span>
+            <span style="color: #666;">~1,800 BTC</span>
+          </div>
+        </div>
       </div>
       
       <!-- SESSION INFO -->
-      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333;">
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
           <div>
-            <div style="color: #ff8c00; font-weight: 700; font-size: 0.8em;">SESSION</div>
-            <div style="color: #fff; font-size: 1.4em; font-weight: 700; margin-top: 4px;" id="frontSessionTimer">--:--:--</div>
+            <div style="color: #888; font-weight: 700; font-size: 0.75em; letter-spacing: 1px;">SESSION</div>
+            <div style="color: #fff; font-size: 1.2em; font-weight: 400; margin-top: 4px;" id="frontSessionTimer">--:--:--</div>
           </div>
-          <div style="text-align: right; font-size: 0.85em;">
-            <div style="color: #888;" id="frontSessionName">--</div>
-            <div style="color: #888; margin-top: 4px;">Next: <span id="nextSessionInfo" style="color: #fff;">--</span></div>
+          <div style="text-align: right; font-size: 0.8em;">
+            <div style="color: #666;" id="frontSessionName">--</div>
+            <div style="color: #666; margin-top: 4px;">Next: <span id="nextSessionInfo" style="color: #888;">--</span></div>
           </div>
         </div>
       </div>
       
       <!-- LIQUIDATION LEVELS -->
-      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333;">
-        <div style="color: #ff8c00; font-weight: 700; font-size: 0.8em; margin-bottom: 10px;">LIQUIDATION LEVELS</div>
-        <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
-          <tr style="border-bottom: 1px solid #222;">
-            <td style="padding: 6px 0; color: #888;">LONG</td>
-            <td style="padding: 6px 0; color: #fff; text-align: right;" id="longLiqPrice">$93,450</td>
-            <td style="padding: 6px 0; color: #888; text-align: right;" id="longLiqVolume">$245M</td>
-          </tr>
-          <tr style="border-bottom: 1px solid #222;">
-            <td style="padding: 6px 0; color: #888;">SHORT</td>
-            <td style="padding: 6px 0; color: #fff; text-align: right;" id="shortLiqPrice">$97,800</td>
-            <td style="padding: 6px 0; color: #888; text-align: right;" id="shortLiqVolume">$180M</td>
-          </tr>
-          <tr>
-            <td style="padding: 6px 0; color: #888;">MEGA</td>
-            <td style="padding: 6px 0; color: #fff; text-align: right;" id="megaLiqPrice">$91,200</td>
-            <td style="padding: 6px 0; color: #888; text-align: right;" id="megaLiqVolume">$520M</td>
-          </tr>
-        </table>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222;">
+        <div style="color: #888; font-weight: 700; font-size: 0.75em; letter-spacing: 1px; margin-bottom: 10px;">LIQUIDATION LEVELS</div>
+        <div style="font-size: 0.85em;">
+          <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #1a1a1a;">
+            <span style="color: #666;">LONG</span>
+            <span style="color: #fff;" id="longLiqPrice">$93,450</span>
+            <span style="color: #666;" id="longLiqVolume">$245M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 0; border-bottom: 1px solid #1a1a1a;">
+            <span style="color: #666;">SHORT</span>
+            <span style="color: #fff;" id="shortLiqPrice">$97,800</span>
+            <span style="color: #666;" id="shortLiqVolume">$180M</span>
+          </div>
+          <div style="display: flex; justify-content: space-between; padding: 5px 0;">
+            <span style="color: #666;">MEGA</span>
+            <span style="color: #fff;" id="megaLiqPrice">$91,200</span>
+            <span style="color: #666;" id="megaLiqVolume">$520M</span>
+          </div>
+        </div>
       </div>
       
       <!-- Footer -->
-      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333; display: flex; justify-content: space-between; font-size: 0.8em;">
-        <div style="color: #888;">Vol: <span style="color: #fff;" id="totalTransferVolume">--</span></div>
-        <div style="color: #888;">Net: <span id="netFlowIndicator" style="color: #fff;">--</span></div>
-        <div style="color: #888;">Prox: <span id="liqProximity" style="color: #fff;">--</span></div>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #222; display: flex; justify-content: space-between; font-size: 0.75em;">
+        <div style="color: #666;">Vol: <span style="color: #888;" id="totalTransferVolume">--</span></div>
+        <div style="color: #666;">Net: <span id="netFlowIndicator" style="color: #888;">--</span></div>
+        <div style="color: #666;">Prox: <span id="liqProximity" style="color: #888;">--</span></div>
       </div>
     </div>
   </div>
@@ -5653,16 +5653,16 @@
       return `
         <div class="transfer-row ${typeClass} ${t.isNew ? 'transfer-row-new' : ''}" 
              data-id="${t.id}"
-             style="padding: 10px 8px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-family: Consolas, Monaco, monospace;">
+             style="padding: 8px 0; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center;">
           <div style="flex: 1;">
-            <div style="color: #fff; font-weight: 400; font-size: 0.95em; letter-spacing: 0.5px;">
+            <div style="color: #fff; font-size: 0.85em;">
               <span class="transfer-indicator ${indicatorClass}"></span>${t.type} ${t.amount.toLocaleString()} BTC
             </div>
-            <div style="color: #888; font-size: 0.8em; margin-top: 3px;">${t.source}</div>
+            <div style="color: #666; font-size: 0.75em; margin-top: 2px;">${t.source}</div>
           </div>
           <div style="text-align: right;">
-            <div style="color: #fff; font-size: 1em; font-weight: 400;">$${(t.valueUSD / 1000000).toFixed(2)}M</div>
-            <div style="color: #888; font-size: 0.75em; margin-top: 2px;">${timeAgo}</div>
+            <div style="color: #888; font-size: 0.9em;">$${(t.valueUSD / 1000000).toFixed(2)}M</div>
+            <div style="color: #555; font-size: 0.7em; margin-top: 2px;">${timeAgo}</div>
           </div>
         </div>
       `;
@@ -5720,9 +5720,9 @@
       }
     }
     
-    // Real-time: Update every 5 seconds for fast reactions
-    setInterval(updateLargeTransfers, 15000); // Reduced from 5s to 15s - API limit
-    updateLargeTransfers();
+    // Real-time: Update transfers
+    setInterval(updateLargeTransfers, 8000);
+    setTimeout(updateLargeTransfers, 500); // Fast initial load
 
     // ===== SESSION STATUS UPDATER =====
     function updateSessionStatus() {
