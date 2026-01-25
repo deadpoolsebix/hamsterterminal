@@ -51,9 +51,18 @@ def save_data(data):
         logger.error(f"Blad zapisu danych: {e}")
 
 # Konfiguracja
-BOT_TOKEN = '8254662818:AAGSCUbd-Zc8tmjmCB3ujLNksLqxICJ2rJw'
-TWELVE_DATA_API = 'd54ad684cd8f40de895ec569d6128821'
-CHAT_ID = '5616894588'
+
+# Pobierz tokeny z ENV (Render.com)
+BOT_TOKEN = os.environ.get('TELEGRAM_TOKEN', os.environ.get('BOT_TOKEN', '8254662818:AAGSCUbd-Zc8tmjmCB3ujLNksLqxICJ2rJw'))
+TWELVE_DATA_API = os.environ.get('TWELVE_DATA_API_KEY', os.environ.get('TWELVE_DATA_API', 'd54ad684cd8f40de895ec569d6128821'))
+CHAT_ID = os.environ.get('CHAT_ID', '5616894588')
+
+if not BOT_TOKEN or BOT_TOKEN.startswith('8254662818:'):
+    print("[WARNING] TELEGRAM_TOKEN nie ustawiony - używam domyślnego")
+if not TWELVE_DATA_API or TWELVE_DATA_API == 'd54ad684cd8f40de895ec569d6128821':
+    print("[WARNING] TWELVE_DATA_API_KEY nie ustawiony - używam domyślnego")
+if not CHAT_ID or CHAT_ID == '5616894588':
+    print("[WARNING] CHAT_ID nie ustawiony - używam domyślnego")
 
 # GIF Animacje chomika 🐹 (używamy .gif URLs bezpośrednio)
 
@@ -730,34 +739,41 @@ def get_quote(symbol):
             binance_symbol = CRYPTO_TO_BINANCE[symbol]
             url = f"https://api.binance.com/api/v3/ticker/24hr?symbol={binance_symbol}"
             r = requests.get(url, timeout=10)
+            if r.status_code != 200:
+                logger.error(f"Binance API error {r.status_code} for {symbol}: {r.text}")
+                return {'error': f'Błąd API Binance ({r.status_code})'}
             data = r.json()
-            
-            if 'lastPrice' in data:
-                return {
-                    'symbol': symbol,
-                    'name': symbol.split('/')[0],
-                    'close': data.get('lastPrice', '0'),
-                    'open': data.get('openPrice', '0'),
-                    'high': data.get('highPrice', '0'),
-                    'low': data.get('lowPrice', '0'),
-                    'percent_change': data.get('priceChangePercent', '0'),
-                    'volume': data.get('volume', '0'),
-                    'source': 'Binance'
-                }
-        
+            if not data or 'lastPrice' not in data:
+                logger.error(f"Binance API returned no data for {symbol}: {data}")
+                return {'error': 'Brak danych z Binance API'}
+            return {
+                'symbol': symbol,
+                'name': symbol.split('/')[0],
+                'close': data.get('lastPrice', '0'),
+                'open': data.get('openPrice', '0'),
+                'high': data.get('highPrice', '0'),
+                'low': data.get('lowPrice', '0'),
+                'percent_change': data.get('priceChangePercent', '0'),
+                'volume': data.get('volume', '0'),
+                'source': 'Binance'
+            }
         # Dla metali/forex - użyj Twelve Data
         r = requests.get(
             f'https://api.twelvedata.com/quote?symbol={symbol}&apikey={TWELVE_DATA_API}',
             timeout=10
         )
+        if r.status_code != 200:
+            logger.error(f"TwelveData API error {r.status_code} for {symbol}: {r.text}")
+            return {'error': f'Błąd API TwelveData ({r.status_code})'}
         result = r.json()
-        if result:
-            result['source'] = 'TwelveData'
+        if not result or 'close' not in result:
+            logger.error(f"TwelveData API returned no data for {symbol}: {result}")
+            return {'error': 'Brak danych z TwelveData API'}
+        result['source'] = 'TwelveData'
         return result
-        
     except Exception as e:
         logger.error(f"Błąd API dla {symbol}: {e}")
-        return {}
+        return {'error': f'Błąd API: {e}'}
 
 
 def generate_dynamic_news():
@@ -1742,15 +1758,24 @@ def get_gif_caption(change_percent=0):
 
 def format_price_message(symbol, name, emoji, data):
     """Formatuj wiadomość - kompaktowy Bloomberg style z unikalną analizą GENIUS"""
+    # Handle error in data
+    if data is None or 'error' in data:
+        error_msg = data['error'] if data and 'error' in data else 'Brak danych rynkowych.'
+        return f"⚠️ Błąd pobierania danych: {error_msg}\nSpróbuj ponownie później lub sprawdź połączenie z API."
+
     price = float(data.get('close', 0))
     change = float(data.get('percent_change', 0))
     high = float(data.get('high', 0))
     low = float(data.get('low', 0))
-    
+
+    # If any of the key values are zero, treat as error
+    if price == 0 or high == 0 or low == 0:
+        return "⚠️ Brak aktualnych danych rynkowych dla tego instrumentu. Spróbuj ponownie później."
+
     arr = '▲' if change >= 0 else '▼'
     sign = '+' if change >= 0 else ''
     now = datetime.now().strftime('%H:%M')
-    
+
     # Dynamiczne obliczenia bazujące na volatility
     daily_range = high - low
     volatility = (daily_range / price) * 100 if price > 0 else 0
@@ -2510,32 +2535,42 @@ def format_price_message(symbol, name, emoji, data):
     # Build SMC section only for crypto
     smc_section = ""
     if binance_symbol:
-        # Oblicz konkretne poziomy stref
-        ext_discount_low = external_low
-        ext_discount_high = external_low + (external_range * 0.25)
-        ext_eq_low = external_low + (external_range * 0.25)
-        ext_eq_high = external_high - (external_range * 0.25)
-        ext_premium_low = external_high - (external_range * 0.25)
-        ext_premium_high = external_high
-        
-        int_discount_low = internal_low
-        int_discount_high = internal_low + (internal_range * 0.25)
-        int_premium_low = internal_high - (internal_range * 0.25)
-        int_premium_high = internal_high
-        
-        # EQH/EQL section - HTF (duże) i LTF (małe) z odległością od ceny
-        eqh_eql_str = ""
-        
-        # HTF EQH (duże - major liquidity)
-        if eqh_htf_detected:
-            eqh_dist = ((eqh_htf_level - price) / price) * 100
-            eqh_dir = "↑" if eqh_htf_level > price else "↓"
-            # Zakres major = ±0.3% od poziomu
-            eqh_range_low = eqh_htf_level * 0.997
-            eqh_range_high = eqh_htf_level * 1.003
-            eqh_eql_str += f"📊 EQH HTF (duży): ${eqh_htf_level:,.0f} ({eqh_dir}{abs(eqh_dist):.1f}%)\n"
-            eqh_eql_str += f"   → Główna płynność powyżej (major)\n"
-            eqh_eql_str += f"   → Zakres: ${eqh_range_low:,.0f} - ${eqh_range_high:,.0f}\n"
+        # Zabezpieczenie: sprawdź czy wszystkie potrzebne zmienne są zainicjalizowane
+        try:
+            ext_vars = [external_low, external_high, external_range, internal_low, internal_high, internal_range]
+        except NameError:
+            logging.error("[SMC] Brak wymaganych danych (external/internal) do wyliczeń SMC! Sprawdź źródło danych.")
+            smc_section = "\n⚠️ Brak danych SMC dla tego instrumentu."
+        else:
+            if any([v is None for v in ext_vars]):
+                logging.error(f"[SMC] Dane SMC są niepełne: {ext_vars}")
+                smc_section = "\n⚠️ Brak danych SMC dla tego instrumentu."
+            else:
+                ext_discount_low = external_low
+                ext_discount_high = external_low + (external_range * 0.25)
+                ext_eq_low = external_low + (external_range * 0.25)
+                ext_eq_high = external_high - (external_range * 0.25)
+                ext_premium_low = external_high - (external_range * 0.25)
+                ext_premium_high = external_high
+                
+                int_discount_low = internal_low
+                int_discount_high = internal_low + (internal_range * 0.25)
+                int_premium_low = internal_high - (internal_range * 0.25)
+                int_premium_high = internal_high
+                
+                # EQH/EQL section - HTF (duże) i LTF (małe) z odległością od ceny
+                eqh_eql_str = ""
+                
+                # HTF EQH (duże - major liquidity)
+                if eqh_htf_detected:
+                    eqh_dist = ((eqh_htf_level - price) / price) * 100
+                    eqh_dir = "↑" if eqh_htf_level > price else "↓"
+                    # Zakres major = ±0.3% od poziomu
+                    eqh_range_low = eqh_htf_level * 0.997
+                    eqh_range_high = eqh_htf_level * 1.003
+                    eqh_eql_str += f"📊 EQH HTF (duży): ${eqh_htf_level:,.0f} ({eqh_dir}{abs(eqh_dist):.1f}%)\n"
+                    eqh_eql_str += f"   → Główna płynność powyżej (major)\n"
+                    eqh_eql_str += f"   → Zakres: ${eqh_range_low:,.0f} - ${eqh_range_high:,.0f}\n"
         
         # LTF EQH (małe - minor liquidity)  
         if eqh_ltf_detected:
@@ -2806,14 +2841,11 @@ Select asset:'''
         await query.edit_message_text(msg, reply_markup=get_main_keyboard())
     
     elif data == 'btc':
-        await query.edit_message_text("⏳ Loading BTC data...")
         quote = get_quote('BTC/USD')
         if quote and 'close' in quote:
             msg = format_price_message('BTC/USD', 'BITCOIN', '₿', quote)
             change = float(quote.get('percent_change', 0))
-            # Zawsze pokaż pełne dane
             await query.edit_message_text(msg, reply_markup=get_back_button())
-            # 50% szans na bonus GIF!
             if should_show_random_gif():
                 gif = get_random_trading_gif(change)
                 caption = get_gif_caption(change)
