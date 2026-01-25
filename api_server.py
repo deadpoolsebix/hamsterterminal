@@ -1408,6 +1408,85 @@ def markets():
     })
 
 
+# ============ WHALE ALERTS ENDPOINT ============
+
+@app.route('/api/whale-alerts', methods=['GET'])
+def whale_alerts():
+    """Generate realistic whale transfer alerts based on market conditions"""
+    import random
+    
+    btc_price = cache.get('btc_price', 95000)
+    btc_change = cache.get('btc_change', 0)
+    
+    # Generate realistic transfers based on market direction
+    types = ['BUY', 'SELL', 'TRANSFER']
+    
+    # Bias towards buys if price is going up, sells if going down
+    if btc_change > 1:
+        type_weights = [0.5, 0.2, 0.3]  # More buys
+    elif btc_change < -1:
+        type_weights = [0.2, 0.5, 0.3]  # More sells
+    else:
+        type_weights = [0.33, 0.33, 0.34]  # Balanced
+    
+    sources = [
+        'Binance → Cold Wallet',
+        'Coinbase → OTC Desk',
+        'Kraken → Unknown Wallet',
+        'Whale Wallet → Binance',
+        'OTC Desk → Institutional',
+        'Cold Storage → Exchange',
+        'Fund Rebalancing',
+        'Tether Treasury',
+        'MicroStrategy',
+        'Mining Pool → Exchange',
+        'Grayscale GBTC',
+        'Fidelity Digital',
+        'BlackRock ETF',
+        'Cumberland',
+        'Jump Trading'
+    ]
+    
+    transfers = []
+    num_transfers = random.randint(1, 3)
+    
+    for i in range(num_transfers):
+        # Weighted random type
+        r = random.random()
+        if r < type_weights[0]:
+            transfer_type = 'BUY'
+        elif r < type_weights[0] + type_weights[1]:
+            transfer_type = 'SELL'
+        else:
+            transfer_type = 'TRANSFER'
+        
+        # Realistic amount distribution (more small, fewer large)
+        amount_base = random.choice([100, 200, 300, 500, 800, 1000, 1500, 2000, 2500, 3000])
+        amount = amount_base + random.randint(0, 200)
+        
+        source = random.choice(sources)
+        price = btc_price + random.uniform(-100, 100)
+        value_usd = amount * price
+        
+        transfers.append({
+            'id': int(time.time() * 1000) + i,
+            'type': transfer_type,
+            'amount': amount,
+            'source': source,
+            'price': round(price, 2),
+            'valueUSD': round(value_usd, 2),
+            'timestamp': datetime.now().isoformat(),
+            'isNew': True
+        })
+    
+    return jsonify({
+        'ok': True,
+        'transfers': transfers,
+        'marketBias': 'bullish' if btc_change > 0 else 'bearish' if btc_change < 0 else 'neutral',
+        'timestamp': datetime.now().isoformat()
+    })
+
+
 # ============ NEW TWELVE DATA ENDPOINTS ============
 
 @app.route('/api/market-movers', methods=['GET'])
