@@ -3643,12 +3643,23 @@
     <!-- OPEN INTEREST CHART - Dark theme matching chart -->
     <div style="background: #0d0d0d; border: 1px solid #1a1a1a; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
       <!-- Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #1a1a1a;">
-        <div>
-          <div style="color: #ffffff; font-weight: 700; font-size: 1.1em; letter-spacing: 1px;">OPEN INTEREST</div>
-          <div style="color: #666666; font-size: 0.8em; margin-top: 2px;">BTC Perpetual Futures</div>
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #1a1a1a;">
+        <div style="flex: 1;">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <div>
+              <div style="color: #ffffff; font-weight: 700; font-size: 1.1em; letter-spacing: 1px;">OPEN INTEREST</div>
+              <div style="color: #666666; font-size: 0.8em; margin-top: 2px;">BTC Perpetual Futures</div>
+            </div>
+            <span style="color: #333333;">|</span>
+            <div style="flex: 1; min-width: 300px;">
+              <div style="color: #555555; font-size: 0.75em; margin-bottom: 2px;">OI ANALYSIS</div>
+              <div id="oiAnalysisText" style="color: #888888; font-size: 0.85em; line-height: 1.4;">
+                OI rosnące - rynek w konsolidacji. Czekaj na wyraźny sygnał kierunku przed zajęciem pozycji.
+              </div>
+            </div>
+          </div>
         </div>
-        <div style="text-align: right;">
+        <div style="text-align: right; margin-left: 16px;">
           <div id="totalOI" style="color: #ffffff; font-size: 1.4em; font-weight: 700;">$12.45B</div>
           <div id="oiChange24h" style="color: #089981; font-size: 0.9em;">+2.8% (24h)</div>
         </div>
@@ -3724,14 +3735,6 @@
             <div id="oiStrengthFill" style="width: 50%; height: 100%; background: #555555; border-radius: 4px; transition: all 0.3s;"></div>
           </div>
           <div id="oiStrengthValue" style="color: #555555; font-size: 0.8em; margin-top: 2px;">50%</div>
-        </div>
-      </div>
-
-      <!-- OI Analysis -->
-      <div style="background: #0a0a0a; border-radius: 6px; padding: 16px; margin-top: 16px; border-left: 3px solid #333333;">
-        <div style="color: #666666; font-size: 0.85em; margin-bottom: 10px;">OI ANALYSIS</div>
-        <div id="oiAnalysisText" style="color: #cccccc; font-size: 0.95em; line-height: 1.6;">
-          OI rosnące - rynek w konsolidacji. Czekaj na wyraźny sygnał kierunku przed zajęciem pozycji.
         </div>
       </div>
 
