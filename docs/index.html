@@ -3508,12 +3508,14 @@
         <text x="1100" y="315" fill="#fff" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace">NOW</text>
 
         <!-- SUPPORT/RESISTANCE LINES -->
-        <line id="resistanceLine" x1="60" y1="65" x2="1140" y2="65" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
-        <line id="supportLine" x1="60" y1="235" x2="1140" y2="235" stroke="#666" stroke-width="1" stroke-dasharray="4,4" opacity="0.7"/>
+        <line id="resistanceLine" x1="60" y1="65" x2="1140" y2="65" stroke="#ff4444" stroke-width="1.5" stroke-dasharray="8,4" opacity="0.8"/>
+        <line id="supportLine" x1="60" y1="235" x2="1140" y2="235" stroke="#00ff88" stroke-width="1.5" stroke-dasharray="8,4" opacity="0.8"/>
         
         <!-- RESISTANCE/SUPPORT LABELS -->
-        <text id="resistanceLabel" x="1145" y="68" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">R $97.5k</text>
-        <text id="supportLabel" x="1145" y="238" fill="#888" font-size="10" font-family="Consolas, Monaco, monospace">S $94.5k</text>
+        <rect x="1145" y="56" width="50" height="18" fill="#1a0000" stroke="#ff4444" stroke-width="1" rx="2"/>
+        <text id="resistanceLabel" x="1170" y="69" fill="#ff4444" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace" text-anchor="middle">R $97.5k</text>
+        <rect x="1145" y="226" width="50" height="18" fill="#001a00" stroke="#00ff88" stroke-width="1" rx="2"/>
+        <text id="supportLabel" x="1170" y="239" fill="#00ff88" font-size="10" font-weight="600" font-family="Consolas, Monaco, monospace" text-anchor="middle">S $94.5k</text>
 
         <!-- EMA 50 LINE -->
         <polyline id="emaLine50" points="80,210 180,200 280,185 380,190 480,175 580,160 680,165 780,155 880,160 980,155 1080,150" 
@@ -3538,16 +3540,20 @@
           </linearGradient>
         </defs>
 
-        <!-- BUY SIGNAL -->
+        <!-- BUY SIGNAL - GREEN ARROW -->
         <g id="buySignalGroup">
-          <circle id="buySignalCircle" cx="380" cy="155" r="4" fill="#fff" stroke="#888" stroke-width="1"/>
-          <text id="buySignalText" x="380" y="175" fill="#fff" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">BUY</text>
+          <!-- Arrow pointing up -->
+          <polygon id="buySignalArrow" points="380,175 370,195 375,195 375,210 385,210 385,195 390,195" fill="#00ff88" stroke="#00cc66" stroke-width="1"/>
+          <rect x="358" y="212" width="44" height="18" fill="#001a00" stroke="#00ff88" stroke-width="1" rx="3"/>
+          <text id="buySignalText" x="380" y="225" fill="#00ff88" text-anchor="middle" font-size="11" font-weight="700" font-family="Consolas, Monaco, monospace">BUY</text>
         </g>
 
-        <!-- SELL SIGNAL -->
+        <!-- SELL SIGNAL - RED ARROW -->
         <g id="sellSignalGroup">
-          <circle id="sellSignalCircle" cx="880" cy="120" r="4" fill="#888" stroke="#666" stroke-width="1"/>
-          <text id="sellSignalText" x="880" y="108" fill="#888" text-anchor="middle" font-size="10" font-weight="400" font-family="Consolas, Monaco, monospace">SELL</text>
+          <!-- Arrow pointing down -->
+          <polygon id="sellSignalArrow" points="880,95 870,75 875,75 875,60 885,60 885,75 890,75" fill="#ff4444" stroke="#cc3333" stroke-width="1"/>
+          <rect x="858" y="40" width="44" height="18" fill="#1a0000" stroke="#ff4444" stroke-width="1" rx="3"/>
+          <text id="sellSignalText" x="880" y="53" fill="#ff4444" text-anchor="middle" font-size="11" font-weight="700" font-family="Consolas, Monaco, monospace">SELL</text>
         </g>
 
         <!-- CURRENT PRICE TAG -->
@@ -3569,32 +3575,52 @@
       </svg>
     </div>
 
-    <!-- RSI INDICATOR -->
-    <div style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 12px; height: 100px; margin-top: -10px;">
-      <svg class="chart-svg" viewBox="0 0 1200 80" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
+    <!-- RSI INDICATOR - ENLARGED -->
+    <div style="background: #000000; border: 1px solid #1a1a1a; border-top: none; padding: 16px; height: 160px; margin-top: -10px;">
+      <svg class="chart-svg" viewBox="0 0 1200 140" preserveAspectRatio="xMidYMid meet" style="width: 100%; height: 100%;">
+        <!-- RSI ZONES BACKGROUND -->
+        <!-- OVERBOUGHT ZONE (70-100) - Subtle red -->
+        <rect x="60" y="0" width="1080" height="42" fill="#ff0000" opacity="0.05"/>
+        <!-- OVERSOLD ZONE (0-30) - Subtle green -->
+        <rect x="60" y="98" width="1080" height="42" fill="#00ff00" opacity="0.05"/>
+        
         <!-- RSI LEVEL LINES -->
-        <line x1="60" y1="12" x2="1140" y2="12" stroke="#222222" stroke-width="1" stroke-dasharray="4,4"/>
-        <text x="65" y="10" fill="#444444" font-size="8">OVERBOUGHT (70)</text>
+        <line x1="60" y1="0" x2="1140" y2="0" stroke="#333333" stroke-width="1"/>
+        <line x1="60" y1="42" x2="1140" y2="42" stroke="#ff4444" stroke-width="1" stroke-dasharray="6,4"/>
+        <text x="65" y="38" fill="#ff4444" font-size="11" font-weight="600">OVERBOUGHT (70) - SELL ZONE</text>
+        
+        <line x1="60" y1="98" x2="1140" y2="98" stroke="#00ff88" stroke-width="1" stroke-dasharray="6,4"/>
+        <text x="65" y="115" fill="#00ff88" font-size="11" font-weight="600">OVERSOLD (30) - BUY ZONE</text>
+        
+        <line x1="60" y1="140" x2="1140" y2="140" stroke="#333333" stroke-width="1"/>
 
-        <line x1="60" y1="68" x2="1140" y2="68" stroke="#222222" stroke-width="1" stroke-dasharray="4,4"/>
-        <text x="65" y="78" fill="#444444" font-size="8">OVERSOLD (30)</text>
+        <!-- RSI MIDLINE (50) -->
+        <line x1="60" y1="70" x2="1140" y2="70" stroke="#333333" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="1145" y="73" fill="#555555" font-size="10">50</text>
 
-        <!-- RSI MIDLINE (50) - Solid -->
-        <line x1="60" y1="40" x2="1140" y2="40" stroke="#1a1a1a" stroke-width="1"/>
-        <text x="1145" y="43" fill="#333333" font-size="8">50</text>
+        <!-- Y-AXIS LABELS -->
+        <text x="20" y="8" fill="#666666" font-size="11" font-weight="600">100</text>
+        <text x="25" y="45" fill="#ff4444" font-size="10">70</text>
+        <text x="25" y="73" fill="#555555" font-size="10">50</text>
+        <text x="25" y="102" fill="#00ff88" font-size="10">30</text>
+        <text x="35" y="138" fill="#666666" font-size="11" font-weight="600">0</text>
 
         <!-- RSI LINE -->
-        <polyline id="rsiLine" points="80,28 180,30 280,34 380,32 480,38 580,42 680,40 780,46 880,50 980,46 1080,44" 
-                  stroke="#d4a856" stroke-width="2" fill="none"/>
-
-        <!-- AXIS LABELS -->
-        <text x="35" y="12" fill="#333333" font-size="8">100</text>
-        <text x="40" y="43" fill="#333333" font-size="8">50</text>
-        <text x="45" y="75" fill="#333333" font-size="8">0</text>
+        <polyline id="rsiLine" points="80,56 180,58 280,62 380,60 480,66 580,70 680,68 780,74 880,78 980,74 1080,72" 
+                  stroke="#d4a856" stroke-width="2.5" fill="none"/>
 
         <!-- RSI CURRENT VALUE -->
-        <circle id="rsiCurrentDot" cx="1080" cy="44" r="3" fill="#d4a856"/>
-        <text id="rsiCurrentLabel" x="1020" y="28" fill="#d4a856" font-size="9" font-weight="600">RSI: 55</text>
+        <circle id="rsiCurrentDot" cx="1080" cy="72" r="5" fill="#d4a856" stroke="#ffffff" stroke-width="1"/>
+        <rect id="rsiValueBg" x="1085" y="60" width="50" height="22" fill="#1a1a1a" stroke="#d4a856" stroke-width="1" rx="2"/>
+        <text id="rsiCurrentLabel" x="1110" y="76" fill="#00ff88" font-size="13" font-weight="700" text-anchor="middle">RSI: 45</text>
+        
+        <!-- RSI SIGNAL INDICATOR -->
+        <g id="rsiSignalGroup">
+          <text id="rsiSignalText" x="600" y="130" fill="#666666" font-size="11" font-weight="600" text-anchor="middle">NEUTRAL ZONE</text>
+        </g>
+        
+        <!-- TIMEFRAME SYNC INDICATOR -->
+        <text id="rsiTimeframeLabel" x="1140" y="130" fill="#444444" font-size="9" text-anchor="end">TF: 1D</text>
       </svg>
     </div>
 
@@ -6552,11 +6578,11 @@
         
         const points = chartData.points;
         
-        // RSI chart dimensions
-        const rsiLeft = 80;
-        const rsiRight = 780;
-        const rsiTop = 10;
-        const rsiBottom = 90;
+        // RSI chart dimensions - ENLARGED
+        const rsiLeft = 60;
+        const rsiRight = 1080;
+        const rsiTop = 0;
+        const rsiBottom = 140;
         const rsiWidth = rsiRight - rsiLeft;
         const rsiHeight = rsiBottom - rsiTop;
         
@@ -6607,6 +6633,8 @@
         // Update RSI current value display
         const rsiCurrentDot = document.getElementById('rsiCurrentDot');
         const rsiCurrentLabel = document.getElementById('rsiCurrentLabel');
+        const rsiSignalText = document.getElementById('rsiSignalText');
+        const rsiTimeframeLabel = document.getElementById('rsiTimeframeLabel');
         const lastY = rsiToY(currentRSI);
         
         if (rsiCurrentDot) {
@@ -6614,17 +6642,51 @@
           rsiCurrentDot.setAttribute('cy', lastY.toFixed(0));
         }
         
+        // Update RSI value background position
+        const rsiValueBg = document.getElementById('rsiValueBg');
+        if (rsiValueBg) {
+          rsiValueBg.setAttribute('y', (lastY - 12).toFixed(0));
+        }
+        
         if (rsiCurrentLabel) {
           rsiCurrentLabel.textContent = `RSI: ${currentRSI.toFixed(0)}`;
-          rsiCurrentLabel.setAttribute('y', (lastY - 10).toFixed(0));
+          rsiCurrentLabel.setAttribute('y', (lastY + 4).toFixed(0));
           // Color based on RSI zones
           if (currentRSI >= 70) {
-            rsiCurrentLabel.setAttribute('fill', 'var(--red)');
+            rsiCurrentLabel.setAttribute('fill', '#ff4444');
+            rsiCurrentDot?.setAttribute('fill', '#ff4444');
           } else if (currentRSI <= 30) {
-            rsiCurrentLabel.setAttribute('fill', 'var(--green)');
+            rsiCurrentLabel.setAttribute('fill', '#00ff88');
+            rsiCurrentDot?.setAttribute('fill', '#00ff88');
           } else {
-            rsiCurrentLabel.setAttribute('fill', 'var(--orange)');
+            rsiCurrentLabel.setAttribute('fill', '#d4a856');
+            rsiCurrentDot?.setAttribute('fill', '#d4a856');
           }
+        }
+        
+        // Update RSI signal text
+        if (rsiSignalText) {
+          if (currentRSI >= 70) {
+            rsiSignalText.textContent = '⚠️ OVERBOUGHT - SELL SIGNAL';
+            rsiSignalText.setAttribute('fill', '#ff4444');
+          } else if (currentRSI <= 30) {
+            rsiSignalText.textContent = '✅ OVERSOLD - BUY SIGNAL';
+            rsiSignalText.setAttribute('fill', '#00ff88');
+          } else if (currentRSI >= 60) {
+            rsiSignalText.textContent = '📈 BULLISH MOMENTUM';
+            rsiSignalText.setAttribute('fill', '#888888');
+          } else if (currentRSI <= 40) {
+            rsiSignalText.textContent = '📉 BEARISH MOMENTUM';
+            rsiSignalText.setAttribute('fill', '#888888');
+          } else {
+            rsiSignalText.textContent = '➖ NEUTRAL ZONE';
+            rsiSignalText.setAttribute('fill', '#555555');
+          }
+        }
+        
+        // Update timeframe label
+        if (rsiTimeframeLabel) {
+          rsiTimeframeLabel.textContent = `TF: ${timeframe.toUpperCase()}`;
         }
         
         // Update RSI value in other places
