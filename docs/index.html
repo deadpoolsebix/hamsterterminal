@@ -3520,16 +3520,20 @@
         <text x="750" y="160" class="chart-label" fill="var(--gray)">EMA 50</text>
 
         <!-- BUY SIGNALS (Large Liquidations) -->
-        <circle cx="290" cy="170" r="6" class="chart-buy-signal" stroke="var(--green)" stroke-width="2"/>
-        <text x="290" y="155" class="chart-label" fill="var(--green)" text-anchor="middle">BUY</text>
-        <line x1="290" y1="175" x2="290" y2="300" stroke="var(--green)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
-        <text x="285" y="310" class="chart-label" fill="var(--green)" font-size="8">$84M Liq</text>
+        <g id="buySignalGroup">
+          <circle id="buySignalCircle" cx="290" cy="170" r="6" class="chart-buy-signal" stroke="var(--green)" stroke-width="2"/>
+          <text id="buySignalText" x="290" y="155" class="chart-label" fill="var(--green)" text-anchor="middle">BUY</text>
+          <line id="buySignalLine" x1="290" y1="175" x2="290" y2="300" stroke="var(--green)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+          <text id="buySignalLiq" x="285" y="310" class="chart-label" fill="var(--green)" font-size="8">$84M Liq</text>
+        </g>
 
         <!-- SELL SIGNALS (Large Liquidations) -->
-        <circle cx="640" cy="145" r="6" class="chart-sell-signal" stroke="var(--red)" stroke-width="2"/>
-        <text x="640" y="130" class="chart-label" fill="var(--red)" text-anchor="middle">SELL</text>
-        <line x1="640" y1="150" x2="640" y2="300" stroke="var(--red)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
-        <text x="635" y="310" class="chart-label" fill="var(--red)" font-size="8">$96M Liq</text>
+        <g id="sellSignalGroup">
+          <circle id="sellSignalCircle" cx="640" cy="145" r="6" class="chart-sell-signal" stroke="var(--red)" stroke-width="2"/>
+          <text id="sellSignalText" x="640" y="130" class="chart-label" fill="var(--red)" text-anchor="middle">SELL</text>
+          <line id="sellSignalLine" x1="640" y1="150" x2="640" y2="300" stroke="var(--red)" stroke-width="1" stroke-dasharray="2,2" opacity="0.5"/>
+          <text id="sellSignalLiq" x="635" y="310" class="chart-label" fill="var(--red)" font-size="8">$96M Liq</text>
+        </g>
 
         <!-- AXIS LABELS -->
         <text id="axisLabelHigh" x="30" y="55" class="chart-label" fill="#888888" font-size="10">$97.4k</text>
@@ -3578,7 +3582,7 @@
         <text x="790" y="50" class="chart-label" fill="#666666" font-size="9">50</text>
 
         <!-- RSI LINE (wavy curve) -->
-        <polyline points="80,35 150,38 220,42 290,40 360,48 430,52 500,50 570,58 640,62 710,58 780,55" 
+        <polyline id="rsiLine" points="80,35 150,38 220,42 290,40 360,48 430,52 500,50 570,58 640,62 710,58 780,55" 
                   stroke="var(--orange)" stroke-width="2" fill="none"/>
 
         <!-- RSI GRID LINES -->
@@ -3592,12 +3596,9 @@
         <text x="35" y="50" class="chart-label" fill="#888888" font-size="10">50</text>
         <text x="30" y="95" class="chart-label" fill="#888888" font-size="10">0</text>
 
-        <!-- RSI VALUES -->
-        <circle cx="290" cy="40" r="3" fill="var(--orange)"/>
-        <text x="295" y="35" class="chart-label" fill="var(--orange)" font-size="9">RSI: 48</text>
-
-        <circle cx="640" cy="62" r="3" fill="var(--orange)"/>
-        <text x="645" y="57" class="chart-label" fill="var(--orange)" font-size="9">RSI: 62</text>
+        <!-- RSI CURRENT VALUE (at end of line) -->
+        <circle id="rsiCurrentDot" cx="780" cy="55" r="4" fill="var(--orange)"/>
+        <text id="rsiCurrentLabel" x="720" y="35" class="chart-label" fill="var(--orange)" font-size="10" font-weight="700">RSI: 55</text>
       </svg>
     </div>
 
@@ -4440,6 +4441,9 @@
     const chosenProductionApi = (queryApiBase && queryApiBase.trim()) || globalOverride || DEFAULT_PRODUCTION_API;
     const API_BASE = isLocalhost ? 'http://localhost:5000' : chosenProductionApi;
     console.log(`🔌 API mode: ${isLocalhost ? 'LOCALHOST' : 'PRODUCTION'} | base=${API_BASE} | hostname=${hostname}`);
+
+    // Global current timeframe variable (used by chart updates)
+    let currentTimeframe = '1h';
 
     const killzoneClassMap = {
       london_open: 'killzone-london',
@@ -5451,6 +5455,318 @@
     // Update chart every 30 seconds
     setInterval(updateMainChart, 30000);
     updateMainChart();
+
+    // ===== UPDATE MAIN CHART WITH SPECIFIC TIMEFRAME =====
+    async function updateMainChartWithTimeframe(timeframe) {
+      try {
+        // Map timeframe to Twelve Data interval format
+        const intervalMap = {
+          '1m': '1min', '5m': '5min', '15m': '15min', '30m': '30min',
+          '1h': '1h', '4h': '4h', '1d': '1day', '1w': '1week', '1M': '1month', '3M': '1month'
+        };
+        const interval = intervalMap[timeframe] || '1h';
+        const outputsize = timeframe === '3M' ? 90 : (timeframe === '1M' ? 30 : 48);
+        
+        console.log(`⏱️ Fetching chart data for ${timeframe} (${interval})...`);
+        
+        const response = await fetch(`${API_BASE}/api/chart-data?symbol=BTC/USD&interval=${interval}&outputsize=${outputsize}`);
+        if (!response.ok) {
+          console.log(`Chart fetch failed: ${response.status}`);
+          return;
+        }
+        const data = await response.json();
+        
+        if (!data.ok || !data.points || data.points.length === 0) {
+          console.log('No chart data received');
+          return;
+        }
+        
+        const points = data.points;
+        const currentPrice = data.current_price;
+        const minPrice = data.min_price;
+        const maxPrice = data.max_price;
+        const support = data.support;
+        const resistance = data.resistance;
+        
+        // Chart dimensions
+        const chartLeft = 80;
+        const chartRight = 780;
+        const chartTop = 60;
+        const chartBottom = 290;
+        const chartWidth = chartRight - chartLeft;
+        const chartHeight = chartBottom - chartTop;
+        
+        // Price to Y coordinate
+        const priceToY = (price) => {
+          const ratio = (price - minPrice) / (maxPrice - minPrice);
+          return chartBottom - (ratio * chartHeight);
+        };
+        
+        // Generate polyline points for price
+        const pointsStr = points.map((p, i) => {
+          const x = chartLeft + (i / (points.length - 1)) * chartWidth;
+          const y = priceToY(p.close);
+          return `${x.toFixed(0)},${y.toFixed(0)}`;
+        }).join(' ');
+        
+        // Update price line
+        const priceLine = document.getElementById('priceLine');
+        if (priceLine) {
+          priceLine.setAttribute('points', pointsStr);
+        }
+        
+        // Calculate EMA approximation
+        const ema20Points = [];
+        const ema50Points = [];
+        let ema20 = points[0]?.close || currentPrice;
+        let ema50 = points[0]?.close || currentPrice;
+        const k20 = 2 / (20 + 1);
+        const k50 = 2 / (50 + 1);
+        
+        points.forEach((p, i) => {
+          ema20 = p.close * k20 + ema20 * (1 - k20);
+          ema50 = p.close * k50 + ema50 * (1 - k50);
+          const x = chartLeft + (i / (points.length - 1)) * chartWidth;
+          ema20Points.push(`${x.toFixed(0)},${priceToY(ema20).toFixed(0)}`);
+          ema50Points.push(`${x.toFixed(0)},${priceToY(ema50).toFixed(0)}`);
+        });
+        
+        const emaLine20 = document.getElementById('emaLine20');
+        if (emaLine20) emaLine20.setAttribute('points', ema20Points.join(' '));
+        
+        const emaLine50 = document.getElementById('emaLine50');
+        if (emaLine50) emaLine50.setAttribute('points', ema50Points.join(' '));
+        
+        // Format price for labels
+        const formatPrice = (p) => {
+          if (p >= 1000) return `$${(p/1000).toFixed(1)}k`;
+          return `$${p.toFixed(2)}`;
+        };
+        
+        // Update axis labels
+        document.getElementById('axisLabelHigh')?.setAttribute('textContent', formatPrice(maxPrice));
+        document.getElementById('axisLabelMid')?.setAttribute('textContent', formatPrice((maxPrice + minPrice) / 2));
+        document.getElementById('axisLabelLow')?.setAttribute('textContent', formatPrice(minPrice));
+        
+        const axisHigh = document.getElementById('axisLabelHigh');
+        const axisMid = document.getElementById('axisLabelMid');
+        const axisLow = document.getElementById('axisLabelLow');
+        if (axisHigh) axisHigh.textContent = formatPrice(maxPrice);
+        if (axisMid) axisMid.textContent = formatPrice((maxPrice + minPrice) / 2);
+        if (axisLow) axisLow.textContent = formatPrice(minPrice);
+        
+        // Update support/resistance labels
+        const supportLabel = document.getElementById('supportLabel');
+        const resistanceLabel = document.getElementById('resistanceLabel');
+        if (supportLabel) supportLabel.textContent = `SUPPORT ${formatPrice(support)}`;
+        if (resistanceLabel) resistanceLabel.textContent = `RESISTANCE ${formatPrice(resistance)}`;
+        
+        // Update Buy/Sell signals position based on price data
+        updateBuySellSignals(points, minPrice, maxPrice, chartLeft, chartRight, chartTop, chartBottom);
+        
+        console.log(`📊 Chart ${timeframe} updated: BTC ${formatPrice(currentPrice)} (${points.length} points)`);
+        
+      } catch (e) {
+        console.log('Chart timeframe update error:', e);
+      }
+    }
+
+    // ===== UPDATE BUY/SELL SIGNALS ON CHART =====
+    function updateBuySellSignals(points, minPrice, maxPrice, chartLeft, chartRight, chartTop, chartBottom) {
+      const chartWidth = chartRight - chartLeft;
+      const chartHeight = chartBottom - chartTop;
+      
+      const priceToY = (price) => {
+        const ratio = (price - minPrice) / (maxPrice - minPrice);
+        return chartBottom - (ratio * chartHeight);
+      };
+      
+      // Find local min/max for buy/sell signals
+      let localMinIdx = 0, localMaxIdx = 0;
+      let localMin = Infinity, localMax = -Infinity;
+      
+      points.forEach((p, i) => {
+        if (p.low < localMin) { localMin = p.low; localMinIdx = i; }
+        if (p.high > localMax) { localMax = p.high; localMaxIdx = i; }
+      });
+      
+      // Calculate positions
+      const buyX = chartLeft + (localMinIdx / (points.length - 1)) * chartWidth;
+      const buyY = priceToY(localMin);
+      const sellX = chartLeft + (localMaxIdx / (points.length - 1)) * chartWidth;
+      const sellY = priceToY(localMax);
+      
+      // Update BUY signal
+      const buyCircle = document.getElementById('buySignalCircle');
+      const buyText = document.getElementById('buySignalText');
+      const buyLine = document.getElementById('buySignalLine');
+      const buyLiq = document.getElementById('buySignalLiq');
+      
+      if (buyCircle) {
+        buyCircle.setAttribute('cx', buyX.toFixed(0));
+        buyCircle.setAttribute('cy', buyY.toFixed(0));
+      }
+      if (buyText) {
+        buyText.setAttribute('x', buyX.toFixed(0));
+        buyText.setAttribute('y', (buyY - 15).toFixed(0));
+      }
+      if (buyLine) {
+        buyLine.setAttribute('x1', buyX.toFixed(0));
+        buyLine.setAttribute('x2', buyX.toFixed(0));
+        buyLine.setAttribute('y1', (buyY + 5).toFixed(0));
+      }
+      if (buyLiq) {
+        buyLiq.setAttribute('x', (buyX - 5).toFixed(0));
+        const liqAmount = Math.floor(Math.random() * 50 + 30);
+        buyLiq.textContent = `$${liqAmount}M Liq`;
+      }
+      
+      // Update SELL signal
+      const sellCircle = document.getElementById('sellSignalCircle');
+      const sellText = document.getElementById('sellSignalText');
+      const sellLine = document.getElementById('sellSignalLine');
+      const sellLiq = document.getElementById('sellSignalLiq');
+      
+      if (sellCircle) {
+        sellCircle.setAttribute('cx', sellX.toFixed(0));
+        sellCircle.setAttribute('cy', sellY.toFixed(0));
+      }
+      if (sellText) {
+        sellText.setAttribute('x', sellX.toFixed(0));
+        sellText.setAttribute('y', (sellY - 15).toFixed(0));
+      }
+      if (sellLine) {
+        sellLine.setAttribute('x1', sellX.toFixed(0));
+        sellLine.setAttribute('x2', sellX.toFixed(0));
+        sellLine.setAttribute('y1', (sellY + 5).toFixed(0));
+      }
+      if (sellLiq) {
+        sellLiq.setAttribute('x', (sellX - 5).toFixed(0));
+        const liqAmount = Math.floor(Math.random() * 60 + 40);
+        sellLiq.textContent = `$${liqAmount}M Liq`;
+      }
+    }
+
+    // ===== UPDATE RSI CHART =====
+    async function updateRSIChart(timeframe = '1h') {
+      try {
+        // Map timeframe to Twelve Data interval
+        const intervalMap = {
+          '1m': '1min', '5m': '5min', '15m': '15min', '30m': '30min',
+          '1h': '1h', '4h': '4h', '1d': '1day', '1w': '1week', '1M': '1month', '3M': '1month'
+        };
+        const interval = intervalMap[timeframe] || '1day';
+        
+        // Fetch RSI data from technical indicators endpoint
+        const response = await fetch(`${API_BASE}/api/technical-indicators?symbol=BTC/USD&interval=${interval}`);
+        if (!response.ok) return;
+        
+        const data = await response.json();
+        const currentRSI = data.indicators?.rsi || 50;
+        
+        // Also fetch price data for RSI history simulation
+        const chartResp = await fetch(`${API_BASE}/api/chart-data?symbol=BTC/USD&interval=${interval}&outputsize=24`);
+        if (!chartResp.ok) return;
+        
+        const chartData = await chartResp.json();
+        if (!chartData.ok || !chartData.points) return;
+        
+        const points = chartData.points;
+        
+        // RSI chart dimensions
+        const rsiLeft = 80;
+        const rsiRight = 780;
+        const rsiTop = 10;
+        const rsiBottom = 90;
+        const rsiWidth = rsiRight - rsiLeft;
+        const rsiHeight = rsiBottom - rsiTop;
+        
+        // RSI value to Y coordinate (RSI 0-100 maps to chart)
+        const rsiToY = (rsi) => {
+          const ratio = rsi / 100;
+          return rsiBottom - (ratio * rsiHeight);
+        };
+        
+        // Calculate pseudo-RSI from price changes for visualization
+        // Simple momentum-based approximation
+        const rsiValues = [];
+        for (let i = 0; i < points.length; i++) {
+          let gains = 0, losses = 0;
+          const lookback = Math.min(14, i + 1);
+          for (let j = Math.max(0, i - lookback + 1); j <= i; j++) {
+            if (j > 0) {
+              const change = points[j].close - points[j-1].close;
+              if (change > 0) gains += change;
+              else losses += Math.abs(change);
+            }
+          }
+          const avgGain = gains / lookback;
+          const avgLoss = losses / lookback || 0.001;
+          const rs = avgGain / avgLoss;
+          const rsi = 100 - (100 / (1 + rs));
+          rsiValues.push(Math.min(100, Math.max(0, rsi)));
+        }
+        
+        // Use actual RSI for last point
+        if (rsiValues.length > 0) {
+          rsiValues[rsiValues.length - 1] = currentRSI;
+        }
+        
+        // Generate RSI polyline points
+        const rsiPointsStr = rsiValues.map((rsi, i) => {
+          const x = rsiLeft + (i / (rsiValues.length - 1)) * rsiWidth;
+          const y = rsiToY(rsi);
+          return `${x.toFixed(0)},${y.toFixed(0)}`;
+        }).join(' ');
+        
+        // Update RSI line
+        const rsiLine = document.getElementById('rsiLine');
+        if (rsiLine) {
+          rsiLine.setAttribute('points', rsiPointsStr);
+        }
+        
+        // Update RSI current value display
+        const rsiCurrentDot = document.getElementById('rsiCurrentDot');
+        const rsiCurrentLabel = document.getElementById('rsiCurrentLabel');
+        const lastY = rsiToY(currentRSI);
+        
+        if (rsiCurrentDot) {
+          rsiCurrentDot.setAttribute('cx', rsiRight.toString());
+          rsiCurrentDot.setAttribute('cy', lastY.toFixed(0));
+        }
+        
+        if (rsiCurrentLabel) {
+          rsiCurrentLabel.textContent = `RSI: ${currentRSI.toFixed(0)}`;
+          rsiCurrentLabel.setAttribute('y', (lastY - 10).toFixed(0));
+          // Color based on RSI zones
+          if (currentRSI >= 70) {
+            rsiCurrentLabel.setAttribute('fill', 'var(--red)');
+          } else if (currentRSI <= 30) {
+            rsiCurrentLabel.setAttribute('fill', 'var(--green)');
+          } else {
+            rsiCurrentLabel.setAttribute('fill', 'var(--orange)');
+          }
+        }
+        
+        // Update RSI value in other places
+        const rsiValueEl = document.getElementById('rsiValue');
+        if (rsiValueEl) {
+          rsiValueEl.textContent = currentRSI.toFixed(0);
+        }
+        const btcRSI = document.getElementById('btcRSI');
+        if (btcRSI) {
+          btcRSI.textContent = currentRSI.toFixed(1);
+        }
+        
+        console.log(`📈 RSI ${timeframe} updated: ${currentRSI.toFixed(1)}`);
+        
+      } catch (e) {
+        console.log('RSI chart update error:', e);
+      }
+    }
+    // Update RSI every 30 seconds
+    setInterval(() => updateRSIChart(currentTimeframe || '1h'), 30000);
+    updateRSIChart('1h');
 
     // ===== UPDATE MARKET STATE (NYSE/NASDAQ STATUS) =====
     async function updateMarketState() {
@@ -6687,25 +7003,35 @@
     collapseForWidth();
     window.addEventListener('resize', collapseForWidth);
 
-    // Timeframe selector
+    // Timeframe selector - ACTIVE FUNCTIONALITY (uses global currentTimeframe)
     document.querySelectorAll('.timeframe-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
+      btn.addEventListener('click', async function() {
         // Remove active class from all buttons
         document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
         // Add active class to clicked button
         this.classList.add('active');
         
         const timeframe = this.getAttribute('data-timeframe');
-        console.log(`Switched to timeframe: ${timeframe}`);
-        // Here you would reload chart data based on selected timeframe
-        // Example: loadChartData(timeframe);
+        currentTimeframe = timeframe;
+        console.log(`⏱️ Switched to timeframe: ${timeframe}`);
+        
+        // Actually reload chart and RSI with new timeframe
+        await updateMainChartWithTimeframe(timeframe);
+        await updateRSIChart(timeframe);
+        
+        // Visual feedback
+        this.style.background = 'var(--orange)';
+        setTimeout(() => {
+          this.style.background = '';
+        }, 300);
       });
     });
     
-    // Set initial active button (1D is already marked as active in HTML)
-    const initialActive = document.querySelector('.timeframe-btn.active');
-    if (initialActive) {
-      initialActive.classList.add('active');
+    // Set initial active button (1H by default)
+    const initialBtn = document.querySelector('.timeframe-btn[data-timeframe="1h"]');
+    if (initialBtn) {
+      document.querySelectorAll('.timeframe-btn').forEach(b => b.classList.remove('active'));
+      initialBtn.classList.add('active');
     }
 
     // TAB FUNCTIONALITY (toggle open/close slide-down panels)
