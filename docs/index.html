@@ -3679,91 +3679,81 @@
     </div>
     </div>
     
-    <!-- LARGE TRANSFERS (LIVE) - TradingView Style -->
-    <div style="background: #131722; border: 1px solid #2a2e39; padding: 20px; border-radius: 4px;">
+    <!-- LARGE TRANSFERS - Bloomberg Terminal Style -->
+    <div style="background: #000; border: 1px solid #333; padding: 16px; font-family: 'Consolas', 'Monaco', monospace;">
       <!-- Header -->
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #2a2e39;">
-        <div style="color: #d1d4dc; font-weight: 700; font-size: 1.1em; letter-spacing: 0.5px;">WHALE TRANSFERS</div>
-        <div style="color: #787b86; font-size: 0.85em;" id="transfersLastUpdate">Updated: --</div>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 10px; border-bottom: 1px solid #333;">
+        <div style="color: #ff8c00; font-weight: 700; font-size: 0.9em;">WHALE TRANSFERS</div>
+        <div style="color: #888; font-size: 0.8em;" id="transfersLastUpdate">--:--:--</div>
       </div>
       
-      <div id="largeTransfersList" style="font-size: 1em;">
-        <div style="display: flex; justify-content: space-between; padding: 6px 0; color: #888;">Loading data...</div>
+      <div id="largeTransfersList" style="font-size: 0.9em;">
+        <div style="color: #888;">Loading...</div>
       </div>
       
-      <!-- ICEBERG ORDERS SECTION -->
-      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #2a2e39;">
-        <div style="color: #787b86; font-weight: 700; font-size: 0.9em; letter-spacing: 0.5px; margin-bottom: 14px;">ICEBERG ORDERS</div>
-        <div id="icebergOrdersList" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
-          <div style="padding: 12px; border-left: 3px solid #089981; background: rgba(8,153,129,0.05); border-radius: 4px;">
-            <div style="color: #089981; font-weight: 600; font-size: 0.9em;">BUY ICEBERG</div>
-            <div style="color: #d1d4dc; margin: 8px 0; font-size: 1.1em; font-weight: 600;">$94,800 - $95,200</div>
-            <div style="color: #787b86; font-size: 0.9em;">~3,200 BTC</div>
-          </div>
-          <div style="padding: 12px; border-left: 3px solid #f23645; background: rgba(242,54,69,0.05); border-radius: 4px;">
-            <div style="color: #f23645; font-weight: 600; font-size: 0.9em;">SELL ICEBERG</div>
-            <div style="color: #d1d4dc; margin: 8px 0; font-size: 1.1em; font-weight: 600;">$97,400 - $97,800</div>
-            <div style="color: #787b86; font-size: 0.9em;">~2,100 BTC</div>
-          </div>
-          <div style="padding: 12px; border-left: 3px solid #ff9800; background: rgba(255,152,0,0.05); border-radius: 4px;">
-            <div style="color: #ff9800; font-weight: 600; font-size: 0.9em;">HIDDEN</div>
-            <div style="color: #d1d4dc; margin: 8px 0; font-size: 1.1em; font-weight: 600;">$96,000 - $96,500</div>
-            <div style="color: #787b86; font-size: 0.9em;">~1,800 BTC</div>
-          </div>
-        </div>
+      <!-- ICEBERG ORDERS -->
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333;">
+        <div style="color: #ff8c00; font-weight: 700; font-size: 0.8em; margin-bottom: 10px;">ICEBERG ORDERS</div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+          <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 6px 0; color: #888;">BUY</td>
+            <td style="padding: 6px 0; color: #fff; text-align: right;">$94,800 - $95,200</td>
+            <td style="padding: 6px 0; color: #888; text-align: right;">~3,200 BTC</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 6px 0; color: #888;">SELL</td>
+            <td style="padding: 6px 0; color: #fff; text-align: right;">$97,400 - $97,800</td>
+            <td style="padding: 6px 0; color: #888; text-align: right;">~2,100 BTC</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #888;">HIDDEN</td>
+            <td style="padding: 6px 0; color: #fff; text-align: right;">$96,000 - $96,500</td>
+            <td style="padding: 6px 0; color: #888; text-align: right;">~1,800 BTC</td>
+          </tr>
+        </table>
       </div>
       
-      <!-- SESSION COUNTDOWN TIMER -->
-      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #2a2e39;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px;">
-          <div style="color: #787b86; font-weight: 700; font-size: 0.9em; letter-spacing: 0.5px;">SESSION COUNTDOWN</div>
-          <div style="color: #787b86; font-size: 0.85em;" id="frontSessionName">Active session...</div>
-        </div>
+      <!-- SESSION INFO -->
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div style="color: #d1d4dc; font-size: 2em; font-weight: 700; font-family: Arial, sans-serif; letter-spacing: 2px;" id="frontSessionTimer">--:--:--</div>
-          <div style="text-align: right; font-size: 0.9em;">
-            <div style="color: #787b86;">Ends: <span id="frontSessionEndTime" style="color: #d1d4dc;">--:--</span></div>
-            <div style="color: #787b86; margin-top: 6px;">Next: <span id="nextSessionInfo" style="color: #d1d4dc;">--</span></div>
+          <div>
+            <div style="color: #ff8c00; font-weight: 700; font-size: 0.8em;">SESSION</div>
+            <div style="color: #fff; font-size: 1.4em; font-weight: 700; margin-top: 4px;" id="frontSessionTimer">--:--:--</div>
           </div>
-        </div>
-        <div style="margin-top: 14px; display: flex; justify-content: space-between; font-size: 0.85em; color: #787b86;">
-          <span>EU Time: <span id="currentEUTime" style="color: #d1d4dc;">--:--</span></span>
-          <div style="width: 60%; height: 4px; background: #2a2e39; border-radius: 2px; overflow: hidden; align-self: center;">
-            <div id="sessionProgressBar" style="width: 0%; height: 100%; background: #2962ff; transition: width 1s ease;"></div>
+          <div style="text-align: right; font-size: 0.85em;">
+            <div style="color: #888;" id="frontSessionName">--</div>
+            <div style="color: #888; margin-top: 4px;">Next: <span id="nextSessionInfo" style="color: #fff;">--</span></div>
           </div>
         </div>
       </div>
       
       <!-- LIQUIDATION LEVELS -->
-      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #2a2e39;">
-        <div style="color: #787b86; font-weight: 700; font-size: 0.9em; letter-spacing: 0.5px; margin-bottom: 14px;">LIQUIDATION LEVELS</div>
-        <div id="mainLiquidations" style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px;">
-          <div style="padding: 12px; border-left: 3px solid #f23645; background: rgba(242,54,69,0.05); border-radius: 4px;">
-            <div style="color: #787b86; font-weight: 600; font-size: 0.9em;">LONG LIQ</div>
-            <div style="color: #d1d4dc; font-size: 1.3em; font-weight: 700; margin: 8px 0;" id="longLiqPrice">$93,450</div>
-            <div style="color: #787b86; font-size: 0.9em;" id="longLiqVolume">$245M</div>
-          </div>
-          <div style="padding: 12px; border-left: 3px solid #089981; background: rgba(8,153,129,0.05); border-radius: 4px;">
-            <div style="color: #787b86; font-weight: 600; font-size: 0.9em;">SHORT LIQ</div>
-            <div style="color: #d1d4dc; font-size: 1.3em; font-weight: 700; margin: 8px 0;" id="shortLiqPrice">$97,800</div>
-            <div style="color: #787b86; font-size: 0.9em;" id="shortLiqVolume">$180M</div>
-          </div>
-          <div style="padding: 12px; border-left: 3px solid #ff9800; background: rgba(255,152,0,0.05); border-radius: 4px;">
-            <div style="color: #787b86; font-weight: 600; font-size: 0.9em;">MEGA LIQ</div>
-            <div style="color: #d1d4dc; font-size: 1.3em; font-weight: 700; margin: 8px 0;" id="megaLiqPrice">$91,200</div>
-            <div style="color: #787b86; font-size: 0.9em;" id="megaLiqVolume">$520M</div>
-          </div>
-        </div>
-        <div style="margin-top: 14px; display: flex; justify-content: space-between; font-size: 0.85em;">
-          <div style="color: #787b86;">Updated: <span id="liqUpdateTime" style="color: #d1d4dc;">--</span></div>
-          <div style="color: #787b86;">Proximity: <span id="liqProximity" style="color: #2962ff;">--</span></div>
-        </div>
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333;">
+        <div style="color: #ff8c00; font-weight: 700; font-size: 0.8em; margin-bottom: 10px;">LIQUIDATION LEVELS</div>
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+          <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 6px 0; color: #888;">LONG</td>
+            <td style="padding: 6px 0; color: #fff; text-align: right;" id="longLiqPrice">$93,450</td>
+            <td style="padding: 6px 0; color: #888; text-align: right;" id="longLiqVolume">$245M</td>
+          </tr>
+          <tr style="border-bottom: 1px solid #222;">
+            <td style="padding: 6px 0; color: #888;">SHORT</td>
+            <td style="padding: 6px 0; color: #fff; text-align: right;" id="shortLiqPrice">$97,800</td>
+            <td style="padding: 6px 0; color: #888; text-align: right;" id="shortLiqVolume">$180M</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; color: #888;">MEGA</td>
+            <td style="padding: 6px 0; color: #fff; text-align: right;" id="megaLiqPrice">$91,200</td>
+            <td style="padding: 6px 0; color: #888; text-align: right;" id="megaLiqVolume">$520M</td>
+          </tr>
+        </table>
       </div>
       
-      <!-- Footer Stats -->
-      <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid #2a2e39; display: flex; justify-content: space-between; font-size: 0.95em;">
-        <div style="color: #787b86;">Total Volume: <span style="color: #d1d4dc; font-weight: 700;" id="totalTransferVolume">--</span></div>
-        <div style="color: #787b86;">Net Flow: <span id="netFlowIndicator" style="color: #d1d4dc; font-weight: 700;">--</span></div>
+      <!-- Footer -->
+      <div style="margin-top: 16px; padding-top: 12px; border-top: 1px solid #333; display: flex; justify-content: space-between; font-size: 0.8em;">
+        <div style="color: #888;">Vol: <span style="color: #fff;" id="totalTransferVolume">--</span></div>
+        <div style="color: #888;">Net: <span id="netFlowIndicator" style="color: #fff;">--</span></div>
+        <div style="color: #888;">Prox: <span id="liqProximity" style="color: #fff;">--</span></div>
       </div>
     </div>
   </div>
@@ -5590,9 +5580,9 @@
         border-radius: 2px;
         margin-right: 10px;
       }
-      .transfer-indicator.buy { background: #089981; }
-      .transfer-indicator.sell { background: #f23645; }
-      .transfer-indicator.move { background: #2962ff; }
+      .transfer-indicator.buy { background: #fff; }
+      .transfer-indicator.sell { background: #888; }
+      .transfer-indicator.move { background: #666; }
     `;
     document.head.appendChild(transferAnimStyle);
     
@@ -5658,22 +5648,21 @@
     function renderTransfer(t) {
       const typeClass = t.type === 'BUY' ? 'transfer-buy' : t.type === 'SELL' ? 'transfer-sell' : 'transfer-move';
       const indicatorClass = t.type === 'BUY' ? 'buy' : t.type === 'SELL' ? 'sell' : 'move';
-      const valueColor = t.type === 'BUY' ? '#089981' : t.type === 'SELL' ? '#f23645' : '#2962ff';
       const timeAgo = getTimeAgo(t.timestamp);
       
       return `
         <div class="transfer-row ${typeClass} ${t.isNew ? 'transfer-row-new' : ''}" 
              data-id="${t.id}"
-             style="padding: 14px 12px; border-bottom: 1px solid #1e222d; display: flex; justify-content: space-between; align-items: center; font-family: Arial, sans-serif;">
+             style="padding: 10px 8px; border-bottom: 1px solid #333; display: flex; justify-content: space-between; align-items: center; font-family: Consolas, Monaco, monospace;">
           <div style="flex: 1;">
-            <div style="color: #d1d4dc; font-weight: 600; font-size: 1.05em;">
+            <div style="color: #fff; font-weight: 400; font-size: 0.95em; letter-spacing: 0.5px;">
               <span class="transfer-indicator ${indicatorClass}"></span>${t.type} ${t.amount.toLocaleString()} BTC
             </div>
-            <div style="color: #787b86; font-size: 0.85em; margin-top: 4px;">${t.source}</div>
+            <div style="color: #888; font-size: 0.8em; margin-top: 3px;">${t.source}</div>
           </div>
           <div style="text-align: right;">
-            <div style="color: ${valueColor}; font-size: 1.15em; font-weight: 700;">$${(t.valueUSD / 1000000).toFixed(2)}M</div>
-            <div style="color: #787b86; font-size: 0.8em; margin-top: 3px;">${timeAgo}</div>
+            <div style="color: #fff; font-size: 1em; font-weight: 400;">$${(t.valueUSD / 1000000).toFixed(2)}M</div>
+            <div style="color: #888; font-size: 0.75em; margin-top: 2px;">${timeAgo}</div>
           </div>
         </div>
       `;
@@ -5720,14 +5709,14 @@
         const sells = transfersQueue.filter(t => t.type === 'SELL').reduce((s, t) => s + t.amount, 0);
         const net = buys - sells;
         netFlowEl.textContent = `${net >= 0 ? '+' : ''}${net.toLocaleString()} BTC`;
-        netFlowEl.style.color = net >= 0 ? '#089981' : '#f23645';
+        netFlowEl.style.color = '#fff';
       }
       
-      // Update timestamp - TradingView style
+      // Update timestamp - Bloomberg style
       const tsEl = document.getElementById('transfersLastUpdate');
       if (tsEl) {
         const now = new Date();
-        tsEl.innerHTML = `<span style="color: #089981;">●</span> LIVE ${now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
+        tsEl.innerHTML = `LIVE ${now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
       }
     }
     
