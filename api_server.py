@@ -18,6 +18,7 @@ from datetime import datetime, timedelta
 import logging
 import os
 import websockets
+import numpy as np
 import asyncio
 import random
 
@@ -120,8 +121,6 @@ cache = {
     'avax_change': 2.8,
     'dot_price': 7.50,
     'dot_change': 1.8,
-    'matic_price': 0.52,
-    'matic_change': 2.4,
     'link_price': 15.80,
     'link_change': 1.2,
     'uni_price': 8.45,
@@ -413,7 +412,6 @@ def fetch_crypto_prices():
             ('DOGE/USD', 'doge_price', 'doge_change'),
             ('AVAX/USD', 'avax_price', 'avax_change'),
             ('DOT/USD', 'dot_price', 'dot_change'),
-            ('MATIC/USD', 'matic_price', 'matic_change'),
             ('LINK/USD', 'link_price', 'link_change'),
             ('UNI/USD', 'uni_price', 'uni_change'),
             ('ATOM/USD', 'atom_price', 'atom_change'),
@@ -1032,7 +1030,6 @@ def get_crypto_summary():
             'DOGE': round(cache['doge_price'], 5),
             'AVAX': round(cache['avax_price'], 2),
             'DOT': round(cache['dot_price'], 2),
-            'MATIC': round(cache['matic_price'], 4),
             'LINK': round(cache['link_price'], 2),
             'UNI': round(cache['uni_price'], 2),
             'ATOM': round(cache['atom_price'], 2),
@@ -1046,7 +1043,6 @@ def get_crypto_summary():
             'DOGE': round(cache['doge_change'], 2),
             'AVAX': round(cache['avax_change'], 2),
             'DOT': round(cache['dot_change'], 2),
-            'MATIC': round(cache['matic_change'], 2),
             'LINK': round(cache['link_change'], 2),
             'UNI': round(cache['uni_change'], 2),
             'ATOM': round(cache['atom_change'], 2),
@@ -1203,6 +1199,59 @@ def coingecko_simple():
                 'usd_24h_change': round(cache['eth_change'], 2)
             }
         }
+    })
+
+
+@app.route('/api/commodities', methods=['GET'])
+def commodities():
+    """Get commodities data (Gold, Silver, Oil)"""
+    return jsonify({
+        'ok': True,
+        'gold': {
+            'price': round(cache.get('gold_price', 2650.0), 2),
+            'change': round(cache.get('gold_change', 0.5), 2)
+        },
+        'silver': {
+            'price': round(cache.get('silver_price', 31.5), 2),
+            'change': round(cache.get('silver_change', 0.3), 2)
+        },
+        'oil': {
+            'price': round(cache.get('oil_price', 75.0), 2),
+            'change': round(cache.get('oil_change', -0.2), 2)
+        }
+    })
+
+
+@app.route('/api/binance/price', methods=['GET'])
+def binance_price():
+    """Get single crypto price"""
+    symbol = request.args.get('symbol', 'BTCUSDT').upper()
+    
+    # Map symbols to cache keys
+    if 'BTC' in symbol:
+        price = cache.get('btc_price', 0)
+        change = cache.get('btc_change', 0)
+    elif 'ETH' in symbol:
+        price = cache.get('eth_price', 0)
+        change = cache.get('eth_change', 0)
+    elif 'SOL' in symbol:
+        price = cache.get('sol_price', 0)
+        change = cache.get('sol_change', 0)
+    elif 'BNB' in symbol:
+        price = cache.get('bnb_price', 0)
+        change = cache.get('bnb_change', 0)
+    elif 'XRP' in symbol:
+        price = cache.get('xrp_price', 0)
+        change = cache.get('xrp_change', 0)
+    else:
+        price = 0
+        change = 0
+    
+    return jsonify({
+        'ok': True,
+        'symbol': symbol,
+        'price': round(price, 2),
+        'change': round(change, 2)
     })
 
 
