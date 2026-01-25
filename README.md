@@ -12,7 +12,7 @@
 
 - 📊 **Real-time Market Data** - Dane z Yahoo Finance
 - 🤖 **AI Trading Bot** - Machine learning predictions z TensorFlow
-- � **Funding Rate Calculator** - Obliczanie kosztów finansowania dla kryptowalut (NEW!)
+- **Funding Rate Calculator** - Obliczanie kosztów finansowania dla kryptowalut (NEW!)
 - 📈 **Advanced Charts** - Plotly interactive charts w stylu Bloomberg
 - 💹 **Technical Indicators** - RSI, MACD, Bollinger Bands, FVG, Order Blocks
 - 🎯 **Risk Management** - Trailing stops, position sizing, leverage control

@@ -1476,7 +1476,7 @@
         .metrics-panel > .metric-card[style*="grid-column: 1 / -1"] *:before,
         .metrics-panel > .metric-card[style*="grid-column: 1 / -1"] *:after {
             animation: none !important;
-            transition: none !important !important;
+            transition: none !important;
             will-change: auto !important;
             backface-visibility: hidden !important;
         }
@@ -1490,7 +1490,7 @@
         #clock-time,
         #clock-zone {
             animation: none !important;
-            transition: none !important !important;
+            transition: none !important;
             will-change: auto !important;
             backface-visibility: hidden !important;
         }
@@ -2472,15 +2472,6 @@
                         currentTimeframe = tf;
                         document.querySelectorAll('.timeframe-btn').forEach(btn => {
                             btn.style.background = '#1a1a1a';
-                            m', '5m': '5m', '15m': '15m', '30m': '30m',
-                    '1h': '1h', '4h': '4h', '1d': '1d', '1w': '1w', '1M': '1M'
-                };
-                
-                function switchTimeframe(event, tf) {
-                    try {
-                        currentTimeframe = tf;
-                        document.querySelectorAll('.timeframe-btn').forEach(btn => {
-                            btn.style.background = '#1a1a1a';
                             btn.style.borderColor = '#333';
                             btn.style.color = '#999';
                             btn.style.boxShadow = 'none';
@@ -2491,27 +2482,9 @@
                         event.target.style.color = '#0a0a0a';
                         event.target.style.boxShadow = '0 0 15px rgba(0,212,255,0.5)';
                         event.target.style.fontWeight = '700';
-                        reloadChartData(tf);onst url = `https://api.binance.com/api/v3/klines?symbol=BTCUSDT&interval=${interval}&limit=${limit}`;
-                        
-                        const res = await fetch(url);
-                        const klines = await res.json();
-                        
-                        if(!klines || klines.length === 0) {
-                            console.error('No data from API');
-                            return;
-                        }
-                        
-                        const x = klines.map(k => new Date(k[0]));
-                        const open = klines.map(k => parseFloat(k[1]));
-                        const high = klines.map(k => parseFloat(k[2]));
-                        const low = klines.map(k => parseFloat(k[3]));
-                        const close = klines.map(k => parseFloat(k[4]));
-                        
-                        chartData = { x, open, high, low, close };
-                        updateChartWithSMT(tf);
-                        
+                        reloadChartData(tf);
                     } catch(e) {
-                        console.error('Chart reload error:', e);
+                        console.error('Timeframe switch error:', e);
                     }
                 }
                 
@@ -2872,7 +2845,10 @@
                         console.error('Chart container not found');
                         return;
                     }
-                   Wait for DOM and Plotly to be ready
+                    // Wait for DOM and Plotly to be ready
+                    initializeChart();
+                }
+                
                 function initializeChart() {
                     const chartContainer = document.getElementById("main-chart");
                     
@@ -2924,10 +2900,39 @@
                     });
                 } else {
                     console.log('✅ DOM already loaded, initializing chart immediately...');
-                    setTimeout(initialize
-                    zt.textContent = 'Weekend - giełda zamknięta';
-                } else {
-                    zt.textContent = timeRemaining(zurich, 22, 0);
+                    setTimeout(initializeChart, 100);
+                }
+            </script>
+            
+            <script>
+            // Trading Sessions Panel
+            function updateTradingSessions() {
+                const now = new Date();
+                
+                // Helper functions
+                function isWeekend(d) {
+                    return d.getDay() === 0 || d.getDay() === 6;
+                }
+                
+                function timeRemaining(d, closeHour, closeMin) {
+                    const close = new Date(d);
+                    close.setHours(closeHour, closeMin, 0, 0);
+                    const diff = close - d;
+                    if (diff <= 0) return 'Zamknięte';
+                    const h = Math.floor(diff / 3600000);
+                    const m = Math.floor((diff % 3600000) / 60000);
+                    return `Zamyka za ${h}h ${m}m`;
+                }
+                
+                // ZURICH (zamyka 22:00)
+                const zt = document.getElementById('zurich-time-panel');
+                const zurich = new Date(now.toLocaleString('en-US', { timeZone: 'Europe/Zurich' }));
+                if (zt) {
+                    if (isWeekend(zurich)) {
+                        zt.textContent = 'Weekend - giełda zamknięta';
+                    } else {
+                        zt.textContent = timeRemaining(zurich, 22, 0);
+                    }
                 }
             }
 
@@ -6852,56 +6857,33 @@
             lastUpdate: null
         };
         
-        // Fetch BTC/USDT real-time data from Binance (with fallback)
+        // Fetch BTC/USDT real-time data from Twelve Data API
         async function fetchBinanceData() {
             try {
-                console.log('📡 Fetching Binance data...');
+                console.log('📡 Fetching Twelve Data...');
                 
-                // Try local API first if available
-                if (isLocalhost) {
-                    const summaryRes = await fetch(`${API_BASE}/api/binance/summary`, { cache: 'no-store' });
-                    if (!summaryRes.ok) throw new Error('Local API unavailable');
-                    const summary = await summaryRes.json();
-                    if (!summary.ok) throw new Error(summary.error || 'Binance summary error');
+                // Always use Twelve Data API through our server
+                const summaryRes = await fetch(`${API_BASE}/api/binance/summary`, { cache: 'no-store' });
+                if (!summaryRes.ok) throw new Error('Twelve Data API unavailable');
+                const summary = await summaryRes.json();
+                if (!summary.ok) throw new Error(summary.error || 'Twelve Data error');
 
-                    marketData.btcPrice = summary.btcPrice;
-                    marketData.btcChange24h = summary.btcChange24h;
-                    marketData.volume24h = summary.btcVolume24h;
-                    marketData.ethPrice = summary.ethPrice;
-                    marketData.ethChange24h = summary.ethChange24h;
-
-                    console.log('✅ BTC price (local API): $' + marketData.btcPrice.toFixed(2));
-                    return true;
+                marketData.btcPrice = summary.btcPrice;
+                marketData.btcChange24h = summary.btcChange24h;
+                marketData.volume24h = summary.btcVolume24h || 25000000000;
+                marketData.ethPrice = summary.ethPrice;
+                marketData.ethChange24h = summary.ethChange24h;
+                
+                // Update additional cryptos
+                if (summary.cryptos) {
+                    marketData.cryptos = summary.cryptos;
+                    marketData.cryptosChange = summary.cryptosChange;
                 }
-                
-                // Production: Direct Binance API calls
-                const btcRes = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
-                const ethRes = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=ETHUSDT');
-                
-                const btcData = await btcRes.json();
-                const ethData = await ethRes.json();
-                
-                marketData.btcPrice = parseFloat(btcData.lastPrice);
-                marketData.btcChange24h = parseFloat(btcData.priceChangePercent);
-                marketData.volume24h = parseFloat(btcData.quoteVolume);
-                marketData.ethPrice = parseFloat(ethData.lastPrice);
-                marketData.ethChange24h = parseFloat(ethData.priceChangePercent);
 
-                console.log('✅ BTC price (Binance direct): $' + marketData.btcPrice.toFixed(2) + ' | Change: ' + marketData.btcChange24h.toFixed(2) + '%');
+                console.log('✅ Twelve Data: BTC $' + marketData.btcPrice.toFixed(2) + ' | ETH $' + marketData.ethPrice.toFixed(2));
                 return true;
             } catch (error) {
-                console.warn('⚠️ Binance API error, using fallback data:', error);
-                // FALLBACK: Simulate realistic price movements
-                const volatility = 0.015;
-                const randomChange = (Math.random() - 0.5) * volatility;
-                
-                marketData.btcPrice = marketData.btcPrice * (1 + randomChange);
-                marketData.btcChange24h = (Math.random() - 0.5) * 5;
-                marketData.ethPrice = marketData.ethPrice * (1 + randomChange * 0.8);
-                marketData.ethChange24h = (Math.random() - 0.5) * 4;
-                marketData.volume24h = 24500000000 + Math.random() * 5000000000;
-                
-                console.log('✅ FALLBACK DATA: BTC $' + marketData.btcPrice.toFixed(0));
+                console.warn('⚠️ Twelve Data API error:', error);
                 return false;
             }
         }

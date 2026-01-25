@@ -1,0 +1,45 @@
+{
+  "subscribers": [
+    "5616894588"
+  ],
+  "signal_subscribers": [
+    "5616894588"
+  ],
+  "price_alerts": {
+    "5616894588": [
+      {
+        "symbol": "ETH/USD",
+        "condition": "<",
+        "price": 3000,
+        "triggered": true
+      }
+    ],
+    "8346176678": [
+      {
+        "symbol": "BTC/USD",
+        "condition": ">",
+        "price": 110000,
+        "triggered": false
+      },
+      {
+        "symbol": "BTC/USD",
+        "condition": "<",
+        "price": 90000,
+        "triggered": true
+      }
+    ]
+  },
+  "signal_stats": {
+    "sent": 50,
+    "types": {
+      "DAILY_TREND": 50
+    },
+    "history": [],
+    "accuracy": {
+      "total": 0,
+      "wins": 0,
+      "losses": 0,
+      "pending": 0
+    }
+  }
+}
