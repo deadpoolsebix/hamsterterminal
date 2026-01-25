@@ -3703,83 +3703,97 @@
     </div>
     </div>
     
-    <!-- LARGE TRANSFERS - Ticker Style Font -->
-    <div style="background: #000; border: 1px solid #333; padding: 0;">
+    <!-- SIDE PANEL - Ticker Style (matching top stock ticker) -->
+    <div style="background: #000000; border: 1px solid #333333; padding: 0; font-weight: 700; letter-spacing: 1px;">
       
-      <!-- WHALE TRANSFERS Header -->
-      <div style="padding: 12px 16px; border-bottom: 1px solid #333;">
-        <div style="color: #fff; font-size: 1.8em; font-weight: 700; letter-spacing: 1px;">WHALE</div>
-        <div style="color: #999; font-size: 0.85em; margin-top: 2px;">TRANSFERS <span style="color: #666;" id="transfersLastUpdate">--:--:--</span></div>
-      </div>
-      
-      <!-- Transfers List -->
-      <div id="largeTransfersList" style="padding: 8px 16px;">
-        <div style="color: #666;">Loading...</div>
-      </div>
-      
-      <!-- ICEBERG Header -->
-      <div style="padding: 12px 16px; border-top: 1px solid #333;">
-        <div style="color: #fff; font-size: 1.6em; font-weight: 700; letter-spacing: 1px;">ICEBERG</div>
-        <div style="color: #999; font-size: 0.85em; margin-top: 2px;">HIDDEN ORDERS</div>
-      </div>
-      <div style="padding: 0 16px 12px 16px; font-size: 0.9em;">
-        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #222;">
-          <span style="color: #aaa;">BUY</span>
-          <span style="color: #ccc;">$94,800 - $95,200</span>
-          <span style="color: #999;">~3,200 BTC</span>
+      <!-- WHALE TRANSFERS -->
+      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="color: #ffffff; font-size: 2.2em;">WHALE</span>
+          <span style="color: #cccccc; font-size: 1em;">TRANSFERS</span>
+          <span style="color: #999999; font-size: 0.85em;" id="transfersLastUpdate">--:--:--</span>
         </div>
-        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #222;">
-          <span style="color: #888;">SELL</span>
-          <span style="color: #ccc;">$97,400 - $97,800</span>
-          <span style="color: #999;">~2,100 BTC</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 6px 0;">
-          <span style="color: #666;">HIDDEN</span>
-          <span style="color: #ccc;">$96,000 - $96,500</span>
-          <span style="color: #999;">~1,800 BTC</span>
+        <div id="largeTransfersList" style="font-size: 0.9em;">
+          <div style="color: #666666;">Loading...</div>
         </div>
       </div>
       
-      <!-- SESSION Header -->
-      <div style="padding: 12px 16px; border-top: 1px solid #333; display: flex; justify-content: space-between; align-items: flex-end;">
-        <div>
-          <div style="color: #fff; font-size: 1.6em; font-weight: 700; letter-spacing: 1px;">SESSION</div>
-          <div style="color: #ccc; font-size: 1.4em; font-weight: 700; margin-top: 4px;" id="frontSessionTimer">--:--:--</div>
+      <!-- ICEBERG ORDERS -->
+      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="color: #ffffff; font-size: 2.2em;">ICEBERG</span>
+          <span style="color: #cccccc; font-size: 1em;">HIDDEN ORDERS</span>
         </div>
-        <div style="text-align: right;">
-          <div style="color: #aaa; font-size: 0.9em;" id="frontSessionName">--</div>
-          <div style="color: #666; font-size: 0.85em; margin-top: 4px;">Next: <span id="nextSessionInfo" style="color: #999;">--</span></div>
-        </div>
-      </div>
-      
-      <!-- LIQUIDATION Header -->
-      <div style="padding: 12px 16px; border-top: 1px solid #333;">
-        <div style="color: #fff; font-size: 1.6em; font-weight: 700; letter-spacing: 1px;">LIQUIDATION</div>
-        <div style="color: #999; font-size: 0.85em; margin-top: 2px;">LEVELS</div>
-      </div>
-      <div style="padding: 0 16px 12px 16px; font-size: 0.9em;">
-        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #222;">
-          <span style="color: #aaa;">LONG</span>
-          <span style="color: #ccc;" id="longLiqPrice">$93,450</span>
-          <span style="color: #999;" id="longLiqVolume">$245M</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #222;">
-          <span style="color: #888;">SHORT</span>
-          <span style="color: #ccc;" id="shortLiqPrice">$97,800</span>
-          <span style="color: #999;" id="shortLiqVolume">$180M</span>
-        </div>
-        <div style="display: flex; justify-content: space-between; padding: 6px 0;">
-          <span style="color: #666;">MEGA</span>
-          <span style="color: #ccc;" id="megaLiqPrice">$91,200</span>
-          <span style="color: #999;" id="megaLiqVolume">$520M</span>
+        <div style="font-size: 0.9em;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
+            <span style="color: #ffffff; font-size: 1.1em; min-width: 50px;">BUY</span>
+            <span style="color: #cccccc; min-width: 140px;">$94,800 - $95,200</span>
+            <span style="color: #999999;">~3,200 BTC</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
+            <span style="color: #cccccc; font-size: 1.1em; min-width: 50px;">SELL</span>
+            <span style="color: #cccccc; min-width: 140px;">$97,400 - $97,800</span>
+            <span style="color: #999999;">~2,100 BTC</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0;">
+            <span style="color: #999999; font-size: 1.1em; min-width: 50px;">HIDE</span>
+            <span style="color: #cccccc; min-width: 140px;">$96,000 - $96,500</span>
+            <span style="color: #999999;">~1,800 BTC</span>
+          </div>
         </div>
       </div>
       
-      <!-- Footer Stats -->
-      <div style="border-top: 1px solid #333; padding: 10px 16px; display: flex; justify-content: space-between; font-size: 0.8em;">
-        <div style="color: #666;">Vol: <span style="color: #aaa;" id="totalTransferVolume">--</span></div>
-        <div style="color: #666;">Net: <span id="netFlowIndicator" style="color: #ccc;">--</span></div>
-        <div style="color: #666;">Prox: <span id="liqProximity" style="color: #ccc;">--</span></div>
+      <!-- SESSION -->
+      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <span style="color: #ffffff; font-size: 2.2em;">SESSION</span>
+          <span style="color: #cccccc; font-size: 1.4em;" id="frontSessionTimer">--:--:--</span>
+          <span style="color: #999999; font-size: 0.9em;" id="frontSessionName">--</span>
+        </div>
+        <div style="margin-top: 8px; font-size: 0.85em; color: #999999;">
+          Next: <span id="nextSessionInfo" style="color: #cccccc;">--</span>
+        </div>
+      </div>
+      
+      <!-- LIQUIDATION LEVELS -->
+      <div style="padding: 16px 20px; border-bottom: 1px solid #333333;">
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 12px;">
+          <span style="color: #ffffff; font-size: 2.2em;">LIQUIDATION</span>
+          <span style="color: #cccccc; font-size: 1em;">LEVELS</span>
+        </div>
+        <div style="font-size: 0.9em;">
+          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
+            <span style="color: #ffffff; font-size: 1.1em; min-width: 60px;">LONG</span>
+            <span style="color: #cccccc; min-width: 100px;" id="longLiqPrice">$93,450</span>
+            <span style="color: #999999;" id="longLiqVolume">$245M</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0; border-bottom: 1px solid #222222;">
+            <span style="color: #cccccc; font-size: 1.1em; min-width: 60px;">SHORT</span>
+            <span style="color: #cccccc; min-width: 100px;" id="shortLiqPrice">$97,800</span>
+            <span style="color: #999999;" id="shortLiqVolume">$180M</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px; padding: 6px 0;">
+            <span style="color: #999999; font-size: 1.1em; min-width: 60px;">MEGA</span>
+            <span style="color: #cccccc; min-width: 100px;" id="megaLiqPrice">$91,200</span>
+            <span style="color: #999999;" id="megaLiqVolume">$520M</span>
+          </div>
+        </div>
+      </div>
+      
+      <!-- FOOTER STATS - Ticker Style -->
+      <div style="padding: 12px 20px; display: flex; align-items: center; gap: 24px; font-size: 0.85em;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ffffff;">VOL</span>
+          <span style="color: #cccccc;" id="totalTransferVolume">--</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ffffff;">NET</span>
+          <span id="netFlowIndicator" style="color: #cccccc;">--</span>
+        </div>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span style="color: #ffffff;">PROX</span>
+          <span id="liqProximity" style="color: #cccccc;">--</span>
+        </div>
       </div>
     </div>
   </div>
@@ -5692,24 +5706,17 @@
     }
     
     function renderTransfer(t) {
-      const typeClass = t.type === 'BUY' ? 'transfer-buy' : t.type === 'SELL' ? 'transfer-sell' : 'transfer-move';
       const timeAgo = getTimeAgo(t.timestamp);
       
+      // Ticker style: TYPE in white, values in #ccc, secondary in #999
       return `
-        <div class="transfer-row ${typeClass} ${t.isNew ? 'transfer-row-new' : ''}" 
+        <div class="transfer-row ${t.isNew ? 'transfer-row-new' : ''}" 
              data-id="${t.id}"
-             style="padding: 8px 0; border-bottom: 1px solid #222; display: flex; justify-content: space-between; align-items: center;">
-          <div style="flex: 1;">
-            <div style="font-size: 0.9em;">
-              <span style="color: #aaa;">${t.type}</span>
-              <span style="color: #ccc; margin-left: 8px;">${t.amount.toLocaleString()} BTC</span>
-            </div>
-            <div style="color: #666; font-size: 0.8em; margin-top: 3px;">${t.source}</div>
-          </div>
-          <div style="text-align: right;">
-            <div style="color: #ccc; font-size: 0.9em;">$${(t.valueUSD / 1000000).toFixed(2)}M</div>
-            <div style="color: #666; font-size: 0.75em; margin-top: 2px;">${timeAgo}</div>
-          </div>
+             style="padding: 8px 0; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 12px; font-weight: 700; letter-spacing: 1px;">
+          <span style="color: #ffffff; font-size: 1em; min-width: 45px;">${t.type}</span>
+          <span style="color: #cccccc; font-size: 0.9em; min-width: 90px;">${t.amount.toLocaleString()} BTC</span>
+          <span style="color: #cccccc; font-size: 0.9em; min-width: 65px;">$${(t.valueUSD / 1000000).toFixed(1)}M</span>
+          <span style="color: #999999; font-size: 0.8em; flex: 1; text-align: right;">${timeAgo}</span>
         </div>
       `;
     }
