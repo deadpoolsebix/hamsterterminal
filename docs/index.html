@@ -2699,9 +2699,9 @@
           <div class="radar-data">
             <div>Mempool: <span class="radar-hot">82% full</span> (Fees: 32 sat/vB)</div>
             <div>L2 Bridges: <span class="radar-cool">+$65M → Arbitrum</span></div>
-            <div>Whale Outflow: <span class="radar-cool">-1.1k BTC</span> → cold storage (BULLISH)</div>
+            <div>Whale Outflow: <span class="radar-cool">-1.1k BTC</span> > cold storage (BULLISH)</div>
             <div>UTXO Age: <span class="radar-cool">Majority > 6mo</span> (Long-term holders)</div>
-            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">On-chain sentiment: BULLISH 🟢</div>
+            <div style="margin-top: 6px; font-size: 0.8em; color: #999;">On-chain sentiment: BULLISH [+]</div>
           </div>
         </div>
 
@@ -2806,7 +2806,7 @@
 
       <div class="drawer-content" id="flowContent" style="display: none;">
         <div class="option-row">
-          <div class="option-label">🐋 WHALE ACCUMULATION</div>
+          <div class="option-label">WHALE ACCUMULATION</div>
           <div class="option-value" data-update="whale">+2.3k BTC</div>
         </div>
 
@@ -5081,7 +5081,7 @@
     }
 
     // Update ticker every 5 seconds
-    setInterval(updateTickerBar, 5000);
+    setInterval(updateTickerBar, 3000);
     updateTickerBar(); // Initial call
 
     // Update news ticker every 45 seconds
@@ -5218,7 +5218,7 @@
         console.log('Metrics update error:', err);
       }
     }
-    setInterval(updateMetricsBoxes, 10000);
+    setInterval(updateMetricsBoxes, 5000);
     updateMetricsBoxes();
 
     // ===== UPDATE SENTIMENT PANEL (Funding, OI, Dominance, Liquidations) =====
@@ -5296,7 +5296,7 @@
         console.log('Sentiment panel update error:', e);
       }
     }
-    setInterval(updateSentimentPanel, 30000);
+    setInterval(updateSentimentPanel, 15000);
     updateSentimentPanel();
 
     // ===== UPDATE BULLS vs BEARS PSYCHOLOGY =====
@@ -5583,33 +5583,38 @@
     setInterval(updateCryptoPanicTicker, 60000);
     updateCryptoPanicTicker();
 
-    // ===== UPDATE LARGE TRANSFERS (REAL-TIME STREAMING) =====
+    // ===== UPDATE LARGE TRANSFERS (REAL-TIME STREAMING - BLOOMBERG STYLE) =====
     let transfersQueue = [];
     let lastTransferId = 0;
     
-    // CSS for transfer animations
+    // CSS for transfer animations - Bloomberg professional style
     const transferAnimStyle = document.createElement('style');
     transferAnimStyle.textContent = `
       @keyframes transferSlideIn {
-        from { opacity: 0; transform: translateX(-20px); background: rgba(255, 140, 0, 0.15); }
-        to { opacity: 1; transform: translateX(0); background: transparent; }
-      }
-      @keyframes transferPulse {
-        0%, 100% { box-shadow: none; }
-        50% { box-shadow: 0 0 10px rgba(255, 140, 0, 0.3); }
+        from { opacity: 0; transform: translateY(-8px); background: rgba(255, 140, 0, 0.08); }
+        to { opacity: 1; transform: translateY(0); background: transparent; }
       }
       .transfer-row-new {
-        animation: transferSlideIn 0.5s ease-out, transferPulse 2s ease-in-out;
+        animation: transferSlideIn 0.3s ease-out;
       }
-      .transfer-buy { border-left: 3px solid var(--green) !important; }
-      .transfer-sell { border-left: 3px solid var(--red) !important; }
-      .transfer-move { border-left: 3px solid var(--cyan) !important; }
+      .transfer-buy { border-left: 2px solid #00ff41 !important; }
+      .transfer-sell { border-left: 2px solid #ff0033 !important; }
+      .transfer-move { border-left: 2px solid #00d4ff !important; }
+      .transfer-indicator {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        border-radius: 1px;
+        margin-right: 6px;
+      }
+      .transfer-indicator.buy { background: #00ff41; }
+      .transfer-indicator.sell { background: #ff0033; }
+      .transfer-indicator.move { background: #00d4ff; }
     `;
     document.head.appendChild(transferAnimStyle);
     
     async function fetchLargeTransfers() {
       try {
-        // Try to get real whale alerts from API
         const response = await fetch(`${API_BASE}/api/whale-alerts`);
         if (response.ok) {
           const data = await response.json();
@@ -5618,27 +5623,31 @@
           }
         }
       } catch (e) {
-        console.log('Whale API offline, using simulated data');
+        // Silent fallback
       }
       
-      // Generate realistic simulated transfers based on current price
+      // Generate realistic simulated transfers
       const btcPrice = parseFloat(document.getElementById('metricPrice')?.textContent?.replace(/[$,]/g, '')) || 95000;
-      const types = ['BUY', 'SELL', 'TRANSFER'];
+      const types = ['BUY', 'SELL', 'MOVE'];
       const sources = [
-        'Binance → Cold Wallet',
-        'Coinbase → OTC Desk', 
-        'Kraken → Unknown',
-        'Whale Wallet → Binance',
-        'OTC → Institutional',
-        'Cold Storage → Exchange',
-        'Fund Rebalance',
-        'Tether Treasury',
-        'MicroStrategy',
-        'Mining Pool → Exchange'
+        'BINANCE > COLD',
+        'COINBASE > OTC', 
+        'KRAKEN > UNKNOWN',
+        'WALLET > BINANCE',
+        'OTC > INST',
+        'COLD > EXCHANGE',
+        'FUND REBAL',
+        'TETHER TREAS',
+        'MSTR',
+        'MINING > EXCH',
+        'GBTC',
+        'FIDELITY',
+        'IBIT',
+        'CUMBERLAND'
       ];
       
       const transfers = [];
-      const numTransfers = Math.floor(Math.random() * 2) + 1; // 1-2 new transfers
+      const numTransfers = Math.floor(Math.random() * 2) + 1;
       
       for (let i = 0; i < numTransfers; i++) {
         lastTransferId++;
@@ -5665,23 +5674,23 @@
     
     function renderTransfer(t) {
       const typeClass = t.type === 'BUY' ? 'transfer-buy' : t.type === 'SELL' ? 'transfer-sell' : 'transfer-move';
-      const colorClass = t.type === 'BUY' ? 'pos' : t.type === 'SELL' ? 'neg' : '';
-      const emoji = t.type === 'BUY' ? '🟢' : t.type === 'SELL' ? '🔴' : '🔵';
+      const indicatorClass = t.type === 'BUY' ? 'buy' : t.type === 'SELL' ? 'sell' : 'move';
+      const valueColor = t.type === 'BUY' ? '#00ff41' : t.type === 'SELL' ? '#ff0033' : '#00d4ff';
       const timeAgo = getTimeAgo(t.timestamp);
       
       return `
         <div class="transfer-row ${typeClass} ${t.isNew ? 'transfer-row-new' : ''}" 
              data-id="${t.id}"
-             style="padding: 12px 10px; border-bottom: 1px solid #1a1a1a; display: flex; justify-content: space-between; align-items: center;">
+             style="padding: 8px 10px; border-bottom: 1px solid #111; display: flex; justify-content: space-between; align-items: center; font-family: 'Courier New', monospace;">
           <div style="flex: 1;">
-            <div style="color: #ffffff; font-weight: 600; font-size: 0.95em;">
-              ${emoji} ${t.type} <span style="color: var(--orange);">${t.amount.toLocaleString()} BTC</span>
+            <div style="color: #fff; font-weight: 500; font-size: 0.85em; letter-spacing: 0.5px;">
+              <span class="transfer-indicator ${indicatorClass}"></span>${t.type} ${t.amount.toLocaleString()} BTC
             </div>
-            <div style="color: #666; font-size: 0.75em; margin-top: 3px;">${t.source}</div>
+            <div style="color: #555; font-size: 0.7em; margin-top: 2px; letter-spacing: 0.3px;">${t.source}</div>
           </div>
           <div style="text-align: right;">
-            <div class="${colorClass}" style="font-size: 0.9em; font-weight: 600;">$${(t.valueUSD / 1000000).toFixed(2)}M</div>
-            <div style="color: #555; font-size: 0.7em; margin-top: 2px;">${timeAgo}</div>
+            <div style="color: ${valueColor}; font-size: 0.85em; font-weight: 600;">$${(t.valueUSD / 1000000).toFixed(2)}M</div>
+            <div style="color: #444; font-size: 0.65em; margin-top: 1px;">${timeAgo}</div>
           </div>
         </div>
       `;
@@ -5692,31 +5701,28 @@
       const then = new Date(timestamp);
       const diffSec = Math.floor((now - then) / 1000);
       
-      if (diffSec < 5) return 'just now';
-      if (diffSec < 60) return `${diffSec}s ago`;
-      if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m ago`;
-      return `${Math.floor(diffSec / 3600)}h ago`;
+      if (diffSec < 3) return 'NOW';
+      if (diffSec < 60) return `${diffSec}s`;
+      if (diffSec < 3600) return `${Math.floor(diffSec / 60)}m`;
+      return `${Math.floor(diffSec / 3600)}h`;
     }
     
     async function updateLargeTransfers() {
       const newTransfers = await fetchLargeTransfers();
       
-      // Add new transfers to queue
       newTransfers.forEach(t => {
         transfersQueue.unshift(t);
       });
       
-      // Keep only last 10 transfers
-      transfersQueue = transfersQueue.slice(0, 10);
+      transfersQueue = transfersQueue.slice(0, 12);
       
       const listEl = document.getElementById('largeTransfersList');
       if (listEl) {
         listEl.innerHTML = transfersQueue.map(t => renderTransfer(t)).join('');
         
-        // Remove "new" flag after animation
         setTimeout(() => {
           transfersQueue.forEach(t => t.isNew = false);
-        }, 600);
+        }, 400);
       }
       
       // Update total volume
@@ -5731,21 +5737,19 @@
         const sells = transfersQueue.filter(t => t.type === 'SELL').reduce((s, t) => s + t.amount, 0);
         const net = buys - sells;
         netFlowEl.textContent = `${net >= 0 ? '+' : ''}${net.toLocaleString()} BTC`;
-        netFlowEl.style.color = net >= 0 ? 'var(--green)' : 'var(--red)';
+        netFlowEl.style.color = net >= 0 ? '#00ff41' : '#ff0033';
       }
       
-      // Update timestamp with live indicator
+      // Update timestamp - Bloomberg style
       const tsEl = document.getElementById('transfersLastUpdate');
       if (tsEl) {
         const now = new Date();
-        tsEl.innerHTML = `<span style="color: var(--green);">●</span> LIVE ${now.toLocaleTimeString('pl-PL', {hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
+        tsEl.innerHTML = `<span style="color: #00ff41;">●</span> LIVE ${now.toLocaleTimeString('en-GB', {hour: '2-digit', minute: '2-digit', second: '2-digit'})}`;
       }
-      
-      console.log(`🐋 ${newTransfers.length} new whale transfers`);
     }
     
-    // Real-time: Update every 8 seconds
-    setInterval(updateLargeTransfers, 8000);
+    // Real-time: Update every 5 seconds for fast reactions
+    setInterval(updateLargeTransfers, 5000);
     updateLargeTransfers();
 
     // ===== UPDATE MARKET MOVERS (TOP GAINERS/LOSERS) =====
@@ -5908,7 +5912,7 @@
       }
     }
     // Update chart every 30 seconds
-    setInterval(updateMainChart, 30000);
+    setInterval(updateMainChart, 15000);
     updateMainChart();
 
     // ===== UPDATE MAIN CHART WITH SPECIFIC TIMEFRAME =====
@@ -6277,17 +6281,16 @@
           if (data.ok && data.signal) {
             const sig = data.signal;
             
-            // Signal Type with strength indicator
+            // Signal Type with strength indicator - Bloomberg style
             const typeEl = document.getElementById('geniusSignalType');
             if (typeEl) {
-              // Show NO_TRADE differently
               if (sig.signal === 'NO_TRADE') {
-                typeEl.textContent = '⛔ NO TRADE';
+                typeEl.textContent = '[ NO TRADE ]';
                 typeEl.style.color = '#666';
               } else {
-                const emoji = sig.signal.includes('BUY') ? '🟢' : sig.signal.includes('SELL') ? '🔴' : '⚪';
-                typeEl.textContent = `${emoji} ${sig.signal} [${sig.strength}]`;
-                typeEl.style.color = sig.signal.includes('BUY') ? '#00ff88' : sig.signal.includes('SELL') ? '#ff4466' : '#888';
+                const indicator = sig.signal.includes('BUY') ? '+' : sig.signal.includes('SELL') ? '-' : '=';
+                typeEl.textContent = `[${indicator}] ${sig.signal} | ${sig.strength}`;
+                typeEl.style.color = sig.signal.includes('BUY') ? '#00ff41' : sig.signal.includes('SELL') ? '#ff0033' : '#888';
               }
             }
             
@@ -6403,7 +6406,7 @@
         console.log('Genius signal update error:', e);
       }
     }
-    setInterval(updateGeniusSignal, 30000); // Update every 30 seconds
+    setInterval(updateGeniusSignal, 10000); // Update every 10 seconds
     updateGeniusSignal();
 
     // ===== UPDATE SNIPER SHOT (DYNAMIC LEVELS) =====
@@ -6552,7 +6555,7 @@
     }
 
     // Update analytics data every 10 seconds
-    setInterval(updateAnalyticsData, 10000);
+    setInterval(updateAnalyticsData, 5000);
     updateAnalyticsData(); // Initial call
 
     // Update killzone overlay every 20 seconds
@@ -6993,10 +6996,10 @@
       
       if (frontName) {
         if (info.currentSession) {
-          frontName.textContent = `🟢 ${info.currentSession.label} aktywna`;
+          frontName.textContent = `[ACTIVE] ${info.currentSession.label}`;
           frontName.style.color = info.currentSession.color;
         } else {
-          frontName.textContent = `⏸️ Przerwa → ${info.nextSession.label}`;
+          frontName.textContent = `[BREAK] > ${info.nextSession.label}`;
           frontName.style.color = '#888';
         }
       }
