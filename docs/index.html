@@ -3598,80 +3598,77 @@
       </svg>
     </div>
 
-    <!-- SESSION KILLZONE + SNIPER OVERLAY -->
-    <div class="session-module">
-      <div class="session-header">
-        <span class="session-title" id="sessionTitle">Nakładka Killzone Sesji</span>
-        <span class="session-timer" id="sessionTimer">Świeca zamyka się za 02:14</span>
+    <!-- SESSION INFO - Clean Text Description -->
+    <div style="background: #131722; border: 1px solid #2a2e39; padding: 20px; border-radius: 4px; margin-bottom: 20px;">
+      <!-- Header -->
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid #2a2e39;">
+        <div style="color: #d1d4dc; font-weight: 700; font-size: 1.1em;">SESSION STATUS</div>
+        <div style="color: #2962ff; font-size: 0.9em; font-weight: 600;" id="sessionStatusLive">● LIVE</div>
       </div>
-      <svg class="session-svg" viewBox="0 0 860 160" preserveAspectRatio="xMidYMid meet">
-        <!-- TIME AXIS -->
-        <line x1="60" y1="130" x2="820" y2="130" class="session-axis"/>
-        <line x1="60" y1="40" x2="820" y2="40" class="session-axis" opacity="0.3"/>
-        <line x1="60" y1="85" x2="820" y2="85" class="session-axis" opacity="0.3"/>
 
-        <!-- AUTO KILLZONES -->
-        <g class="killzone-block" data-zone="asia" id="killzoneBlock-asia">
-          <rect id="killzoneRect-asia" x="80" y="45" width="150" height="70" class="killzone-rect killzone-asia"/>
-          <text id="killzoneLabel-asia" data-role="label" x="90" y="60" class="chart-label" fill="var(--yellow)" font-size="10">Killzone Azja</text>
-          <text id="killzoneTime-asia" data-role="time" x="90" y="78" class="chart-label" fill="var(--yellow)" font-size="9">00:00 - 06:00 UTC</text>
-        </g>
-
-        <g class="killzone-block" data-zone="london" id="killzoneBlock-london">
-          <rect id="killzoneRect-london" x="250" y="45" width="210" height="70" class="killzone-rect killzone-london"/>
-          <text id="killzoneLabel-london" data-role="label" x="260" y="60" class="chart-label" fill="var(--cyan)" font-size="10">Killzone Londyn</text>
-          <text id="killzoneTime-london" data-role="time" x="260" y="78" class="chart-label" fill="var(--cyan)" font-size="9">07:00 - 10:00 UTC</text>
-        </g>
-
-        <g class="killzone-block" data-zone="newyork_am" id="killzoneBlock-newyork_am">
-          <rect id="killzoneRect-newyork_am" x="500" y="45" width="220" height="70" class="killzone-rect killzone-ny"/>
-          <text id="killzoneLabel-newyork_am" data-role="label" x="510" y="60" class="chart-label" fill="var(--red)" font-size="10">Killzone Nowy Jork</text>
-          <text id="killzoneTime-newyork_am" data-role="time" x="510" y="78" class="chart-label" fill="var(--red)" font-size="9">13:00 - 16:00 UTC</text>
-        </g>
-
-        <g class="killzone-block" data-zone="newyork_pm" id="killzoneBlock-newyork_pm">
-          <rect id="killzoneRect-newyork_pm" x="740" y="45" width="110" height="70" class="killzone-rect killzone-ny" opacity="0.65"/>
-          <text id="killzoneLabel-newyork_pm" data-role="label" x="750" y="60" class="chart-label" fill="var(--red)" font-size="10">NY PM Sweep</text>
-          <text id="killzoneTime-newyork_pm" data-role="time" x="750" y="78" class="chart-label" fill="var(--red)" font-size="9">19:00 - 21:00 UTC</text>
-        </g>
-
-        <!-- PRICE PATH INSIDE KILLZONES -->
-        <polyline points="80,105 140,96 200,88 260,92 320,86 380,82 440,84 500,78 560,82 620,90 680,96 740,100 800,94" stroke="var(--yellow)" stroke-width="2" fill="none"/>
-        <circle cx="600" cy="82" r="4" fill="var(--yellow)" stroke="#000000" stroke-width="0.5"/>
-        <text x="612" y="78" class="chart-label" fill="var(--yellow)" font-size="9">Impuls NY</text>
-
-        <!-- AI PUSH NOTIFICATION -->
-        <rect id="aiAlertBubble" x="600" y="15" width="220" height="58" rx="8" class="session-bubble"/>
-        <polygon points="710,73 692,73 710,95" class="session-bubble-tail"/>
-        <text id="aiAlertTitle" x="610" y="32" class="session-bubble-text">ALERT AI</text>
-        <text id="aiAlertLine1" x="610" y="48" class="session-bubble-text" font-size="8.5">Momentum zgrywa się z killzone NY.</text>
-        <text id="aiAlertLine2" x="610" y="61" class="session-bubble-text" font-size="8.5">Oczekuj wybicia w ciągu 5 min.</text>
-
-        <!-- SNIPER SIGNAL LEVELS -->
-        <line x1="60" y1="110" x2="820" y2="110" class="session-sniper-line"/>
-        <circle cx="600" cy="110" r="5" fill="var(--green)" stroke="#0a0a0a" stroke-width="1"/>
-        <text id="sniperEntryLabel" x="612" y="105" class="chart-label" fill="var(--green)" font-size="10">Wejście Sniper 95 280</text>
-        <text id="sniperTargetsLabel" x="612" y="120" class="chart-label" fill="#bbbbbb" font-size="9">Cele 96 400 / 97 400</text>
-        <text id="sniperTimerLabel" x="760" y="26" class="chart-label" fill="#bbbbbb" font-size="9">Timer: 02:14</text>
-
-        <!-- SESSION TIME MARKERS -->
-        <text x="90" y="145" class="chart-label" fill="#666666" font-size="9">Sesja Azja</text>
-        <text x="270" y="145" class="chart-label" fill="#666666" font-size="9">Otwarcie Londyn</text>
-        <text x="520" y="145" class="chart-label" fill="#666666" font-size="9">Przed otwarciem NY</text>
-        <text x="720" y="145" class="chart-label" fill="#666666" font-size="9">Fixing NY PM</text>
-      </svg>
-
-      <div class="session-footer">
-        <div class="session-signal-box">
-          <span class="session-label" id="sessionCurrentLabel">Sniper BTC</span>
-          <span id="sniperEntryLine">Wejście: 95 280 • TP1: 96 400 • TP2: 97 400</span>
-          <span id="sniperStopLine">Stop: 94 750 • Ryzyko na trade: 0.75%</span>
-          <span id="sessionRecommendation" style="display: block; margin-top: 4px; color: var(--gray); font-size: 0.85em;">Rekomendacja: Pilnuj momentum NY.</span>
+      <!-- Current Session Box -->
+      <div style="background: #1e222d; border-radius: 6px; padding: 20px; margin-bottom: 16px;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <div style="color: #787b86; font-size: 0.85em; margin-bottom: 6px;">ACTIVE SESSION</div>
+            <div id="currentSessionName" style="color: #d1d4dc; font-size: 1.5em; font-weight: 700;">London Open</div>
+            <div id="currentSessionTime" style="color: #787b86; font-size: 0.9em; margin-top: 4px;">08:00 - 12:00 CET</div>
+          </div>
+          <div style="text-align: right;">
+            <div style="color: #787b86; font-size: 0.85em; margin-bottom: 6px;">ENDS IN</div>
+            <div id="sessionCountdown" style="color: #2962ff; font-size: 2em; font-weight: 700; font-family: Arial, sans-serif;">02:34:12</div>
+          </div>
         </div>
-        <div class="session-push-box">
-          <span class="session-label" style="margin-bottom: 6px;">Powiadomienie Push</span>
-          <div id="aiPushNote">Notatka AI: "Sweep płynności pokrywa się z killzone NY. Przygotuj schodkowe wejścia teraz." Powiadomienia wysłane na desktop i mobile.</div>
-          <div id="sessionUpcomingNote" style="margin-top: 6px; color: var(--gray); font-size: 0.85em;">Następna killzone za 45 min.</div>
+      </div>
+
+      <!-- Session Grid -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px;">
+        <div id="sessionCard-asia" style="padding: 14px; background: #1e222d; border-radius: 4px; border-left: 3px solid #ff9800;">
+          <div style="color: #ff9800; font-weight: 600; font-size: 0.9em;">🌏 ASIA</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">00:00 - 09:00 CET</div>
+          <div id="asiaStatus" style="color: #787b86; font-size: 0.85em; margin-top: 8px;">Ended</div>
+        </div>
+        <div id="sessionCard-london" style="padding: 14px; background: rgba(41, 98, 255, 0.1); border-radius: 4px; border-left: 3px solid #2962ff;">
+          <div style="color: #2962ff; font-weight: 600; font-size: 0.9em;">🇬🇧 LONDON</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">08:00 - 17:00 CET</div>
+          <div id="londonStatus" style="color: #2962ff; font-size: 0.85em; margin-top: 8px; font-weight: 600;">● Active</div>
+        </div>
+        <div id="sessionCard-ny" style="padding: 14px; background: #1e222d; border-radius: 4px; border-left: 3px solid #089981;">
+          <div style="color: #089981; font-weight: 600; font-size: 0.9em;">🇺🇸 NEW YORK</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">14:30 - 21:00 CET</div>
+          <div id="nyStatus" style="color: #787b86; font-size: 0.85em; margin-top: 8px;">In 2h 15m</div>
+        </div>
+        <div id="sessionCard-overlap" style="padding: 14px; background: #1e222d; border-radius: 4px; border-left: 3px solid #f23645;">
+          <div style="color: #f23645; font-weight: 600; font-size: 0.9em;">⚡ OVERLAP</div>
+          <div style="color: #787b86; font-size: 0.8em; margin-top: 6px;">14:30 - 17:00 CET</div>
+          <div id="overlapStatus" style="color: #787b86; font-size: 0.85em; margin-top: 8px;">High volatility zone</div>
+        </div>
+      </div>
+
+      <!-- AI Session Analysis -->
+      <div style="background: #1e222d; border-radius: 6px; padding: 16px; border-left: 3px solid #2962ff;">
+        <div style="color: #787b86; font-size: 0.85em; margin-bottom: 10px;">AI SESSION ANALYSIS</div>
+        <div id="sessionAIAnalysis" style="color: #d1d4dc; font-size: 1em; line-height: 1.6;">
+          <strong style="color: #2962ff;">London session active.</strong> Volatility expected to increase as European markets open. Watch for GBP/USD correlation with BTC. Key level at $96,500 resistance - if broken, expect momentum continuation. NY overlap (14:30 CET) typically brings highest volume - prepare for potential breakout.
+        </div>
+      </div>
+
+      <!-- Quick Stats -->
+      <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px;">
+        <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
+          <div style="color: #787b86; font-size: 0.8em;">NEXT SESSION</div>
+          <div id="nextSessionName" style="color: #d1d4dc; font-size: 1.1em; font-weight: 600; margin-top: 4px;">New York</div>
+          <div id="nextSessionIn" style="color: #089981; font-size: 0.9em; margin-top: 2px;">in 2h 15m</div>
+        </div>
+        <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
+          <div style="color: #787b86; font-size: 0.8em;">VOLATILITY LEVEL</div>
+          <div id="volatilityLevel" style="color: #ff9800; font-size: 1.1em; font-weight: 600; margin-top: 4px;">MEDIUM</div>
+          <div style="color: #787b86; font-size: 0.9em; margin-top: 2px;">London typical</div>
+        </div>
+        <div style="text-align: center; padding: 12px; background: #1e222d; border-radius: 4px;">
+          <div style="color: #787b86; font-size: 0.8em;">BEST TRADING WINDOW</div>
+          <div id="bestWindow" style="color: #2962ff; font-size: 1.1em; font-weight: 600; margin-top: 4px;">14:30 - 17:00</div>
+          <div style="color: #787b86; font-size: 0.9em; margin-top: 2px;">London/NY overlap</div>
         </div>
       </div>
     </div>
@@ -5737,6 +5734,135 @@
     // Real-time: Update every 5 seconds for fast reactions
     setInterval(updateLargeTransfers, 15000); // Reduced from 5s to 15s - API limit
     updateLargeTransfers();
+
+    // ===== SESSION STATUS UPDATER =====
+    function updateSessionStatus() {
+      const now = new Date();
+      const cetOffset = 1; // CET = UTC+1
+      const cetHour = (now.getUTCHours() + cetOffset) % 24;
+      const cetMinutes = now.getUTCMinutes();
+      
+      // Session definitions (CET times)
+      const sessions = {
+        asia: { name: 'Asia', emoji: '🌏', start: 0, end: 9, color: '#ff9800' },
+        london: { name: 'London', emoji: '🇬🇧', start: 8, end: 17, color: '#2962ff' },
+        ny: { name: 'New York', emoji: '🇺🇸', start: 14.5, end: 21, color: '#089981' },
+        overlap: { name: 'London/NY Overlap', emoji: '⚡', start: 14.5, end: 17, color: '#f23645' }
+      };
+      
+      // Check which sessions are active
+      const currentHourDecimal = cetHour + (cetMinutes / 60);
+      
+      let activeSession = null;
+      let volatilityLevel = 'LOW';
+      
+      // Update session cards
+      Object.keys(sessions).forEach(key => {
+        const s = sessions[key];
+        const isActive = currentHourDecimal >= s.start && currentHourDecimal < s.end;
+        const card = document.getElementById(`sessionCard-${key}`);
+        const status = document.getElementById(`${key}Status`);
+        
+        if (card && status) {
+          if (isActive) {
+            card.style.background = `rgba(${key === 'london' ? '41, 98, 255' : key === 'ny' ? '8, 153, 129' : key === 'overlap' ? '242, 54, 69' : '255, 152, 0'}, 0.1)`;
+            status.innerHTML = `<span style="color: ${s.color};">● Active</span>`;
+            status.style.fontWeight = '600';
+            
+            if (!activeSession || key === 'overlap') {
+              activeSession = s;
+            }
+          } else {
+            card.style.background = '#1e222d';
+            const timeUntil = s.start - currentHourDecimal;
+            if (timeUntil > 0 && timeUntil < 12) {
+              const hours = Math.floor(timeUntil);
+              const mins = Math.round((timeUntil - hours) * 60);
+              status.textContent = `In ${hours}h ${mins}m`;
+              status.style.fontWeight = '400';
+            } else {
+              status.textContent = 'Ended';
+              status.style.fontWeight = '400';
+            }
+          }
+        }
+      });
+      
+      // Determine volatility
+      if (currentHourDecimal >= 14.5 && currentHourDecimal < 17) {
+        volatilityLevel = 'HIGH';
+      } else if ((currentHourDecimal >= 8 && currentHourDecimal < 10) || (currentHourDecimal >= 14.5 && currentHourDecimal < 16)) {
+        volatilityLevel = 'MEDIUM';
+      }
+      
+      // Update main display
+      const currentSessionName = document.getElementById('currentSessionName');
+      const sessionCountdown = document.getElementById('sessionCountdown');
+      const volatilityEl = document.getElementById('volatilityLevel');
+      const sessionAI = document.getElementById('sessionAIAnalysis');
+      
+      if (activeSession && currentSessionName) {
+        currentSessionName.textContent = activeSession.name;
+        currentSessionName.style.color = activeSession.color;
+        
+        // Calculate time remaining
+        const endHour = Math.floor(activeSession.end);
+        const endMin = (activeSession.end % 1) * 60;
+        const remainingMins = (endHour * 60 + endMin) - (cetHour * 60 + cetMinutes);
+        const remainingH = Math.floor(remainingMins / 60);
+        const remainingM = remainingMins % 60;
+        const remainingS = 60 - now.getSeconds();
+        
+        if (sessionCountdown) {
+          sessionCountdown.textContent = `${String(remainingH).padStart(2, '0')}:${String(remainingM).padStart(2, '0')}:${String(remainingS).padStart(2, '0')}`;
+        }
+      }
+      
+      if (volatilityEl) {
+        volatilityEl.textContent = volatilityLevel;
+        volatilityEl.style.color = volatilityLevel === 'HIGH' ? '#f23645' : volatilityLevel === 'MEDIUM' ? '#ff9800' : '#787b86';
+      }
+      
+      // Update AI Analysis based on time
+      if (sessionAI) {
+        let analysis = '';
+        if (currentHourDecimal >= 14.5 && currentHourDecimal < 17) {
+          analysis = `<strong style="color: #f23645;">⚡ London/NY Overlap - Peak Volatility.</strong> This is the most liquid and volatile period. Major moves often occur now. Watch for institutional order flow and breakout patterns. High volume expected - ideal for momentum trades.`;
+        } else if (currentHourDecimal >= 8 && currentHourDecimal < 14.5) {
+          analysis = `<strong style="color: #2962ff;">London session active.</strong> European markets are open. Watch for GBP/USD and EUR/USD correlation with BTC. NY overlap starts at 14:30 CET - prepare for increased volatility. Key support/resistance levels are being tested.`;
+        } else if (currentHourDecimal >= 14.5 && currentHourDecimal < 21) {
+          analysis = `<strong style="color: #089981;">New York session active.</strong> US markets are driving volume. Watch for stock market correlation (SPX, QQQ). Major economic data releases can cause sharp moves. Consider tighter stops during news events.`;
+        } else if (currentHourDecimal >= 0 && currentHourDecimal < 8) {
+          analysis = `<strong style="color: #ff9800;">Asia session - Low Volatility.</strong> Typically quieter period with ranging price action. Good for scalping in tight ranges. Watch for news from China/Japan markets. London open at 08:00 CET often brings momentum.`;
+        } else {
+          analysis = `<strong style="color: #787b86;">After Hours.</strong> Low liquidity period between sessions. Wide spreads possible. Wait for London or Asia open for better trading conditions.`;
+        }
+        sessionAI.innerHTML = analysis;
+      }
+      
+      // Update next session
+      const nextSessionName = document.getElementById('nextSessionName');
+      const nextSessionIn = document.getElementById('nextSessionIn');
+      if (nextSessionName && nextSessionIn) {
+        if (currentHourDecimal < 8) {
+          nextSessionName.textContent = 'London';
+          const timeToLondon = 8 - currentHourDecimal;
+          nextSessionIn.textContent = `in ${Math.floor(timeToLondon)}h ${Math.round((timeToLondon % 1) * 60)}m`;
+        } else if (currentHourDecimal < 14.5) {
+          nextSessionName.textContent = 'NY Open';
+          const timeToNY = 14.5 - currentHourDecimal;
+          nextSessionIn.textContent = `in ${Math.floor(timeToNY)}h ${Math.round((timeToNY % 1) * 60)}m`;
+        } else if (currentHourDecimal < 21) {
+          nextSessionName.textContent = 'Asia';
+          const timeToAsia = 24 - currentHourDecimal;
+          nextSessionIn.textContent = `in ${Math.floor(timeToAsia)}h ${Math.round((timeToAsia % 1) * 60)}m`;
+        }
+      }
+    }
+    
+    // Update session status every second
+    setInterval(updateSessionStatus, 1000);
+    updateSessionStatus();
 
     // ===== UPDATE MARKET MOVERS (TOP GAINERS/LOSERS) =====
     async function updateMarketMovers() {
