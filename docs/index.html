@@ -98,52 +98,54 @@
     .genius-hamburger-btn {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 12px 20px;
-      background: rgba(255, 140, 0, 0.15);
-      border: 2px solid var(--orange);
-      border-radius: 8px;
-      color: var(--orange);
+      gap: 8px;
+      padding: 8px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #444444;
+      border-radius: 4px;
+      color: #ffffff;
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
       letter-spacing: 0.5px;
       transition: all 0.3s ease;
       position: relative;
       z-index: 10001;
-      min-width: 100px;
-      min-height: 50px;
+      min-width: 70px;
+      min-height: 36px;
       justify-content: center;
+      font-size: 0.85em;
     }
     .genius-hamburger-btn:hover {
-      background: rgba(255, 140, 0, 0.25);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #666666;
     }
     .genius-hamburger-btn:active {
       transform: scale(0.95);
     }
-    .genius-hamburger-icon { display: grid; gap: 5px; width: 24px; }
+    .genius-hamburger-icon { display: grid; gap: 4px; width: 18px; }
     .genius-hamburger-icon span {
-      width: 24px;
-      height: 3px;
-      background: var(--orange);
+      width: 18px;
+      height: 2px;
+      background: #ffffff;
       transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
-      border-radius: 2px;
+      border-radius: 1px;
     }
-    .genius-hamburger-btn.open .line1 { transform: translateY(8px) rotate(45deg); }
+    .genius-hamburger-btn.open .line1 { transform: translateY(6px) rotate(45deg); }
     .genius-hamburger-btn.open .line2 { opacity: 0; width: 0; }
-    .genius-hamburger-btn.open .line3 { transform: translateY(-8px) rotate(-45deg); }
+    .genius-hamburger-btn.open .line3 { transform: translateY(-6px) rotate(-45deg); }
     
     /* Mobile: Make Genius hamburger bigger and centered */
     @media (max-width: 768px) {
       .genius-hamburger-btn {
-        padding: 14px 24px;
-        min-width: 130px;
-        min-height: 55px;
-        font-size: 0.95em;
+        padding: 10px 16px;
+        min-width: 90px;
+        min-height: 40px;
+        font-size: 0.85em;
         margin: 8px auto !important;
       }
       .genius-hamburger-icon span {
-        width: 28px;
-        height: 4px;
+        width: 20px;
+        height: 2px;
       }
     }
 
@@ -1309,31 +1311,30 @@
       align-items: center;
       gap: 6px;
       padding: 8px 14px;
-      background: rgba(255, 140, 0, 0.2);
-      backdrop-filter: blur(8px);
-      border: 2px solid rgba(255, 140, 0, 0.5);
-      border-radius: 8px;
-      color: var(--orange);
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid #444444;
+      border-radius: 4px;
+      color: #ffffff;
       cursor: pointer;
       transition: all 0.3s ease;
-      box-shadow: 0 0 12px rgba(255, 140, 0, 0.3);
+      box-shadow: none;
     }
     .tools-nav-btn:hover {
-      background: rgba(255, 140, 0, 0.35);
-      border-color: var(--orange);
-      box-shadow: 0 0 20px rgba(255, 140, 0, 0.5);
-      transform: scale(1.05);
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #666666;
+      box-shadow: none;
+      transform: scale(1.02);
     }
     .tools-nav-btn.active {
-      background: rgba(255, 140, 0, 0.4);
-      border-color: var(--orange);
+      background: rgba(255, 255, 255, 0.15);
+      border-color: #888888;
     }
     .tools-nav-icon {
       font-size: 1.1em;
     }
     .tools-nav-text {
-      font-weight: 800;
-      letter-spacing: 2px;
+      font-weight: 600;
+      letter-spacing: 1px;
       font-size: 0.85em;
       text-transform: uppercase;
     }
