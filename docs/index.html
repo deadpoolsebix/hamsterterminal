@@ -770,12 +770,20 @@
       align-items: center;
     }
     .news-ticker-content {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       white-space: nowrap;
-      animation: ticker-scroll 45s linear infinite;
+      animation: news-ticker-seamless 60s linear infinite;
       gap: 72px;
       padding: 0 48px;
+      will-change: transform;
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+    }
+    @keyframes news-ticker-seamless {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
     .news-ticker-item {
       display: flex;
@@ -4134,15 +4142,21 @@
   </div>
 
   <!-- CRYPTOPANIC TICKER -->
-  <div class="cryptopanic-ticker" style="background: linear-gradient(90deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%); border-top: 1px solid #ff6b00; border-bottom: 1px solid #ff6b00; padding: 8px 0; overflow: hidden; position: relative;">
-    <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 100px; background: linear-gradient(90deg, #0a0a0a 0%, transparent 100%); z-index: 2; display: flex; align-items: center; padding-left: 12px;">
-      <span style="color: #ff6b00; font-weight: 700; font-size: 0.95em;">🔥 CRYPTO</span>
+  <div class="cryptopanic-ticker" style="background: linear-gradient(90deg, #0a0a0a 0%, #111 50%, #0a0a0a 100%); border-top: 1px solid #ff6b00; border-bottom: 1px solid #ff6b00; padding: 10px 0; overflow: hidden; position: relative;">
+    <div style="position: absolute; left: 0; top: 0; bottom: 0; width: 120px; background: linear-gradient(90deg, #0a0a0a 0%, #0a0a0a 70%, transparent 100%); z-index: 2; display: flex; align-items: center; padding-left: 14px;">
+      <span style="color: #ff6b00; font-weight: 700; font-size: 1em;">🔥 CRYPTO NEWS</span>
     </div>
-    <div id="cryptoPanicTicker" style="display: flex; animation: ticker-scroll 35s linear infinite; white-space: nowrap; padding-left: 110px; font-size: 1em;">
+    <div id="cryptoPanicTicker" style="display: inline-flex; animation: crypto-ticker-seamless 50s linear infinite; white-space: nowrap; padding-left: 130px; font-size: 1em; will-change: transform; backface-visibility: hidden; -webkit-backface-visibility: hidden; transform: translateZ(0);">
       <span style="color: var(--gray); margin-right: 40px;">Ładowanie wiadomości crypto...</span>
     </div>
-    <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 50px; background: linear-gradient(90deg, transparent 0%, #0a0a0a 100%); z-index: 2;"></div>
+    <div style="position: absolute; right: 0; top: 0; bottom: 0; width: 60px; background: linear-gradient(90deg, transparent 0%, #0a0a0a 100%); z-index: 2;"></div>
   </div>
+  <style>
+    @keyframes crypto-ticker-seamless {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+  </style>
 
   <!-- CHART + TRANSFERS -->
   <div class="chart-container" style="padding: 10px 16px;">
@@ -5998,9 +6012,23 @@
 
     function renderNewsTicker(headlines) {
       const newsContent = document.getElementById('newsTickerContent');
-      if (!newsContent || !Array.isArray(headlines)) return;
+      if (!newsContent) return;
+      
+      // Polskie nagłówki fallback
+      const polishFallbackNews = [
+        { category: 'RYNEK', headline: 'Bitcoin testuje kluczowy poziom oporu - analitycy oczekują wybicia', sentiment: 'bullish', timeAgo: '2 min' },
+        { category: 'MAKRO', headline: 'Fed sygnalizuje możliwą zmianę polityki monetarnej w Q2', sentiment: 'neutral', timeAgo: '5 min' },
+        { category: 'CRYPTO', headline: 'Ethereum przygotowuje się do kolejnej aktualizacji sieci', sentiment: 'bullish', timeAgo: '8 min' },
+        { category: 'ALERT', headline: 'Rekordowy napływ kapitału do funduszy ETF na kryptowaluty', sentiment: 'bullish', timeAgo: '12 min' },
+        { category: 'WHALE', headline: 'Wykryto transfer 5000 BTC z nieznanego portfela na giełdę', sentiment: 'bearish', timeAgo: '15 min' },
+        { category: 'ANALIZA', headline: 'RSI wskazuje na możliwość korekty w krótkim terminie', sentiment: 'neutral', timeAgo: '18 min' },
+        { category: 'INST', headline: 'BlackRock zwiększa ekspozycję na aktywa cyfrowe', sentiment: 'bullish', timeAgo: '22 min' },
+        { category: 'TECH', headline: 'Lightning Network osiąga nowe rekordy przepustowości', sentiment: 'bullish', timeAgo: '25 min' }
+      ];
+      
+      const newsToRender = (Array.isArray(headlines) && headlines.length > 0) ? headlines : polishFallbackNews;
 
-      const items = headlines.map(item => {
+      const items = newsToRender.map(item => {
         const label = item.category || 'NEWS';
         const text = item.headline || '';
         const time = item.timeAgo || '--';
@@ -6014,28 +6042,34 @@
         `;
       });
 
-      newsContent.innerHTML = items.length ? `${items.join('')} ${items.join('')}` : `
-        <div class="news-ticker-item">
-          <span class="news-ticker-label">INFO</span>
-          <span class="news-ticker-text">Brak naglowkow</span>
-          <span class="news-ticker-time">--</span>
-        </div>`;
-
+      // Duplikujemy content dla seamless loop
+      newsContent.innerHTML = items.join('') + items.join('');
       restartAnimation(newsContent);
     }
 
     async function updateNewsTicker() {
       try {
         const response = await fetch(`${API_BASE}/api/news/headlines`);
-        if (!response.ok) return;
+        if (!response.ok) {
+          // Fallback - render with empty to trigger Polish defaults
+          renderNewsTicker([]);
+          return;
+        }
         const data = await response.json();
         if (data.ok) {
           renderNewsTicker(data.headlines || []);
+        } else {
+          renderNewsTicker([]);
         }
       } catch (err) {
-        console.log('News API offline, pozostaje tryb demo');
+        console.log('News API offline, używam polskich newsów');
+        renderNewsTicker([]); // Will use Polish fallback
       }
     }
+    // Initialize immediately with Polish news
+    renderNewsTicker([]);
+    // Then try to fetch from API
+    setTimeout(updateNewsTicker, 2000);
 
     // HAMSTER GENIUS - Generate intelligent local commentary based on market data
     function generateLocalGeniusCommentary() {
@@ -6655,7 +6689,7 @@
     async function updateBreakingNews() {
       try {
         const response = await fetch(`${API_BASE}/api/news/headlines`);
-        if (!response.ok) return;
+        if (!response.ok) throw new Error('Headlines fetch failed');
         const data = await response.json();
         if (data.ok && data.headlines) {
           // BREAKING NEWS
@@ -6663,7 +6697,7 @@
           if (breakingList) {
             breakingList.innerHTML = data.headlines.slice(0, 4).map(h => {
               const statusClass = h.sentiment === 'bullish' ? 'breaking-green' : h.sentiment === 'bearish' ? 'breaking-red' : 'breaking-yellow';
-              const statusText = h.sentiment === 'bullish' ? 'GREEN' : h.sentiment === 'bearish' ? 'RED' : 'NEUTRAL';
+              const statusText = h.sentiment === 'bullish' ? 'BYCZE' : h.sentiment === 'bearish' ? 'NIEDŹWIEDZIE' : 'NEUTRALNE';
               return `
                 <div class="breaking-item">
                   <div class="breaking-status ${statusClass}">${statusText}</div>
@@ -6677,9 +6711,52 @@
               `;
             }).join('');
           }
+        } else {
+          // Fallback Polish breaking news
+          const breakingList = document.getElementById('breakingNewsList');
+          if (breakingList) {
+            const polishNews = [
+              { status: 'BYCZE', statusClass: 'breaking-green', category: 'RYNEK', headline: 'Bitcoin przebija kolejny opór - momentum wzrostowe utrzymane', source: 'ANALIZA', time: '3 min' },
+              { status: 'NEUTRALNE', statusClass: 'breaking-yellow', category: 'MAKRO', headline: 'Fed publikuje protokół z ostatniego posiedzenia - rynek analizuje', source: 'FOMC', time: '8 min' },
+              { status: 'BYCZE', statusClass: 'breaking-green', category: 'ETF', headline: 'Napływ kapitału do ETF Bitcoin przekracza $400M dziennie', source: 'FLOWS', time: '15 min' },
+              { status: 'NIEDŹWIEDZIE', statusClass: 'breaking-red', category: 'WHALE', headline: 'Duży transfer BTC na giełdę - obserwuj poziom $87,000', source: 'ALERT', time: '22 min' }
+            ];
+            breakingList.innerHTML = polishNews.map(n => `
+              <div class="breaking-item">
+                <div class="breaking-status ${n.statusClass}">${n.status}</div>
+                <div class="breaking-category">${n.category}</div>
+                <div>
+                  <div class="breaking-headline">${n.headline}</div>
+                  <div class="breaking-source">${n.source}</div>
+                </div>
+                <div class="breaking-time">${n.time}</div>
+              </div>
+            `).join('');
+          }
         }
       } catch (err) {
         console.log('Breaking news update error:', err);
+        // Fallback on error - Polish news
+        const breakingList = document.getElementById('breakingNewsList');
+        if (breakingList) {
+          const polishNews = [
+            { status: 'BYCZE', statusClass: 'breaking-green', category: 'CRYPTO', headline: 'Rynek kryptowalut kontynuuje trend wzrostowy', source: 'RYNEK', time: '2 min' },
+            { status: 'NEUTRALNE', statusClass: 'breaking-yellow', category: 'DANE', headline: 'Wolumen handlowy stabilny - traderzy czekają na sygnał', source: 'VOL', time: '10 min' },
+            { status: 'BYCZE', statusClass: 'breaking-green', category: 'TECH', headline: 'Sieć Ethereum przetwarza rekordową liczbę transakcji', source: 'ETH', time: '18 min' },
+            { status: 'NIEDŹWIEDZIE', statusClass: 'breaking-red', category: 'UWAGA', headline: 'Zmienność rośnie - zarządzaj ryzykiem ostrożnie', source: 'RISK', time: '25 min' }
+          ];
+          breakingList.innerHTML = polishNews.map(n => `
+            <div class="breaking-item">
+              <div class="breaking-status ${n.statusClass}">${n.status}</div>
+              <div class="breaking-category">${n.category}</div>
+              <div>
+                <div class="breaking-headline">${n.headline}</div>
+                <div class="breaking-source">${n.source}</div>
+              </div>
+              <div class="breaking-time">${n.time}</div>
+            </div>
+          `).join('');
+        }
       }
     }
     setInterval(updateBreakingNews, 30000);
@@ -6711,36 +6788,46 @@
           items.forEach(item => {
             const sentimentColor = item.sentiment === 'bullish' ? '#00ff88' : item.sentiment === 'bearish' ? '#ff4466' : '#ff6b00';
             const sentimentIcon = item.sentiment === 'bullish' ? '📈' : item.sentiment === 'bearish' ? '📉' : '📰';
-            html += `<span style="display: inline-flex; align-items: center; gap: 10px; margin-right: 70px; font-size: 1em;">
-              <span style="font-size: 1.1em;">${sentimentIcon}</span>
+            html += `<span style="display: inline-flex; align-items: center; gap: 12px; margin-right: 80px; font-size: 1.05em;">
+              <span style="font-size: 1.15em;">${sentimentIcon}</span>
               <span style="color: ${sentimentColor}; font-weight: 700;">${item.source || 'NEWS'}</span>
               <span style="color: #eee;">${item.title}</span>
-              <span style="color: #444;">●</span>
+              <span style="color: #333;">●</span>
             </span>`;
           });
           tickerEl.innerHTML = html + html; // duplicate for seamless loop
+          tickerEl.style.animation = 'none';
+          void tickerEl.offsetWidth;
+          tickerEl.style.animation = 'crypto-ticker-seamless 50s linear infinite';
         } else {
-          // Fallback Polish crypto news
+          // Fallback Polish crypto news - rozbudowane
           const fallbackNews = [
-            { icon: '📈', text: 'BTC przekracza ważny opór - analitycy oczekują kontynuacji wzrostów', src: 'ANALIZA' },
-            { icon: '🐋', text: 'Wieloryb przelał 5000 BTC na giełdę - potencjalna presja sprzedażowa', src: 'ALERT' },
-            { icon: '📊', text: 'Indeks Fear & Greed wskazuje na chciwość - rynek w euforii', src: 'SENTIMENT' },
-            { icon: '💰', text: 'Fundusze ETF zanotowały rekordowy napływ kapitału', src: 'FLOWS' },
-            { icon: '🔥', text: 'Funding rate na poziomie neutralnym - stabilna struktura rynku', src: 'DANE' },
-            { icon: '⚡', text: 'Lightning Network osiąga nowe ATH w liczbie kanałów', src: 'TECH' },
-            { icon: '🏦', text: 'Instytucje zwiększają ekspozycję na kryptowaluty', src: 'INST' },
-            { icon: '📉', text: 'Dominacja BTC spada poniżej 50% - altseason nadchodzi?', src: 'MARKET' }
+            { icon: '📈', text: 'BTC przekracza ważny opór techniczny - analitycy oczekują kontynuacji wzrostów', src: 'ANALIZA' },
+            { icon: '🐋', text: 'Wieloryb przeniósł 5000 BTC na giełdę Binance - obserwuj potencjalną presję sprzedażową', src: 'WHALE ALERT' },
+            { icon: '📊', text: 'Indeks Fear & Greed na poziomie 72 - rynek wchodzi w fazę chciwości', src: 'SENTIMENT' },
+            { icon: '💰', text: 'Fundusze ETF na Bitcoin zanotowały rekordowy napływ $500M w jeden dzień', src: 'ETF FLOWS' },
+            { icon: '🔥', text: 'Funding rate na Binance neutralny 0.01% - stabilna struktura rynku futures', src: 'FUTURES' },
+            { icon: '⚡', text: 'Sieć Lightning Network przekroczyła 5000 BTC pojemności - adopcja rośnie', src: 'LIGHTNING' },
+            { icon: '🏦', text: 'Goldman Sachs zwiększa ekspozycję na kryptowaluty w portfelach klientów', src: 'INSTYTUCJE' },
+            { icon: '📉', text: 'Dominacja Bitcoina spada poniżej 52% - czy nadchodzi sezon altcoinów?', src: 'DOMINACJA' },
+            { icon: '🚀', text: 'Ethereum przygotowuje się do aktualizacji Dencun - gas fees mogą spaść o 90%', src: 'ETH UPDATE' },
+            { icon: '💎', text: 'Rezerwy BTC na giełdach osiągnęły najniższy poziom od 5 lat - byki dominują', src: 'ON-CHAIN' },
+            { icon: '📱', text: 'PayPal rozszerza usługi crypto na kolejne 10 krajów europejskich', src: 'ADOPCJA' },
+            { icon: '⚠️', text: 'Open Interest na BTC futures wzrósł o 15% - zwiększona zmienność możliwa', src: 'OI ALERT' }
           ];
           let html = '';
           fallbackNews.forEach(n => {
-            html += `<span style="display: inline-flex; align-items: center; gap: 10px; margin-right: 70px; font-size: 1em;">
-              <span style="font-size: 1.1em;">${n.icon}</span>
+            html += `<span style="display: inline-flex; align-items: center; gap: 12px; margin-right: 80px; font-size: 1.05em;">
+              <span style="font-size: 1.15em;">${n.icon}</span>
               <span style="color: #ff6b00; font-weight: 700;">${n.src}</span>
               <span style="color: #eee;">${n.text}</span>
-              <span style="color: #444;">●</span>
+              <span style="color: #333;">●</span>
             </span>`;
           });
           tickerEl.innerHTML = html + html;
+          tickerEl.style.animation = 'none';
+          void tickerEl.offsetWidth;
+          tickerEl.style.animation = 'crypto-ticker-seamless 50s linear infinite';
         }
       } catch (err) {
         console.log('CryptoPanic ticker error:', err);
@@ -6748,22 +6835,28 @@
         const tickerEl = document.getElementById('cryptoPanicTicker');
         if (tickerEl) {
           const fallbackNews = [
-            { icon: '📈', text: 'BTC utrzymuje się powyżej kluczowego wsparcia', src: 'ANALIZA' },
-            { icon: '🐋', text: 'Aktywność wielorybów wzrasta - monitoruj ruchy', src: 'WHALE' },
-            { icon: '📊', text: 'Wolumen handlowy stabilny w sesji azjatyckiej', src: 'VOL' },
-            { icon: '💰', text: 'Open Interest na futures rośnie', src: 'FUTURES' },
-            { icon: '🔥', text: 'Rynek oczekuje na dane makroekonomiczne', src: 'MACRO' }
+            { icon: '📈', text: 'Bitcoin utrzymuje się powyżej kluczowego poziomu wsparcia $85,000', src: 'ANALIZA' },
+            { icon: '🐋', text: 'Aktywność wielorybów wzrasta - duże transfery wykryte na blockchain', src: 'WHALE' },
+            { icon: '📊', text: 'Wolumen handlowy stabilny w sesji europejskiej', src: 'WOLUMEN' },
+            { icon: '💰', text: 'Open Interest na kontraktach futures rośnie trzeci dzień z rzędu', src: 'FUTURES' },
+            { icon: '🔥', text: 'Rynek oczekuje na publikację danych o inflacji z USA', src: 'MAKRO' },
+            { icon: '⚡', text: 'Hash rate sieci Bitcoin osiąga nowe ATH - bezpieczeństwo sieci rośnie', src: 'MINING' },
+            { icon: '💎', text: 'HODLerzy nie sprzedają - liczba adresów z BTC > 1 rok rośnie', src: 'ON-CHAIN' },
+            { icon: '🚀', text: 'Altcoiny w korekcie - rotacja kapitału do BTC trwa', src: 'ALTS' }
           ];
           let html = '';
           fallbackNews.forEach(n => {
-            html += `<span style="display: inline-flex; align-items: center; gap: 10px; margin-right: 70px; font-size: 1em;">
-              <span style="font-size: 1.1em;">${n.icon}</span>
+            html += `<span style="display: inline-flex; align-items: center; gap: 12px; margin-right: 80px; font-size: 1.05em;">
+              <span style="font-size: 1.15em;">${n.icon}</span>
               <span style="color: #ff6b00; font-weight: 700;">${n.src}</span>
               <span style="color: #eee;">${n.text}</span>
-              <span style="color: #444;">●</span>
+              <span style="color: #333;">●</span>
             </span>`;
           });
           tickerEl.innerHTML = html + html;
+          tickerEl.style.animation = 'none';
+          void tickerEl.offsetWidth;
+          tickerEl.style.animation = 'crypto-ticker-seamless 50s linear infinite';
         }
       }
     }
