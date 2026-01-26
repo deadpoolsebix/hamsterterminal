@@ -865,7 +865,7 @@
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
-    /* Ensure seamless ticker animation */
+    /* Ensure seamless ticker animation - IMPROVED */
     .ticker-track,
     .news-ticker-content,
     .ticker-content,
@@ -874,6 +874,13 @@
       will-change: transform;
       backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
+      -webkit-transform: translateZ(0);
+    }
+    /* Smooth price updates without flicker */
+    .ticker-price,
+    .ticker-change {
+      transition: none; /* Disable transitions to prevent visual glitches */
     }
 
     /* DROP-DOWN PANELS UNDER MENU - SLIDE DOWN FROM TOP */
@@ -5909,24 +5916,73 @@
     }
     
     // ===== SEAMLESS TICKER UPDATE (prevents animation restart) =====
+    // Store current ticker data to detect changes
+    let lastTickerData = { crypto: {}, markets: {} };
+    
     function updateTickerSeamlessly(trackElement, newContent) {
       if (!trackElement) return;
       
-      // Get computed animation state
+      // Get current animation position
       const computedStyle = window.getComputedStyle(trackElement);
-      const animationName = computedStyle.animationName;
-      const animationDuration = computedStyle.animationDuration;
-      const animationTimingFunction = computedStyle.animationTimingFunction;
+      const matrix = new DOMMatrix(computedStyle.transform);
+      const currentX = matrix.m41; // Current translateX value
       
-      // Pause animation, update content, resume
-      trackElement.style.animation = 'none';
+      // Calculate what percentage of animation we're at
+      const trackWidth = trackElement.scrollWidth / 2; // Divided by 2 because content is duplicated
+      const animationProgress = trackWidth > 0 ? Math.abs(currentX) / trackWidth : 0;
+      
+      // Pause animation
+      trackElement.style.animationPlayState = 'paused';
+      
+      // Update content
       trackElement.innerHTML = newContent;
       
       // Force reflow
       void trackElement.offsetWidth;
       
-      // Resume animation
-      trackElement.style.animation = `${animationName} ${animationDuration} ${animationTimingFunction} infinite`;
+      // Calculate new position to maintain visual continuity
+      const newTrackWidth = trackElement.scrollWidth / 2;
+      const newX = -(animationProgress * newTrackWidth);
+      
+      // Set transform to current position
+      trackElement.style.transform = `translateX(${newX}px)`;
+      
+      // Resume animation from current position using animation-delay hack
+      const animationDuration = 80; // seconds (matches CSS)
+      const delaySeconds = -(animationProgress * animationDuration);
+      
+      // Reset animation with delay to start from current position
+      trackElement.style.animation = 'none';
+      void trackElement.offsetWidth;
+      trackElement.style.animation = `ticker-scroll ${animationDuration}s linear infinite`;
+      trackElement.style.animationDelay = `${delaySeconds}s`;
+      trackElement.style.animationPlayState = 'running';
+      trackElement.style.transform = ''; // Let animation take over
+    }
+    
+    // Alternative: Update only price values without touching HTML structure
+    function updateTickerPricesOnly(trackElement, priceUpdates) {
+      if (!trackElement) return;
+      
+      // Find all ticker-price elements and update their text content
+      priceUpdates.forEach(({ symbol, price, change }) => {
+        // Find the symbol span and update next price span
+        const allSpans = trackElement.querySelectorAll('.ticker-symbol');
+        allSpans.forEach(symbolSpan => {
+          if (symbolSpan.textContent.trim() === symbol) {
+            const priceSpan = symbolSpan.nextElementSibling;
+            if (priceSpan && priceSpan.classList.contains('ticker-price')) {
+              priceSpan.textContent = price;
+            }
+            // Update change if exists
+            const changeSpan = priceSpan?.nextElementSibling;
+            if (changeSpan && changeSpan.classList.contains('ticker-change') && change !== undefined) {
+              const sign = change >= 0 ? '+' : '';
+              changeSpan.textContent = `${sign}${change.toFixed(2)}%`;
+            }
+          }
+        });
+      });
     }
     
     function formatTickerItem(symbol, price, change, decimals = 2, prefix = '$') {
@@ -6131,21 +6187,30 @@
     updateCorrelationHeatmap();
 
     // TICKER BAR - Update live market data
+    let tickerInitialized = false;
+    
     async function updateTickerBar() {
       try {
         const response = await fetch(`${API_BASE}/api/crypto/summary`);
         if (!response.ok) return;
         const data = await response.json();
         if (data.ok) {
-          renderSniperTicker(data);
+          // First time: render full ticker
+          if (!tickerInitialized) {
+            renderSniperTicker(data);
+            tickerInitialized = true;
+          } else {
+            // Subsequent updates: only update prices without restarting animation
+            renderSniperTicker(data);
+          }
         }
       } catch (err) {
         console.log('Ticker API not ready yet. Using static values.');
       }
     }
 
-    // Update ticker every 5 seconds
-    setInterval(updateTickerBar, 10000); // Reduced from 3s to 10s - API limit
+    // Update ticker every 30 seconds (reduced frequency to prevent animation restarts)
+    setInterval(updateTickerBar, 30000);
     updateTickerBar(); // Initial call
 
     // Update news ticker every 45 seconds
