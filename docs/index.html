@@ -5608,8 +5608,12 @@
       }
       
       // Update live commentary with typewriter effect
-      if (typeof updateLiveCommentary === 'function') {
-        updateLiveCommentary(commentary);
+      if (typeof window.updateLiveCommentary === 'function') {
+        try {
+          window.updateLiveCommentary(commentary);
+        } catch(e) {
+          console.log('Typewriter not ready yet:', e.message);
+        }
       }
       
       const commentaryUpdateEl = document.getElementById('commentaryLastUpdate');
@@ -9274,8 +9278,12 @@
     };
 
     function updateMT5PipCalc() {
-      const instrument = document.getElementById('mt5Instrument').value;
-      const lotSize = parseFloat(document.getElementById('mt5LotSize').value) || 0.1;
+      const instrumentEl = document.getElementById('mt5Instrument');
+      const lotSizeEl = document.getElementById('mt5LotSize');
+      if (!instrumentEl || !lotSizeEl) return; // Skip if elements don't exist
+      
+      const instrument = instrumentEl.value;
+      const lotSize = parseFloat(lotSizeEl.value) || 0.1;
       const info = pipValues[instrument] || pipValues['XAUUSD'];
       
       const basePipValue = info.value * lotSize;
@@ -9730,8 +9738,11 @@
     }
 
     // ============ TYPEWRITER EFFECT FOR LIVE COMMENTARY ============
-    let typewriterQueue = [];
-    let isTyping = false;
+    // Declare at module level to avoid initialization errors
+    var typewriterQueue = window.typewriterQueue || [];
+    var isTyping = window.isTyping || false;
+    window.typewriterQueue = typewriterQueue;
+    window.isTyping = isTyping;
     
     function typewriterEffect(text, elementId = 'typewriterText', speed = 30) {
       const element = document.getElementById(elementId);
@@ -9770,7 +9781,7 @@
       type();
     }
     
-    // Update live commentary with typewriter
+    // Update live commentary with typewriter - register globally
     function updateLiveCommentary(text) {
       typewriterEffect(text, 'typewriterText', 25);
       
@@ -9780,6 +9791,7 @@
       const updateEl = document.getElementById('commentaryLastUpdate');
       if (updateEl) updateEl.textContent = timeStr;
     }
+    window.updateLiveCommentary = updateLiveCommentary;
     
     // Update Genius commentary UI elements (called from applyGeniusPayload)
     function updateGeniusCommentaryUI(data) {
