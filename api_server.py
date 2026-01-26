@@ -72,7 +72,7 @@ logger = logging.getLogger(__name__)
 
 # ============ API CONFIG ============
 # Twelve Data - stocks, crypto, forex (Pro plan)
-TWELVE_DATA_API_KEY = os.getenv('TWELVE_DATA_API_KEY', 'demo')
+TWELVE_DATA_API_KEY = os.getenv('TWELVE_DATA_API_KEY', 'd54ad684cd8f40de895ec569d6128821')
 TWELVE_DATA_BASE_URL = 'https://api.twelvedata.com'
 TWELVE_DATA_WS_URL = 'wss://ws.twelvedata.com/v1/quotes/price'
 
