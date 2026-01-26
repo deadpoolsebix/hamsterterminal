@@ -5227,68 +5227,77 @@
       
       // Force body colors
       body.style.setProperty('background-color', bgColor, 'important');
+      body.style.setProperty('background', bgColor, 'important');
       body.style.setProperty('color', textColor, 'important');
       
-      // Force ALL elements with background
+      // FORCE ALL ELEMENTS - very aggressive!
       const allElements = document.querySelectorAll('*');
       allElements.forEach(el => {
         const tag = el.tagName.toLowerCase();
-        const classes = el.className || '';
+        const classes = el.className ? el.className.toString() : '';
+        const id = el.id || '';
         
-        // Skip price elements (green/red)
-        if (classes.includes && (classes.includes('price-up') || classes.includes('price-down') || classes.includes('positive') || classes.includes('negative'))) {
+        // Skip specific price color classes
+        if (classes.includes('price-up') || classes.includes('price-down') || 
+            classes.includes('positive') || classes.includes('negative') ||
+            classes.includes('bullish') || classes.includes('bearish') ||
+            classes.includes('green') || classes.includes('red')) {
           return;
         }
         
-        // Force backgrounds on containers
-        if (tag === 'div' || tag === 'section' || tag === 'article' || tag === 'aside' || tag === 'header' || tag === 'footer' || tag === 'main' || tag === 'nav') {
-          const computedBg = window.getComputedStyle(el).backgroundColor;
-          // Only change if it has a dark background (not transparent)
-          if (computedBg && computedBg !== 'rgba(0, 0, 0, 0)' && computedBg !== 'transparent') {
-            el.style.setProperty('background-color', panelBg, 'important');
-          }
+        // Skip SVG internals
+        if (tag === 'svg' || tag === 'path' || tag === 'g' || tag === 'circle' || tag === 'line' || tag === 'polyline' || tag === 'polygon' || tag === 'rect') {
+          return;
         }
         
-        // Force text colors (but NOT price colors)
-        if (tag === 'h1' || tag === 'h2' || tag === 'h3' || tag === 'h4' || tag === 'h5' || tag === 'h6' || tag === 'p' || tag === 'span' || tag === 'label' || tag === 'a' || tag === 'li' || tag === 'td' || tag === 'th') {
-          const currentColor = window.getComputedStyle(el).color;
-          // Skip if it's a price color (green rgb(0,255,136) or red rgb(255,68,68))
-          if (currentColor.includes('0, 255') || currentColor.includes('255, 68') || currentColor.includes('255, 0, 0') || currentColor.includes('0, 128, 0')) {
-            return;
-          }
+        // Skip scripts and styles
+        if (tag === 'script' || tag === 'style' || tag === 'link' || tag === 'meta' || tag === 'head' || tag === 'html') {
+          return;
+        }
+        
+        // Force background on ALL container-like elements
+        if (tag === 'div' || tag === 'section' || tag === 'article' || tag === 'aside' || 
+            tag === 'header' || tag === 'footer' || tag === 'main' || tag === 'nav' ||
+            tag === 'form' || tag === 'fieldset' || tag === 'ul' || tag === 'ol' || tag === 'li') {
+          el.style.setProperty('background-color', panelBg, 'important');
+          el.style.setProperty('border-color', borderColor, 'important');
+        }
+        
+        // Force text color on ALL text elements
+        el.style.setProperty('color', textColor, 'important');
+      });
+      
+      // Force specific elements that might have inline styles
+      document.querySelectorAll('[style*="background"], [style*="color"]').forEach(el => {
+        const classes = el.className ? el.className.toString() : '';
+        if (!classes.includes('price') && !classes.includes('positive') && !classes.includes('negative')) {
+          el.style.setProperty('background-color', panelBg, 'important');
           el.style.setProperty('color', textColor, 'important');
         }
       });
       
-      // Force specific panel classes
-      const panelSelectors = '.genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar, .funding-grid, .rsi-section, .signals-section, .level-analysis-container, .market-news-section, .top-bar, .news-ticker-bar, .status-bar, .drawer-panel, .analytics-panel';
-      document.querySelectorAll(panelSelectors).forEach(el => {
-        el.style.setProperty('background-color', panelBg, 'important');
-        el.style.setProperty('border-color', borderColor, 'important');
-      });
-      
-      // Force select, input elements
-      document.querySelectorAll('select, input, textarea').forEach(el => {
-        el.style.setProperty('background-color', isLight ? '#ffffff' : '#1a1a2e', 'important');
-        el.style.setProperty('color', textColor, 'important');
-        el.style.setProperty('border-color', borderColor, 'important');
-      });
-      
-      // Force buttons (except theme toggle)
-      document.querySelectorAll('button:not(.theme-toggle)').forEach(el => {
-        el.style.setProperty('background-color', isLight ? '#e0e0e0' : '#1a1a2e', 'important');
-        el.style.setProperty('color', textColor, 'important');
-        el.style.setProperty('border-color', borderColor, 'important');
+      // Force inputs and selects
+      document.querySelectorAll('select, input, textarea, button').forEach(el => {
+        if (!el.classList.contains('theme-toggle')) {
+          el.style.setProperty('background-color', isLight ? '#ffffff' : '#1a1a2e', 'important');
+          el.style.setProperty('color', textColor, 'important');
+          el.style.setProperty('border-color', borderColor, 'important');
+        }
       });
       
       // Force tables
-      document.querySelectorAll('table, tr, td, th').forEach(el => {
+      document.querySelectorAll('table, thead, tbody, tr, td, th').forEach(el => {
         el.style.setProperty('background-color', panelBg, 'important');
         el.style.setProperty('color', textColor, 'important');
         el.style.setProperty('border-color', borderColor, 'important');
       });
       
-      console.log('✅ Theme styles applied! isLight:', isLight, 'textColor:', textColor);
+      // Force links
+      document.querySelectorAll('a').forEach(el => {
+        el.style.setProperty('color', isLight ? '#0066cc' : '#00ff88', 'important');
+      });
+      
+      console.log('✅ Theme styles applied! isLight:', isLight);
     }
     // ============================================
     
