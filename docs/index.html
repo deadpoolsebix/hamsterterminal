@@ -102,8 +102,11 @@
       background: var(--bg-secondary) !important;
       border-color: var(--border-color) !important;
     }
-    body.light-theme .hamburger-menu .bar {
-      background: var(--text-primary) !important;
+    body.light-theme .hamburger-menu .bar,
+    body.light-theme .genius-hamburger-icon span,
+    body.light-theme .hamburger-icon span,
+    body.light-theme .analytics-icon span {
+      background: #000000 !important;
     }
     /* All panels and sections */
     body.light-theme div[style*="background: #0a0a0a"],
@@ -431,7 +434,7 @@
     .genius-hamburger-icon span {
       width: 18px;
       height: 2px;
-      background: #ffffff;
+      background: #000000;
       transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease;
       border-radius: 1px;
     }
@@ -6682,7 +6685,7 @@
     setInterval(updateBreakingNews, 30000);
     updateBreakingNews();
 
-    // ===== UPDATE CRYPTOPANIC TICKER (POLISH NEWS, SMALLER) =====
+    // ===== UPDATE CRYPTOPANIC TICKER (POLISH NEWS, BIGGER) =====
     async function updateCryptoPanicTicker() {
       const tickerEl = document.getElementById('cryptoPanicTicker');
       if (!tickerEl) return;
@@ -6722,11 +6725,11 @@
             let html = '';
             items.forEach(item => {
               const icon = item.sentiment === 'bullish' ? '📈' : item.sentiment === 'bearish' ? '📉' : '📰';
-              html += `<span style="display: inline-flex; align-items: center; gap: 8px; margin-right: 60px; font-size: 0.8em;">
-                <span style="font-size: 1em;">${icon}</span>
-                <span style="color: #ff6b00; font-weight: 600;">${item.source || 'NEWS'}</span>
-                <span style="color: #bbb;">${item.title}</span>
-                <span style="color: #333;">●</span>
+              html += `<span style="display: inline-flex; align-items: center; gap: 12px; margin-right: 80px; font-size: 1.05em;">
+                <span style="font-size: 1.2em;">${icon}</span>
+                <span style="color: #ff6b00; font-weight: 700;">${item.source || 'NEWS'}</span>
+                <span style="color: #ccc;">${item.title}</span>
+                <span style="color: #444;">●</span>
               </span>`;
             });
             tickerEl.innerHTML = html + html;
@@ -6740,14 +6743,14 @@
         console.log('CryptoPanic API offline - używam polskich newsów');
       }
       
-      // Fallback - Polish news (smaller)
+      // Fallback - Polish news (BIGGER)
       let html = '';
       polishNews.forEach(n => {
-        html += `<span style="display: inline-flex; align-items: center; gap: 8px; margin-right: 60px; font-size: 0.8em;">
-          <span style="font-size: 1em;">${n.icon}</span>
-          <span style="color: #ff6b00; font-weight: 600;">${n.src}</span>
-          <span style="color: #bbb;">${n.text}</span>
-          <span style="color: #333;">●</span>
+        html += `<span style="display: inline-flex; align-items: center; gap: 12px; margin-right: 80px; font-size: 1.05em;">
+          <span style="font-size: 1.2em;">${n.icon}</span>
+          <span style="color: #ff6b00; font-weight: 700;">${n.src}</span>
+          <span style="color: #ccc;">${n.text}</span>
+          <span style="color: #444;">●</span>
         </span>`;
       });
       tickerEl.innerHTML = html + html;
@@ -8610,11 +8613,11 @@
             data.tweets.forEach(tweet => {
               const timeAgo = formatTwitterTime(tweet.created_at);
               tickerHtml += `
-                <span class="twitter-ticker-item" style="display: inline-flex; align-items: center; gap: 6px; margin-right: 40px; font-size: 0.75em;">
-                  <span style="color: #1DA1F2; font-weight: 600;">@${tweet.author}</span>
-                  <span style="color: #aaa;">${tweet.text}</span>
-                  <span style="color: #555; font-size: 0.9em;">${timeAgo}</span>
-                  <span style="color: #333;">•</span>
+                <span class="twitter-ticker-item" style="display: inline-flex; align-items: center; gap: 12px; margin-right: 70px; font-size: 1.05em;">
+                  <span style="color: #1DA1F2; font-weight: 700;">@${tweet.author}</span>
+                  <span style="color: #ccc;">${tweet.text}</span>
+                  <span style="color: #666; font-size: 0.9em;">${timeAgo}</span>
+                  <span style="color: #444;">•</span>
                 </span>
               `;
             });
@@ -8626,15 +8629,15 @@
         console.log('Twitter API offline - używam polskich wiadomości');
       }
       
-      // Fallback - Polish tweets
+      // Fallback - Polish tweets (BIGGER)
       let tickerHtml = '';
       polishTweets.forEach(t => {
         tickerHtml += `
-          <span class="twitter-ticker-item" style="display: inline-flex; align-items: center; gap: 6px; margin-right: 40px; font-size: 0.75em;">
-            <span style="color: #1DA1F2; font-weight: 600;">@${t.author}</span>
-            <span style="color: #aaa;">${t.text}</span>
-            <span style="color: #555; font-size: 0.9em;">${t.time}</span>
-            <span style="color: #333;">•</span>
+          <span class="twitter-ticker-item" style="display: inline-flex; align-items: center; gap: 12px; margin-right: 70px; font-size: 1.05em;">
+            <span style="color: #1DA1F2; font-weight: 700;">@${t.author}</span>
+            <span style="color: #ccc;">${t.text}</span>
+            <span style="color: #666; font-size: 0.9em;">${t.time}</span>
+            <span style="color: #444;">•</span>
           </span>
         `;
       });
