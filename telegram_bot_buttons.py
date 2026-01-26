@@ -13,7 +13,7 @@ import asyncio
 import json
 import os
 from datetime import datetime, time, timedelta
-from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardRemove
+from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, ContextTypes, CallbackQueryHandler, JobQueue, MessageHandler, filters, ConversationHandler
 
 # ═══════════════════════════════════════════════════════════════
@@ -722,29 +722,166 @@ logger = logging.getLogger(__name__)
 
 def get_quote(symbol):
     """
-    Pobierz cenę z Twelve Data API (Pro Max).
+    Pobierz cenę z wielu źródeł z priorytetem:
+    1. TwelveData API (Pro Max) - główne źródło
+    2. Binance API - fallback dla crypto
+    3. CoinGecko API - fallback #2 dla crypto (działa wszędzie)
+    4. Kraken API - fallback #3 dla crypto
+    
     Obsługuje: Crypto, Forex, Metale, Akcje, Indeksy.
     """
+    
+    # ═══════════════════════════════════════════════════════════════
+    # ŹRÓDŁO 1: TwelveData API (Pro Max)
+    # ═══════════════════════════════════════════════════════════════
     try:
         r = requests.get(
             f'https://api.twelvedata.com/quote?symbol={symbol}&apikey={TWELVE_DATA_API}',
             timeout=10
         )
-        if r.status_code != 200:
-            logger.error(f"TwelveData API error {r.status_code} for {symbol}: {r.text}")
-            return {'error': f'Błąd API TwelveData ({r.status_code})'}
-        result = r.json()
-        if 'code' in result and result.get('code') == 400:
-            logger.error(f"TwelveData API error for {symbol}: {result.get('message', 'Unknown error')}")
-            return {'error': f"Błąd API: {result.get('message', 'Nieznany błąd')}"}
-        if not result or 'close' not in result:
-            logger.error(f"TwelveData API returned no data for {symbol}: {result}")
-            return {'error': 'Brak danych z TwelveData API'}
-        result['source'] = 'TwelveData Pro Max'
-        return result
+        if r.status_code == 200:
+            result = r.json()
+            if 'close' in result and not result.get('code'):
+                result['source'] = 'TwelveData Pro Max'
+                logger.info(f"[OK] {symbol} z TwelveData: ${result['close']}")
+                return result
+            else:
+                logger.warning(f"TwelveData zwróciło błąd dla {symbol}: {result.get('message', 'Unknown')}")
+        else:
+            logger.warning(f"TwelveData HTTP {r.status_code} dla {symbol}")
     except Exception as e:
-        logger.error(f"Błąd API dla {symbol}: {e}")
-        return {'error': f'Błąd API: {e}'}
+        logger.warning(f"TwelveData API error for {symbol}: {e}")
+    
+    # ═══════════════════════════════════════════════════════════════
+    # ŹRÓDŁO 2: Binance API (fallback dla crypto)
+    # ═══════════════════════════════════════════════════════════════
+    binance_symbols = {
+        'BTC/USD': 'BTCUSDT',
+        'ETH/USD': 'ETHUSDT',
+        'SOL/USD': 'SOLUSDT',
+        'XRP/USD': 'XRPUSDT',
+        'DOGE/USD': 'DOGEUSDT',
+        'ADA/USD': 'ADAUSDT',
+        'AVAX/USD': 'AVAXUSDT',
+        'DOT/USD': 'DOTUSDT',
+        'LINK/USD': 'LINKUSDT',
+        'MATIC/USD': 'MATICUSDT',
+    }
+    
+    if symbol in binance_symbols:
+        try:
+            binance_sym = binance_symbols[symbol]
+            ticker = requests.get(
+                f'https://api.binance.com/api/v3/ticker/24hr?symbol={binance_sym}', 
+                timeout=8
+            ).json()
+            if 'lastPrice' in ticker:
+                logger.info(f"[OK] {symbol} z Binance: ${ticker['lastPrice']}")
+                return {
+                    'close': ticker['lastPrice'],
+                    'open': ticker['openPrice'],
+                    'high': ticker['highPrice'],
+                    'low': ticker['lowPrice'],
+                    'volume': ticker['volume'],
+                    'percent_change': ticker['priceChangePercent'],
+                    'source': 'Binance Spot API'
+                }
+        except Exception as e:
+            logger.warning(f"Binance API failed for {symbol}: {e}")
+    
+    # ═══════════════════════════════════════════════════════════════
+    # ŹRÓDŁO 3: CoinGecko API (fallback #2 - działa wszędzie!)
+    # ═══════════════════════════════════════════════════════════════
+    coingecko_ids = {
+        'BTC/USD': 'bitcoin',
+        'ETH/USD': 'ethereum',
+        'SOL/USD': 'solana',
+        'XRP/USD': 'ripple',
+        'DOGE/USD': 'dogecoin',
+        'ADA/USD': 'cardano',
+        'AVAX/USD': 'avalanche-2',
+        'DOT/USD': 'polkadot',
+        'LINK/USD': 'chainlink',
+        'MATIC/USD': 'matic-network',
+    }
+    
+    if symbol in coingecko_ids:
+        try:
+            coin_id = coingecko_ids[symbol]
+            # CoinGecko FREE API - działa nawet na Render!
+            url = f'https://api.coingecko.com/api/v3/coins/{coin_id}?localization=false&tickers=false&community_data=false&developer_data=false'
+            r = requests.get(url, timeout=10)
+            if r.status_code == 200:
+                data = r.json()
+                market_data = data.get('market_data', {})
+                price = market_data.get('current_price', {}).get('usd', 0)
+                change_24h = market_data.get('price_change_percentage_24h', 0)
+                high_24h = market_data.get('high_24h', {}).get('usd', price)
+                low_24h = market_data.get('low_24h', {}).get('usd', price)
+                
+                if price > 0:
+                    # Oblicz open jako price / (1 + change/100)
+                    open_price = price / (1 + change_24h/100) if change_24h != 0 else price
+                    logger.info(f"[OK] {symbol} z CoinGecko: ${price}")
+                    return {
+                        'close': str(price),
+                        'open': str(open_price),
+                        'high': str(high_24h),
+                        'low': str(low_24h),
+                        'volume': str(market_data.get('total_volume', {}).get('usd', 0)),
+                        'percent_change': str(change_24h),
+                        'source': 'CoinGecko API'
+                    }
+        except Exception as e:
+            logger.warning(f"CoinGecko API failed for {symbol}: {e}")
+    
+    # ═══════════════════════════════════════════════════════════════
+    # ŹRÓDŁO 4: Kraken API (fallback #3 dla crypto)
+    # ═══════════════════════════════════════════════════════════════
+    kraken_symbols = {
+        'BTC/USD': 'XXBTZUSD',
+        'ETH/USD': 'XETHZUSD',
+        'SOL/USD': 'SOLUSD',
+        'XRP/USD': 'XXRPZUSD',
+        'DOGE/USD': 'XDGUSD',
+        'ADA/USD': 'ADAUSD',
+        'DOT/USD': 'DOTUSD',
+        'LINK/USD': 'LINKUSD',
+    }
+    
+    if symbol in kraken_symbols:
+        try:
+            kraken_sym = kraken_symbols[symbol]
+            url = f'https://api.kraken.com/0/public/Ticker?pair={kraken_sym}'
+            r = requests.get(url, timeout=8)
+            if r.status_code == 200:
+                data = r.json()
+                if not data.get('error') and 'result' in data:
+                    result_key = list(data['result'].keys())[0]
+                    ticker = data['result'][result_key]
+                    price = float(ticker['c'][0])  # Last trade price
+                    open_price = float(ticker['o'])  # Today's opening price
+                    high = float(ticker['h'][1])  # 24h high
+                    low = float(ticker['l'][1])  # 24h low
+                    volume = float(ticker['v'][1])  # 24h volume
+                    change = ((price - open_price) / open_price) * 100 if open_price > 0 else 0
+                    
+                    logger.info(f"[OK] {symbol} z Kraken: ${price}")
+                    return {
+                        'close': str(price),
+                        'open': str(open_price),
+                        'high': str(high),
+                        'low': str(low),
+                        'volume': str(volume),
+                        'percent_change': str(change),
+                        'source': 'Kraken API'
+                    }
+        except Exception as e:
+            logger.warning(f"Kraken API failed for {symbol}: {e}")
+    
+    # Brak danych z żadnego źródła
+    logger.error(f"[FAIL] Brak danych dla {symbol} z wszystkich źródeł!")
+    return {'error': f'Brak danych dla {symbol} - wszystkie API niedostępne'}
 
 
 def generate_dynamic_news():
@@ -1029,11 +1166,11 @@ def analyze_market_signals(symbol, data):
     # 🚨 FLASH CRASH / FLASH PUMP - NAJWYŻSZY PRIORYTET!
     # ═══════════════════════════════════════════════════════════════
     
-    # Flash Crash: Nagły spadek >2% w krótkim czasie lub >4% w 10min
-    if short_term_change < -2.0 or medium_term_change < -4.0:
+    # Flash Crash: Nagły spadek >4% w krótkim czasie lub >6% w 10min - TYLKO DUŻE RUCHY!
+    if short_term_change < -4.0 or medium_term_change < -6.0:
         crash_percent = min(short_term_change, medium_term_change)
         # Atrakcyjność: duży ruch + knot odbicia = super hot
-        attr = calc_attractiveness(abs(crash_percent), has_big_wick, range_position > 0.3, abs(crash_percent) > 2)
+        attr = calc_attractiveness(abs(crash_percent), has_big_wick, range_position > 0.3, abs(crash_percent) > 5)
         signals.append({
             'type': 'FLASH_CRASH',
             'emoji': '🚨',
@@ -1058,11 +1195,11 @@ Historycznie takie crashe dają okazję na szybkie odbicie +3-8%. To moment gdy 
             'attractiveness': attr
         })
     
-    # Flash Pump: Nagły wzrost >2% w krótkim czasie lub >4% w 10min
-    if short_term_change > 2.0 or medium_term_change > 4.0:
+    # Flash Pump: Nagły wzrost >4% w krótkim czasie lub >6% w 10min - TYLKO DUŻE RUCHY!
+    if short_term_change > 4.0 or medium_term_change > 6.0:
         pump_percent = max(short_term_change, medium_term_change)
         # Atrakcyjność: duży ruch + momentum = super hot
-        attr = calc_attractiveness(abs(pump_percent), has_big_wick, has_momentum, abs(pump_percent) > 2)
+        attr = calc_attractiveness(abs(pump_percent), has_big_wick, has_momentum, abs(pump_percent) > 5)
         signals.append({
             'type': 'FLASH_PUMP',
             'emoji': '🚀',
@@ -1091,8 +1228,8 @@ Momentum play - "trend is your friend". Możesz jechać z falą lub poczekać na
     # 💰 WIELKA OKAZJA - EXTREME MOVES
     # ═══════════════════════════════════════════════════════════════
     
-    # Ekstremalny dzienny spadek z odbiciem (Hammer na sterydach)
-    if change < -5.0 and range_position > 0.4:
+    # Ekstremalny dzienny spadek z odbiciem (Hammer na sterydach) - MIN 7%!
+    if change < -7.0 and range_position > 0.4:
         # SUPER HOT: duży ruch + odbicie + knot
         attr = calc_attractiveness(abs(change), True, True, True)
         signals.append({
@@ -1117,8 +1254,8 @@ Spadek {change:.1f}% ALE cena odbiła od dna!
             'attractiveness': attr
         })
     
-    # Ekstremalny dzienny wzrost z rejection (potencjalny szczyt)
-    if change > 5.0 and range_position < 0.6:
+    # Ekstremalny dzienny wzrost z rejection (potencjalny szczyt) - MIN 7%!
+    if change > 7.0 and range_position < 0.6:
         attr = calc_attractiveness(abs(change), True, False, True)
         signals.append({
             'type': 'EXTREME_PUMP_REJECTION',
@@ -1211,8 +1348,8 @@ Cena zebrała liquidity powyżej ${high:,.0f} i spadła!
     # Symulowany funding rate
     funding_rate = random.uniform(-0.08, 0.12)
     
-    # Short Squeeze: Nagły wzrost + wysoki negatywny funding (dużo shortów)
-    if change > 3.0 and funding_rate < -0.02:
+    # Short Squeeze: Nagły wzrost + wysoki negatywny funding (dużo shortów) - MIN 5%!
+    if change > 5.0 and funding_rate < -0.02:
         attr = calc_attractiveness(abs(change), has_big_wick, True, True)
         signals.append({
             'type': 'SHORT_SQUEEZE',
@@ -1235,8 +1372,8 @@ Masowe likwidacje SHORT!
             'attractiveness': attr
         })
     
-    # Long Squeeze: Nagły spadek + wysoki pozytywny funding (dużo longów)
-    if change < -3.0 and funding_rate > 0.05:
+    # Long Squeeze: Nagły spadek + wysoki pozytywny funding (dużo longów) - MIN 5%!
+    if change < -5.0 and funding_rate > 0.05:
         attr = calc_attractiveness(abs(change), has_big_wick, True, True)
         signals.append({
             'type': 'LONG_SQUEEZE',
@@ -1263,8 +1400,8 @@ Masowe likwidacje LONG!
     # 📈 SILNE MOMENTUM - TREND CONTINUATION
     # ═══════════════════════════════════════════════════════════════
     
-    if change > 3.5 and range_position > 0.75:
-        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 4)
+    if change > 5.0 and range_position > 0.75:
+        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 6)
         signals.append({
             'type': 'MOMENTUM_BULLISH',
             'emoji': '📈',
@@ -1285,8 +1422,8 @@ Cena +{change:.1f}% i zamyka przy HIGH dnia!
             'attractiveness': attr
         })
     
-    if change < -3.5 and range_position < 0.25:
-        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 4)
+    if change < -5.0 and range_position < 0.25:
+        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 6)
         signals.append({
             'type': 'MOMENTUM_BEARISH',
             'emoji': '📉',
@@ -1311,9 +1448,9 @@ Cena {change:.1f}% i zamyka przy LOW dnia!
     # 🔄 REVERSAL SETUP - PRZY EKSTREMALNYCH POZIOMACH
     # ═══════════════════════════════════════════════════════════════
     
-    # Oversold bounce
-    if change < -4.0 and range_position < 0.15 and lw > bd:
-        attr = calc_attractiveness(abs(change), True, False, abs(change) > 5)
+    # Oversold bounce - MIN 6%!
+    if change < -6.0 and range_position < 0.15 and lw > bd:
+        attr = calc_attractiveness(abs(change), True, False, abs(change) > 7)
         signals.append({
             'type': 'REVERSAL_BULLISH',
             'emoji': '🔄',
@@ -1335,9 +1472,9 @@ Ekstremalny spadek {change:.1f}%!
             'attractiveness': attr
         })
     
-    # Overbought rejection
-    if change > 4.0 and range_position > 0.85 and uw > bd:
-        attr = calc_attractiveness(abs(change), True, False, abs(change) > 5)
+    # Overbought rejection - MIN 6%!
+    if change > 6.0 and range_position > 0.85 and uw > bd:
+        attr = calc_attractiveness(abs(change), True, False, abs(change) > 7)
         signals.append({
             'type': 'REVERSAL_BEARISH',
             'emoji': '🔄',
@@ -1412,8 +1549,8 @@ Cena przebiła ${prev_close * 0.98:,.0f} w dół!
     # 📊 VOLATILITY SIGNALS - częste!
     # ═══════════════════════════════════════════════════════════════
     
-    # Wysoka zmienność - okazja na szybkie zyski
-    if volatility > 5.0 and abs(change) > 3.0:
+    # Wysoka zmienność - okazja na szybkie zyski - TYLKO EKSTREMALNA!
+    if volatility > 7.0 and abs(change) > 5.0:
         direction = 'LONG' if change > 0 else 'SHORT'
         # Atrakcyjność zależy od wielkości ruchu i knota
         attr = calc_attractiveness(abs(change), has_big_wick, has_momentum, volatility > 5)
@@ -1440,9 +1577,9 @@ Wysoka zmienność = większy zysk ALE większe ryzyko. Zmniejsz pozycję!''',
             'attractiveness': attr
         })
     
-    # Trend dzienny - podstawowy sygnał - WYŁĄCZONY (zbyt częsty)
-    # Tylko dla ruchów >5%
-    if abs(change) > 5.0:
+    # Trend dzienny - WYŁĄCZONY dla małych ruchów
+    # Tylko dla EKSTREMALNYCH ruchów >8%
+    if abs(change) > 8.0:
         direction = 'LONG' if change > 0 else 'SHORT'
         trend_name = 'WZROSTOWY 📈' if change > 0 else 'SPADKOWY 📉'
         # Niższa atrakcyjność dla małych ruchów
@@ -1544,11 +1681,28 @@ def format_auto_signal(symbol, name, signal, price):
 
 async def check_and_send_signals(context):
     """
-    EVENT-DRIVEN SIGNALS!
-    Sprawdź rynek i wyślij sygnały gdy wykryto okazję.
-    Flash crash/pump - natychmiast (5 min cooldown)
-    Inne sygnały - 15 min cooldown
-    + Sprawdź PRICE ALERTS użytkowników
+    🔥 RYGORYSTYCZNY SYSTEM SYGNAŁÓW - TYLKO DUŻE OKAZJE!
+    
+    📡 Monitoring 24/7 najlepsze okazje
+    
+    🎯 WYKRYWANE OKAZJE:
+    • 🚨 Flash Crash / Flash Pump (min 4-6%)
+    • 🎯 Liquidity Grab (duży knot + odbicie)
+    • 🚀 Short Squeeze (5%+ przy ujemnym funding)
+    • 💥 Long Squeeze (5%+ przy dodatnim funding)
+    • 📈 Silne Momentum (5%+ przy dziennym high/low)
+    • 🔄 Reversal Setup (6%+ z dużym knotem)
+    • ⚠️ High Volatility (7%+ range)
+    
+    🔥 SYSTEM ATRAKCYJNOŚCI:
+    • Min 65% atrakcyjność do wysłania!
+    • HOT = duże ruchy + wick + momentum
+    
+    ⏰ COOLDOWN:
+    • Flash: 1h
+    • Squeeze/Extreme: 2h
+    • Momentum: 4h
+    • Info: 8h
     """
     global last_signals, price_alerts, signal_stats
     
@@ -1588,16 +1742,24 @@ async def check_and_send_signals(context):
                     signal_key = f"{symbol}_{signal['type']}"
                     now = datetime.now()
                     
-                    # Dynamiczny cooldown w zależności od priorytetu - ZWIĘKSZONE!
+                    # ═══════════════════════════════════════════════════════════════
+                    # FILTR ATRAKCYJNOŚCI - TYLKO HOT SYGNAŁY (min 65%)!
+                    # ═══════════════════════════════════════════════════════════════
+                    attractiveness = signal.get('attractiveness', 50)
+                    if attractiveness < 65:
+                        print(f"      [SKIP] {signal['type']} - zbyt niska atrakcyjność ({attractiveness}%)")
+                        continue
+                    
+                    # Dynamiczny cooldown w zależności od priorytetu - MOCNO ZWIĘKSZONE!
                     priority = signal.get('priority', 5)
                     if priority == 1:
-                        cooldown = 1800  # 30 minut dla flash crash/pump
+                        cooldown = 3600   # 1 GODZINA dla flash crash/pump
                     elif priority == 2:
-                        cooldown = 3600  # 60 minut dla dużych okazji
+                        cooldown = 7200   # 2 GODZINY dla dużych okazji
                     elif priority <= 4:
-                        cooldown = 7200  # 2 godziny dla standardowych
+                        cooldown = 14400  # 4 GODZINY dla standardowych
                     else:
-                        cooldown = 14400  # 4 godziny dla info signals
+                        cooldown = 28800  # 8 GODZIN dla info signals
                     
                     if signal_key in last_signals:
                         last_time = last_signals[signal_key]
@@ -1608,7 +1770,7 @@ async def check_and_send_signals(context):
                     
                     # Zapisz czas sygnału
                     last_signals[signal_key] = now
-                    print(f"      [SEND] Wysylam: {signal['type']} (priorytet: {priority})")
+                    print(f"      [SEND] Wysylam: {signal['type']} (priorytet: {priority}, HOT: {attractiveness}%)")
                     
                     # ═══════════════════════════════════════════════════════════════
                     # AKTUALIZUJ STATYSTYKI SYGNAŁÓW
@@ -2758,23 +2920,31 @@ def get_main_keyboard():
 
 
 def get_back_button():
-    """Przycisk powrotu"""
+    """Przycisk powrotu do głównego MENU"""
     return InlineKeyboardMarkup([
         [InlineKeyboardButton("◀️ MENU", callback_data='menu')]
     ])
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    """Komenda /start z przyciskami"""
-    # Usuń szare menu (ReplyKeyboard) jeśli istnieje
-    await update.message.reply_text("🐹", reply_markup=ReplyKeyboardRemove())
+    """Komenda /start z przyciskami - MENU ZAWSZE WIDOCZNE"""
+    chat_id = str(update.message.chat_id)
     
-    msg = '''🐹 HAMSTER TERMINAL
-━━━━━━━━━━━━━━━━━━━━
-Live Data • Sniper Signals
-Auto Reports 08:00/20:00
+    # Dodaj do subskrybentów
+    if chat_id not in signal_subscribers:
+        signal_subscribers.add(chat_id)
+        save_data({
+            'subscribers': list(report_subscribers),
+            'signal_subscribers': list(signal_subscribers),
+            'price_alerts': price_alerts,
+            'signal_stats': signal_stats
+        })
+    
+    msg = '''┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        🐹 HAMSTER TERMINAL       ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
 
-Select asset:'''
+Select asset to analyze:'''
     
     await update.message.reply_text(msg, reply_markup=get_main_keyboard())
 
@@ -2807,9 +2977,14 @@ async def button_callback(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     
     if data == 'menu':
-        msg = '''🐹 HAMSTER TERMINAL
-━━━━━━━━━━━━━━━━━━━━
-Select asset:'''
+        msg = '''┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃        🐹 HAMSTER TERMINAL       ┃
+┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛
+
+📊 Live Data • ⚡ Sniper Signals
+🕐 Auto Reports 08:00/20:00
+
+Select asset to analyze:'''
         await query.edit_message_text(msg, reply_markup=get_main_keyboard())
     
     elif data == 'btc':
@@ -6307,11 +6482,12 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_custom_symbol))
     
     # ═══════════════════════════════════════════════════════════════
-    # AUTO SIGNALS - EVENT-DRIVEN! Sprawdzaj rynek co 15 minut
-    # Zredukowane aby uniknąć spamu - tylko istotne ruchy
+    # AUTO SIGNALS - RYGORYSTYCZNE! Sprawdzaj rynek co 30 minut
+    # TYLKO DUŻE OKAZJE: Flash Crash/Pump, Squeeze, Liquidity Grab
+    # Min atrakcyjność: 65%
     # ═══════════════════════════════════════════════════════════════
     job_queue = app.job_queue
-    job_queue.run_repeating(check_and_send_signals, interval=900, first=30)  # Co 15 min, start po 30s
+    job_queue.run_repeating(check_and_send_signals, interval=1800, first=60)  # Co 30 min, start po 60s
     
     print("=" * 50)
     print("🚀 BOT STARTED!")
@@ -6320,7 +6496,8 @@ def main():
     print("=" * 50)
     print("")
     
-    app.run_polling(allowed_updates=Update.ALL_TYPES)
+    # drop_pending_updates=True - ignoruje stare wiadomości i rozwiązuje konflikt
+    app.run_polling(allowed_updates=Update.ALL_TYPES, drop_pending_updates=True)
 
 
 if __name__ == "__main__":
