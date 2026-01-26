@@ -5261,12 +5261,28 @@
           /* PRESERVE ONLY PRICE COLORS - green for up, red for down */
           .price-up, .positive, .bullish { color: #00aa55 !important; }
           .price-down, .negative, .bearish { color: #cc0000 !important; }
-          /* CHARTS - DO NOT TOUCH COLORS, only light background */
-          canvas, svg, svg * { 
-            /* No color override - let chart library handle it */
+          /* CHARTS - SVG text elements need dark fill for LIGHT mode */
+          svg text {
+            fill: #333333 !important;
+          }
+          /* Keep price colors on chart labels */
+          svg text[fill="#ff4444"], svg text[fill="#ff6666"], svg text[fill*="ff44"], svg text[fill*="ff66"] {
+            fill: #cc0000 !important;
+          }
+          svg text[fill="#00ff88"], svg text[fill="#66ffaa"], svg text[fill*="00ff"], svg text[fill*="66ff"] {
+            fill: #00aa55 !important;
           }
           .chart-container, [class*="chart"], [id*="chart"], [id*="Chart"] {
             background-color: #f8f8f8 !important;
+          }
+          /* Chart lines should be darker in light mode */
+          svg line, svg path {
+            stroke: #666666 !important;
+          }
+          /* Keep colored lines */
+          svg line[stroke*="ff"], svg path[stroke*="ff"],
+          svg line[stroke*="00"], svg path[stroke*="00"] {
+            /* preserve original color */
           }
         `;
         
