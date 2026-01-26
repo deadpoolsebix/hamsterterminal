@@ -5217,16 +5217,18 @@
       
       if (isLight) {
         // LIGHT THEME - white backgrounds, BLACK text
+        // EXCLUDE: canvas, svg, charts to preserve their colors
         themeStyle.textContent = `
           body, html {
             background-color: #f5f5f5 !important;
             background: #f5f5f5 !important;
             color: #111111 !important;
           }
-          * {
+          *:not(canvas):not(svg):not(svg *):not(.chart-container *):not([class*="chart"] *):not([class*="tradingview"] *):not([id*="chart"] *) {
             color: #111111 !important;
           }
-          div, section, article, aside, header, footer, main, nav, form, ul, ol, li {
+          div:not(.chart-container):not([class*="chart"]):not([id*="chart"]), 
+          section, article, aside, header, footer, main, nav, form, ul, ol, li {
             background-color: #ffffff !important;
             border-color: #dddddd !important;
           }
@@ -5238,7 +5240,11 @@
             background: #ffffff !important;
             border-color: #dddddd !important;
           }
-          h1, h2, h3, h4, h5, h6, p, span, label, a, td, th, li {
+          h1, h2, h3, h4, h5, h6, p, label, a, td, th, li {
+            color: #111111 !important;
+          }
+          /* EXCLUDE spans inside charts */
+          span:not(.chart-container span):not([class*="chart"] span) {
             color: #111111 !important;
           }
           select, input, textarea, button {
@@ -5254,6 +5260,12 @@
           /* Preserve price colors */
           .price-up, .positive, .bullish, [class*="green"] { color: #00aa55 !important; }
           .price-down, .negative, .bearish, [class*="red"] { color: #cc0000 !important; }
+          /* DO NOT TOUCH CHARTS */
+          canvas, svg, .chart-container, .chart-container *, [class*="chart"], [id*="chart"],
+          .lightweight-charts, .tv-lightweight-charts {
+            color: inherit !important;
+            background-color: transparent !important;
+          }
         `;
       } else {
         // DARK THEME - remove injected styles, use original CSS
