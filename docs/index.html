@@ -189,6 +189,56 @@
       color: var(--text-primary) !important;
     }
     
+    /* AGGRESSIVE LIGHT THEME OVERRIDE - Force background on all elements */
+    body.light-theme,
+    body.light-theme * {
+      --bg-primary: #f5f5f5 !important;
+      --bg-secondary: #ffffff !important;
+      --panel: #ffffff !important;
+      --black: #f5f5f5 !important;
+    }
+    body.light-theme {
+      background: #f5f5f5 !important;
+      color: #111111 !important;
+    }
+    body.light-theme .main-grid,
+    body.light-theme .genius-panel,
+    body.light-theme .oi-section,
+    body.light-theme .rsi-section,
+    body.light-theme .genius-inline-box,
+    body.light-theme .side-panel-unified,
+    body.light-theme .chart-section,
+    body.light-theme .live-analysis,
+    body.light-theme .live-analysis-panel {
+      background: #ffffff !important;
+      border-color: #cccccc !important;
+    }
+    body.light-theme div,
+    body.light-theme section,
+    body.light-theme article {
+      border-color: #cccccc !important;
+    }
+    body.light-theme select,
+    body.light-theme input,
+    body.light-theme textarea {
+      background: #ffffff !important;
+      color: #111111 !important;
+      border-color: #cccccc !important;
+    }
+    body.light-theme .ticker-item span,
+    body.light-theme .news-ticker-item span {
+      color: #111111 !important;
+    }
+    /* Force all text colors in light mode */
+    body.light-theme h1, body.light-theme h2, body.light-theme h3,
+    body.light-theme h4, body.light-theme h5, body.light-theme h6,
+    body.light-theme p, body.light-theme span, body.light-theme div {
+      color: inherit;
+    }
+    /* Keep green/red for price changes */
+    body.light-theme .positive, body.light-theme .price-up { color: #00aa33 !important; }
+    body.light-theme .negative, body.light-theme .price-down { color: #cc0022 !important; }
+    
     /* Theme Toggle Button */
     .theme-toggle {
       background: rgba(255, 255, 255, 0.1);
@@ -9729,9 +9779,91 @@
         if (themeLabel) themeLabel.textContent = 'LIGHT';
       }
       
+      // Function to apply theme to inline styles
+      function applyThemeToInlineStyles(isLight) {
+        const darkColors = {
+          bg: ['#000', '#000000', '#0a0a0a', '#111', '#111111', '#1a1a1a', 'black', 'var(--panel)', 'var(--black)'],
+          text: ['#fff', '#ffffff', '#eee', '#eeeeee', '#ddd', '#dddddd', '#ccc', '#cccccc', '#bdbdbd', 'white'],
+          border: ['#222', '#222222', '#333', '#333333', '#444', '#1a1a1a']
+        };
+        const lightColors = {
+          bg: '#f5f5f5',
+          bgAlt: '#ffffff',
+          bgTertiary: '#e8e8e8',
+          text: '#111111',
+          textAlt: '#333333',
+          border: '#cccccc'
+        };
+        
+        // Get ALL elements with inline background
+        document.querySelectorAll('[style*="background"]').forEach(el => {
+          const style = el.getAttribute('style') || '';
+          if (isLight) {
+            // Dark to Light
+            darkColors.bg.forEach(c => {
+              if (style.includes(`background: ${c}`) || style.includes(`background:${c}`)) {
+                el.style.background = lightColors.bg;
+              }
+            });
+          } else {
+            // Light to Dark - restore original (page reload recommended)
+            if (style.includes('background: #f5f5f5') || style.includes('background: #ffffff') || style.includes('background: #e8e8e8')) {
+              el.style.background = '#0a0a0a';
+            }
+          }
+        });
+        
+        // Get ALL elements with inline color
+        document.querySelectorAll('[style*="color"]').forEach(el => {
+          const style = el.getAttribute('style') || '';
+          if (isLight) {
+            darkColors.text.forEach(c => {
+              if (style.includes(`color: ${c}`) || style.includes(`color:${c}`)) {
+                el.style.color = lightColors.text;
+              }
+            });
+          } else {
+            if (style.includes('color: #111') || style.includes('color: #333')) {
+              el.style.color = '#ffffff';
+            }
+          }
+        });
+        
+        // SVG backgrounds
+        document.querySelectorAll('svg rect').forEach(rect => {
+          const fill = rect.getAttribute('fill');
+          if (isLight && (fill === '#000' || fill === '#000000' || fill === 'black')) {
+            rect.setAttribute('fill', '#f0f0f0');
+          } else if (!isLight && (fill === '#f0f0f0' || fill === '#f5f5f5')) {
+            rect.setAttribute('fill', '#000000');
+          }
+        });
+        
+        // SVG text
+        document.querySelectorAll('svg text').forEach(text => {
+          if (isLight) {
+            text.setAttribute('fill', '#111111');
+          } else {
+            text.setAttribute('fill', '#888888');
+          }
+        });
+        
+        // Force body background
+        document.body.style.background = isLight ? '#f5f5f5' : '#000000';
+        document.body.style.color = isLight ? '#111111' : '#ffffff';
+      }
+      
+      // Apply on load if saved theme is light
+      if (savedTheme === 'light') {
+        applyThemeToInlineStyles(true);
+      }
+      
       if (themeToggle) {
         themeToggle.addEventListener('click', () => {
           const isLight = document.body.classList.toggle('light-theme');
+          
+          // Apply to inline styles
+          applyThemeToInlineStyles(isLight);
           
           if (isLight) {
             themeIcon.textContent = '☀️';
