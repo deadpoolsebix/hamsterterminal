@@ -1156,6 +1156,14 @@ def get_crypto_summary():
             'DAX': round(cache['dax_change'], 2),
             'DOW': round(cache['dow_change'], 2)
         },
+        'forex': {
+            'EURUSD': round(cache['eurusd_price'], 4),
+            'GBPUSD': round(cache['gbpusd_price'], 4)
+        },
+        'forexChange': {
+            'EURUSD': round(cache['eurusd_change'], 2),
+            'GBPUSD': round(cache['gbpusd_change'], 2)
+        },
         'fearGreed': cache['fear_greed']
     }
 

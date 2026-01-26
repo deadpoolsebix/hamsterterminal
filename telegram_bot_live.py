@@ -31,6 +31,9 @@ CHAT_ID = '5616894588'  # Twój chat ID do auto-raportów
 previous_prices = {}
 # Subskrybenci auto-raportów
 report_subscribers = set([CHAT_ID])
+# Cooldown alertów - zapobiega spamowi (ostatni czas wysłania alertu dla danego assetu)
+alert_cooldowns = {}  # {'BTC': timestamp, 'ETH': timestamp, ...}
+ALERT_COOLDOWN_MINUTES = 30  # Minimum 30 minut między alertami dla tego samego assetu
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -542,8 +545,8 @@ async def generate_evening_report():
 
 
 async def check_price_alerts(context: ContextTypes.DEFAULT_TYPE):
-    """Sprawdź duże ruchy cenowe (>3%)"""
-    global previous_prices
+    """Sprawdź duże ruchy cenowe (>3%) z cooldown 30 min"""
+    global previous_prices, alert_cooldowns
     
     symbols = {
         'BTC/USD': ('BTC', '₿'),
@@ -551,6 +554,8 @@ async def check_price_alerts(context: ContextTypes.DEFAULT_TYPE):
         'XAU/USD': ('GOLD', '🪙'),
         'XAG/USD': ('SILVER', '🔘')
     }
+    
+    current_time = datetime.now()
     
     for symbol, (name, emoji) in symbols.items():
         data = get_quote(symbol)
@@ -562,6 +567,14 @@ async def check_price_alerts(context: ContextTypes.DEFAULT_TYPE):
                 change_pct = ((current_price - prev_price) / prev_price) * 100
                 
                 if abs(change_pct) >= 3:
+                    # Sprawdź cooldown - czy minęło 30 minut od ostatniego alertu
+                    last_alert_time = alert_cooldowns.get(name)
+                    if last_alert_time:
+                        minutes_since_alert = (current_time - last_alert_time).total_seconds() / 60
+                        if minutes_since_alert < ALERT_COOLDOWN_MINUTES:
+                            logger.info(f"⏸️ Alert {name} pominięty - cooldown ({minutes_since_alert:.0f}/{ALERT_COOLDOWN_MINUTES} min)")
+                            continue  # Pomijamy - za wcześnie na kolejny alert
+                    
                     direction = "🚀 PUMP" if change_pct > 0 else "💥 DUMP"
                     arrow = "▲" if change_pct > 0 else "▼"
                     
@@ -577,15 +590,22 @@ async def check_price_alerts(context: ContextTypes.DEFAULT_TYPE):
 ⚠️ WYSOKA ZMIENNOŚĆ!
 {'🟢 Rozważ LONG' if change_pct > 0 else '🔴 Rozważ SHORT'}
 
-⏰ {datetime.now().strftime('%H:%M:%S')} CET
+⏰ {current_time.strftime('%H:%M:%S')} CET
 ══════════════════════════════════'''
                     
                     # Wyślij do wszystkich subskrybentów
+                    alert_sent = False
                     for chat_id in report_subscribers:
                         try:
                             await context.bot.send_message(chat_id=chat_id, text=alert_msg)
+                            alert_sent = True
                         except Exception as e:
                             logger.error(f"Błąd wysyłania alertu: {e}")
+                    
+                    # Zapisz czas wysłania alertu (cooldown)
+                    if alert_sent:
+                        alert_cooldowns[name] = current_time
+                        logger.info(f"✅ Alert {name} wysłany - następny możliwy za {ALERT_COOLDOWN_MINUTES} min")
             
             # Aktualizuj cenę
             previous_prices[name] = current_price

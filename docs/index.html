@@ -5873,6 +5873,16 @@
           stockItems.push(formatTickerItem('DAX', indices.DAX, indicesChange.DAX, 2, ''));
         }
         
+        // ═══ 3.5 FOREX (EUR/USD, GBP/USD) ═══
+        const forex = data.forex || {};
+        const forexChange = data.forexChange || {};
+        if (typeof forex.EURUSD === 'number') {
+          stockItems.push(formatTickerItem('EUR/USD', forex.EURUSD, forexChange.EURUSD, 4, ''));
+        }
+        if (typeof forex.GBPUSD === 'number') {
+          stockItems.push(formatTickerItem('GBP/USD', forex.GBPUSD, forexChange.GBPUSD, 4, ''));
+        }
+        
         // ═══ 4. MEGA-CAP TECH STOCKS by Market Cap (Jan 2026) ═══
         // Order: AAPL ($3.5T) > MSFT ($3.2T) > NVDA ($3.0T) > AMZN ($2.3T) > GOOGL ($2.2T) > META ($1.5T) > TSLA ($1.2T)
         const stocks = data.stocks || {};
