@@ -3088,7 +3088,7 @@
       
       <!-- BUTTONS on the right -->
       <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
-        <button class="theme-toggle" id="themeToggle" title="Przełącz motyw Dark/Light">
+        <button class="theme-toggle" id="themeToggle" title="Przełącz motyw Dark/Light" onclick="toggleTheme()">
           <span class="icon" id="themeIcon">🌙</span>
           <span id="themeLabel">DARK</span>
         </button>
@@ -5173,6 +5173,93 @@
     </div>
 
   <script>
+    // ============================================
+    // GLOBAL THEME TOGGLE FUNCTION (MUST BE FIRST!)
+    // ============================================
+    function toggleTheme() {
+      console.log('🎨 toggleTheme() called!');
+      const body = document.body;
+      const isCurrentlyLight = body.classList.contains('light-theme');
+      
+      if (isCurrentlyLight) {
+        body.classList.remove('light-theme');
+        localStorage.setItem('hamsterTheme', 'dark');
+        console.log('🌙 Switching to DARK theme');
+      } else {
+        body.classList.add('light-theme');
+        localStorage.setItem('hamsterTheme', 'light');
+        console.log('☀️ Switching to LIGHT theme');
+      }
+      
+      // Update button text and icon
+      const themeBtn = document.getElementById('themeToggle');
+      if (themeBtn) {
+        const newIsLight = body.classList.contains('light-theme');
+        themeBtn.innerHTML = newIsLight ? '☀️ LIGHT' : '🌙 DARK';
+      }
+      
+      // Force aggressive style changes
+      applyThemeStyles();
+    }
+    
+    function applyThemeStyles() {
+      const body = document.body;
+      const isLight = body.classList.contains('light-theme');
+      console.log('🎨 applyThemeStyles() - isLight:', isLight);
+      
+      // Force body colors
+      if (isLight) {
+        body.style.setProperty('background-color', '#f5f5f5', 'important');
+        body.style.setProperty('color', '#1a1a2e', 'important');
+      } else {
+        body.style.setProperty('background-color', '#0a0a0f', 'important');
+        body.style.setProperty('color', '#00ff88', 'important');
+      }
+      
+      // Force all panels and containers
+      const panels = document.querySelectorAll('.genius-panel, .panel, .container, .card, .section, .ticker-wrapper, .main-content, .sidebar, .funding-grid, .rsi-section, .signals-section, .level-analysis-container, .market-news-section');
+      panels.forEach(el => {
+        if (isLight) {
+          el.style.setProperty('background-color', '#ffffff', 'important');
+          el.style.setProperty('border-color', '#ddd', 'important');
+        } else {
+          el.style.setProperty('background-color', '#12121a', 'important');
+          el.style.setProperty('border-color', '#00ff88', 'important');
+        }
+      });
+      
+      // Force text colors (but preserve green/red for prices)
+      const textElements = document.querySelectorAll('h1, h2, h3, h4, h5, h6, p, span, label, div');
+      textElements.forEach(el => {
+        const color = window.getComputedStyle(el).color;
+        // Skip green (#00ff88) and red (#ff4444) price colors
+        if (!color.includes('0, 255') && !color.includes('255, 68')) {
+          if (isLight) {
+            el.style.setProperty('color', '#1a1a2e', 'important');
+          } else {
+            el.style.setProperty('color', '#00ff88', 'important');
+          }
+        }
+      });
+      
+      // Force select, input elements
+      const formElements = document.querySelectorAll('select, input, textarea, button:not(.theme-toggle)');
+      formElements.forEach(el => {
+        if (isLight) {
+          el.style.setProperty('background-color', '#ffffff', 'important');
+          el.style.setProperty('color', '#1a1a2e', 'important');
+          el.style.setProperty('border-color', '#ccc', 'important');
+        } else {
+          el.style.setProperty('background-color', '#1a1a2e', 'important');
+          el.style.setProperty('color', '#00ff88', 'important');
+          el.style.setProperty('border-color', '#00ff88', 'important');
+        }
+      });
+      
+      console.log('✅ Theme styles applied!');
+    }
+    // ============================================
+    
     // Clock updater
     const clockEl = document.getElementById('clock');
     const dateEl = document.getElementById('current-date');
@@ -9912,7 +9999,13 @@
         if (themeLabel) themeLabel.textContent = 'LIGHT';
       }
       
-      // Function to apply theme to inline styles - AGGRESSIVE VERSION
+      // APPLY THEME STYLES ON PAGE LOAD!
+      console.log('🎨 Applying initial theme on page load...');
+      if (typeof applyThemeStyles === 'function') {
+        applyThemeStyles();
+      }
+      
+      // OLD FUNCTION - KEEPING FOR BACKUP BUT USING GLOBAL toggleTheme() NOW
       function applyThemeToInlineStyles(isLight) {
         console.log(`🎨 Applying ${isLight ? 'LIGHT' : 'DARK'} theme to all elements...`);
         
