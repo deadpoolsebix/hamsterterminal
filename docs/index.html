@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pl">
+<html lang="pl" class="light-theme">
 <head>
   <meta charset="UTF-8" />
   <title>Hamster Terminal v6.0 - Enterprise Trading Engine | 16 Modules</title>
@@ -3103,10 +3103,6 @@
       
       <!-- BUTTONS on the right -->
       <div style="margin-left: auto; display: flex; gap: 8px; align-items: center;">
-        <button class="theme-toggle" id="themeToggle" title="Przełącz motyw Dark/Light" onclick="toggleTheme()">
-          <span class="icon" id="themeIcon">🌙</span>
-          <span id="themeLabel">DARK</span>
-        </button>
         <button class="analytics-btn" id="analyticsBtn" title="Toggle Radar Panel (Bottom)">
           <span>RADAR</span>
         </button>
@@ -5195,38 +5191,17 @@
 
   <script>
     // ============================================
-    // GLOBAL THEME TOGGLE FUNCTION (MUST BE FIRST!)
+    // THEME IS NOW FIXED TO LIGHT ONLY
     // ============================================
     function toggleTheme() {
-      console.log('🎨 toggleTheme() called!');
-      const body = document.body;
-      const isCurrentlyLight = body.classList.contains('light-theme');
-      
-      if (isCurrentlyLight) {
-        body.classList.remove('light-theme');
-        localStorage.setItem('hamsterTheme', 'dark');
-        console.log('🌙 Switching to DARK theme');
-      } else {
-        body.classList.add('light-theme');
-        localStorage.setItem('hamsterTheme', 'light');
-        console.log('☀️ Switching to LIGHT theme');
-      }
-      
-      // Update button text and icon
-      const themeBtn = document.getElementById('themeToggle');
-      if (themeBtn) {
-        const newIsLight = body.classList.contains('light-theme');
-        themeBtn.innerHTML = newIsLight ? '☀️ LIGHT' : '🌙 DARK';
-      }
-      
-      // Force aggressive style changes
-      applyThemeStyles();
+      // Funkcja wyłączona - zawsze light theme
+      console.log('☀️ Dark mode disabled - using LIGHT theme only');
     }
     
     function applyThemeStyles() {
       const body = document.body;
-      const isLight = body.classList.contains('light-theme');
-      console.log('🎨 applyThemeStyles() - isLight:', isLight);
+      body.classList.add('light-theme');
+      console.log('☀️ applyThemeStyles() - LIGHT theme forced');
       
       // Use CSS custom properties approach - inject a style tag
       let themeStyle = document.getElementById('dynamic-theme-style');
@@ -5236,165 +5211,108 @@
         document.head.appendChild(themeStyle);
       }
       
-      if (isLight) {
-        // LIGHT THEME - white backgrounds, BLACK text - VERY AGGRESSIVE
-        themeStyle.textContent = `
-          :root {
-            --text-primary: #111111 !important;
-            --text-secondary: #333333 !important;
-            --bg-primary: #f5f5f5 !important;
-            --bg-secondary: #ffffff !important;
-            --border-color: #dddddd !important;
-            --accent: #0066cc !important;
-          }
-          body, html {
-            background-color: #f5f5f5 !important;
-            background: #f5f5f5 !important;
-            color: #111111 !important;
-          }
-          /* FORCE BLACK TEXT ON EVERYTHING - EXCEPT CHARTS */
-          *:not(canvas):not(svg):not(svg *):not([class*="chart"] *):not([id*="chart"] *):not([id*="Chart"] *),
-          *:not(canvas):not(svg):not(svg *)::before,
-          *:not(canvas):not(svg):not(svg *)::after {
-            color: #111111 !important;
-          }
-          /* WHITE BACKGROUNDS */
-          div:not([class*="chart"]):not([id*="chart"]):not([id*="Chart"]), 
-          section, article, aside, header, footer, main, nav, form, ul, ol, li,
-          .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
-          .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
-          .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
-          .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
-            background-color: #ffffff !important;
-            background: #ffffff !important;
-            border-color: #dddddd !important;
-          }
-          select, input, textarea, button {
-            background-color: #ffffff !important;
-            color: #111111 !important;
-            border-color: #cccccc !important;
-          }
-          table, thead, tbody, tr, td, th {
-            background-color: #ffffff !important;
-            color: #111111 !important;
-            border-color: #dddddd !important;
-          }
-          /* PRESERVE ONLY PRICE COLORS - green for up, red for down */
-          .price-up, .positive, .bullish { color: #00aa55 !important; }
-          .price-down, .negative, .bearish { color: #cc0000 !important; }
-          /* CHARTS - SVG text elements need dark fill for LIGHT mode */
-          svg text {
-            fill: #333333 !important;
-          }
-          /* Keep price colors on chart labels */
-          svg text[fill="#ff4444"], svg text[fill="#ff6666"], svg text[fill*="ff44"], svg text[fill*="ff66"] {
-            fill: #cc0000 !important;
-          }
-          svg text[fill="#00ff88"], svg text[fill="#66ffaa"], svg text[fill*="00ff"], svg text[fill*="66ff"] {
-            fill: #00aa55 !important;
-          }
-          .chart-container, [class*="chart"], [id*="chart"], [id*="Chart"] {
-            background-color: #f8f8f8 !important;
-          }
-          /* Chart lines should be darker in light mode */
-          svg line, svg path {
-            stroke: #666666 !important;
-          }
-          /* Keep colored lines - resistance red, support green */
-          svg line[stroke="#ff4444"], svg line[stroke="#ff0000"] {
-            stroke: #cc0000 !important;
-          }
-          svg line[stroke="#00ff88"], svg line[stroke="#00ff00"] {
-            stroke: #00aa55 !important;
-          }
-          /* SVG LABEL BOXES - white background with dark text in LIGHT mode */
-          svg rect {
-            fill: #ffffff !important;
-          }
-          /* Keep resistance box with red tint */
-          svg rect[fill="#1a0505"], #livePriceBox {
-            fill: #fff5f5 !important;
-          }
-          /* Keep support box with green tint */
-          svg rect[fill="#051a0a"] {
-            fill: #f5fff5 !important;
-          }
-          /* Signal box white */
-          #signalBox {
-            fill: #ffffff !important;
-            stroke: #cccccc !important;
-          }
-          /* Signal text dark */
-          #signalText {
-            fill: #333333 !important;
-          }
-          /* Live price text dark */
-          #livePriceText {
-            fill: #111111 !important;
-          }
-          /* Main chart background light */
-          svg rect[fill="#000"], svg rect[fill="#000000"], svg rect[fill="black"] {
-            fill: #f8f8f8 !important;
-          }
-        `;
-        
-      } else {
-        // DARK THEME - ciemne tło, BIAŁY tekst (nie zielony!)
-        themeStyle.textContent = `
-          :root {
-            --text-primary: #ffffff !important;
-            --text-secondary: #cccccc !important;
-          }
-          body, html {
-            background-color: #0a0a0a !important;
-            background: #0a0a0a !important;
-            color: #ffffff !important;
-          }
-          /* FORCE WHITE TEXT ON EVERYTHING IN DARK MODE */
-          *, *::before, *::after {
-            color: #ffffff !important;
-          }
-          /* DARK BACKGROUNDS */
-          div, section, article, aside, header, footer, main, nav, form, ul, ol, li,
-          .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
-          .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
-          .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
-          .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
-            background-color: #0d0d0d !important;
-            background: #0d0d0d !important;
-            border-color: #333333 !important;
-          }
-          select, input, textarea, button {
-            background-color: #1a1a1a !important;
-            color: #ffffff !important;
-            border-color: #444444 !important;
-          }
-          table, thead, tbody, tr, td, th {
-            background-color: #0d0d0d !important;
-            color: #ffffff !important;
-            border-color: #333333 !important;
-          }
-          /* PRESERVE PRICE COLORS */
-          .price-up, .positive, .bullish { color: #00ff88 !important; }
-          .price-down, .negative, .bearish { color: #ff4444 !important; }
-          canvas { 
-            background-color: transparent !important;
-          }
-          .chart-container, [class*="chart"], [id*="chart"], [id*="Chart"] {
-            background-color: #0d0d0d !important;
-          }
-        `;
-        
-        // Remove inline styles from LIGHT mode
-        document.querySelectorAll('*').forEach(el => {
-          el.style.removeProperty('color');
-          el.style.removeProperty('background-color');
-          el.style.removeProperty('background');
-          el.style.removeProperty('border-color');
-        });
-      }
+      // LIGHT THEME ONLY - white backgrounds, BLACK text
+      themeStyle.textContent = `
+        :root {
+          --text-primary: #111111 !important;
+          --text-secondary: #333333 !important;
+          --bg-primary: #f5f5f5 !important;
+          --bg-secondary: #ffffff !important;
+          --border-color: #dddddd !important;
+          --accent: #0066cc !important;
+        }
+        body, html {
+          background-color: #f5f5f5 !important;
+          background: #f5f5f5 !important;
+          color: #111111 !important;
+        }
+        /* FORCE BLACK TEXT ON EVERYTHING - EXCEPT CHARTS */
+        *:not(canvas):not(svg):not(svg *):not([class*="chart"] *):not([id*="chart"] *):not([id*="Chart"] *),
+        *:not(canvas):not(svg):not(svg *)::before,
+        *:not(canvas):not(svg):not(svg *)::after {
+          color: #111111 !important;
+        }
+        /* WHITE BACKGROUNDS */
+        div:not([class*="chart"]):not([id*="chart"]):not([id*="Chart"]), 
+        section, article, aside, header, footer, main, nav, form, ul, ol, li,
+        .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
+        .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
+        .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
+        .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
+          background-color: #ffffff !important;
+          background: #ffffff !important;
+          border-color: #dddddd !important;
+        }
+        select, input, textarea, button {
+          background-color: #ffffff !important;
+          color: #111111 !important;
+          border-color: #cccccc !important;
+        }
+        table, thead, tbody, tr, td, th {
+          background-color: #ffffff !important;
+          color: #111111 !important;
+          border-color: #dddddd !important;
+        }
+        /* PRESERVE ONLY PRICE COLORS - green for up, red for down */
+        .price-up, .positive, .bullish { color: #00aa55 !important; }
+        .price-down, .negative, .bearish { color: #cc0000 !important; }
+        /* CHARTS - SVG text elements need dark fill for LIGHT mode */
+        svg text {
+          fill: #333333 !important;
+        }
+        /* Keep price colors on chart labels */
+        svg text[fill="#ff4444"], svg text[fill="#ff6666"], svg text[fill*="ff44"], svg text[fill*="ff66"] {
+          fill: #cc0000 !important;
+        }
+        svg text[fill="#00ff88"], svg text[fill="#66ffaa"], svg text[fill*="00ff"], svg text[fill*="66ff"] {
+          fill: #00aa55 !important;
+        }
+        .chart-container, [class*="chart"], [id*="chart"], [id*="Chart"] {
+          background-color: #f8f8f8 !important;
+        }
+        /* Chart lines should be darker in light mode */
+        svg line, svg path {
+          stroke: #666666 !important;
+        }
+        /* Keep colored lines - resistance red, support green */
+        svg line[stroke="#ff4444"], svg line[stroke="#ff0000"] {
+          stroke: #cc0000 !important;
+        }
+        svg line[stroke="#00ff88"], svg line[stroke="#00ff00"] {
+          stroke: #00aa55 !important;
+        }
+        /* SVG LABEL BOXES - white background with dark text in LIGHT mode */
+        svg rect {
+          fill: #ffffff !important;
+        }
+        /* Keep resistance box with red tint */
+        svg rect[fill="#1a0505"], #livePriceBox {
+          fill: #fff5f5 !important;
+        }
+        /* Keep support box with green tint */
+        svg rect[fill="#051a0a"] {
+          fill: #f5fff5 !important;
+        }
+        /* Signal box white */
+        #signalBox {
+          fill: #ffffff !important;
+          stroke: #cccccc !important;
+        }
+        /* Signal text dark */
+        #signalText {
+          fill: #333333 !important;
+        }
+        /* Live price text dark */
+        #livePriceText {
+          fill: #111111 !important;
+        }
+        /* Main chart background light */
+        svg rect[fill="#000"], svg rect[fill="#000000"], svg rect[fill="black"] {
+          fill: #f8f8f8 !important;
+        }
+      `;
       
-      console.log('✅ Theme applied! isLight:', isLight);
+      console.log('✅ LIGHT theme applied!');
     }
     // ============================================
     
@@ -10283,25 +10201,13 @@
         }
       }, 1000);
       
-      // ============ THEME TOGGLE (DARK/LIGHT) ============
-      const themeToggle = document.getElementById('themeToggle');
-      const themeIcon = document.getElementById('themeIcon');
-      const themeLabel = document.getElementById('themeLabel');
+      // ============ THEME - FORCE LIGHT ONLY ============
+      // Zawsze wymuszaj light theme - bez możliwości zmiany
+      document.body.classList.add('light-theme');
+      localStorage.setItem('hamsterTheme', 'light');
       
-      // Load saved theme from localStorage - DEFAULT is LIGHT
-      const savedTheme = localStorage.getItem('hamsterTheme') || 'light';
-      if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-        if (themeIcon) themeIcon.textContent = '☀️';
-        if (themeLabel) themeLabel.textContent = 'LIGHT';
-      } else {
-        document.body.classList.remove('light-theme');
-        if (themeIcon) themeIcon.textContent = '🌙';
-        if (themeLabel) themeLabel.textContent = 'DARK';
-      }
-      
-      // APPLY THEME STYLES ON PAGE LOAD!
-      console.log('🎨 Applying initial theme on page load...');
+      // APPLY LIGHT THEME STYLES ON PAGE LOAD!
+      console.log('☀️ Forcing LIGHT theme (dark mode disabled)');
       if (typeof applyThemeStyles === 'function') {
         applyThemeStyles();
       }
