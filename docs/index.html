@@ -5216,11 +5216,11 @@
       }
       
       if (isLight) {
-        // LIGHT THEME - white backgrounds, dark text
+        // LIGHT THEME - white backgrounds, BLACK text
         themeStyle.textContent = `
           body, html {
-            background-color: #f0f0f0 !important;
-            background: #f0f0f0 !important;
+            background-color: #f5f5f5 !important;
+            background: #f5f5f5 !important;
             color: #111111 !important;
           }
           * {
@@ -5228,7 +5228,7 @@
           }
           div, section, article, aside, header, footer, main, nav, form, ul, ol, li {
             background-color: #ffffff !important;
-            border-color: #cccccc !important;
+            border-color: #dddddd !important;
           }
           .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
           .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
@@ -5236,7 +5236,7 @@
           .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
             background-color: #ffffff !important;
             background: #ffffff !important;
-            border-color: #cccccc !important;
+            border-color: #dddddd !important;
           }
           h1, h2, h3, h4, h5, h6, p, span, label, a, td, th, li {
             color: #111111 !important;
@@ -5249,52 +5249,15 @@
           table, thead, tbody, tr, td, th {
             background-color: #ffffff !important;
             color: #111111 !important;
-            border-color: #cccccc !important;
+            border-color: #dddddd !important;
           }
           /* Preserve price colors */
           .price-up, .positive, .bullish, [class*="green"] { color: #00aa55 !important; }
           .price-down, .negative, .bearish, [class*="red"] { color: #cc0000 !important; }
         `;
       } else {
-        // DARK THEME - dark backgrounds, green text
-        themeStyle.textContent = `
-          body, html {
-            background-color: #0a0a0f !important;
-            background: #0a0a0f !important;
-            color: #00ff88 !important;
-          }
-          * {
-            color: #00ff88 !important;
-          }
-          div, section, article, aside, header, footer, main, nav, form, ul, ol, li {
-            background-color: #12121a !important;
-            border-color: #00ff88 !important;
-          }
-          .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
-          .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
-          .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
-          .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
-            background-color: #12121a !important;
-            background: #12121a !important;
-            border-color: #00ff88 !important;
-          }
-          h1, h2, h3, h4, h5, h6, p, span, label, a, td, th, li {
-            color: #00ff88 !important;
-          }
-          select, input, textarea, button {
-            background-color: #1a1a2e !important;
-            color: #00ff88 !important;
-            border-color: #00ff88 !important;
-          }
-          table, thead, tbody, tr, td, th {
-            background-color: #12121a !important;
-            color: #00ff88 !important;
-            border-color: #00ff88 !important;
-          }
-          /* Preserve price colors */
-          .price-up, .positive, .bullish, [class*="green"] { color: #00ff88 !important; }
-          .price-down, .negative, .bearish, [class*="red"] { color: #ff4444 !important; }
-        `;
+        // DARK THEME - remove injected styles, use original CSS
+        themeStyle.textContent = '';
       }
       
       console.log('✅ Theme CSS injected! isLight:', isLight);
