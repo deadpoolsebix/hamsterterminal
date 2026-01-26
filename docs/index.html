@@ -260,6 +260,69 @@
     .theme-toggle .icon {
       font-size: 1.1em;
     }
+    
+    /* ========== SMOOTH TRANSITIONS FOR ALL DATA ========== */
+    /* RSI Chart smooth animation */
+    #rsiLine {
+      transition: all 0.8s ease-out;
+    }
+    #rsiCurrentDot, #rsiValueBg, #rsiCurrentLabel {
+      transition: all 0.5s ease-out;
+    }
+    #rsiSignalText {
+      transition: fill 0.3s ease, opacity 0.3s ease;
+    }
+    
+    /* Price and data smooth transitions */
+    #btcPrice, #btcChange, #metricPrice, #metricChange,
+    #ethPrice, #ethChange, #solPrice, #solChange,
+    .ticker-price, .ticker-change {
+      transition: all 0.4s ease-out;
+    }
+    
+    /* Market status smooth */
+    #nyseStatus, #nasdaqStatus, #geniusSignalType,
+    #geniusConfidenceValue, #geniusEntryZone {
+      transition: color 0.3s ease, opacity 0.3s ease;
+    }
+    
+    /* Transfer rows smooth */
+    .transfer-row {
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .transfer-row:hover {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    /* OI Chart smooth */
+    #oiLine, #oiArea {
+      transition: all 0.8s ease-out;
+    }
+    #totalOI, #oiChange24h {
+      transition: all 0.4s ease-out;
+    }
+    
+    /* Technical indicators smooth */
+    #btcRSI, #btcMACD, #btcEMA21, #btcBBUpper, #btcBBLower {
+      transition: all 0.4s ease-out;
+    }
+    
+    /* Liquidation levels smooth */
+    #longLiqPrice, #shortLiqPrice, #longLiqVolume, #shortLiqVolume {
+      transition: all 0.4s ease-out;
+    }
+    
+    /* All SVG polylines smooth */
+    svg polyline {
+      transition: all 0.6s ease-out;
+    }
+    svg circle {
+      transition: all 0.4s ease-out;
+    }
+    svg rect {
+      transition: all 0.3s ease-out;
+    }
+    
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Roboto Mono', monospace;
@@ -9753,6 +9816,76 @@
 
     // Initialize WebSocket after page loads
     document.addEventListener('DOMContentLoaded', () => {
+      console.log('🚀 Hamster Terminal initializing...');
+      
+      // ============ FORCE IMMEDIATE DATA REFRESH ============
+      // Call all critical update functions immediately
+      setTimeout(() => {
+        console.log('📊 Loading initial data...');
+        
+        // Market Status
+        if (typeof updateMarketStatusEnhanced === 'function') {
+          updateMarketStatusEnhanced();
+          console.log('✅ Market Status initialized');
+        }
+        
+        // Genius AI Signal
+        if (typeof updateGeniusSignal === 'function') {
+          updateGeniusSignal();
+          console.log('✅ Genius AI Signal initialized');
+        }
+        
+        // Large Transfers
+        if (typeof updateLargeTransfers === 'function') {
+          updateLargeTransfers();
+          console.log('✅ Large Transfers initialized');
+        }
+        
+        // RSI Chart
+        if (typeof updateRSIChart === 'function') {
+          updateRSIChart('1h');
+          console.log('✅ RSI Chart initialized');
+        }
+        
+        // Technical Indicators
+        if (typeof updateTechnicalIndicators === 'function') {
+          updateTechnicalIndicators();
+          console.log('✅ Technical Indicators initialized');
+        }
+        
+        // Open Interest
+        if (typeof updateOpenInterest === 'function') {
+          updateOpenInterest();
+          console.log('✅ Open Interest initialized');
+        }
+        
+        // Sentiment
+        if (typeof updateSentimentPanel === 'function') {
+          updateSentimentPanel();
+          console.log('✅ Sentiment Panel initialized');
+        }
+        
+        // Bulls/Bears
+        if (typeof updateBullsBears === 'function') {
+          updateBullsBears();
+          console.log('✅ Bulls/Bears initialized');
+        }
+        
+        // Main Chart
+        if (typeof updateMainChart === 'function') {
+          updateMainChart();
+          console.log('✅ Main Chart initialized');
+        }
+        
+        // Market Movers
+        if (typeof updateMarketMovers === 'function') {
+          updateMarketMovers();
+          console.log('✅ Market Movers initialized');
+        }
+        
+        console.log('🎉 All data initialized!');
+      }, 500);
+      
       // Small delay to ensure API_BASE is set
       setTimeout(() => {
         if (typeof io !== 'undefined') {
