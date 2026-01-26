@@ -1029,8 +1029,8 @@ def analyze_market_signals(symbol, data):
     # 🚨 FLASH CRASH / FLASH PUMP - NAJWYŻSZY PRIORYTET!
     # ═══════════════════════════════════════════════════════════════
     
-    # Flash Crash: Nagły spadek >1% w krótkim czasie lub >2.5% w 10min
-    if short_term_change < -1.0 or medium_term_change < -2.5:
+    # Flash Crash: Nagły spadek >2% w krótkim czasie lub >4% w 10min
+    if short_term_change < -2.0 or medium_term_change < -4.0:
         crash_percent = min(short_term_change, medium_term_change)
         # Atrakcyjność: duży ruch + knot odbicia = super hot
         attr = calc_attractiveness(abs(crash_percent), has_big_wick, range_position > 0.3, abs(crash_percent) > 2)
@@ -1058,8 +1058,8 @@ Historycznie takie crashe dają okazję na szybkie odbicie +3-8%. To moment gdy 
             'attractiveness': attr
         })
     
-    # Flash Pump: Nagły wzrost >1% w krótkim czasie lub >2.5% w 10min
-    if short_term_change > 1.0 or medium_term_change > 2.5:
+    # Flash Pump: Nagły wzrost >2% w krótkim czasie lub >4% w 10min
+    if short_term_change > 2.0 or medium_term_change > 4.0:
         pump_percent = max(short_term_change, medium_term_change)
         # Atrakcyjność: duży ruch + momentum = super hot
         attr = calc_attractiveness(abs(pump_percent), has_big_wick, has_momentum, abs(pump_percent) > 2)
@@ -1263,8 +1263,8 @@ Masowe likwidacje LONG!
     # 📈 SILNE MOMENTUM - TREND CONTINUATION
     # ═══════════════════════════════════════════════════════════════
     
-    if change > 2.0 and range_position > 0.75:
-        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 3)
+    if change > 3.5 and range_position > 0.75:
+        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 4)
         signals.append({
             'type': 'MOMENTUM_BULLISH',
             'emoji': '📈',
@@ -1285,8 +1285,8 @@ Cena +{change:.1f}% i zamyka przy HIGH dnia!
             'attractiveness': attr
         })
     
-    if change < -2.0 and range_position < 0.25:
-        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 3)
+    if change < -3.5 and range_position < 0.25:
+        attr = calc_attractiveness(abs(change), has_big_wick, True, abs(change) > 4)
         signals.append({
             'type': 'MOMENTUM_BEARISH',
             'emoji': '📉',
@@ -1413,7 +1413,7 @@ Cena przebiła ${prev_close * 0.98:,.0f} w dół!
     # ═══════════════════════════════════════════════════════════════
     
     # Wysoka zmienność - okazja na szybkie zyski
-    if volatility > 3.0 and abs(change) > 1.0:
+    if volatility > 5.0 and abs(change) > 3.0:
         direction = 'LONG' if change > 0 else 'SHORT'
         # Atrakcyjność zależy od wielkości ruchu i knota
         attr = calc_attractiveness(abs(change), has_big_wick, has_momentum, volatility > 5)
@@ -1440,8 +1440,9 @@ Wysoka zmienność = większy zysk ALE większe ryzyko. Zmniejsz pozycję!''',
             'attractiveness': attr
         })
     
-    # Trend dzienny - podstawowy sygnał (częsty) - NISKA atrakcyjność
-    if abs(change) > 0.8:
+    # Trend dzienny - podstawowy sygnał - WYŁĄCZONY (zbyt częsty)
+    # Tylko dla ruchów >5%
+    if abs(change) > 5.0:
         direction = 'LONG' if change > 0 else 'SHORT'
         trend_name = 'WZROSTOWY 📈' if change > 0 else 'SPADKOWY 📉'
         # Niższa atrakcyjność dla małych ruchów
@@ -1587,16 +1588,16 @@ async def check_and_send_signals(context):
                     signal_key = f"{symbol}_{signal['type']}"
                     now = datetime.now()
                     
-                    # Dynamiczny cooldown w zależności od priorytetu
+                    # Dynamiczny cooldown w zależności od priorytetu - ZWIĘKSZONE!
                     priority = signal.get('priority', 5)
                     if priority == 1:
-                        cooldown = 300  # 5 minut dla flash crash/pump
+                        cooldown = 1800  # 30 minut dla flash crash/pump
                     elif priority == 2:
-                        cooldown = 600  # 10 minut dla dużych okazji
+                        cooldown = 3600  # 60 minut dla dużych okazji
                     elif priority <= 4:
-                        cooldown = 900  # 15 minut dla standardowych
+                        cooldown = 7200  # 2 godziny dla standardowych
                     else:
-                        cooldown = 1800  # 30 minut dla info signals
+                        cooldown = 14400  # 4 godziny dla info signals
                     
                     if signal_key in last_signals:
                         last_time = last_signals[signal_key]
@@ -6306,11 +6307,11 @@ def main():
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handle_custom_symbol))
     
     # ═══════════════════════════════════════════════════════════════
-    # AUTO SIGNALS - EVENT-DRIVEN! Sprawdzaj rynek co 2 minuty
-    # Szybsze wykrywanie: flash crash, flash pump, nagłe okazje
+    # AUTO SIGNALS - EVENT-DRIVEN! Sprawdzaj rynek co 15 minut
+    # Zredukowane aby uniknąć spamu - tylko istotne ruchy
     # ═══════════════════════════════════════════════════════════════
     job_queue = app.job_queue
-    job_queue.run_repeating(check_and_send_signals, interval=120, first=15)  # Co 2 min, start po 15s
+    job_queue.run_repeating(check_and_send_signals, interval=900, first=30)  # Co 15 min, start po 30s
     
     print("=" * 50)
     print("🚀 BOT STARTED!")
