@@ -5267,25 +5267,21 @@
           }
         `;
         
-        // Also force inline styles on ALL elements
-        document.querySelectorAll('*').forEach(el => {
-          const tag = el.tagName.toLowerCase();
-          // Skip chart elements and canvas
-          if (tag === 'canvas' || tag === 'svg' || tag === 'path' || tag === 'g') return;
-          if (el.closest('.chart-container') || el.closest('[class*="chart"]')) return;
-          
-          // Check if it has green color inline
-          if (el.style.color && el.style.color.includes('rgb(0, 255')) {
-            el.style.setProperty('color', '#111111', 'important');
-          }
-        });
-        
       } else {
-        // DARK THEME - remove injected styles, use original CSS
+        // DARK THEME - remove ALL injected CSS
         themeStyle.textContent = '';
+        
+        // ALSO remove any inline styles that were set by LIGHT mode
+        // This ensures DARK mode uses original CSS
+        document.querySelectorAll('*').forEach(el => {
+          el.style.removeProperty('color');
+          el.style.removeProperty('background-color');
+          el.style.removeProperty('background');
+          el.style.removeProperty('border-color');
+        });
       }
       
-      console.log('✅ Theme CSS injected! isLight:', isLight);
+      console.log('✅ Theme applied! isLight:', isLight);
     }
     // ============================================
     
