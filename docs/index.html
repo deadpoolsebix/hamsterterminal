@@ -5216,22 +5216,27 @@
       }
       
       if (isLight) {
-        // LIGHT THEME - white backgrounds, BLACK text
-        // EXCLUDE: canvas, svg, charts to preserve their colors
+        // LIGHT THEME - white backgrounds, BLACK text - VERY AGGRESSIVE
         themeStyle.textContent = `
+          :root {
+            --text-primary: #111111 !important;
+            --text-secondary: #333333 !important;
+            --bg-primary: #f5f5f5 !important;
+            --bg-secondary: #ffffff !important;
+            --border-color: #dddddd !important;
+            --accent: #0066cc !important;
+          }
           body, html {
             background-color: #f5f5f5 !important;
             background: #f5f5f5 !important;
             color: #111111 !important;
           }
-          *:not(canvas):not(svg):not(svg *):not(.chart-container *):not([class*="chart"] *):not([class*="tradingview"] *):not([id*="chart"] *) {
+          /* FORCE BLACK TEXT ON EVERYTHING */
+          *, *::before, *::after {
             color: #111111 !important;
           }
-          div:not(.chart-container):not([class*="chart"]):not([id*="chart"]), 
-          section, article, aside, header, footer, main, nav, form, ul, ol, li {
-            background-color: #ffffff !important;
-            border-color: #dddddd !important;
-          }
+          /* WHITE BACKGROUNDS */
+          div, section, article, aside, header, footer, main, nav, form, ul, ol, li,
           .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
           .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
           .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
@@ -5239,13 +5244,6 @@
             background-color: #ffffff !important;
             background: #ffffff !important;
             border-color: #dddddd !important;
-          }
-          h1, h2, h3, h4, h5, h6, p, label, a, td, th, li {
-            color: #111111 !important;
-          }
-          /* EXCLUDE spans inside charts */
-          span:not(.chart-container span):not([class*="chart"] span) {
-            color: #111111 !important;
           }
           select, input, textarea, button {
             background-color: #ffffff !important;
@@ -5257,16 +5255,31 @@
             color: #111111 !important;
             border-color: #dddddd !important;
           }
-          /* Preserve price colors */
-          .price-up, .positive, .bullish, [class*="green"] { color: #00aa55 !important; }
-          .price-down, .negative, .bearish, [class*="red"] { color: #cc0000 !important; }
-          /* DO NOT TOUCH CHARTS */
-          canvas, svg, .chart-container, .chart-container *, [class*="chart"], [id*="chart"],
-          .lightweight-charts, .tv-lightweight-charts {
-            color: inherit !important;
+          /* PRESERVE ONLY PRICE COLORS - green for up, red for down */
+          .price-up, .positive, .bullish { color: #00aa55 !important; }
+          .price-down, .negative, .bearish { color: #cc0000 !important; }
+          /* CHARTS - keep their styling but with white background */
+          canvas { 
             background-color: transparent !important;
           }
+          .chart-container, [class*="chart"], [id*="chart"], [id*="Chart"] {
+            background-color: #ffffff !important;
+          }
         `;
+        
+        // Also force inline styles on ALL elements
+        document.querySelectorAll('*').forEach(el => {
+          const tag = el.tagName.toLowerCase();
+          // Skip chart elements and canvas
+          if (tag === 'canvas' || tag === 'svg' || tag === 'path' || tag === 'g') return;
+          if (el.closest('.chart-container') || el.closest('[class*="chart"]')) return;
+          
+          // Check if it has green color inline
+          if (el.style.color && el.style.color.includes('rgb(0, 255')) {
+            el.style.setProperty('color', '#111111', 'important');
+          }
+        });
+        
       } else {
         // DARK THEME - remove injected styles, use original CSS
         themeStyle.textContent = '';
