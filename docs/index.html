@@ -9912,78 +9912,121 @@
         if (themeLabel) themeLabel.textContent = 'LIGHT';
       }
       
-      // Function to apply theme to inline styles
+      // Function to apply theme to inline styles - AGGRESSIVE VERSION
       function applyThemeToInlineStyles(isLight) {
-        const darkColors = {
-          bg: ['#000', '#000000', '#0a0a0a', '#111', '#111111', '#1a1a1a', 'black', 'var(--panel)', 'var(--black)'],
-          text: ['#fff', '#ffffff', '#eee', '#eeeeee', '#ddd', '#dddddd', '#ccc', '#cccccc', '#bdbdbd', 'white'],
-          border: ['#222', '#222222', '#333', '#333333', '#444', '#1a1a1a']
-        };
-        const lightColors = {
-          bg: '#f5f5f5',
-          bgAlt: '#ffffff',
-          bgTertiary: '#e8e8e8',
-          text: '#111111',
-          textAlt: '#333333',
-          border: '#cccccc'
-        };
+        console.log(`🎨 Applying ${isLight ? 'LIGHT' : 'DARK'} theme to all elements...`);
         
-        // Get ALL elements with inline background
-        document.querySelectorAll('[style*="background"]').forEach(el => {
-          const style = el.getAttribute('style') || '';
+        // STEP 1: Force body styles
+        document.body.style.setProperty('background', isLight ? '#f5f5f5' : '#000000', 'important');
+        document.body.style.setProperty('color', isLight ? '#111111' : '#ffffff', 'important');
+        
+        // STEP 2: Get ALL divs and sections and force their background
+        const allDivs = document.querySelectorAll('div, section, article, header, footer, aside, nav, main');
+        allDivs.forEach(el => {
+          const computedBg = window.getComputedStyle(el).backgroundColor;
+          const computedColor = window.getComputedStyle(el).color;
+          
+          // Check if element has dark background (rgb values close to 0)
           if (isLight) {
-            // Dark to Light
-            darkColors.bg.forEach(c => {
-              if (style.includes(`background: ${c}`) || style.includes(`background:${c}`)) {
-                el.style.background = lightColors.bg;
-              }
-            });
+            // Convert dark backgrounds to light
+            if (computedBg && (computedBg.includes('rgb(0,') || computedBg.includes('rgb(10,') || 
+                computedBg.includes('rgb(17,') || computedBg.includes('rgb(26,') ||
+                computedBg === 'rgb(0, 0, 0)' || computedBg === 'rgba(0, 0, 0, 0)')) {
+              el.style.setProperty('background', '#f5f5f5', 'important');
+            }
+            // Also check inline style attribute directly
+            const inlineStyle = el.getAttribute('style') || '';
+            if (inlineStyle.includes('background') && 
+                (inlineStyle.includes('#000') || inlineStyle.includes('#0a0a0a') || 
+                 inlineStyle.includes('#111') || inlineStyle.includes('#1a1a1a') ||
+                 inlineStyle.includes('black'))) {
+              el.style.setProperty('background', '#ffffff', 'important');
+            }
           } else {
-            // Light to Dark - restore original (page reload recommended)
-            if (style.includes('background: #f5f5f5') || style.includes('background: #ffffff') || style.includes('background: #e8e8e8')) {
-              el.style.background = '#0a0a0a';
+            // Convert light backgrounds back to dark
+            if (computedBg && (computedBg.includes('rgb(245,') || computedBg.includes('rgb(255,') ||
+                computedBg.includes('rgb(232,'))) {
+              el.style.setProperty('background', '#0a0a0a', 'important');
+            }
+            const inlineStyle = el.getAttribute('style') || '';
+            if (inlineStyle.includes('background') && 
+                (inlineStyle.includes('#f5f5f5') || inlineStyle.includes('#ffffff') ||
+                 inlineStyle.includes('#e8e8e8') || inlineStyle.includes('white'))) {
+              el.style.setProperty('background', '#0a0a0a', 'important');
             }
           }
         });
         
-        // Get ALL elements with inline color
-        document.querySelectorAll('[style*="color"]').forEach(el => {
-          const style = el.getAttribute('style') || '';
+        // STEP 3: Force text colors on ALL text-containing elements
+        const allText = document.querySelectorAll('span, p, h1, h2, h3, h4, h5, h6, label, a, li, td, th');
+        allText.forEach(el => {
+          const inlineStyle = el.getAttribute('style') || '';
           if (isLight) {
-            darkColors.text.forEach(c => {
-              if (style.includes(`color: ${c}`) || style.includes(`color:${c}`)) {
-                el.style.color = lightColors.text;
+            // Don't change green/red prices
+            if (inlineStyle.includes('color') && 
+                !inlineStyle.includes('#00ff') && !inlineStyle.includes('#ff00') &&
+                !inlineStyle.includes('#ff44') && !inlineStyle.includes('#089') &&
+                !inlineStyle.includes('green') && !inlineStyle.includes('red')) {
+              if (inlineStyle.includes('#fff') || inlineStyle.includes('#ccc') ||
+                  inlineStyle.includes('#ddd') || inlineStyle.includes('#eee') ||
+                  inlineStyle.includes('#bdb') || inlineStyle.includes('white')) {
+                el.style.setProperty('color', '#111111', 'important');
               }
-            });
+            }
           } else {
-            if (style.includes('color: #111') || style.includes('color: #333')) {
-              el.style.color = '#ffffff';
+            if (inlineStyle.includes('color') && 
+                (inlineStyle.includes('#111') || inlineStyle.includes('#333') ||
+                 inlineStyle.includes('#000') || inlineStyle.includes('black'))) {
+              el.style.setProperty('color', '#ffffff', 'important');
             }
           }
         });
         
-        // SVG backgrounds
+        // STEP 4: Force select, input, textarea backgrounds
+        const formElements = document.querySelectorAll('select, input, textarea, button');
+        formElements.forEach(el => {
+          if (isLight) {
+            el.style.setProperty('background', '#ffffff', 'important');
+            el.style.setProperty('color', '#111111', 'important');
+            el.style.setProperty('border-color', '#cccccc', 'important');
+          } else {
+            el.style.setProperty('background', '#0a0a0a', 'important');
+            el.style.setProperty('color', '#ffffff', 'important');
+            el.style.setProperty('border-color', '#333333', 'important');
+          }
+        });
+        
+        // STEP 5: SVG backgrounds and text
         document.querySelectorAll('svg rect').forEach(rect => {
           const fill = rect.getAttribute('fill');
-          if (isLight && (fill === '#000' || fill === '#000000' || fill === 'black')) {
-            rect.setAttribute('fill', '#f0f0f0');
-          } else if (!isLight && (fill === '#f0f0f0' || fill === '#f5f5f5')) {
-            rect.setAttribute('fill', '#000000');
+          if (fill && (fill.includes('#000') || fill === 'black' || fill === '#0a0a0a')) {
+            rect.setAttribute('fill', isLight ? '#f0f0f0' : '#000000');
+          } else if (fill && (fill.includes('#f0f0f0') || fill.includes('#f5f5f5') || fill === 'white')) {
+            rect.setAttribute('fill', isLight ? '#f0f0f0' : '#000000');
           }
         });
         
-        // SVG text
         document.querySelectorAll('svg text').forEach(text => {
-          if (isLight) {
-            text.setAttribute('fill', '#111111');
-          } else {
-            text.setAttribute('fill', '#888888');
+          const fill = text.getAttribute('fill');
+          // Don't change colored text (green/red indicators)
+          if (fill && !fill.includes('#ff') && !fill.includes('#00ff') && !fill.includes('#089')) {
+            text.setAttribute('fill', isLight ? '#111111' : '#888888');
           }
         });
         
-        // Force body background
-        document.body.style.background = isLight ? '#f5f5f5' : '#000000';
-        document.body.style.color = isLight ? '#111111' : '#ffffff';
+        // STEP 6: Force all panels with specific classes
+        const panels = document.querySelectorAll('.genius-panel, .panel-card, .menu-panel, .chart-container, .news, .ticker, .ticker-bar, .rsi-section, .oi-section, .side-panel-unified');
+        panels.forEach(el => {
+          if (isLight) {
+            el.style.setProperty('background', '#ffffff', 'important');
+            el.style.setProperty('border-color', '#cccccc', 'important');
+          } else {
+            el.style.setProperty('background', '#0a0a0a', 'important');
+            el.style.setProperty('border-color', '#1a1a1a', 'important');
+          }
+        });
+        
+        console.log(`✅ Theme applied: ${isLight ? 'LIGHT' : 'DARK'}`);
       }
       
       // Apply on load if saved theme is light
