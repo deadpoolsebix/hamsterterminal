@@ -5279,10 +5279,41 @@
           svg line, svg path {
             stroke: #666666 !important;
           }
-          /* Keep colored lines */
-          svg line[stroke*="ff"], svg path[stroke*="ff"],
-          svg line[stroke*="00"], svg path[stroke*="00"] {
-            /* preserve original color */
+          /* Keep colored lines - resistance red, support green */
+          svg line[stroke="#ff4444"], svg line[stroke="#ff0000"] {
+            stroke: #cc0000 !important;
+          }
+          svg line[stroke="#00ff88"], svg line[stroke="#00ff00"] {
+            stroke: #00aa55 !important;
+          }
+          /* SVG LABEL BOXES - white background with dark text in LIGHT mode */
+          svg rect {
+            fill: #ffffff !important;
+          }
+          /* Keep resistance box with red tint */
+          svg rect[fill="#1a0505"], #livePriceBox {
+            fill: #fff5f5 !important;
+          }
+          /* Keep support box with green tint */
+          svg rect[fill="#051a0a"] {
+            fill: #f5fff5 !important;
+          }
+          /* Signal box white */
+          #signalBox {
+            fill: #ffffff !important;
+            stroke: #cccccc !important;
+          }
+          /* Signal text dark */
+          #signalText {
+            fill: #333333 !important;
+          }
+          /* Live price text dark */
+          #livePriceText {
+            fill: #111111 !important;
+          }
+          /* Main chart background light */
+          svg rect[fill="#000"], svg rect[fill="#000000"], svg rect[fill="black"] {
+            fill: #f8f8f8 !important;
           }
         `;
         
