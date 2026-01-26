@@ -5207,97 +5207,97 @@
       const isLight = body.classList.contains('light-theme');
       console.log('🎨 applyThemeStyles() - isLight:', isLight);
       
-      // LIGHT THEME COLORS
-      const lightBg = '#f0f0f0';
-      const lightBgPanel = '#ffffff';
-      const lightText = '#111111';
-      const lightBorder = '#cccccc';
+      // Use CSS custom properties approach - inject a style tag
+      let themeStyle = document.getElementById('dynamic-theme-style');
+      if (!themeStyle) {
+        themeStyle = document.createElement('style');
+        themeStyle.id = 'dynamic-theme-style';
+        document.head.appendChild(themeStyle);
+      }
       
-      // DARK THEME COLORS
-      const darkBg = '#0a0a0f';
-      const darkBgPanel = '#12121a';
-      const darkText = '#00ff88';
-      const darkBorder = '#00ff88';
+      if (isLight) {
+        // LIGHT THEME - white backgrounds, dark text
+        themeStyle.textContent = `
+          body, html {
+            background-color: #f0f0f0 !important;
+            background: #f0f0f0 !important;
+            color: #111111 !important;
+          }
+          * {
+            color: #111111 !important;
+          }
+          div, section, article, aside, header, footer, main, nav, form, ul, ol, li {
+            background-color: #ffffff !important;
+            border-color: #cccccc !important;
+          }
+          .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
+          .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
+          .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
+          .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
+            background-color: #ffffff !important;
+            background: #ffffff !important;
+            border-color: #cccccc !important;
+          }
+          h1, h2, h3, h4, h5, h6, p, span, label, a, td, th, li {
+            color: #111111 !important;
+          }
+          select, input, textarea, button {
+            background-color: #ffffff !important;
+            color: #111111 !important;
+            border-color: #cccccc !important;
+          }
+          table, thead, tbody, tr, td, th {
+            background-color: #ffffff !important;
+            color: #111111 !important;
+            border-color: #cccccc !important;
+          }
+          /* Preserve price colors */
+          .price-up, .positive, .bullish, [class*="green"] { color: #00aa55 !important; }
+          .price-down, .negative, .bearish, [class*="red"] { color: #cc0000 !important; }
+        `;
+      } else {
+        // DARK THEME - dark backgrounds, green text
+        themeStyle.textContent = `
+          body, html {
+            background-color: #0a0a0f !important;
+            background: #0a0a0f !important;
+            color: #00ff88 !important;
+          }
+          * {
+            color: #00ff88 !important;
+          }
+          div, section, article, aside, header, footer, main, nav, form, ul, ol, li {
+            background-color: #12121a !important;
+            border-color: #00ff88 !important;
+          }
+          .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
+          .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
+          .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
+          .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
+            background-color: #12121a !important;
+            background: #12121a !important;
+            border-color: #00ff88 !important;
+          }
+          h1, h2, h3, h4, h5, h6, p, span, label, a, td, th, li {
+            color: #00ff88 !important;
+          }
+          select, input, textarea, button {
+            background-color: #1a1a2e !important;
+            color: #00ff88 !important;
+            border-color: #00ff88 !important;
+          }
+          table, thead, tbody, tr, td, th {
+            background-color: #12121a !important;
+            color: #00ff88 !important;
+            border-color: #00ff88 !important;
+          }
+          /* Preserve price colors */
+          .price-up, .positive, .bullish, [class*="green"] { color: #00ff88 !important; }
+          .price-down, .negative, .bearish, [class*="red"] { color: #ff4444 !important; }
+        `;
+      }
       
-      // Choose colors based on theme
-      const bgColor = isLight ? lightBg : darkBg;
-      const panelBg = isLight ? lightBgPanel : darkBgPanel;
-      const textColor = isLight ? lightText : darkText;
-      const borderColor = isLight ? lightBorder : darkBorder;
-      
-      // Force body colors
-      body.style.setProperty('background-color', bgColor, 'important');
-      body.style.setProperty('background', bgColor, 'important');
-      body.style.setProperty('color', textColor, 'important');
-      
-      // FORCE ALL ELEMENTS - very aggressive!
-      const allElements = document.querySelectorAll('*');
-      allElements.forEach(el => {
-        const tag = el.tagName.toLowerCase();
-        const classes = el.className ? el.className.toString() : '';
-        const id = el.id || '';
-        
-        // Skip specific price color classes
-        if (classes.includes('price-up') || classes.includes('price-down') || 
-            classes.includes('positive') || classes.includes('negative') ||
-            classes.includes('bullish') || classes.includes('bearish') ||
-            classes.includes('green') || classes.includes('red')) {
-          return;
-        }
-        
-        // Skip SVG internals
-        if (tag === 'svg' || tag === 'path' || tag === 'g' || tag === 'circle' || tag === 'line' || tag === 'polyline' || tag === 'polygon' || tag === 'rect') {
-          return;
-        }
-        
-        // Skip scripts and styles
-        if (tag === 'script' || tag === 'style' || tag === 'link' || tag === 'meta' || tag === 'head' || tag === 'html') {
-          return;
-        }
-        
-        // Force background on ALL container-like elements
-        if (tag === 'div' || tag === 'section' || tag === 'article' || tag === 'aside' || 
-            tag === 'header' || tag === 'footer' || tag === 'main' || tag === 'nav' ||
-            tag === 'form' || tag === 'fieldset' || tag === 'ul' || tag === 'ol' || tag === 'li') {
-          el.style.setProperty('background-color', panelBg, 'important');
-          el.style.setProperty('border-color', borderColor, 'important');
-        }
-        
-        // Force text color on ALL text elements
-        el.style.setProperty('color', textColor, 'important');
-      });
-      
-      // Force specific elements that might have inline styles
-      document.querySelectorAll('[style*="background"], [style*="color"]').forEach(el => {
-        const classes = el.className ? el.className.toString() : '';
-        if (!classes.includes('price') && !classes.includes('positive') && !classes.includes('negative')) {
-          el.style.setProperty('background-color', panelBg, 'important');
-          el.style.setProperty('color', textColor, 'important');
-        }
-      });
-      
-      // Force inputs and selects
-      document.querySelectorAll('select, input, textarea, button').forEach(el => {
-        if (!el.classList.contains('theme-toggle')) {
-          el.style.setProperty('background-color', isLight ? '#ffffff' : '#1a1a2e', 'important');
-          el.style.setProperty('color', textColor, 'important');
-          el.style.setProperty('border-color', borderColor, 'important');
-        }
-      });
-      
-      // Force tables
-      document.querySelectorAll('table, thead, tbody, tr, td, th').forEach(el => {
-        el.style.setProperty('background-color', panelBg, 'important');
-        el.style.setProperty('color', textColor, 'important');
-        el.style.setProperty('border-color', borderColor, 'important');
-      });
-      
-      // Force links
-      document.querySelectorAll('a').forEach(el => {
-        el.style.setProperty('color', isLight ? '#0066cc' : '#00ff88', 'important');
-      });
-      
-      console.log('✅ Theme styles applied! isLight:', isLight);
+      console.log('✅ Theme CSS injected! isLight:', isLight);
     }
     // ============================================
     
