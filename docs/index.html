@@ -4488,22 +4488,22 @@
       </div>
       <div id="icebergOrdersList">
         <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap;">
-          <span style="color: #ffffff; font-size: 1em; font-weight: 600;">BUY</span>
-          <span style="color: #cccccc; font-size: 0.95em;">$94,800 - $95,200</span>
+          <span style="color: #000000; font-size: 1em; font-weight: 800; min-width: 50px;">BUY</span>
+          <span style="color: #333333; font-size: 0.95em;">$94,800 - $95,200</span>
           <span style="color: #444444;">•</span>
-          <span style="color: #888888; font-size: 0.9em;">~3,200 BTC</span>
+          <span style="color: #555555; font-size: 0.9em;">~3,200 BTC</span>
         </div>
         <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap;">
-          <span style="color: #ffffff; font-size: 1em; font-weight: 600;">SELL</span>
-          <span style="color: #cccccc; font-size: 0.95em;">$97,400 - $97,800</span>
+          <span style="color: #000000; font-size: 1em; font-weight: 800; min-width: 50px;">SELL</span>
+          <span style="color: #333333; font-size: 0.95em;">$97,400 - $97,800</span>
           <span style="color: #444444;">•</span>
-          <span style="color: #888888; font-size: 0.9em;">~2,100 BTC</span>
+          <span style="color: #555555; font-size: 0.9em;">~2,100 BTC</span>
         </div>
         <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222; flex-wrap: wrap;">
-          <span style="color: #ffffff; font-size: 1em; font-weight: 600;">HIDE</span>
-          <span style="color: #cccccc; font-size: 0.95em;">$96,000 - $96,500</span>
+          <span style="color: #000000; font-size: 1em; font-weight: 800; min-width: 50px;">HIDE</span>
+          <span style="color: #333333; font-size: 0.95em;">$96,000 - $96,500</span>
           <span style="color: #444444;">•</span>
-          <span style="color: #888888; font-size: 0.9em;">~1,800 BTC</span>
+          <span style="color: #555555; font-size: 0.9em;">~1,800 BTC</span>
         </div>
       </div>
       
@@ -6934,15 +6934,15 @@
         <span style="background: #1a1a1a; color: #cccccc; font-size: 0.75em; padding: 2px 6px; border-radius: 3px; border: 1px solid #333; font-weight: 600; letter-spacing: 0.3px;">${t.entity}</span>
       ` : '';
       
-      // Grayscale - all white text, no colors
-      const typeColor = '#ffffff';
+      // Grayscale - black text for visibility on light background
+      const typeColor = '#000000';
       
       // Flat ticker style with entity detection
       return `
         <div class="transfer-row ${t.isNew ? 'transfer-row-new' : ''}" 
              data-id="${t.id}"
              style="padding: 6px 0; border-bottom: 1px solid #222222; display: flex; align-items: center; gap: 10px; font-weight: 700; letter-spacing: 0.5px;">
-          <span style="color: ${typeColor}; font-size: 1em; min-width: 40px;">${t.type}</span>
+          <span style="color: ${typeColor}; font-size: 1em; min-width: 60px; font-weight: 800;">${t.type}</span>
           <span style="color: #cccccc; font-size: 0.95em;">${t.amount.toLocaleString()} BTC</span>
           <span style="color: #666666;">•</span>
           <span style="color: #ffffff; font-size: 0.95em;">$${(t.valueUSD / 1000000).toFixed(1)}M</span>
@@ -9134,22 +9134,22 @@
         if (icebergList) {
           icebergList.innerHTML = `
             <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap;">
-              <span style="color: #ffffff; font-size: 1em; font-weight: 600;">BUY</span>
-              <span style="color: #cccccc; font-size: 0.95em;">${formatPrice(buyIcebergLow)} - ${formatPrice(buyIcebergHigh)}</span>
+              <span style="color: #000000; font-size: 1em; font-weight: 800; min-width: 50px;">BUY</span>
+              <span style="color: #333333; font-size: 0.95em;">${formatPrice(buyIcebergLow)} - ${formatPrice(buyIcebergHigh)}</span>
               <span style="color: #444444;">•</span>
-              <span style="color: #888888; font-size: 0.9em;">~${buyBTC.toLocaleString()} BTC</span>
+              <span style="color: #555555; font-size: 0.9em;">~${buyBTC.toLocaleString()} BTC</span>
             </div>
             <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #1a1a1a; flex-wrap: wrap;">
-              <span style="color: #ffffff; font-size: 1em; font-weight: 600;">SELL</span>
-              <span style="color: #cccccc; font-size: 0.95em;">${formatPrice(sellIcebergLow)} - ${formatPrice(sellIcebergHigh)}</span>
+              <span style="color: #000000; font-size: 1em; font-weight: 800; min-width: 50px;">SELL</span>
+              <span style="color: #333333; font-size: 0.95em;">${formatPrice(sellIcebergLow)} - ${formatPrice(sellIcebergHigh)}</span>
               <span style="color: #444444;">•</span>
-              <span style="color: #888888; font-size: 0.9em;">~${sellBTC.toLocaleString()} BTC</span>
+              <span style="color: #555555; font-size: 0.9em;">~${sellBTC.toLocaleString()} BTC</span>
             </div>
             <div class="iceberg-row" style="padding: 8px 16px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #222222; flex-wrap: wrap;">
-              <span style="color: #ffffff; font-size: 1em; font-weight: 600;">HIDE</span>
-              <span style="color: #cccccc; font-size: 0.95em;">${formatPrice(hiddenLow)} - ${formatPrice(hiddenHigh)}</span>
+              <span style="color: #000000; font-size: 1em; font-weight: 800; min-width: 50px;">HIDE</span>
+              <span style="color: #333333; font-size: 0.95em;">${formatPrice(hiddenLow)} - ${formatPrice(hiddenHigh)}</span>
               <span style="color: #444444;">•</span>
-              <span style="color: #888888; font-size: 0.9em;">~${hiddenBTC.toLocaleString()} BTC</span>
+              <span style="color: #555555; font-size: 0.9em;">~${hiddenBTC.toLocaleString()} BTC</span>
             </div>
           `;
         }
