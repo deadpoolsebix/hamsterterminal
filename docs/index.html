@@ -33,13 +33,14 @@
       --bg-primary: #f5f5f5;
       --bg-secondary: #ffffff;
       --bg-tertiary: #e8e8e8;
-      --text-primary: #000000;
+      --text-primary: #111111;
       --text-secondary: #333333;
       --text-muted: #666666;
-      --border-color: #dddddd;
+      --border-color: #cccccc;
       --panel: #ffffff;
-      --border: #dddddd;
+      --border: #cccccc;
       --gray: #555555;
+      --black: #f5f5f5;
     }
     body.light-theme .header {
       background: var(--orange);
@@ -56,26 +57,136 @@
       background: var(--bg-secondary) !important;
       border-color: var(--border-color) !important;
     }
+    body.light-theme .ticker-track,
+    body.light-theme .ticker-content,
+    body.light-theme .news-ticker-content {
+      background: transparent !important;
+    }
     body.light-theme .ticker-price,
-    body.light-theme .ticker-symbol {
-      color: var(--text-primary);
+    body.light-theme .ticker-symbol,
+    body.light-theme .ticker-label {
+      color: var(--text-primary) !important;
+    }
+    body.light-theme .ticker-change {
+      color: var(--text-muted) !important;
     }
     body.light-theme .chart-container,
     body.light-theme .news,
     body.light-theme .breaking-news {
-      background: var(--bg-secondary);
-      border-color: var(--border-color);
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
     }
+    /* SVG Chart Light Theme */
     body.light-theme svg rect[fill="#000"],
-    body.light-theme svg rect[fill="#000000"] {
-      fill: #f5f5f5 !important;
+    body.light-theme svg rect[fill="#000000"],
+    body.light-theme svg rect[fill="black"] {
+      fill: #f0f0f0 !important;
     }
     body.light-theme svg text {
-      fill: var(--text-primary);
+      fill: var(--text-primary) !important;
     }
-    body.light-theme .genius-panel {
-      background: var(--bg-secondary);
-      border-color: var(--border-color);
+    body.light-theme svg polyline[stroke="#ff8c00"] {
+      stroke: #ff6b00 !important;
+    }
+    body.light-theme .genius-panel,
+    body.light-theme .panel-card,
+    body.light-theme .menu-panels,
+    body.light-theme .menu-panel {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-primary) !important;
+    }
+    /* Nav and hamburger */
+    body.light-theme .nav-wrapper,
+    body.light-theme .hamburger-container {
+      background: var(--bg-secondary) !important;
+      border-color: var(--border-color) !important;
+    }
+    body.light-theme .hamburger-menu .bar {
+      background: var(--text-primary) !important;
+    }
+    /* All panels and sections */
+    body.light-theme div[style*="background: #0a0a0a"],
+    body.light-theme div[style*="background: var(--panel)"],
+    body.light-theme div[style*="background:#0a0a0a"] {
+      background: var(--bg-secondary) !important;
+    }
+    body.light-theme div[style*="color: #fff"],
+    body.light-theme div[style*="color: #ffffff"],
+    body.light-theme div[style*="color:#fff"] {
+      color: var(--text-primary) !important;
+    }
+    body.light-theme .ticker-wrapper {
+      background: var(--bg-secondary) !important;
+    }
+    body.light-theme .ticker {
+      background: var(--bg-secondary) !important;
+    }
+    /* Transfers table */
+    body.light-theme .transfer-row,
+    body.light-theme #transfersContainer > div {
+      background: var(--bg-tertiary) !important;
+      border-color: var(--border-color) !important;
+      color: var(--text-primary) !important;
+    }
+    /* Analysis panels */
+    body.light-theme #liveCommentaryText,
+    body.light-theme #typewriterText {
+      color: var(--text-primary) !important;
+    }
+    /* Unusual Activity */
+    body.light-theme .unusual-item {
+      background: var(--bg-tertiary) !important;
+      border-color: var(--border-color) !important;
+    }
+    body.light-theme .unusual-header,
+    body.light-theme .unusual-value,
+    body.light-theme .unusual-note {
+      color: var(--text-primary) !important;
+    }
+    /* Breaking news */
+    body.light-theme .breaking-item {
+      background: var(--bg-tertiary) !important;
+      border-color: var(--border-color) !important;
+    }
+    body.light-theme .breaking-headline {
+      color: var(--text-primary) !important;
+    }
+    /* General overrides for inline styles */
+    body.light-theme [style*="background: #000"],
+    body.light-theme [style*="background:#000"],
+    body.light-theme [style*="background: black"] {
+      background: var(--bg-primary) !important;
+    }
+    body.light-theme [style*="background: #111"],
+    body.light-theme [style*="background:#111"] {
+      background: var(--bg-tertiary) !important;
+    }
+    /* Theme toggle in light mode */
+    body.light-theme .theme-toggle {
+      background: rgba(0, 0, 0, 0.1);
+      border-color: rgba(0, 0, 0, 0.2);
+      color: #000;
+    }
+    body.light-theme .theme-toggle:hover {
+      background: rgba(0, 0, 0, 0.15);
+    }
+    /* RSI and other indicators */
+    body.light-theme .rsi-chart,
+    body.light-theme #rsiChart {
+      background: var(--bg-secondary) !important;
+    }
+    /* Session axis */
+    body.light-theme .session-axis {
+      background: var(--bg-tertiary) !important;
+    }
+    /* Crypto panic ticker */
+    body.light-theme #cryptoPanicTicker span {
+      color: var(--text-primary) !important;
+    }
+    body.light-theme #cryptoPanicTicker span[style*="color: #eee"],
+    body.light-theme #cryptoPanicTicker span[style*="color: #ddd"] {
+      color: var(--text-primary) !important;
     }
     
     /* Theme Toggle Button */
@@ -9604,38 +9715,38 @@
           if (wsLabel) wsLabel.textContent = 'POLLING';
         }
       }, 1000);
+      
+      // ============ THEME TOGGLE (DARK/LIGHT) ============
+      const themeToggle = document.getElementById('themeToggle');
+      const themeIcon = document.getElementById('themeIcon');
+      const themeLabel = document.getElementById('themeLabel');
+      
+      // Load saved theme from localStorage
+      const savedTheme = localStorage.getItem('hamsterTheme') || 'dark';
+      if (savedTheme === 'light') {
+        document.body.classList.add('light-theme');
+        if (themeIcon) themeIcon.textContent = '☀️';
+        if (themeLabel) themeLabel.textContent = 'LIGHT';
+      }
+      
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          const isLight = document.body.classList.toggle('light-theme');
+          
+          if (isLight) {
+            themeIcon.textContent = '☀️';
+            themeLabel.textContent = 'LIGHT';
+            localStorage.setItem('hamsterTheme', 'light');
+          } else {
+            themeIcon.textContent = '🌙';
+            themeLabel.textContent = 'DARK';
+            localStorage.setItem('hamsterTheme', 'dark');
+          }
+          
+          console.log(`🎨 Theme switched to: ${isLight ? 'LIGHT' : 'DARK'}`);
+        });
+      }
     });
-
-    // ============ THEME TOGGLE (DARK/LIGHT) ============
-    const themeToggle = document.getElementById('themeToggle');
-    const themeIcon = document.getElementById('themeIcon');
-    const themeLabel = document.getElementById('themeLabel');
-    
-    // Load saved theme from localStorage
-    const savedTheme = localStorage.getItem('hamsterTheme') || 'dark';
-    if (savedTheme === 'light') {
-      document.body.classList.add('light-theme');
-      if (themeIcon) themeIcon.textContent = '☀️';
-      if (themeLabel) themeLabel.textContent = 'LIGHT';
-    }
-    
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        const isLight = document.body.classList.toggle('light-theme');
-        
-        if (isLight) {
-          themeIcon.textContent = '☀️';
-          themeLabel.textContent = 'LIGHT';
-          localStorage.setItem('hamsterTheme', 'light');
-        } else {
-          themeIcon.textContent = '🌙';
-          themeLabel.textContent = 'DARK';
-          localStorage.setItem('hamsterTheme', 'dark');
-        }
-        
-        console.log(`🎨 Theme switched to: ${isLight ? 'LIGHT' : 'DARK'}`);
-      });
-    }
 
   </script>
 </body>
