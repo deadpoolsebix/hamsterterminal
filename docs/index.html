@@ -5231,12 +5231,15 @@
             background: #f5f5f5 !important;
             color: #111111 !important;
           }
-          /* FORCE BLACK TEXT ON EVERYTHING */
-          *, *::before, *::after {
+          /* FORCE BLACK TEXT ON EVERYTHING - EXCEPT CHARTS */
+          *:not(canvas):not(svg):not(svg *):not([class*="chart"] *):not([id*="chart"] *):not([id*="Chart"] *),
+          *:not(canvas):not(svg):not(svg *)::before,
+          *:not(canvas):not(svg):not(svg *)::after {
             color: #111111 !important;
           }
           /* WHITE BACKGROUNDS */
-          div, section, article, aside, header, footer, main, nav, form, ul, ol, li,
+          div:not([class*="chart"]):not([id*="chart"]):not([id*="Chart"]), 
+          section, article, aside, header, footer, main, nav, form, ul, ol, li,
           .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
           .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
           .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
@@ -5258,12 +5261,12 @@
           /* PRESERVE ONLY PRICE COLORS - green for up, red for down */
           .price-up, .positive, .bullish { color: #00aa55 !important; }
           .price-down, .negative, .bearish { color: #cc0000 !important; }
-          /* CHARTS - keep their styling but with white background */
-          canvas { 
-            background-color: transparent !important;
+          /* CHARTS - DO NOT TOUCH COLORS, only light background */
+          canvas, svg, svg * { 
+            /* No color override - let chart library handle it */
           }
           .chart-container, [class*="chart"], [id*="chart"], [id*="Chart"] {
-            background-color: #ffffff !important;
+            background-color: #f8f8f8 !important;
           }
         `;
         
