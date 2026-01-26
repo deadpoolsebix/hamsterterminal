@@ -5268,11 +5268,53 @@
         `;
         
       } else {
-        // DARK THEME - remove ALL injected CSS
-        themeStyle.textContent = '';
+        // DARK THEME - ciemne tło, BIAŁY tekst (nie zielony!)
+        themeStyle.textContent = `
+          :root {
+            --text-primary: #ffffff !important;
+            --text-secondary: #cccccc !important;
+          }
+          body, html {
+            background-color: #0a0a0a !important;
+            background: #0a0a0a !important;
+            color: #ffffff !important;
+          }
+          /* FORCE WHITE TEXT ON EVERYTHING IN DARK MODE */
+          *, *::before, *::after {
+            color: #ffffff !important;
+          }
+          /* DARK BACKGROUNDS */
+          div, section, article, aside, header, footer, main, nav, form, ul, ol, li,
+          .genius-panel, .panel, .card, .ticker-wrapper, .main-content, .sidebar,
+          .funding-grid, .rsi-section, .signals-section, .level-analysis-container,
+          .market-news-section, .top-bar, .news-ticker-bar, .status-bar,
+          .drawer-panel, .analytics-panel, .crypto-ticker, .stock-ticker {
+            background-color: #0d0d0d !important;
+            background: #0d0d0d !important;
+            border-color: #333333 !important;
+          }
+          select, input, textarea, button {
+            background-color: #1a1a1a !important;
+            color: #ffffff !important;
+            border-color: #444444 !important;
+          }
+          table, thead, tbody, tr, td, th {
+            background-color: #0d0d0d !important;
+            color: #ffffff !important;
+            border-color: #333333 !important;
+          }
+          /* PRESERVE PRICE COLORS */
+          .price-up, .positive, .bullish { color: #00ff88 !important; }
+          .price-down, .negative, .bearish { color: #ff4444 !important; }
+          canvas { 
+            background-color: transparent !important;
+          }
+          .chart-container, [class*="chart"], [id*="chart"], [id*="Chart"] {
+            background-color: #0d0d0d !important;
+          }
+        `;
         
-        // ALSO remove any inline styles that were set by LIGHT mode
-        // This ensures DARK mode uses original CSS
+        // Remove inline styles from LIGHT mode
         document.querySelectorAll('*').forEach(el => {
           el.style.removeProperty('color');
           el.style.removeProperty('background-color');
