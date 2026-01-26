@@ -723,16 +723,144 @@ logger = logging.getLogger(__name__)
 def get_quote(symbol):
     """
     Pobierz cenę z wielu źródeł z priorytetem:
-    1. TwelveData API (Pro Max) - główne źródło
-    2. Binance API - fallback dla crypto
-    3. CoinGecko API - fallback #2 dla crypto (działa wszędzie)
-    4. Kraken API - fallback #3 dla crypto
+    
+    🔥 DLA CRYPTO (BTC, ETH, SOL...):
+    1. Binance API - NAJSZYBSZE, real-time, #1 wolumen na świecie
+    2. Kraken API - fallback, też real-time
+    3. CoinGecko API - fallback #2 (działa wszędzie)
+    
+    📊 DLA FOREX/METALI/AKCJI:
+    1. TwelveData API (Pro Max) - najlepsze dla tradycyjnych rynków
     
     Obsługuje: Crypto, Forex, Metale, Akcje, Indeksy.
     """
     
+    # Lista symboli crypto - dla nich używamy Binance jako PRIMARY!
+    binance_symbols = {
+        'BTC/USD': 'BTCUSDT',
+        'ETH/USD': 'ETHUSDT',
+        'SOL/USD': 'SOLUSDT',
+        'XRP/USD': 'XRPUSDT',
+        'DOGE/USD': 'DOGEUSDT',
+        'ADA/USD': 'ADAUSDT',
+        'AVAX/USD': 'AVAXUSDT',
+        'DOT/USD': 'DOTUSDT',
+        'LINK/USD': 'LINKUSDT',
+        'MATIC/USD': 'MATICUSDT',
+        'BNB/USD': 'BNBUSDT',
+        'SHIB/USD': 'SHIBUSDT',
+        'LTC/USD': 'LTCUSDT',
+        'TRX/USD': 'TRXUSDT',
+        'ATOM/USD': 'ATOMUSDT',
+    }
+    
     # ═══════════════════════════════════════════════════════════════
-    # ŹRÓDŁO 1: TwelveData API (Pro Max)
+    # CRYPTO: BINANCE JAKO GŁÓWNE ŹRÓDŁO (najszybsze, real-time!)
+    # ═══════════════════════════════════════════════════════════════
+    if symbol in binance_symbols:
+        try:
+            binance_sym = binance_symbols[symbol]
+            ticker = requests.get(
+                f'https://api.binance.com/api/v3/ticker/24hr?symbol={binance_sym}', 
+                timeout=5
+            ).json()
+            if 'lastPrice' in ticker:
+                logger.info(f"[OK] {symbol} z Binance (real-time): ${ticker['lastPrice']}")
+                return {
+                    'close': ticker['lastPrice'],
+                    'open': ticker['openPrice'],
+                    'high': ticker['highPrice'],
+                    'low': ticker['lowPrice'],
+                    'volume': ticker['volume'],
+                    'percent_change': ticker['priceChangePercent'],
+                    'source': 'Binance Spot (real-time)'
+                }
+        except Exception as e:
+            logger.warning(f"Binance API failed for {symbol}: {e}, trying Kraken...")
+        
+        # Crypto fallback #1: Kraken
+        kraken_symbols = {
+            'BTC/USD': 'XXBTZUSD',
+            'ETH/USD': 'XETHZUSD',
+            'SOL/USD': 'SOLUSD',
+            'XRP/USD': 'XXRPZUSD',
+            'DOGE/USD': 'XDGUSD',
+            'ADA/USD': 'ADAUSD',
+            'DOT/USD': 'DOTUSD',
+            'LINK/USD': 'LINKUSD',
+            'LTC/USD': 'XLTCZUSD',
+        }
+        
+        if symbol in kraken_symbols:
+            try:
+                kraken_sym = kraken_symbols[symbol]
+                url = f'https://api.kraken.com/0/public/Ticker?pair={kraken_sym}'
+                r = requests.get(url, timeout=5)
+                if r.status_code == 200:
+                    data = r.json()
+                    if not data.get('error') and 'result' in data:
+                        result_key = list(data['result'].keys())[0]
+                        ticker = data['result'][result_key]
+                        price = float(ticker['c'][0])
+                        open_price = float(ticker['o'])
+                        high = float(ticker['h'][1])
+                        low = float(ticker['l'][1])
+                        volume = float(ticker['v'][1])
+                        change = ((price - open_price) / open_price) * 100 if open_price > 0 else 0
+                        
+                        logger.info(f"[OK] {symbol} z Kraken: ${price}")
+                        return {
+                            'close': str(price),
+                            'open': str(open_price),
+                            'high': str(high),
+                            'low': str(low),
+                            'volume': str(volume),
+                            'percent_change': str(change),
+                            'source': 'Kraken API'
+                        }
+            except Exception as e:
+                logger.warning(f"Kraken API failed for {symbol}: {e}")
+        
+        # Crypto fallback #2: CoinGecko (ostateczność)
+        coingecko_ids = {
+            'BTC/USD': 'bitcoin',
+            'ETH/USD': 'ethereum',
+            'SOL/USD': 'solana',
+            'XRP/USD': 'ripple',
+            'DOGE/USD': 'dogecoin',
+            'ADA/USD': 'cardano',
+            'AVAX/USD': 'avalanche-2',
+            'DOT/USD': 'polkadot',
+            'LINK/USD': 'chainlink',
+            'MATIC/USD': 'matic-network',
+        }
+        
+        if symbol in coingecko_ids:
+            try:
+                coin_id = coingecko_ids[symbol]
+                url = f'https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=usd&include_24hr_change=true&include_24hr_vol=true'
+                r = requests.get(url, timeout=8)
+                if r.status_code == 200:
+                    data = r.json().get(coin_id, {})
+                    price = data.get('usd', 0)
+                    change = data.get('usd_24h_change', 0)
+                    if price > 0:
+                        open_price = price / (1 + change/100) if change != 0 else price
+                        logger.info(f"[OK] {symbol} z CoinGecko: ${price}")
+                        return {
+                            'close': str(price),
+                            'open': str(open_price),
+                            'high': str(price * 1.02),
+                            'low': str(price * 0.98),
+                            'volume': str(data.get('usd_24h_vol', 0)),
+                            'percent_change': str(change),
+                            'source': 'CoinGecko API'
+                        }
+            except Exception as e:
+                logger.warning(f"CoinGecko API failed for {symbol}: {e}")
+    
+    # ═══════════════════════════════════════════════════════════════
+    # FOREX/METALE/AKCJE: TwelveData jako główne źródło
     # ═══════════════════════════════════════════════════════════════
     try:
         r = requests.get(
@@ -746,138 +874,11 @@ def get_quote(symbol):
                 logger.info(f"[OK] {symbol} z TwelveData: ${result['close']}")
                 return result
             else:
-                logger.warning(f"TwelveData zwróciło błąd dla {symbol}: {result.get('message', 'Unknown')}")
+                logger.warning(f"TwelveData error for {symbol}: {result.get('message', 'Unknown')}")
         else:
             logger.warning(f"TwelveData HTTP {r.status_code} dla {symbol}")
     except Exception as e:
         logger.warning(f"TwelveData API error for {symbol}: {e}")
-    
-    # ═══════════════════════════════════════════════════════════════
-    # ŹRÓDŁO 2: Binance API (fallback dla crypto)
-    # ═══════════════════════════════════════════════════════════════
-    binance_symbols = {
-        'BTC/USD': 'BTCUSDT',
-        'ETH/USD': 'ETHUSDT',
-        'SOL/USD': 'SOLUSDT',
-        'XRP/USD': 'XRPUSDT',
-        'DOGE/USD': 'DOGEUSDT',
-        'ADA/USD': 'ADAUSDT',
-        'AVAX/USD': 'AVAXUSDT',
-        'DOT/USD': 'DOTUSDT',
-        'LINK/USD': 'LINKUSDT',
-        'MATIC/USD': 'MATICUSDT',
-    }
-    
-    if symbol in binance_symbols:
-        try:
-            binance_sym = binance_symbols[symbol]
-            ticker = requests.get(
-                f'https://api.binance.com/api/v3/ticker/24hr?symbol={binance_sym}', 
-                timeout=8
-            ).json()
-            if 'lastPrice' in ticker:
-                logger.info(f"[OK] {symbol} z Binance: ${ticker['lastPrice']}")
-                return {
-                    'close': ticker['lastPrice'],
-                    'open': ticker['openPrice'],
-                    'high': ticker['highPrice'],
-                    'low': ticker['lowPrice'],
-                    'volume': ticker['volume'],
-                    'percent_change': ticker['priceChangePercent'],
-                    'source': 'Binance Spot API'
-                }
-        except Exception as e:
-            logger.warning(f"Binance API failed for {symbol}: {e}")
-    
-    # ═══════════════════════════════════════════════════════════════
-    # ŹRÓDŁO 3: CoinGecko API (fallback #2 - działa wszędzie!)
-    # ═══════════════════════════════════════════════════════════════
-    coingecko_ids = {
-        'BTC/USD': 'bitcoin',
-        'ETH/USD': 'ethereum',
-        'SOL/USD': 'solana',
-        'XRP/USD': 'ripple',
-        'DOGE/USD': 'dogecoin',
-        'ADA/USD': 'cardano',
-        'AVAX/USD': 'avalanche-2',
-        'DOT/USD': 'polkadot',
-        'LINK/USD': 'chainlink',
-        'MATIC/USD': 'matic-network',
-    }
-    
-    if symbol in coingecko_ids:
-        try:
-            coin_id = coingecko_ids[symbol]
-            # CoinGecko FREE API - działa nawet na Render!
-            url = f'https://api.coingecko.com/api/v3/coins/{coin_id}?localization=false&tickers=false&community_data=false&developer_data=false'
-            r = requests.get(url, timeout=10)
-            if r.status_code == 200:
-                data = r.json()
-                market_data = data.get('market_data', {})
-                price = market_data.get('current_price', {}).get('usd', 0)
-                change_24h = market_data.get('price_change_percentage_24h', 0)
-                high_24h = market_data.get('high_24h', {}).get('usd', price)
-                low_24h = market_data.get('low_24h', {}).get('usd', price)
-                
-                if price > 0:
-                    # Oblicz open jako price / (1 + change/100)
-                    open_price = price / (1 + change_24h/100) if change_24h != 0 else price
-                    logger.info(f"[OK] {symbol} z CoinGecko: ${price}")
-                    return {
-                        'close': str(price),
-                        'open': str(open_price),
-                        'high': str(high_24h),
-                        'low': str(low_24h),
-                        'volume': str(market_data.get('total_volume', {}).get('usd', 0)),
-                        'percent_change': str(change_24h),
-                        'source': 'CoinGecko API'
-                    }
-        except Exception as e:
-            logger.warning(f"CoinGecko API failed for {symbol}: {e}")
-    
-    # ═══════════════════════════════════════════════════════════════
-    # ŹRÓDŁO 4: Kraken API (fallback #3 dla crypto)
-    # ═══════════════════════════════════════════════════════════════
-    kraken_symbols = {
-        'BTC/USD': 'XXBTZUSD',
-        'ETH/USD': 'XETHZUSD',
-        'SOL/USD': 'SOLUSD',
-        'XRP/USD': 'XXRPZUSD',
-        'DOGE/USD': 'XDGUSD',
-        'ADA/USD': 'ADAUSD',
-        'DOT/USD': 'DOTUSD',
-        'LINK/USD': 'LINKUSD',
-    }
-    
-    if symbol in kraken_symbols:
-        try:
-            kraken_sym = kraken_symbols[symbol]
-            url = f'https://api.kraken.com/0/public/Ticker?pair={kraken_sym}'
-            r = requests.get(url, timeout=8)
-            if r.status_code == 200:
-                data = r.json()
-                if not data.get('error') and 'result' in data:
-                    result_key = list(data['result'].keys())[0]
-                    ticker = data['result'][result_key]
-                    price = float(ticker['c'][0])  # Last trade price
-                    open_price = float(ticker['o'])  # Today's opening price
-                    high = float(ticker['h'][1])  # 24h high
-                    low = float(ticker['l'][1])  # 24h low
-                    volume = float(ticker['v'][1])  # 24h volume
-                    change = ((price - open_price) / open_price) * 100 if open_price > 0 else 0
-                    
-                    logger.info(f"[OK] {symbol} z Kraken: ${price}")
-                    return {
-                        'close': str(price),
-                        'open': str(open_price),
-                        'high': str(high),
-                        'low': str(low),
-                        'volume': str(volume),
-                        'percent_change': str(change),
-                        'source': 'Kraken API'
-                    }
-        except Exception as e:
-            logger.warning(f"Kraken API failed for {symbol}: {e}")
     
     # Brak danych z żadnego źródła
     logger.error(f"[FAIL] Brak danych dla {symbol} z wszystkich źródeł!")
