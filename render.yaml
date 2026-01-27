@@ -1,4 +1,7 @@
 services:
+  # ============================================
+  # STRONA WWW - Hamster Terminal (bez zmian)
+  # ============================================
   - type: web
     name: hamster-api
     runtime: python
@@ -12,3 +15,26 @@ services:
         sync: false
     # Custom domain - dodaj w Render Dashboard:
     # hamsterterminal.com
+
+  # ============================================
+  # SAMANTA BOT - Trading 24/7 (Background)
+  # ============================================
+  - type: worker
+    name: samanta-bot
+    runtime: python
+    plan: starter
+    buildCommand: "pip install --upgrade pip && pip install -r requirements.txt"
+    startCommand: "python genius_simple_test.py 8760"
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+      - key: TWELVE_DATA_API_KEY
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        value: "8104143715:AAF3A8vPIicbMJF5I8kSnjSH7rHx8PeInVY"
+      - key: TELEGRAM_CHAT_ID
+        value: "5616894588"
+      - key: BYBIT_API_KEY
+        sync: false
+      - key: BYBIT_API_SECRET
+        sync: false
