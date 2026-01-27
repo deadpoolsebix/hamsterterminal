@@ -40,11 +40,15 @@ Thumbs.db
 
 # Project specific
 *.log
-*.csv
-data.json
 bot_trades_*.csv
 dashboard_screenshots/
 logs/
+
+# Keep important data files
+!data/btc_6years_hourly.csv
+!models/genius_lstm.h5
+!models/genius_lstm_scaler.pkl
+!models/lstm_config.json
 
 # Secrets
 .env
